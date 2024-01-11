@@ -1,26 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   Autoren:
+%   Autoren des verwendeten Templates:
 %   Prof. Dr. Bernhard Drabant
 %   Prof. Dr. Dennis Pfisterer
 %   Prof. Dr. Julian Reichwald
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%	ANLEITUNG:
-%   1. Ersetzen Sie firmenlogo.jpg im Verzeichnis img
-%   2. Passen Sie alle Stellen im Dokument an, die mit
-%      @stud
-%      markiert sind
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%	ACHTUNG:
-%   Für das Erstellen des Literaturverzeichnisses wird das
-%   modernere Paket biblatex in Kombination mit biber
-%   verwendet - nicht mehr das ältere Paket BibTex!
-%
-%   Bitte stellen Sie Ihre TeX-Umgebung entsprechend ein (z.B. TeXStudio):
-%   Einstellungen --> Erzeugen --> Standard Bibliographieprogramm: biber
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[fontsize=12pt,BCOR=5mm,DIV=12,parskip=half,listof=totoc,
@@ -148,8 +130,8 @@
 \cleardoublepage
 
 % Abkürzungsverzeichnis
-% @stud: acronyms.tex bearbeiten
-\input{acronyms}
+% @stud: abkürzungen.tex bearbeiten
+\input{abkürzungen}
 \cleardoublepage
 
 % 1,5 Zeilenabstand schon ab dem Abstrakt
@@ -174,16 +156,12 @@
 % KAPITEL
 %
 % @stud: einzelne Kapitel bearbeiten und eigene Kapitel hier einfügen
-%
-% Einleitung
-\input{introduction}
-
-% mehrere Grundlagen- und Forschungs-Kapitel
-\input{chapter1}
-\input{chapter2}
-
-% Fazit und Ausblick
-\input{conclusion}
+\input{einleitung}
+\input{grundlagen}
+\input{vorgehen}
+\input{ergebnisse}
+\input{diskussion}
+\input{fazit}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

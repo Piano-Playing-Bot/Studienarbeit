@@ -13,7 +13,6 @@
 	\item Grundlagen MIDI
 	\item ...
 \end{enumerate}
-\newline
 
 \section{Vorgehen}\label{Vorgehen - Hardware}
 
@@ -32,7 +31,7 @@ zu müssen.
 
 \subsection{Ansteuerung und Signal}\label{Ansteuerung}
 
-\newline\subsubsection{Arduino R3}
+\subsubsection{Arduino R3}
 Zur Signalsteuerung wird ein Arduino R3 genutzt.
 Es handelt sich dabei um eine Open-Source-Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
 einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten
@@ -48,17 +47,17 @@ erzeugen. Dies ermöglicht es, die Aktuatoren mit verschiedenen Stärken anzuste
 entsprechend angepasst wird. Dadurch können die Klaviertasten mit unterschiedlichen Intensitäten angespielt werden,
 was zu einer realistischeren und dynamischeren Wiedergabe führt.
 
-\newline \subsubsection{Erweiterung der Ports}
+\subsubsection{Erweiterung der Ports}
 Es werden 88 Tasten angesteuert. Da ein Arduino keine 88 PWM-Ports besitzt, müssen die Signale über
 eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten:
-\newline
+
 \begin{enumerate}
 	\item Schieberegister
 	\item Motor-Matrix
 	\item Demultiplexer
 \end{enumerate}
 
-\newline \paragraph{Schieberegister}
+ \paragraph{Schieberegister}
 Ein Schieberegister ist ein integrierter Schaltkreis, der hier verwendet wird, um die Anzahl der verfügbaren Ausgänge des
 Mikrocontrollers zu erweitern. Das gängigste Schieberegister ist das 8-Bit-Schieberegister. \newline
 

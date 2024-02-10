@@ -59,8 +59,26 @@ eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt 
 \end{enumerate}
 
 \newline \paragraph{Schieberegister}
-//TODO
+Ein Schieberegister ist ein integrierter Schaltkreis, der hier verwendet wird, um die Anzahl der verfügbaren Ausgänge des
+Mikrocontrollers zu erweitern. Das gängigste Schieberegister ist das 8-Bit-Schieberegister. \newline
+
+Um 88 Ausgänge mit Hilfe von Schieberegistern von nur 3 PWM-Pins des Arduinos anzusteuern, werden insgesamt 11
+Schieberegister benötigt.\newline
+
+Zuerst werden die Datenleitungen (SERIAL IN) aller Schieberegister in Reihe geschaltet. Dies bedeutet, dass das
+Ausgangssignal des ersten Schieberegisters mit dem Eingang (SERIAL IN) des nächsten verbunden wird, und so weiter, bis
+zum letzten Schieberegister. \newline
+Der Arduino sendet Daten seriell über die verbundenen PWM-Pin. Diese Daten werden über ein Schieberegister an
+alle Schieberegister weitergegeben. Durch diesen Vorgang werden die Daten parallel über alle Schieberegister gesendet.
+\newline
+Die Ausgänge der Schieberegister (Q0 bis Q7) werden dann an die entsprechenden Aktuatoren angeschlossen.
+Das Signal wird zu einer definierten Clock durch die Schieberegister durchgeschoben. So kann durch Steuerung der Daten,
+die an die Schieberegister gesendet werden, kann der Arduino jeden einzelnen Ausgang manipulieren, um die Aktuatoren
+entsprechend anzusteuern. \newline
+Auf diese Weise kann der Arduino mit Hilfe von Schieberegistern eine größere Anzahl von Ausgängen kontrollieren, als er
+direkt verfügbar hat.
 \paragraph{Motor-Matrix}
+Die Motor-Matrix ist einer LED-Matrix nachgeahmt.
 //TODO
 \paragraph{Demultiplexer}
 //TODO

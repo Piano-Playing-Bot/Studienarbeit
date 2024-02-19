@@ -2,5 +2,29 @@
 \chapter{Vorgehen - Software} \label{vorgehenSW}
 
 \nocite{*}
-- Teilung des Problems (siehe Unterkapitel)
+- Teilung des Problems (siehe Unterkapitel) \newline
 - Grobe Architektur der Komponenten
+
+\section{PIDI}
+1. Existierendes vs. Custom Format\newline
+2. Darstellung von Tönen (nicht an geg. Piano mit 88 Tasten gebunden)\newline
+3. Speicher vs Performanz im Design des Formats (inkl. Alternativen)
+
+\section{Arduino Logik}
+kurzer Überblick, vllt. mit SADT-Diagramm
+
+\section{UI-Arduino Kommunikation}
+1. Wie wird Kommunikation mit Arduino i.d.R. gelöst\newline
+2. Grundlagen der Kommunikation (Files, Polling, etc.)\newline
+3. Prinzip der minimalen Arbeit → Custom Protocol → SPPP\newline
+4. Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
+
+\section{UI}
+1. Grundlagen: Immediate vs. Retained Mode UI\newline
+2. Cached Immediate Mode\newline
+3. Generelle Diskussion bzgl. API-Design vllt
+
+\section{Parsing von MIDI}
+1. Überblick über Midi \newline
+2. Vergleich MIDI vs PIDI \newline
+(Kapitel vllt uninteressant?)

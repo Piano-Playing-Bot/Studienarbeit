@@ -1,0 +1,119 @@
+% !TEX root =  master.tex
+\chapter{Konzeption - Hardware}\label{Hardware - Konzeption}
+
+\nocite{*}
+
+\begin{enumerate}
+	\item Genereller Überblick über mögliche Lösungsvorgehen
+	\item Bereits existierende selbst-spielende Klaviere
+	\item Arduino
+	\item Schieberegister, LED-Matrix, Motoren etc.
+	\item Theoretische Grundsätze für UIs
+	\item Groundless der Musiktheorie, Musiknotation
+	\item Grundlagen MIDI
+	\item ...
+\end{enumerate}
+
+\section{Elektronik}\label{Vorgehen - Hardware}
+
+Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
+Die Grundfragen, denen wir bei der Konstruktion begegneten, betrafen die Auswahl und Implementierung der
+Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des Arduinos.
+Im Hinblick auf die Aktuatoren fiel unsere Wahl auf Hubmagneten, die eine präzise Steuerung der Tasten
+ermöglichen. Durch ihre Verwendung können die Tasten des Klaviers mit der erforderlichen Geschwindigkeit und
+Genauigkeit angespielt werden. \newline
+Die Aktuatoren wurden mit den Klaviertasten mittels Seilen verbunden, um die mechanische Integrität des Klaviers
+zu erhalten und gleichzeitig eine präzise Steuerung zu gewährleisten.\newline
+Die Signalübertragung erfolgte über einen Arduino-Mikrocontroller. Da der Arduino nicht über ausreichend
+viele Ausgänge verfügt, um alle Tasten anzusteuern, wurde das Signal mithilfe von Schieberegistern erweitert.
+Diese Erweiterung ermöglichte es, alle 88 Tasten des Klaviers anzusteuern, ohne zusätzliche Hardware einsetzen
+zu müssen.
+
+
+\subsection{Arduino R3}\label{Ansteuerung}
+Zur Signalsteuerung wird ein Arduino R3 genutzt.
+Es handelt sich dabei um eine Open-Source-Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
+einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten
+verbunden werden kann. Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit
+externen Geräten verwendet werden können. \newline
+Der Arduino Uno R3 eignet sich hervorragend zur Ansteuerung der Aktuatoren eines selbstspielenden Klaviers aus
+mehreren Gründen. Erstens bietet der Arduino eine benutzerfreundliche Plattform für die Entwicklung und Implementierung
+von Steuerungslogik. Die einfache Programmierung mittels der Arduino-IDE ermöglicht es, komplexe Steuerungsalgorithmen
+für die Aktuatoren zu erstellen. \newline
+Zweitens bietet er PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts genutzt wurden.
+//TODO: Speicher \newline
+//TODO: Vergleich mit anderen Microcontrollern 
+
+\subsection{Pulsweitenmodulation}\label{PWM}
+PWM ist eine Technik, bei der die Zeitdauer eines digitalen Signals variiert wird, um einen durchschnittlichen Wert zu
+erzeugen. Dies ermöglicht es, die Aktuatoren mit verschiedenen Stärken anzusteuern, indem die Pulsweite des Signals
+entsprechend angepasst wird. Dadurch können die Klaviertasten mit unterschiedlichen Intensitäten angespielt werden,
+was zu einer realistischeren und dynamischeren Wiedergabe führt.\newline
+//TODO: Resolution \newline
+//TODO: min/max pulse width \newline
+//TODO: Duty Cycle
+
+
+\subsection{Vermehrung der Ausgänge}
+Es werden 88 Tasten angesteuert. Da ein Arduino keine 88 PWM-Ports besitzt, müssen die Signale über
+eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten:
+
+\begin{enumerate}
+	\item Schieberegister
+	\item Motor-Matrix
+	\item Demultiplexer
+\end{enumerate}
+
+ \paragraph{Schieberegister}
+Ein Schieberegister ist ein integrierter Schaltkreis, der hier verwendet wird, um die Anzahl der verfügbaren Ausgänge des
+Mikrocontrollers zu erweitern. Das gängigste Schieberegister ist das 8-Bit-Schieberegister. \newline
+
+Um 88 Ausgänge mit Hilfe von Schieberegistern von nur 3 PWM-Pins des Arduinos anzusteuern, werden insgesamt 11
+Schieberegister benötigt.\newline
+
+Zuerst werden die Datenleitungen (SERIAL IN) aller Schieberegister in Reihe geschaltet. Dies bedeutet, dass das
+Ausgangssignal des ersten Schieberegisters mit dem Eingang (SERIAL IN) des nächsten verbunden wird, und so weiter, bis
+zum letzten Schieberegister. \newline
+Der Arduino sendet Daten seriell über die verbundenen PWM-Pin. Diese Daten werden über ein Schieberegister an
+alle Schieberegister weitergegeben. Durch diesen Vorgang werden die Daten parallel über alle Schieberegister gesendet.
+\newline
+Die Ausgänge der Schieberegister (Q0 bis Q7) werden dann an die entsprechenden Aktuatoren angeschlossen.
+Das Signal wird zu einer definierten Clock durch die Schieberegister durchgeschoben. So kann durch Steuerung der Daten,
+die an die Schieberegister gesendet werden, kann der Arduino jeden einzelnen Ausgang manipulieren, um die Aktuatoren
+entsprechend anzusteuern. \newline
+Auf diese Weise kann der Arduino mit Hilfe von Schieberegistern eine größere Anzahl von Ausgängen kontrollieren, als er
+direkt verfügbar hat.
+
+
+\paragraph{Motor-Matrix}
+Die Motor-Matrix ist einer LED-Matrix nachgeahmt.
+In einer Matrix, werden zwei Reihen an Ports angeschlossen, nach folgendem Muster: \newline
+(00)(01)(02)(03)(04)(05)(06)(07) \newline
+(10)(11)(12)(13)(14)(15)(16)(17) \newline
+(20)(21)(22)(23)(24)(25)(26)(27) \newline
+(30)(31)(32)(33)(34)(35)(36)(37) \newline
+(40)(41)(42)(43)(44)(45)(46)(47) \newline
+(50)(51)(52)(53)(54)(55)(56)(57) \newline
+(60)(61)(62)(63)(64)(65)(66)(67) \newline
+(70)(71)(72)(73)(74)(75)(76)(77) \newline
+
+Eine LED-Matrix besteht aus einer Anordnung von LEDs in Zeilen und Spalten. Jede LED kann unabhängig von den anderen
+ein- oder ausgeschaltet werden. Die Steuerung erfolgt über Multiplexing, bei dem jede Zeile der Matrix nacheinander
+aktiviert wird, während die entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden. Durch schnelles
+Wechseln zwischen den Zeilen (PWM) erscheint es den BetrachterInnen, als ob alle LEDs gleichzeitig leuchten würden,
+obwohl sie tatsächlich nacheinander aktiviert werden. \newline
+
+Um das Prinzip einer LED-Matrix auf Aktuatoren zu übertragen, müssen lediglich die LEDs durch die Aktuatoren ersetzt werden.
+Durch Steuerung der Zeilen und Spalten dieses Rasters können verschiedene Motoren selektiv
+aktiviert werden. Dies ermöglicht eine effiziente Steuerung mehrerer Motoren mit einem begrenzten Satz von
+Steuersignalen. \newline
+
+//TODO: Nachteile Matrix
+
+
+\paragraph{Demultiplexer}
+//TODO
+
+\subsection{Transistor}
+\subsection{Akkumulator}
+

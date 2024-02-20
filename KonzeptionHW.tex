@@ -3,8 +3,6 @@
 
 \nocite{*}
 
-\section{Elektronik}\label{Vorgehen - Hardware}
-
 Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
 Die Grundfragen, denen wir bei der Konstruktion begegneten, betrafen die Auswahl und Implementierung der
 Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des Arduinos.
@@ -17,6 +15,8 @@ Die Signalübertragung erfolgte über einen Arduino-Mikrocontroller. Da der Ardu
 viele Ausgänge verfügt, um alle Tasten anzusteuern, wurde das Signal mithilfe von Schieberegistern erweitert.
 Diese Erweiterung ermöglichte es, alle 88 Tasten des Klaviers anzusteuern, ohne zusätzliche Hardware einsetzen
 zu müssen.
+
+\section{Elektronik}\label{Vorgehen - Hardware}
 
 
 \subsection{Arduino R3}\label{Ansteuerung}
@@ -34,13 +34,32 @@ Zweitens bietet er PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts g
 //TODO: Vergleich mit anderen Microcontrollern 
 
 \subsection{Pulsweitenmodulation}\label{PWM}
-PWM ist eine Technik, bei der die Zeitdauer eines digitalen Signals variiert wird, um einen durchschnittlichen Wert zu
-erzeugen. Dies ermöglicht es, die Aktuatoren mit verschiedenen Stärken anzusteuern, indem die Pulsweite des Signals
+PWM ist einfach ausgedrückt eine Technik, bei der die Zeitdauer eines digitalen Signals variiert wird, um einen
+durchschnittlichen Wert zu erzeugen. Dies ermöglicht es, die Aktuatoren mit verschiedenen Stärken anzusteuern, indem die
+Pulsweite des Signals
 entsprechend angepasst wird. Dadurch können die Klaviertasten mit unterschiedlichen Intensitäten angespielt werden,
 was zu einer realistischeren und dynamischeren Wiedergabe führt.\newline
-//TODO: Resolution \newline
-//TODO: min/max pulse width \newline
-//TODO: Duty Cycle
+
+Digitale Steuerung wird verwendet, um eine Rechteckwelle zu erzeugen, ein Signal, das zwischen Ein und Aus umgeschaltet
+wird. Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung (5V) und Aus (0 Volt) simulieren,
+indem der Anteil der Zeit geändert wird, den das Signal eingeschaltet ist im Vergleich zur Zeit, die das Signal
+ausgeschaltet ist. Die Dauer der Einschaltzeit wird als Pulsweite bezeichnet. Um unterschiedliche analoge Werte zu
+erhalten, ändert man, oder moduliert man, diese Pulsweite. Wenn man dieses Ein-Aus-Muster schnell genug mit einer LED
+wiederholt, ist das Ergebnis so, als ob das Signal eine konstante Spannung zwischen 0 und Vcc ist, die die Helligkeit
+der LED steuert. \newline
+
+Auf den Arduino bezogen sieht die Umsetzung eines PWM Signals wie folgt aus:
+Ein Taktsignal gelangt in die entsprechende Clock.
+Die Clock stellt den entsprechenden PWM-Modus ein. Dabei werden zwei wichtige Werte gesetzt:
+Der erste bestimmt, wann das Signal von HIGH auf LOW
+umschaltet. Und der zweite bestimmt, wann es zurückkommt. Das Verhältnis zwischen HIGH und LOW wird als
+Tastverhältnis bezeichnet und bestimmt die Helligkeit unserer LED bzw. die Stärke mit welcher der Hubmagnet anschlägt.
+Je länger die Ausgabe im HIGH-Zustand bleibt, desto schneller erfolgt der Tastenanschlag. \newline
+
+Es können die Auflösung und das Tastverhältnis des PWM-Signals angepasst werden. Die Auflösung bezieht sich auf die Anzahl der
+möglichen diskreten Werte, die das Signal annehmen kann. Das Tastverhältnis ist das Verhältnis der Einschaltzeit zur
+Periodendauer und wird oft in Prozent ausgedrückt.
+
 
 
 \subsection{Vermehrung der Ausgänge}

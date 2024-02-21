@@ -127,9 +127,123 @@ Steuersignalen. \newline
 \subsection{Akkumulator}
 \subsection{Schaltplan}
 
+\textit{Arduino}
+
+Im Zentrum der Schaltung steht der Mikrocontroller (hier: Arduino Uno R3).
+Dieser erhält Daten und Strom über den integrierten USB-Anschluss, welcher mit dem Computer verbunden wird.
+Da der Arduino limitierte \nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
+Mit jedem \"in Reihe" geschaltetem Schieberegister kann die Anzahl PWM-fähiger Ausgänge um 8 erweitert werden.
+
+\textit{Schieberegister}
+
+Der Arduino wird an fünf Stellen mit dem ersten Schieberegister verbunden:
+
+Arduinoport D2 <-> Serial (SER) Input
+
+Über diese Verbindung werden serielle Daten werden hier bitweise in das Register geschoben.
+
+Arduinoport D3 <-> SHCP (Shift Register Clock Input)
+
+Dieser Pin wird verwendet, um den Takt für das Verschieben der Daten innerhalb des Schieberegisters anzulegen.
+Bei jedem Taktimpuls auf diesem Pin wird das Bit am seriellen Dateneingang in das Register verschoben.
+Das bedeutet, dass bei jeder steigenden Flanke des Taktsignals das Datenbit, das am Eingang anliegt, in das Schieberegister übernommen und alle vorhandenen Daten um eine Position verschoben werden.
+
+Arduinoport D4 <-> STCP (Storage Register Clock Input)
+
+Nachdem die Daten in das Schieberegister eingelesen wurden, wird dieser Pin verwendet, um die im Schieberegister vorhandenen Daten in das Ausgangsregister zu übertragen.
+Ein Taktimpuls auf diesem Pin bewirkt, dass die Daten vom Schieberegister ins Ausgangsregister übernommen werden, sodass alle Ausgänge gleichzeitig aktualisiert werden.
+Das ist besonders relevant, da sonst unter Umständen alle Ausgänge von einer Änderung im letzten Schieberegister bedingst wären.
+
+Arduino GND <-> Ground, Output Enable (OE)
+
+Der OE-Pin wird genutzt, um die Ausgänge des Schieberegisters global zu aktivieren oder zu deaktivieren, ohne die Daten selbst zu beeinflussen.
+Da das Schieberegister zu keiner Zeit deaktiviert sein soll, wird dieser Pin dauerhaft mit dem GND-Pin verbunden.
+
+Arduino VCC 5V <-> VCC, \overline{SRCLR} (Reset)
+
+Um das Schiebregister mit den benötigten 5V zu betreiben, wird der entsprechende Pin mit dem 5V Output des Arduino verbunden.
+Zusätzlich wird der \overline{ } SRCLR Port des Schieberegisters, welcher ein Reset ermöglicht dauerhaft mit 5V verbunden.
+
+Jedes weiteres Schieberegister greift die oben genannten Signale ab.
+Der einzige Unterschied befindet sich am Serial (SER) Input Port.
+Das Schieberegister an Position i+1 wird mit dem seriellen Output des Schieberegisters an Position i verbunden. (\forall i = 0,...,10)
+
+\textit{MOSFET}
+
+Die Hubmagnete werden jeweils mit 24V und mit bis zu 400mA betrieben.
+Um einen hohen Stromfluss zu steuern, können Transistoren verwendet werden.
+Für hohe Spannungen und schnelle Schaltvorgänge eigenen sich besonders MOSFETs (Metall-Oxid-Halbleiter-Feldeffekttransistor).
+Im Folgenden werden speziell n-MOSFETs verwendet, der mit einem Signal zwischen 0V (leitet nicht) und +5V (voll leitend) angesteuert werden kann.
+
+Der folgende Aufbau ist für die insgesamt 88 Ausgänge der 11 Schieberegister identisch, da jeder Ausgang für die Ansteuerung genau eines Motors zuständig ist.
+
+Der GATE-Pin des MOSFETs erhält das Signal, dass die \"Durchlässigkeit" steuert aus einem der Outputs des Schieberegisters.
+Der SOURCE-Pin wird mit Ground des gesamten Systems verbunden.
+Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunden.
+
+\textit{Hubmagnet}
+
+Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnetes mit dem +24V verbunden.
+
+\textit{Testen}
+
+Um die Fehlersuche zu erleichtern, werden LEDs in den Schaltplan mit eingebaut.
+Diese werden jeweils mit einem entsprechenden 1k\textOmega parallel zu den Motoren angeschlossen.
+So kann anhand der Helligkeit der LED die Intensität abgelesen werden, mit der eine Taste gespielt wird.
+
+//Bild vom Schaltplan
+
 \section{Mechanik}\label{vorgehenHW}
 
 \subsection{Auswahl des Klaviers}
+
+Da sich dieses Projekt nicht auf die theoretische Konzeption beschränkt, muss ein entsprechendes Testobjekt - ein reales Klavier - gefunden werden.
+Dieses muss einige Voraussetzungen erfüllen:
+	1. Der Preis muss im Rahmen des Budgets liegen
+	2. Es muss leicht auseinander zu bauen sein, um die Mechanik zugänglich zu machen
+	3. Es muss vollständig sein (alle 88 Tasten)
+	4. Es muss stimmbar sein
+	5. Der Transport muss einfach durchzuführen sein
+
+
 \subsection{Ansteuerungskonzept}
+
+Jay?
+
+
 \subsection{Verbindung Tasten und Hubmagnete}
+
+Es wurde sich dazu entschieden die Tasten durch Ziehen anzusprechen (siehe:\nameref{Ansteuerung}).
+Die Idee ist, eine Schnur, oder Ähnliches, durch ein waagerechtes Loch in der Taste an dieser zu befestigen.
+Anschließend wird die Schnur durch ein senkrechtes Loch durch das Holz, worauf die Tasten liegen, in den Fußraum zu führen.
+Damit der Pianist:in nicht durch Platzmangel eingeschränkt wird, werden die Seile entlang zum Rumpf des Klaviers geführt.
+Dort werden auch die Hubmagnete über die gesamte Breite befestigt.
+Um die Intensität des Tastendrucks zu steuern und die Durabilität des Materials zu verlängern, sollte die Reibung möglichst gering gehalten werden.
+Dazu wird mittels eines Rohres, welchen waagerecht unter der Klaviatur entlang der Löcher montiert wird als erste Umlenkung verwendet.
+
+
+Für das Ziehen wird ein leichtes, formbares und dünnes Material benötigt, da Konzept die eine Seite mit dem Motor und die andere durch ein Loch in der Taste verknotet werden sollte.
+
+\textit{Nähgarn}
+
+Als Erstes wurden Nähgarn, welches zur Hand war getestet.
+Auch doppelt hielt es der ruckartigen Ziehbewegung mit 25N des Hubmagnetens nicht stand.
+Vier Fäden funktionierten zu Beginn gut, leierten allerding schnell aus.
+
+\textit{Nylonsaiten}
+
+Als Nächstes wurde die g-Saite einer Gitarre verwendet.
+Durch den höheren Durchmesser und das stärkere Material riss und leierte die Saite nicht aus.
+Da die Saite kaum Flexibilität liefert, war die Befestigung an der Taste äußerst schwierig.
+Dadurch konnte nicht der vollständige Hub des Magnetes auf die Taste übertragen werden.
+
+\textit{Angelschnur}
+
+Aus Erfahrungen aus dem Angelbereich konnte schnell eine geeignete Schnur gefunden werden.
+Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
+Mit einem Durchmesser von 1.6mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7kg standhalten.
+Damit sollte das Spielen des Forellenquintetts von Schubert ein leichtes sein.
+
+
+
 \subsection{Weitere Ideen und Limitationen}

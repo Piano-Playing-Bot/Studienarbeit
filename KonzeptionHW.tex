@@ -31,7 +31,7 @@ von Steuerungslogik. Die einfache Programmierung mittels der Arduino-IDE ermögl
 für die Aktuatoren zu erstellen. \newline
 Zweitens bietet er PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts genutzt wurden.
 //TODO: Speicher \newline
-//TODO: Vergleich mit anderen Microcontrollern 
+//TODO: Vergleich mit anderen Microcontrollern
 
 \subsection{Pulsweitenmodulation (PWM)}\label{PWM}
 PWM ist einfach ausgedrückt eine Technik, bei der die Zeitdauer eines digitalen Signals variiert wird, um einen
@@ -159,14 +159,14 @@ Arduino GND <-> Ground, Output Enable (OE)
 Der OE-Pin wird genutzt, um die Ausgänge des Schieberegisters global zu aktivieren oder zu deaktivieren, ohne die Daten selbst zu beeinflussen.
 Da das Schieberegister zu keiner Zeit deaktiviert sein soll, wird dieser Pin dauerhaft mit dem GND-Pin verbunden.
 
-Arduino VCC 5V <-> VCC, \overline{SRCLR} (Reset)
+Arduino VCC 5V <-> VCC, $$\overline{SRCLR}$$ (Reset)
 
 Um das Schiebregister mit den benötigten 5V zu betreiben, wird der entsprechende Pin mit dem 5V Output des Arduino verbunden.
-Zusätzlich wird der \overline{ } SRCLR Port des Schieberegisters, welcher ein Reset ermöglicht dauerhaft mit 5V verbunden.
+Zusätzlich wird der $\overline{ }$ SRCLR Port des Schieberegisters, welcher ein Reset ermöglicht dauerhaft mit 5V verbunden.
 
 Jedes weiteres Schieberegister greift die oben genannten Signale ab.
 Der einzige Unterschied befindet sich am Serial (SER) Input Port.
-Das Schieberegister an Position i+1 wird mit dem seriellen Output des Schieberegisters an Position i verbunden. (\forall i = 0,...,10)
+Das Schieberegister an Position i+1 wird mit dem seriellen Output des Schieberegisters an Position i verbunden. ($\forall i = 0,...,10$)
 
 \textit{MOSFET}
 
@@ -188,7 +188,7 @@ Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnetes mit dem 
 \textit{Testen}
 
 Um die Fehlersuche zu erleichtern, werden LEDs in den Schaltplan mit eingebaut.
-Diese werden jeweils mit einem entsprechenden 1k\textOmega parallel zu den Motoren angeschlossen.
+Diese werden jeweils mit einem entsprechenden $1k\Omega$ parallel zu den Motoren angeschlossen.
 So kann anhand der Helligkeit der LED die Intensität abgelesen werden, mit der eine Taste gespielt wird.
 
 //Bild vom Schaltplan

@@ -1,30 +1,87 @@
 % !TEX root =  master.tex
+\nocite{*}
 \chapter{Vorgehen - Software} \label{vorgehenSW}
 
-\nocite{*}
-- Teilung des Problems (siehe Unterkapitel) \newline
-- Grobe Architektur der Komponenten
+Wie in Kapitel \ref{Zielstellung} beschrieben, benötigt dieses Projekt einen Desktop-Anwendung für die Nutzer:innen-Interaktion mit dem selbst-spielenden Klavier.
+Außerdem wurde in Kapitel \ref{Hardware - Konzeption} bereits aufgezeigt, dass für die Ansteurung der Motoren ein \ac{MC} verwendet werden soll, der natürlich auch eine bestimmte Software ausführen muss.
+Beide Komponenten, das \ac{UI} und der \ac{MC}, sollen in diesem Kapitel konzipiert werden.
 
-\section{PIDI}
-1. Existierendes vs. Custom Format\newline
-2. Darstellung von Tönen (nicht an geg. Piano mit 88 Tasten gebunden)\newline
-3. Speicher vs Performanz im Design des Formats (inkl. Alternativen)
+Abbildung \ref*{fig:high-level-komponenten} zeigt diese unterschiedlichen Komponenten, sowie den Datenfluss zwischen diesen.
+Nutzer:innen werden in der Abbildung auch dargestellt, um eindeutig zu machen, dass Nutzer-Eingaben nur an die \ac{UI} gehen.
+Der \ac{MC} erhält Daten zum abzuspielenden Musikstück von der \ac{UI} und schickt darauf basierend in regelmäßigen Intervallen \ac{PWM}-Signale an die Hardware.
 
-\section{Arduino Logik}
+\begin{figure}[htbp]
+	\centering
+	\begin{tikzpicture}[node distance=2cm, line width=0.25mm]
+		% Code for drawing a stick figure as taken from https://tex.stackexchange.com/a/441952
+		% \begin{tikzpicture}
+		% 	\thicklines
+		% 	\put(5,18){\circle{5}}
+		% 	\put(5,7){\line(0,1){8}}
+		% 	\put(5,7){\line(1,-2){5}}
+		% 	\put(5,7){\line(-1,-2){5}}
+		% 	\put(1,12){\line(1,0){8}}
+		% \end{tikzpicture}
+		\node (user) [rect] {User}; % @TODO: draw Useer as stick figure
+		\node (ui) [rect, below of=user] {UI};
+		\node (mc) [rect, right of=ui, xshift=1.5cm] {\ac{MC}};
+		\node (hw) [rect, right of=mc, xshift=1.5cm] {Hardware};
+
+		\draw [arrow] (user) -- (ui);
+		\draw [arrow] (ui) -- (mc);
+		\draw [arrow] (mc) -- (hw);
+	\end{tikzpicture}
+	\caption{Komponenten-Diagramm mit Datenfluss}
+	\label{fig:high-level-komponenten}
+\end{figure}
+
+Da die Hardware-Komponente in vorherigen Kapiteln bereits behandelt wurde, soll hier nur die Architektur der \ac{UI} (in Abschnitt \ref{vorgehenSW-UI}) und des \ac{MC} (in Abschnitt \ref{vorgehenSW-MC}) erarbeitet werden.
+Dabei soll die Kommunikation zwischen diesen beiden Komponenten in Abschnitt \ref{vorgehenSW-SPPP} ebenfalls seperat betrachtet und spezifiziert werden.
+Damit können die beiden Komponenten relativ aufwandsarm verändert oder ausgetauscht werden, solange sie sich weiterhin an das selbe Kommunikations-Protokoll halten.
+
+Weiterhin soll auch das Format, in dem Musikstücke auf dem \ac{MC} gespeichert werden, in Abschnitt \ref{vorgehenSW-PIDI} seperat entworfen werden.
+Da der \ac{MC} eine möglichst hohe Geschwindigkeit für die Ansteuerung der Motoren erbringen soll, muss das Format eine performante Nutzung ermöglichen.
+Auch muss das Format möglichst wenig Speicherplatz aufbrauchen, damit möglichst viele Daten auf einmal auf dem \ac{MC} gespeichert werden können.
+Je mehr Speicherplatz das Format nämlich benötigt, desto öfter muss die \ac{UI} Daten an den \ac{MC} schicken, was einen hohen Zeitaufwand mit sich bringen kann.
+
+Zuletzt soll außerdem auch die Architektur der \ac{UI} in zwei Teile geteilt werden.
+Die \ac{UI} hat an sich drei klar separierbare Aufgaben.
+Zum einen muss die \ac{UI} natürlich Nutzer:innen-Eingaben verarbeiten und ein graphisches Interface rendern.
+Zum anderen muss die \ac{UI} wie bereits erwähnt auch Daten an den \ac{MC} schicken.
+Wie in Unterkapitel \ref{vorgehenSW-SPPP} aufgezeigt wird, muss die \ac{UI} auch Daten vom \ac{MC} empfangen können.
+Die UI muss zusätzlich zum Rendering und der Kommunikation aber auch noch das Importieren von Musikstücken erlauben.
+Wie in \ref{Zielstellung} spezifiziert, sollen Nutzer:innen Musikstücke in bestimmten Dateiformaten an die Anwendung geben können, um diese danach auf dem selbst-spielenden Klavier abspielen zu können.
+Konzeptionelle Überlegungen dazu werden in \ref{vorgehenSW-MIDI} erläutert.
+
+
+\section{PIDI} \label{vorgehenSW-PIDI}
+\begin{enumerate}
+	\item Existierendes vs. Custom Format
+	\item Darstellung von Tönen (nicht an geg. Piano mit 88 Tasten gebunden)
+	\item Speicher vs Performanz im Design des Formats (inkl. Alternativen)
+\end{enumerate}
+
+\section{Logik des Microcontrollers} \label{vorgehenSW-MC}
 kurzer Überblick, vllt. mit SADT-Diagramm
 
-\section{UI-Arduino Kommunikation}
-1. Wie wird Kommunikation mit Arduino i.d.R. gelöst\newline
-2. Grundlagen der Kommunikation (Files, Polling, etc.)\newline
-3. Prinzip der minimalen Arbeit → Custom Protocol → SPPP\newline
-4. Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
+\section{UI-Arduino Kommunikation} \label{vorgehenSW-SPPP}
+\begin{enumerate}
+	\item Wie wird Kommunikation mit Arduino i.d.R. gelöst
+	\item Grundlagen der Kommunikation (Files, Polling, etc.)
+	\item Prinzip der minimalen Arbeit → Custom Protocol → SPPP
+	\item Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
+\end{enumerate}
 
-\section{UI}
-1. Grundlagen: Immediate vs. Retained Mode UI\newline
-2. Cached Immediate Mode\newline
-3. Generelle Diskussion bzgl. API-Design vllt
+\section{UI} \label{vorgehenSW-UI}
+\begin{enumerate}
+	\item Grundlagen: Immediate vs. Retained Mode UI
+	\item Cached Immediate Mode
+	\item Generelle Diskussion bzgl. API-Design vllt
+\end{enumerate}
 
-\section{Parsing von MIDI}
-1. Überblick über Midi \newline
-2. Vergleich MIDI vs PIDI \newline
+\section{Parsing von MIDI} \label{vorgehenSW-MIDI}
+\begin{enumerate}
+	\item Überblick über Midi
+	\item Vergleich MIDI vs PIDI
+\end{enumerate}
 (Kapitel vllt uninteressant?)

@@ -129,7 +129,7 @@ Steuersignalen. \newline
 //TODO
 
 \subsection{Transistor}
-\subsection{Akkumulator}
+\subsection{Aktuator}
 \subsection{Schaltplan}
 
 \textit{Arduino}
@@ -164,7 +164,7 @@ Arduino GND <-> Ground, Output Enable (OE)
 Der OE-Pin wird genutzt, um die Ausgänge des Schieberegisters global zu aktivieren oder zu deaktivieren, ohne die Daten selbst zu beeinflussen.
 Da das Schieberegister zu keiner Zeit deaktiviert sein soll, wird dieser Pin dauerhaft mit dem GND-Pin verbunden.
 
-Arduino VCC 5V <-> VCC, \overline{SRCLR}$ (Reset)
+Arduino VCC 5V <-> VCC, $\overline{SRCLR}$ (Reset)
 
 Um das Schiebregister mit den benötigten 5V zu betreiben, wird der entsprechende Pin mit dem 5V Output des Arduino verbunden.
 Zusätzlich wird der $\overline{ }$ SRCLR Port des Schieberegisters, welcher ein Reset ermöglicht dauerhaft mit 5V verbunden.
@@ -213,7 +213,15 @@ Dieses muss einige Voraussetzungen erfüllen:
 
 \subsection{Ansteuerungskonzept}
 
-Jay?
+//Drücken der ziehen, oben oder unten...
+1. Oben
+	Klavierhand
+	Schiene
+	Aufsatz mit 88 oben drüber
+2. unten
+	ziehen
+	drücken
+
 
 
 \subsection{Verbindung Tasten und Hubmagnete}
@@ -252,3 +260,31 @@ Damit sollte das Spielen des Forellenquintetts von Schubert ein leichtes sein.
 
 
 \subsection{Weitere Ideen und Limitationen}
+
+Im laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten- Gründen nicht weiter
+behandelt wurden.
+\paragraph{Anzahl der Aktuatoren}
+Wie bereits erklärt, wurden insgesamt 88 Aktuatoren verbaut, womit jede Taste angespielt werden kann. Trotz der Anzahl an
+Hubmagneten, werden maximal 10 Tasten glechzeitig angespielt. Dies liegt an der Stromversorgung. Ein Hubmagnet benötigt
+eine Stromversorgung von etwa 0.4 Amper, für 10 Aktuatoren sind das also 4 Amper. Das Netzteil welches wir verwenden, ist auf
+6(?) Amper ausgelegt, wobei wir mit einem Netzteil getestet haben, welches 2,8 Amper unterstützt. Es gibt Netzteile die
+einen höheren Stromföuss ermöglichen, allerdings sind diese um weiten teurer als das Netzteil für welches wir uns entschieden haben.
+Es wäre auch möglich, ein zweites Netzteil parallel zu Schalten, wodurch die Kosten nicht dramatisch gestiegen wären.
+Wir haben hier allerdings keinen Mehrwert mehr gesehen. Die Logik und Ansteuerung des Klaviers bleibt die gleiche, weswegen
+wir bei einem Netzteil mit einem maximalen Stromfluss von 6 Amper (und 24V Leistung) verblieben sind.
+
+\paragraph{Pedale werden ignoriert}
+Ein Klavier hat normalerweise zwei oder drei Pedale, welchedie dynamik und den Klang des Klaviers beeinflussen.
+Diese sind schwerer anzuspielen als die Tasten und benötigen somit Leistungsfähigere Aktuatoren als wir für die
+Tasten nutzen. Es gab eine Überlegung diese Aktuatoren zu besorgen, da die Pedale klangtechnisch Mehrwert bringen.
+Außerdem hätten wir uns noch Gedanken bezüglich der Schaltug und des Signals machen können. Einerseits hätte ein weiteres
+Schieberegister genutzt werden können, wobei das Signal angepasst wird das die letzten 6 Ausgänge nie ein Signal bekommen.
+ANdererseits hätten die Pedale mit weiteren PWM Ports des Arduinos verbunden werden können und die Signale unabhängig von den
+Schieberegistern erhalten können. Im Prinzip wäre die Idee hier allerdings wieder die selbe wie beim Rest des Projektes gewesen,
+weswegen wir Kosten an den Aktuatoren und der extra Stromversorgung für die Pedale gespart haben und diese nicht ansteuern.
+
+\paragraph{Klangdämpfung der Aktuatoren}
+Die Hubmagnete machen beim Anschlagen Geräusche, welche von der Melodie des Klaviers ablenken. Es gab eine Überlegung,
+diese zu Dämpfen undem das Innere der Hubmagnete mit Isolierfolie abgedeckt wird und die Geräusche somit nicht so
+offensichtlich sind. Letztendlich war uns die Gefahr, dass die Hubmagnete durch die Isolierung überhitzen oder nicht ganz
+zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden.

@@ -19,12 +19,25 @@ Erklärung: Software-seitig kann sehr genau angegeben werden, wann welche Taste 
 Hierbei kann auch die Frequenz mit der dieselbe Taste hintereinander angespielt wird bis auf mehrere hundert Hertz erhöht werden.
 Da der Hubmagnet, bevor er einen erneuten Tastendruck initiieren kann, wieder in seinen Ausgangszustand zurückkehren muss, ist dieser der limitierende Faktor.
 Im Endprodukt soll verhindert werden, dass es halt blöd klingt....
-Ablauf: Es
+
+Ablauf: Schrittweise wird software-seitig die Frequenz des Anspiels einer Taste erhöht.
+Es werden mehrere Tasten für diesen Test verwendet, wobei der Fokus, auf Grund des höchsten Mechanik-Gewichts, auf der A0 Taste liegt.
+Während des Spielens wird eine Slow-Motion-Aufnahme des Hammers und der Klaviersaite angefertigt ud im Anschluss analysiert.
+Wird die Saite angeschlagen, kann die Frequenz im nächsten Schritt erhöht werden.
+Sollte sie nicht angeschlagen werden, ist der Limitation gefunden und kann in den Code aufgenommen werden.
+
 Ergebnis:
 
-\paragraph{T1 Min. Lautstärke:}
-Erklärung: iwas mit Hubmagnete anfang überwinden
-Ablauf:
+\paragraph{T2 Min. Lautstärke:}
+Erklärung: Um den am leistesten spielbaren Ton zu ermitteln, muss die minimale Spannung ermittelt werden, mit der eine Taste betätigt werden kann.
+Wie in \nameref{subsec:aktuator} erklärt, benötigt ein Hubmagnet eine entsprechende Ansprechspannung, um den Anker zu bewegen.
+Da uns kein Datenblatt vorliegt und das Tastengewicht mit einbezogen werden muss, wird diese Mindestspannung beim Klavier experimentell ermittelt.
+
+Ablauf: Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt (siehe: \nameref{vorgehenSW-PIDI}) schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
+Dies wird an allen (,mit Fokus auf den tieferen) Tasten durchgeführt, da sich die einzelnen Tasten in ihrem Ansprechverhalten teils deutlich unterscheiden.
+Anschließend wird der größte der einzelnen minimalen Werte in den Code mit aufgenommen.
+
 Ergebnis:
+
 
 Max geschwindigkeit, Lautstärke, Akkurarität

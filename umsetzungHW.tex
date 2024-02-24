@@ -9,4 +9,22 @@ Breadboard mit einem Motor → Hochskalieren wäre riskant
 \section{Ergebnisse des Prototypen}
 \section{Klavieranbau}
 \section{Tests}
+
+Um eine Überbelastung der Komponenten und eine korrekte Funktionalität zu gewährleisten, müssen Software-seitig Begrenzungen eingeführt werden.
+Um zum Beispiel die maximale Geschwindigkeit bestimmen zu könnne mit der ein Stück gespielt werden kann, muss die maximale Frequenz eines physischen Tastendrucks berüclsichtigt werden.
+Es wurden folgende Tests durchgeführt:
+
+\paragraph{T1 Max. Frequenz eines Tastendrucks:}
+Erklärung: Software-seitig kann sehr genau angegeben werden, wann welche Taste gespielt wird.(siehe: \nameref{vorgehenSW-PIDI})
+Hierbei kann auch die Frequenz mit der dieselbe Taste hintereinander angespielt wird bis auf mehrere hundert Hertz erhöht werden.
+Da der Hubmagnet, bevor er einen erneuten Tastendruck initiieren kann, wieder in seinen Ausgangszustand zurückkehren muss, ist dieser der limitierende Faktor.
+Im Endprodukt soll verhindert werden, dass es halt blöd klingt....
+Ablauf: Es
+Ergebnis:
+
+\paragraph{T1 Min. Lautstärke:}
+Erklärung: iwas mit Hubmagnete anfang überwinden
+Ablauf:
+Ergebnis:
+
 Max geschwindigkeit, Lautstärke, Akkurarität

@@ -11,28 +11,28 @@ Nutzer:innen werden in der Abbildung auch dargestellt, um eindeutig zu machen, d
 Der \ac{MC} erhält Daten zum abzuspielenden Musikstück von der \ac{UI} und schickt darauf basierend in regelmäßigen Intervallen \ac{PWM}-Signale an die Hardware.
 
 \begin{figure}[htbp]
-	\centering
-	\begin{tikzpicture}[node distance=2cm, line width=0.25mm]
-		% Code for drawing a stick figure as taken from https://tex.stackexchange.com/a/441952
-		% \begin{tikzpicture}
-		% 	\thicklines
-		% 	\put(5,18){\circle{5}}
-		% 	\put(5,7){\line(0,1){8}}
-		% 	\put(5,7){\line(1,-2){5}}
-		% 	\put(5,7){\line(-1,-2){5}}
-		% 	\put(1,12){\line(1,0){8}}
-		% \end{tikzpicture}
-		\node (user) [rect] {User}; % @TODO: draw Useer as stick figure
-		\node (ui) [rect, below of=user] {UI};
-		\node (mc) [rect, right of=ui, xshift=1.5cm] {\ac{MC}};
-		\node (hw) [rect, right of=mc, xshift=1.5cm] {Hardware};
+    \centering
+    \begin{tikzpicture}[node distance=2cm, line width=0.25mm]
+        % Code for drawing a stick figure as taken from https://tex.stackexchange.com/a/441952
+        % \begin{tikzpicture}
+        % 	\thicklines
+        % 	\put(5,18){\circle{5}}
+        % 	\put(5,7){\line(0,1){8}}
+        % 	\put(5,7){\line(1,-2){5}}
+        % 	\put(5,7){\line(-1,-2){5}}
+        % 	\put(1,12){\line(1,0){8}}
+        % \end{tikzpicture}
+        \node (user) [rect] {User}; % @TODO: draw Useer as stick figure
+        \node (ui) [rect, below of=user] {UI};
+        \node (mc) [rect, right of=ui, xshift=1.5cm] {\ac{MC}};
+        \node (hw) [rect, right of=mc, xshift=1.5cm] {Hardware};
 
-		\draw [arrow] (user) -- (ui);
-		\draw [arrow] (ui) -- (mc);
-		\draw [arrow] (mc) -- (hw);
-	\end{tikzpicture}
-	\caption{Komponenten-Diagramm mit Datenfluss}
-	\label{fig:high-level-komponenten}
+        \draw [arrow] (user) -- (ui);
+        \draw [arrow] (ui) -- (mc);
+        \draw [arrow] (mc) -- (hw);
+    \end{tikzpicture}
+    \caption{Komponenten-Diagramm mit Datenfluss}
+    \label{fig:high-level-komponenten}
 \end{figure}
 
 Da die Hardware-Komponente in vorherigen Kapiteln bereits behandelt wurde, soll hier nur die Architektur der \ac{UI} (in Abschnitt \ref{vorgehenSW-UI}) und des \ac{MC} (in Abschnitt \ref{vorgehenSW-MC}) erarbeitet werden.
@@ -56,9 +56,9 @@ Konzeptionelle Überlegungen dazu werden in \ref{vorgehenSW-MIDI} erläutert.
 
 \section{Datenformat für Musikstücke} \label{vorgehenSW-PIDI}
 \begin{enumerate}
-	\item Existierendes vs. Custom Format
-	\item Darstellung von Tönen (nicht an geg. Piano mit 88 Tasten gebunden)
-	\item Speicher vs Performanz im Design des Formats (inkl. Alternativen)
+    \item Existierendes vs. Custom Format
+    \item Darstellung von Tönen (nicht an geg. Piano mit 88 Tasten gebunden)
+    \item Speicher vs Performanz im Design des Formats (inkl. Alternativen)
 \end{enumerate}
 
 Es gibt bereits viele Datenformate, die zum Speichern von Musikstücken verwendet werden können. Dabei lassen sich solche Formate generell in zwei fundamental verschiedenen Designs unterscheiden.
@@ -99,33 +99,102 @@ Das verringert die Wichtigkeit des Speicherplatzes jedoch nur zu Teilen, da ein 
 MIDI schneidet hier nun nicht allzu gut ab.
 Auch wenn MIDI die relevanten Informationen direkt abspeichert, speichert es ebenfalls noch eine relativ große Menge weiterer Daten ab.
 Das liegt daran, das MIDI ein generelles Format ist, das eine Vielzahl von digitalen Instrumenten und Synthesizers untersützen möchte.
-Deswegen gibt es in einer MIDI-Datei auch mehrere sogenannte Channels, damit unterschiedliche Instrumente gleichzeitig angespielt werden können.
-% @TODO(Val): Nicht-linearität von MIDI-Dateien erwähnen (i.e. zeitliche Sortierung ist nur innerhalb von Chunks festgelegt)
+Deswegen enthalten MIDI-Dateien oftmals eine Vielzahl von Metadaten, die hier irrelevant sind.
+Weiterhin gibt es in einer MIDI-Datei auch mehrere sogenannte Channels, damit unterschiedliche Instrumente gleichzeitig angespielt werden können.
+% @TODO(Val):  Vllt. Nicht-linearität von MIDI-Dateien erwähnen (i.e. zeitliche Sortierung ist nur innerhalb von Chunks festgelegt)
 
-% @TODO(Val): Schlussfolgerung -> Eigenes Format
-% @TODO(Val): Design-Decisions erläutern und abwägen (PIDI und Alternativen erklären)
+% @Note(Val): Muss das mit einer Quelle belegt werden?
+MIDI-Alternativen haben die selben Probleme, da sie ebenfalls einen allgemeinen Anwendungsfall abbilden.
+Da der Anwendungsfall dieser Arbeit eingeschränkter ist, lassen sich weitere Optimierungen am Datenformat durchführen.
+Entsprechend muss dann aber auch ein eigenes Datenformat für diese Arbeit entwickelt werden.
+Dabei ist es sinnvolll klar festzuhalten, welche Rahmenbedingungen vom Format angenommen werden können.
+
+Das Datenformat, das im Folgenden \enquote{\ac{PIDI}} genannt wird, soll zu spielende Tonfolgen für ein einzelnes Piano speichern.
+Dabei darf \ac{PIDI} keine Annahmen über die Anzahl an Tasten auf dem Piano oder deren Anordnung machen.
+Das ist speziell deshalb sinnvoll, weil nicht alle Pianos die selbe Anzahl Tasten haben und Hardware-seitig dann nicht unbedingt alle Tasten anspielbar sein müssen.
+Zusätzlich wird das Architektur-Prinzip der \enquote{Seperation of Concerns} dabei bewahrt, da die \ac{UI} dann nichts über die genaue Anzahl vorhandener Tasten beim Piano wissen muss.
+\ac{PIDI} darf weiterhin annehmen, das jede Taste immer entweder nur gedrückt oder nicht gedrückt sein kann.
+Die Stärke, mit der eine Taste gespielt wird, soll dabei aber in einem Bereich von mindestens 8 unterschiedlichen Werten liegen.
+Zuletzt darf die Geschwindigkeit, mit der Daten an die Aktuatoren weitergegeben werden, nicht vorausgesetzt werden.
+
+Eine Option wäre die Speicherung der Zustände jeder Taste des Pianos.
+Da nicht angenommen werden soll, wie viele Tasten das Piano hat, müsste dabei eine arbiträre Anzahl an Tasten für das virtuelle Piano gewählt werden.
+Für jeden Zeitpunkt des Musikstücks müsste dann für jede Taste des virtuellen Pianos ein Anschlagswert gespeichert werden.
+Die Anzahl benötigten Speichers wächst dabei linear mit der Länge des Musikstücks und wäre schon bei Stücken mehrer Sekunden sehr hoch.
+Dafür ist die Transformation dieses Formats in für die Aktuatoren benötigte Format trivial und sehr effizient.
+Zur Speicherplatzoptimierung könnte dieses Format noch mithilfe von Kompressionstechniken noch verdichtet werden.
+Je besser die Kompression dabei sein soll, desto komplexer und langsamer muss auch die Dekompression werden.
+
+Eine alternative Idee ist nur das Speichern von Änderungen.
+Dabei müsste nur jeder Zeitpunkt gespeichert werden, in dem sich die Anschlagsstärke mindestens eines Tons verändert.
+Der verbrauchte Speicherplatz wächst damit nur noch linear mit der Anzahl sich verändernder Tasten-Anschläge.
+Im Regelfall sollte damit also eine niedrigere Speicher-Auslastung möglich sein.
+Zusätzlich ist die Performanz mit dieser Speicherart ähnlich gut, wenn nicht sogar besser.
+Für jede Anschlagsveränderung muss nur ein Wert in der Ausgabe an die Aktuatoren angepasst werden.
+Sind die Daten noch zeitlich sortiert, kann ein laufender Index verwendet zu werden, um die nächste Anschlagsänderung zu erhalten.
+Es wurde sich entsprechend entschieden, diese Speicherung für das \ac{PIDI}-Format zu verwenden.
+
+Es ist hierbei noch zu bemerken, dass für das Spielen jedes Tons mindestens zwei Anschlagsänderungen vorliegen, da der Ton sowohl anfangen als auch aufhören muss zu spielen.
+Die Anschlagsstärke muss dabei auch nur beim Anfangen oder Ändern der Stärke gespeichert werden, da beim Aufhören des Spielens immer eine Anschlagsstärke von Null daliegt.
+Aufgrund dieser Beochbachtungen, kann das \ac{PIDI}-Format bzgl. Speicherplatz weiter optimiert werden.
+So könnte zum Beispiel immer eine Länge des Anschlagens gespeichert werden, statt eine weitere Änderung zum Stoppen des Anschlags zu speichern.
+Allerdings bedeutet das auch, dass ein einfacher, fortlaufender Index nicht mehr ausreichen würde, um zu wissen, ob sich die Daten für die Aktuatoren ändern müssen.
+Das bedeutet also eine ineffizientere Verwendung der Datenstruktur.
+Hier wurde sich entschieden, dass eine Halbierung des Speicherplatzes diesen Performanz-Verlust nicht wert ist.
+
+Listing \ref{code:PidiCmd struct} zeigt die endgültige Datenstruktur, die für ein individuellen \ac{PIDI}-Kommand gewählt wurde.
+Ein \ac{PIDI}-Kommand stellt dabei die Änderung einer Anschlagsstärke eines Tons dar.
+Die Töne selbst wurden als ein Paar aus Oktave und Taste in der Oktave dargestellt, da angenommen werden durfte, wie viele Tasten es pro Oktave auf einem Klavier gibt.
+Die nullte Oktave bezeichnet die mittlere Oktave des Pianos.
+Die \enquote{velocity} gibt in dieser Struktur die Anschlagsstärke an.
+Zuletzt gibt die \enquote{time} noch die Zeit in Millisekunden nach Start des Musikstücks an, zu dem diese Änderung durchgeführt werden soll.
+Eine Liste von \ac{PIDI}-Kommandos muss aufsteigend nach der Zeit sortiert sein.
+
+\begin{UnbrokenCodePage}[style=CStyle, caption={Definition eines \ac{PIDI}-Kommands}, label={code:PidiCmd struct}]
+typedef enum {
+    PIANO_KEY_C,
+    PIANO_KEY_CS,
+    PIANO_KEY_D,
+    PIANO_KEY_DS,
+    PIANO_KEY_E,
+    PIANO_KEY_F,
+    PIANO_KEY_FS,
+    PIANO_KEY_G,
+    PIANO_KEY_GS,
+    PIANO_KEY_A,
+    PIANO_KEY_AS,
+    PIANO_KEY_B,
+} PianoKey;
+
+typedef struct {
+    u64  time;
+    u8   velocity;
+    i8   octave;
+    PianoKey key;
+} PidiCmd;
+\end{UnbrokenCodePage}
 
 \section{Logik des Microcontrollers} \label{vorgehenSW-MC}
 kurzer Überblick, vllt. mit SADT-Diagramm
 
 \section{UI-Arduino Kommunikation} \label{vorgehenSW-SPPP}
 \begin{enumerate}
-	\item Wie wird Kommunikation mit Arduino i.d.R. gelöst
-	\item Grundlagen der Kommunikation (Files, Polling, etc.)
-	\item Prinzip der minimalen Arbeit → Custom Protocol → SPPP
-	\item Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
+    \item Wie wird Kommunikation mit Arduino i.d.R. gelöst
+    \item Grundlagen der Kommunikation (Files, Polling, etc.)
+    \item Prinzip der minimalen Arbeit → Custom Protocol → SPPP
+    \item Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
 \end{enumerate}
 
 \section{UI} \label{vorgehenSW-UI}
 \begin{enumerate}
-	\item Grundlagen: Immediate vs. Retained Mode UI
-	\item Cached Immediate Mode
-	\item Generelle Diskussion bzgl. API-Design vllt
+    \item Grundlagen: Immediate vs. Retained Mode UI
+    \item Cached Immediate Mode
+    \item Generelle Diskussion bzgl. API-Design vllt
 \end{enumerate}
 
 \section{Parsing von MIDI} \label{vorgehenSW-MIDI}
 \begin{enumerate}
-	\item Überblick über Midi
-	\item Vergleich MIDI vs PIDI
+    \item Überblick über Midi
+    \item Vergleich MIDI vs PIDI
 \end{enumerate}
 (Kapitel vllt uninteressant?)

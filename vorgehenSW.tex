@@ -177,7 +177,14 @@ typedef struct {
 \section{Logik des Microcontrollers} \label{vorgehenSW-MC}
 kurzer Überblick, vllt. mit SADT-Diagramm
 
-Der \ac{MC} hat grundlegend zwei Aufgaben zu tun. Einerseits muss der \ac{MC} in einem regelmäßigen Zeitintervall Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen. Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren können.
+Der \ac{MC} hat grundlegend zwei Aufgaben zu tun.
+Einerseits muss der \ac{MC} in einem regelmäßigen Zeitintervall Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
+Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren können.
+
+Der \ac{MC} hat grundsätzlich zwei Funktionen.
+Eine Funktion, die initial beim Start des \ac{MC} ausgeführt wird und eine weitere Funktion, die daraufhin in einer Endlosschleife ausgeführt wird.
+Demnach müssen die beiden Aufgaben im Körper der Schleife umgesetzt werden.
+Da der \ac{MC} nur einen einzelnen CPU-Kern hat, ist es wichtig zu beachten, dass keine der
 
 % @TODO(Val): Rest schreiben...
 

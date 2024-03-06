@@ -1,4 +1,6 @@
 % !TEX root =  master.tex
+\graphicspath{ {./img/} }
+
 \chapter{Konzeption - Hardware}\label{Hardware - Konzeption}
 
 \nocite{*}
@@ -224,11 +226,27 @@ Dieses muss einige Voraussetzungen erfüllen:
 	drücken
 
 \subsection{Anbringung der Aktuatoren}
-Beim Ansteuerungskonzept der Tasten muss auch beachtet werden, wo die Magnete befästigt werden.
-Wir haben ein Brett, auf welchem sie befästigt werden. Folgende Bedenken:
-1. Wie viel Platzt zwischen Solenoids? 2. Wie verbinden ohne dass Angelschnuren und andere Solenoids sich in den weg kommen
+Beim Ansteuerungskonzept der Tasten muss auch beachtet werden, wo die Magnete befestigt werden.
+Wir haben ein Brett, auf welchem sie befestigt werden. Folgende Bedenken:
+1. Wie viel Platzt zwischen Solenoids?-weil Hitze
+bsp. weiß unten und schwarz oben, weil die weißen weiter vorne
+	-> nicht weil funktionalität vor optik (weil zu eng)
+ -> Platz maximieren
+
+2. Wie verbinden ohne dass Angelschnuren und andere Solenoids sich in den weg kommen
 (3. spezifischer . in 2 oder 3 Reihen)
+Voteil: Hitze
+Nachteil: Umlenkung, Verkabelung
+
+4. Umlenkung, damit der ganze Hub verwendet werden kann
+
+\includegraphics [width=5cm, height=4cm,angle=-90] {img/skizze_Umlenkung}
+
+*Bild wegen Umlenkung
+
 Erklärung geben: Haben Brett mit 67x25cm für 44 Motoren
+*Bild von Brett-Sikzze
+
 
 
 \subsection{Verbindung Tasten und Hubmagnete}
@@ -296,5 +314,24 @@ diese zu Dämpfen undem das Innere der Hubmagnete mit Isolierfolie abgedeckt wir
 offensichtlich sind. Letztendlich war uns die Gefahr, dass die Hubmagnete durch die Isolierung überhitzen oder nicht ganz
 zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden.
 
-Notiz von Oli: siehe diy piano Anschlag dämpfen indem man mit gummi die Taste limitiert
+Notiz von Oli: siehe diy piano Anschlag dempfen, indem man mit gummi die Taste limitiert
 Notiz von Oli: Motorlager verwenden zwischen Platte und Klavier
+Notiz von Oli:
+Aktuatoren Geräuschreduzierung Tests:
+
+Weg normal: 10mm
+
+1. Schaumstoff:
+
+*siehe bild
+reduzierung des Weges, abfangen bevor es klopft
+hässlich
+sehr leise
+Weg: 9mm (-1)
+
+2. Seil (2mm Durchmesser) um den Anker
+
+kann nicht rutschen, da kante
+Nachteil: reibung
+sehr leise
+Weg: 8mm (-2)

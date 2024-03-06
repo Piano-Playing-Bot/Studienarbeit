@@ -106,6 +106,40 @@
 	captionpos=b,
 	basicstyle=\ttfamily\small}
 
+\definecolor{cGreen}{rgb}{0,0.6,0}
+\definecolor{cGray}{rgb}{0.5,0.5,0.5}
+\definecolor{cPurple}{rgb}{0.58,0,0.82}
+\definecolor{cBackgroundColour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{cBackgroundColour},
+    commentstyle=\color{cGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{cGray},
+    stringstyle=\color{cPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left, % @Note(Val): Ist es schöner mit Line-Numbers links vom Code oder sollten wir die ausstellen mit `numbers=none`?
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    language=C
+}
+
+% Code-Listing, that doesn't spill over page-breaks (see: https://tex.stackexchange.com/a/22889)
+\lstnewenvironment{UnbrokenCodePage}[1][]%
+{
+   \noindent
+   \minipage[htbp]{\linewidth}
+   \vspace{0.5\baselineskip}
+   \lstset{#1}}
+{\endminipage}
+
 %	ALGORITHMS
 % @stud: ggf. Namen/Text anpassen (englisch)
 \renewcommand{\listalgorithmname}{Algorithmenverzeichnis}

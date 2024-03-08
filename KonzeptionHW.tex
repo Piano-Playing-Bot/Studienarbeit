@@ -6,51 +6,61 @@
 \nocite{*}
 
 Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
-Die Grundfragen, denen wir bei der Konstruktion begegneten, betrafen die Auswahl und Implementierung der
+Die Grundfragen, welche bei der Konstruktion auftraten, betrafen die Auswahl und Implementierung der
 Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des Arduinos.
-Im Hinblick auf die Aktuatoren fiel unsere Wahl auf Hubmagneten, die eine präzise Steuerung der Tasten
-ermöglichen. Durch ihre Verwendung können die Tasten des Klaviers mit der erforderlichen Geschwindigkeit und
-Genauigkeit angespielt werden. \newline
-Die Aktuatoren wurden mit den Klaviertasten mittels Seilen verbunden, um die mechanische Integrität des Klaviers
+Im Hinblick auf die Aktuatoren muss eine präzise Steuerung der Tasten
+ermöglichet werden, ohne dass Genauigkeit und Geschwindigkeit des Anspielens vernachlässigt werden.
+\newline
+Die Aktuatoren wurden mit den Klaviertasten verbunden, um die mechanische Integrität des Klaviers
 zu erhalten und gleichzeitig eine präzise Steuerung zu gewährleisten.\newline
-Die Signalübertragung erfolgte über einen Arduino-Mikrocontroller. Da der Arduino nicht über ausreichend
-viele Ausgänge verfügt, um alle Tasten anzusteuern, wurde das Signal mithilfe von Schieberegistern erweitert.
-Diese Erweiterung ermöglichte es, alle 88 Tasten des Klaviers anzusteuern, ohne zusätzliche Hardware einsetzen
-zu müssen.
+Die Signalübertragung erfolgt über einen Arduino-Mikrocontroller. Da der Arduino nicht über ausreichend
+viele Ausgänge verfügt, um alle Tasten anzusteuern, wird das Signal mithilfe von Schieberegistern erweitert.
+Diese Erweiterung ermöglicht es, alle 88 Tasten des Klaviers anzusteuern.
 
 \section{Elektronik}\label{Vorgehen - Hardware}
 
 
-\subsection{Arduino R3}\label{Ansteuerung}
-Zur Signalsteuerung wird ein Arduino R3 genutzt.
-Es handelt sich dabei um eine Open-Source-Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
+\subsection{Mikrocontroller}\label{Ansteuerung}
+Um die Signale des Programmes an die Aktuatoren weitergeben zu können, wird ein Mikrocontroller benötigt.
+Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei für diese Arbeit ein Arduino und ein
+Rasperry Pi betrachtet wurden (Wobei es sich bei einem Rasperry Pi genau genommen um einen Einplatinencontroller
+handelt). \newline
+//TODO: kleines Intro Arduino:
+Es handelt sich dabei um eine Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
 einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten
 verbunden werden kann. Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit
 externen Geräten verwendet werden können. \newline
-Der Arduino Uno R3 eignet sich hervorragend zur Ansteuerung der Aktuatoren eines selbstspielenden Klaviers aus
-mehreren Gründen. Erstens bietet der Arduino eine benutzerfreundliche Plattform für die Entwicklung und Implementierung
+Der Arduino bietet eine benutzerfreundliche Plattform für die Entwicklung und Implementierung
 von Steuerungslogik. Die einfache Programmierung mittels der Arduino-IDE ermöglicht es, komplexe Steuerungsalgorithmen
 für die Aktuatoren zu erstellen. \newline
-Zweitens bietet er PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts genutzt wurden.
-//TODO: Speicher \newline
-//TODO: Vergleich mit anderen Microcontrollern
+//TODO: kleines Intro Rasperry: \newline
+//TODO: Entscheidung: Vor- und Nachteile Rasperry und Arduino, insbesondere das entscheidung darauf basiert, dass Arduino vor allem
+für wiederholt ausgeführte Aufgaben besonders gut geeignet ist und ein Rasperry zwar durch Ports etc. mehr Möglichkeiten
+bietet, wir diese aber für die Studienarbeitnicht wirklich brauchen. \newline
+Für das Projekt wird spezifisch ein Arduino R3 verwendet.
+Er bietet er PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts genutzt wurden.
+//TODO: Speicher
 
 \subsection{Pulsweitenmodulation (PWM)}\label{PWM}
-PWM ist einfach ausgedrückt eine Technik, bei der die Zeitdauer eines digitalen Signals variiert wird, um einen
-durchschnittlichen Wert zu erzeugen. Dies ermöglicht es, die Aktuatoren mit verschiedenen Stärken anzusteuern, indem die
-Pulsweite des Signals
-entsprechend angepasst wird. Dadurch können die Klaviertasten mit unterschiedlichen Intensitäten angespielt werden,
-was zu einer realistischeren und dynamischeren Wiedergabe führt.\newline
-
+Oftmals ist bei der Ansteuerung nicht die gesamte Versorgungsspannung erwünscht bezw. gebraucht. In diesen Fällen muss
+die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
+Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt. Das Signal kann
+dafür die Hälfte der Zeit ausgeschaltet werden, womit zwischen 0V und den vollen 5V durchschnittlich insgesamt 2.5V
+anliegen. Wenn die Frequenz zwischen an- und ausschalten des Signals erhöht wird, desto weniger wird diese \"künstlich"
+simulierte Halbierung wahrgenommen. \newline
+PWM bedient sich im Grunde genau dieser Technik.
+Einfach ausgedrückt, wird die Zeitdauer eines digitalen Signals variiert wird, um einen
+durchschnittlichen Wert zu erzeugen. Bei den PWM- Ausgängen wird die Pulsweite des Signals angepasst, um die gewünschte Spannung
+zu erreichen. //TODO Add piture pulsweite \newline
+Spezifischer ausgedrück passiert folgendes:
 Eine Digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das zwischen Ein und Aus umgeschaltet wird
-- zu erzeugen. Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung (5V) und Aus (0 Volt)
+- zu erzeugen. Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung und Aus
 simulieren.
 Dabei wird der Anteil der Zeit geändert, den das Signal eingeschaltet ist im Vergleich zur Zeit, die das Signal
 ausgeschaltet ist. Die Dauer der Einschaltzeit wird als Pulsweite bezeichnet. Um unterschiedliche analoge Werte zu
-erhalten, wird die Pulsweite geändert bzw. moduliert. Wenn dieses Ein-Aus-Muster schnell genug mit einer LED
+erhalten, wird die Pulsweite geändert bzw. moduliert. Wenn dieses Ein-Aus-Muster zum Beispiel schnell genug mit einer LED
 wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit
 der LED steuert. \newline
-
 Auf den Arduino bezogen sieht die Umsetzung eines PWM Signals wie folgt aus:
 Ein Taktsignal gelangt in die entsprechende Clock.
 Die Clock stellt den entsprechenden PWM-Modus ein. Dabei werden zwei wichtige Werte gesetzt:
@@ -58,16 +68,14 @@ Der erste bestimmt, wann das Signal von HIGH auf LOW
 umschaltet, während der zweite bestimmt, wann es zurückkommt. Das Verhältnis zwischen HIGH und LOW wird als
 Tastverhältnis bezeichnet und bestimmt die Helligkeit unserer LED bzw. die Stärke, mit welcher der Hubmagnet anschlägt.
 Je länger die Ausgabe im HIGH-Zustand bleibt, desto schneller erfolgt der Tastenanschlag. \newline
-
 Neben dem Tastverhältnis, also das Verhältnis der Einschaltzeit zur
 Periodendauer, welches oft in Prozent ausgedrückt wird, ist auch die Resolution (de: Auflösung) ein variierbarer Parameter.
 Die Resolution bezieht sich auf die Anzahl der möglichen diskreten Werte, die das Signal annehmen kann.
 
 
-
 \subsection{Vermehrung der Ausgänge}
-Es werden 88 Tasten angesteuert. Da ein Arduino keine 88 PWM-Ports besitzt, müssen die Signale über
-eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten:
+Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Ein Arduino hat keine 88 PWM-Ports, daher
+müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten:
 
 \begin{enumerate}
 	\item Schieberegister
@@ -77,10 +85,9 @@ eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt 
 
 \paragraph{Schieberegister}
 Ein Schieberegister ist ein integrierter Schaltkreis, der hier verwendet wird, um die Anzahl der verfügbaren Ausgänge des
-Mikrocontrollers zu erweitern. Das gängigste Schieberegister ist das 8-Bit-Schieberegister. \newline
-
-Um 88 Ausgänge mit Hilfe von Schieberegistern von nur 3 PWM-Pins des Arduinos anzusteuern, werden insgesamt 11
-Schieberegister benötigt.\newline
+Mikrocontrollers zu erweitern. \newline
+Um 88 Ausgänge mit Hilfe von Schieberegistern von nur 3 PWM-Pins des Arduinos anzusteuern, werden insgesamt 11 8-Bit-Schieberegister
+(Also Schieberegister mit 8 Ausgängen) benötigt.\newline
 
 Zuerst werden die Datenleitungen (SERIAL IN) aller Schieberegister in Reihe geschaltet. Dies bedeutet, dass das
 Ausgangssignal des ersten Schieberegisters mit dem Eingang (SERIAL IN) des nächsten verbunden wird, und so weiter, bis
@@ -97,7 +104,7 @@ direkt verfügbar hat.
 
 
 \paragraph{Motor-Matrix}
-Die Motor-Matrix ist einer LED-Matrix nachgeahmt.
+Die Motor-Matrix ist einer LED-Matrix nachgeahmt. //TODO: Picture Matrix and use muster to explain it for magnets
 In einer Matrix, werden zwei Reihen an Ports angeschlossen, nach folgendem Muster:
 $$
 \begin{pmatrix}
@@ -131,8 +138,9 @@ Steuersignalen. \newline
 //TODO
 
 \subsection{Transistor}
+Durchlaufspannung, Mindestspannung
 \subsection{Aktuator}\label{subsec:aktuator}
-Test
+
 \subsection{Schaltplan}
 
 \textit{Arduino}

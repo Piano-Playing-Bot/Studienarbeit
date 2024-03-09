@@ -25,21 +25,34 @@ Um die Signale des Programmes an die Aktuatoren weitergeben zu können, wird ein
 Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei für diese Arbeit ein Arduino und ein
 Rasperry Pi betrachtet wurden (Wobei es sich bei einem Rasperry Pi genau genommen um einen Einplatinencontroller
 handelt). \newline
-//TODO: kleines Intro Arduino:
-Es handelt sich dabei um eine Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
+%Arduino Intro
+Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
 einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten
 verbunden werden kann. Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit
 externen Geräten verwendet werden können. \newline
-Der Arduino bietet eine benutzerfreundliche Plattform für die Entwicklung und Implementierung
-von Steuerungslogik. Die einfache Programmierung mittels der Arduino-IDE ermöglicht es, komplexe Steuerungsalgorithmen
-für die Aktuatoren zu erstellen. \newline
-//TODO: kleines Intro Rasperry: \newline
-//TODO: Entscheidung: Vor- und Nachteile Rasperry und Arduino, insbesondere das entscheidung darauf basiert, dass Arduino vor allem
-für wiederholt ausgeführte Aufgaben besonders gut geeignet ist und ein Rasperry zwar durch Ports etc. mehr Möglichkeiten
-bietet, wir diese aber für die Studienarbeitnicht wirklich brauchen. \newline
-Für das Projekt wird spezifisch ein Arduino R3 verwendet.
-Er bietet er PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts genutzt wurden.
-//TODO: Speicher
+%Pi Intro
+Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert. Er ist dafür konzipiert, eine breite
+Palette von Anwendungen zu unterstützen, von Prototypenbau bis IoT.
+Im Gegensatz zum Arduino verfügt er über einen Prozessor und ist besonders für komplexe und Rechenlastige
+Projekte geeignet.\newline
+%Vergleich
+Die Entscheidung für den verwendeten Mikrocontroller traf auf den Arduino. Der Rasperry Pi stand vor allem aufgrund
+seiner höhere Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine Komplexe Ansteuerungslogik
+möglich ist und ein Großteil des Programmes auf dem Rasperry Pi ausgeführt werden kann. Allerdings ist er aufgrund
+seines Betriebssystems und einer erhöhten Latenz nicht für Echtzeit-Anwendungen bzw. Geschwindigkeitskritische
+Anwendungen ausgelegt. Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
+Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die
+Hardware direkt anzusprechen und ist somit besser für Projekte geeignet, welche eine präzise Ansteuerung von
+Aktuatoren benötigt. Zudem ist die Komplexität der Ansteuerung nicht so hoch, dass der Microcontroller über eine
+hohe Rechenleistung verfügen muss. \newline
+Für das Projekt wird spezifisch ein Arduino R3 verwendet. Bei der Auswahl des spezifischen Arduinos wurden der Arduino
+Uno, Nano und R3(auch: mega 2563) betrachtet. Im Prinzip wäre jedes der Modelle für die Anwendung möglich, allerdings
+verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
+gegenüber der 32KB vom Arduino Uno und den 16KB des Arduino Nanos). Der Arduino Uno verfügt zwar über mehr Ports,
+allerdings bringt dies keinen Mehrwert, da die Anzahl der benötigten Ausgänge auch bei einem Arduino Uno nicht erreicht werden
+(siehe Kapitel \ref{output}).
+Der Arduino R3 bietet - wie die anderen beiden Modelle auch - PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts
+genutzt wurden.
 
 \subsection{Pulsweitenmodulation (PWM)}\label{PWM}
 Oftmals ist bei der Ansteuerung nicht die gesamte Versorgungsspannung erwünscht bezw. gebraucht. In diesen Fällen muss
@@ -73,7 +86,7 @@ Periodendauer, welches oft in Prozent ausgedrückt wird, ist auch die Resolution
 Die Resolution bezieht sich auf die Anzahl der möglichen diskreten Werte, die das Signal annehmen kann.
 
 
-\subsection{Vermehrung der Ausgänge}
+\subsection{Vermehrung der Ausgänge}\label{output}
 Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Ein Arduino hat keine 88 PWM-Ports, daher
 müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten:
 

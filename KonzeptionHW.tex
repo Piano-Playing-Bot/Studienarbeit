@@ -55,7 +55,7 @@ Der Arduino R3 bietet - wie die anderen beiden Modelle auch - PWM (Pulsweitenmod
 genutzt wurden.
 
 \subsection{Pulsweitenmodulation (PWM)}\label{PWM}
-Oftmals ist bei der Ansteuerung nicht die gesamte Versorgungsspannung erwünscht bezw. gebraucht. In diesen Fällen muss
+Oftmals ist bei der Ansteuerung nicht die gesamte Versorgungsspannung erwünscht bzw. gebraucht. In diesen Fällen muss
 die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
 Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt. Das Signal kann
 dafür die Hälfte der Zeit ausgeschaltet werden, womit zwischen 0V und den vollen 5V durchschnittlich insgesamt 2.5V
@@ -63,15 +63,15 @@ anliegen. Wenn die Frequenz zwischen an- und ausschalten des Signals erhöht wir
 simulierte Halbierung wahrgenommen. \newline
 PWM bedient sich im Grunde genau dieser Technik.
 Einfach ausgedrückt, wird die Zeitdauer eines digitalen Signals variiert wird, um einen
-durchschnittlichen Wert zu erzeugen. Bei den PWM- Ausgängen wird die Pulsweite des Signals angepasst, um die gewünschte Spannung
-zu erreichen. \newline
+durchschnittlichen Wert zu erzeugen. Bei den PWM- Ausgängen wird die Pulsweite - die Dauer der Einschaltzeit -
+des Signals angepasst, um die gewünschte Spannung zu erreichen. \newline
 \includegraphics [width=13cm, height=8cm] {img/pulsweite} \newline \newline
 Spezifischer ausgedrück passiert folgendes:
 Eine Digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das zwischen Ein und Aus umgeschaltet wird
 - zu erzeugen. Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung und Aus
 simulieren.
 Dabei wird der Anteil der Zeit geändert, den das Signal eingeschaltet ist im Vergleich zur Zeit, die das Signal
-ausgeschaltet ist. Die Dauer der Einschaltzeit wird als Pulsweite bezeichnet. Um unterschiedliche analoge Werte zu
+ausgeschaltet ist. Um unterschiedliche analoge Werte zu
 erhalten, wird die Pulsweite geändert bzw. moduliert. Wenn dieses Ein-Aus-Muster zum Beispiel schnell genug mit einer LED
 wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit
 der LED steuert. \newline
@@ -89,33 +89,30 @@ Die Resolution bezieht sich auf die Anzahl der möglichen diskreten Werte, die d
 
 \subsection{Vermehrung der Ausgänge}\label{output}
 Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Ein Arduino hat keine 88 PWM-Ports, daher
-müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten:
+müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten,
+wobei in dieser Arbeit 3 im Detail betrachtet wurden:
 
 \begin{enumerate}
 	\item Schieberegister
-	\item Motor-Matrix
-	\item Demultiplexer
+	\item Motor-Matrix ohne Demultiplexer
+	\item Motor-Matrix mit Demultiplexer
 \end{enumerate}
 
+% Wäre es smart zu erwähnen was es noch für Möglichkeiten gibt? Also Arduino Mega muss ich soweiso erwähnen, aber z.B
+%Shields verbinden oder mehrere Arduinos nutzen weil das haben wir ja kurz überlegt und dann relativ schnell verworfen
+
 \paragraph{Schieberegister}
-Ein Schieberegister ist ein integrierter Schaltkreis, der hier verwendet wird, um die Anzahl der verfügbaren Ausgänge des
-Mikrocontrollers zu erweitern. \newline
+Ein Schieberegister ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
+Datenbits verwendet wird.\newline
+Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell (eins nach dem anderen) in das Register
+eingegeben und dann sequenziell (eins nach dem anderen) aus dem Register ausgegeben werden können. Dies geschieht durch
+die Verwendung von Taktimpulsen, die das Verschieben der Bits steuern.\newline
+Schieberegister bestehen aus einer Reihe von Flip-Flops. Ein Flip-Flop kann als einfacher Speicher/Element betrachtet werden, dass
+binäre Informationen speichert und je nach Eingangssignal den Zustand 1, 0, oder einen \"Flip"-Zustand annimmt. Diese
+FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolge speichern und weitergeben können. \newline
+
 Um 88 Ausgänge mit Hilfe von Schieberegistern von nur 3 PWM-Pins des Arduinos anzusteuern, werden insgesamt 11 8-Bit-Schieberegister
 (Also Schieberegister mit 8 Ausgängen) benötigt.\newline
-
-Zuerst werden die Datenleitungen (SERIAL IN) aller Schieberegister in Reihe geschaltet. Dies bedeutet, dass das
-Ausgangssignal des ersten Schieberegisters mit dem Eingang (SERIAL IN) des nächsten verbunden wird, und so weiter, bis
-zum letzten Schieberegister. \newline
-Der Arduino sendet Daten seriell über die verbundenen PWM-Pin. Diese Daten werden über ein Schieberegister an
-alle Schieberegister weitergegeben. Durch diesen Vorgang werden die Daten parallel über alle Schieberegister gesendet.
-\newline
-Die Ausgänge der Schieberegister (Q0 bis Q7) werden dann an die entsprechenden Aktuatoren angeschlossen.
-Das Signal wird zu einer definierten Clock durch die Schieberegister durchgeschoben. So kann durch Steuerung der Daten,
-die an die Schieberegister gesendet werden, kann der Arduino jeden einzelnen Ausgang manipulieren, um die Aktuatoren
-entsprechend anzusteuern. \newline
-Auf diese Weise kann der Arduino mit Hilfe von Schieberegistern eine größere Anzahl von Ausgängen kontrollieren, als er
-direkt verfügbar hat.
-
 
 \paragraph{Motor-Matrix}
 Die Motor-Matrix ist einer LED-Matrix nachgeahmt. //TODO: Picture Matrix and use muster to explain it for magnets
@@ -150,6 +147,14 @@ Steuersignalen. \newline
 
 \paragraph{Demultiplexer}
 //TODO
+
+\newline 
+//TODO: Diskussion, dass wir uns für Schieberegister entschieden haben
+\paragraph{74HC959 Schieberegister}
+In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau:
+\newline
+\includegraphics [width=5cm, height=7cm] {img/Schieberegister} \newline
+there is gonna be text here
 
 \subsection{Transistor}
 Durchlaufspannung, Mindestspannung

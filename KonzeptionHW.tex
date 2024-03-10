@@ -1,9 +1,13 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   Autoren des Abschnitts:
+%   Jakob Kautz
+%   Olivier Stenzel
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % !TEX root =  master.tex
 \graphicspath{ {./img/} }
 
-\chapter{Konzeption - Hardware}\label{Hardware - Konzeption}
-
-\nocite{*}
+\chapter{Konzeption - Hardware}\label{Hardware - Konzeption}~\nocite{*}
 
 Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
 Die Grundfragen, welche bei der Konstruktion auftraten, betrafen die Auswahl und Implementierung der
@@ -25,16 +29,33 @@ Um die Signale des Programmes an die Aktuatoren weitergeben zu können, wird ein
 Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei für diese Arbeit ein Arduino und ein
 Rasperry Pi betrachtet wurden (Wobei es sich bei einem Rasperry Pi genau genommen um einen Einplatinencontroller
 handelt). \newline
+
 %Arduino Intro
-Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
-einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten
-verbunden werden kann. Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit
-externen Geräten verwendet werden können. \newline
+\begin{minipage}{0.7\textwidth}
+	\paragraph{Arduino}
+	Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
+	einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten
+	verbunden werden kann. Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit
+	externen Geräten verwendet werden können.
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+	\includegraphics [width=\textwidth] {img/ArduinoR3}
+\end{minipage}
+\newline
+
 %Pi Intro
-Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert. Er ist dafür konzipiert, eine breite
-Palette von Anwendungen zu unterstützen, von Prototypenbau bis IoT.
-Im Gegensatz zum Arduino verfügt er über einen Prozessor und ist besonders für komplexe und Rechenlastige
-Projekte geeignet.\newline
+\begin{minipage}{0.3\textwidth}
+	\includegraphics [width=\textwidth] {img/RasperryPi}
+\end{minipage}
+\begin{minipage}{0.7\textwidth}
+	\paragraph{Rasperry Pi}
+	Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert. Er ist dafür konzipiert, eine breite
+	Palette von Anwendungen zu unterstützen, von Prototypenbau bis IoT.
+	Im Gegensatz zum Arduino verfügt er über einen Prozessor und ist besonders für komplexe und Rechenlastige
+	Projekte geeignet.
+\end{minipage}
+\newline
+
 %Vergleich
 Die Entscheidung für den verwendeten Mikrocontroller traf auf den Arduino. Der Rasperry Pi stand vor allem aufgrund
 seiner höhere Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine Komplexe Ansteuerungslogik
@@ -50,7 +71,7 @@ Uno, Nano und R3(auch: mega 2563) betrachtet. Im Prinzip wäre jedes der Modelle
 verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
 gegenüber der 32KB vom Arduino Uno und den 16KB des Arduino Nanos). Der Arduino Uno verfügt zwar über mehr Ports,
 allerdings bringt dies keinen Mehrwert, da die Anzahl der benötigten Ausgänge auch bei einem Arduino Uno nicht erreicht werden
-(siehe Kapitel \ref{output}).
+(siehe Kapitel~\ref{output}).
 Der Arduino R3 bietet - wie die anderen beiden Modelle auch - PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts
 genutzt wurden.
 
@@ -59,7 +80,7 @@ Oftmals ist bei der Ansteuerung nicht die gesamte Versorgungsspannung erwünscht
 die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
 Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt. Das Signal kann
 dafür die Hälfte der Zeit ausgeschaltet werden, womit zwischen 0V und den vollen 5V durchschnittlich insgesamt 2.5V
-anliegen. Wenn die Frequenz zwischen an- und ausschalten des Signals erhöht wird, desto weniger wird diese \"künstlich"
+anliegen. Wenn die Frequenz zwischen an- und ausschalten des Signals erhöht wird, desto weniger wird diese ``künstlich''
 simulierte Halbierung wahrgenommen. \newline
 PWM bedient sich im Grunde genau dieser Technik.
 Einfach ausgedrückt, wird die Zeitdauer eines digitalen Signals variiert wird, um einen
@@ -99,7 +120,7 @@ wobei in dieser Arbeit 3 im Detail betrachtet wurden:
 \end{enumerate}
 
 % Wäre es smart zu erwähnen was es noch für Möglichkeiten gibt? Also Arduino Mega muss ich soweiso erwähnen, aber z.B
-%Shields verbinden oder mehrere Arduinos nutzen weil das haben wir ja kurz überlegt und dann relativ schnell verworfen
+% Shields verbinden oder mehrere Arduinos nutzen weil das haben wir ja kurz überlegt und dann relativ schnell verworfen
 
 \paragraph{Schieberegister}
 Ein Schieberegister ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
@@ -108,11 +129,11 @@ Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell (ein
 eingegeben und dann sequenziell (eins nach dem anderen) aus dem Register ausgegeben werden können. Dies geschieht durch
 die Verwendung von Taktimpulsen, die das Verschieben der Bits steuern.\newline
 Schieberegister bestehen aus einer Reihe von Flip-Flops. Ein Flip-Flop kann als einfacher Speicher/Element betrachtet werden, dass
-binäre Informationen speichert und je nach Eingangssignal den Zustand 1, 0, oder einen \"Flip"-Zustand annimmt. Diese
+binäre Informationen speichert und je nach Eingangssignal den Zustand 1, 0, oder einen \"Flip``-Zustand annimmt. Diese
 FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolge speichern und weitergeben können. \newline
 
 Um 88 Ausgänge mit Hilfe von Schieberegistern von nur 3 PWM-Pins des Arduinos anzusteuern, werden insgesamt 11 8-Bit-Schieberegister
-(Also Schieberegister mit 8 Ausgängen) benötigt.\newline
+(Also Schieberegister mit 8 Ausgängen) benötigt.
 
 \paragraph{Motor-Matrix}
 Die Motor-Matrix ist einer LED-Matrix nachgeahmt. //TODO: Picture Matrix and use muster to explain it for magnets
@@ -140,20 +161,24 @@ obwohl sie tatsächlich nacheinander aktiviert werden. \newline
 Um das Prinzip einer LED-Matrix auf Aktuatoren zu übertragen, müssen lediglich die LEDs durch die Aktuatoren ersetzt werden.
 Durch Steuerung der Zeilen und Spalten dieses Rasters können verschiedene Motoren selektiv
 aktiviert werden. Dies ermöglicht eine effiziente Steuerung mehrerer Motoren mit einem begrenzten Satz von
-Steuersignalen. \newline
+Steuersignalen.
 
 //TODO: Nachteile Matrix
 
 
 \paragraph{Demultiplexer}
 //TODO \newline
-
-//TODO: Diskussion, dass wir uns für Schieberegister entschieden haben
 \paragraph{74HC959 Schieberegister}
 In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau:
+//TODO: Diskussion, dass wir uns für Schieberegister entschieden haben \newline
+\begin{minipage}{0.4\textwidth}
+	\includegraphics [width=\textwidth] {img/Schieberegister}
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+	//TODO Ausgänge und so erklären
+\end{minipage}
 \newline
-\includegraphics [width=5cm, height=7cm] {img/Schieberegister} \newline
-there is gonna be text here
+
 
 \subsection{Transistor}
 Durchlaufspannung, Mindestspannung
@@ -165,8 +190,8 @@ Durchlaufspannung, Mindestspannung
 
 Im Zentrum der Schaltung steht der Mikrocontroller (hier: Arduino Uno R3).
 Dieser erhält Daten und Strom über den integrierten USB-Anschluss, welcher mit dem Computer verbunden wird.
-Da der Arduino limitierte \nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
-Mit jedem \"in Reihe" geschaltetem Schieberegister kann die Anzahl PWM-fähiger Ausgänge um 8 erweitert werden.
+Da der Arduino limitierte~\nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
+Mit jedem ``in Reihe'' geschaltetem Schieberegister kann die Anzahl PWM-fähiger Ausgänge um 8 erweitert werden.
 
 \textit{Schieberegister}
 
@@ -211,7 +236,7 @@ Im Folgenden werden speziell n-MOSFETs verwendet, der mit einem Signal zwischen 
 
 Der folgende Aufbau ist für die insgesamt 88 Ausgänge der 11 Schieberegister identisch, da jeder Ausgang für die Ansteuerung genau eines Motors zuständig ist.
 
-Der GATE-Pin des MOSFETs erhält das Signal, dass die \"Durchlässigkeit" steuert aus einem der Outputs des Schieberegisters.
+Der GATE-Pin des MOSFETs erhält das Signal, dass die ``Durchlässigkeit'' steuert aus einem der Outputs des Schieberegisters.
 Der SOURCE-Pin wird mit Ground des gesamten Systems verbunden.
 Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunden.
 

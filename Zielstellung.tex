@@ -3,10 +3,33 @@
 
 \nocite{*}
 
-Zielsetzung der Arbeit besteht darin, ein selbstspieldendes Klavier zu entwickeln, welches gleichzeitig
-noch normal bespielt werden kann. Hierbei wird ein Arduino eingesetzt, um Hardware anzusteuern, die in der
-Lage ist, die Klaviertasten zu betätigen. Die Steuerung dieses selbstspielenden Klaviers erfolgt über eine
-Desktop-Anwendung, mittels derer Nutzer:innen die Auswahl von Musikstücken vornehmen können. Darüber hinaus
-soll die Möglichkeit bestehen, dem Katalog weitere Musikstücke in Form von MIDI-Dateien hinzuzufügen. Ferner
-sollen potenzielle Erweiterungen in Betracht gezogen werden, wie beispielsweise die Steuerung des
-selbstspielenden Klaviers durch Bilder von Notenblättern.
+Die Idee der Arbeit besteht ist die Entwicklung eines Klaviers, sowohl von Personen, als auch automatisiert von einem Computer bespielt werden kann.
+Hierfür wird ein kleiner Computer eingesetzt, um Hardware anzusteuern, die in der Lage ist, die Klaviertasten zu betätigen.
+Die Steuerung dieses selbstspielenden Klaviers erfolgt über eine
+Desktop-Anwendung, mittels derer Nutzer:innen zwischen Musikstücken wählen können.
+Darüber hinaus soll die Möglichkeit bestehen, dem Katalog weitere Musikstücke hinzuzufügen.
+Des Weiteren sollen Nutzer:innen die Wiedergabe-Geschwindigkeit -und Lautstärke verändern können.
+Inspiriert von gängigen Musikplayern, soll das Spielen pausiert und zu beliebigen Stellen des Stücks gesprungen werden können.
+
+
+\section{Vorgehensweise} \label{sec:zielstellung-vorgehen}
+Die Vorgehensweise des Projekts gliedert sich in mehrere Schlüsselschritte.
+Zunächst erfolgt die Konzeptualisierung des selbstspielenden Klaviers, wobei die spezifischen Anforderungen und Funktionalitäten
+definiert werden.//TODO: noch An die Struktur anpassen!!!!
+Hierbei liegt ein besonderer Fokus auf der Identifikation der Schnittstellen zwischen der
+Hardware und Software, wobei die Arduino-Plattform als zentrales Steuerungselement berücksichtigt wird. \newline
+
+Im Anschluss erfolgt die Hardware-Implementierung mithilfe des Arduinos. Dies beinhaltet die sorgfältige
+Auswahl geeigneter Hardwarekomponenten, die in der Lage sind, die Klaviertasten präzise anzusteuern.
+Die Programmierung des Arduinos erfolgt mit dem Ziel, eine nahtlose Integration in das Gesamtsystem zu
+gewährleisten. \newline
+
+Die nachfolgende Etappe konzentriert sich auf die Entwicklung einer
+Desktop-Anwendung, die als Schnittstelle für die Steuerung des selbstspielenden Klaviers dient. Hierbei wird
+besonderes Augenmerk auf die Benutzerfreundlichkeit gelegt, und die Anwendung ermöglicht Nutzer:innen die
+Auswahl und Wiedergabe von Musikstücken aus einem vordefinierten Katalog. \newline
+
+Ein weiterer Schwerpunkt liegt auf der Integration von MIDI-Dateien, um dem Katalog kontinuierlich weitere
+Musikstücke hinzufügen zu können.
+Dieser Prozess beinhaltet die Entwicklung einer Schnittstelle, die eine
+unkomplizierte Integration neuer Musikstücke in die bestehende Datenbank ermöglicht.

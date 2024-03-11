@@ -21,6 +21,135 @@ Die Signalübertragung erfolgt über einen Arduino-Mikrocontroller. Da der Ardui
 viele Ausgänge verfügt, um alle Tasten anzusteuern, wird das Signal mithilfe von Schieberegistern erweitert.
 Diese Erweiterung ermöglicht es, alle 88 Tasten des Klaviers anzusteuern.
 
+\section{Mechanik}\label{vorgehenHW}
+
+\subsection{Auswahl des Klaviers}
+
+Da sich dieses Projekt nicht auf die theoretische Konzeption beschränkt, muss ein entsprechendes Testobjekt - ein reales Klavier - gefunden werden.
+Dieses muss einige Voraussetzungen erfüllen:
+\begin{enumerate}
+	\item 	Der Preis muss im Rahmen des Budgets (gesamt < 2000 €) liegen
+	\item 	Es muss leicht auseinander zu bauen sein, um die Mechanik zugänglich zu machen
+	\item 	Es muss vollständig sein (alle 88 Tasten)
+	\item 	Es muss stimmbar sein
+	\item 	Der Transport muss einfach durchzuführen sein
+\end{enumerate}
+
+
+\subsection{Ansteuerungskonzept}
+
+//Drücken der ziehen, oben oder unten...
+1. Oben
+Klavierhand
+Schiene
+Aufsatz mit 88 oben drüber
+2. unten
+ziehen
+drücken
+
+\subsection{Anbringung der Aktuatoren}
+Beim Ansteuerungskonzept der Tasten muss auch beachtet werden, wo die Magnete befestigt werden.
+Wir haben ein Brett, auf welchem sie befestigt werden. Folgende Bedenken:
+1. Wie viel Platzt zwischen Solenoids?-weil Hitze
+bsp. weiß unten und schwarz oben, weil die weißen weiter vorne
+-> nicht weil funktionalität vor optik (weil zu eng)
+-> Platz maximieren
+
+2. Wie verbinden ohne dass Angelschnuren und andere Solenoids sich in den weg kommen
+(3. spezifischer . in 2 oder 3 Reihen)
+Voteil: Hitze
+Nachteil: Umlenkung, Verkabelung
+
+4. Umlenkung, damit der ganze Hub verwendet werden kann
+
+\includegraphics [width=5cm, height=4cm,angle=-90] {img/skizze_Umlenkung}
+
+*Bild wegen Umlenkung
+
+Erklärung geben: Haben Brett mit 67x25cm für 44 Motoren
+*Bild von Brett-Sikzze
+
+
+
+\subsection{Verbindung Tasten und Hubmagnete}
+
+Es wurde sich dazu entschieden die Tasten durch Ziehen anzusprechen (siehe:\nameref{Ansteuerung}).
+Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen.
+Anschließend wird die Schnur durch ein senkrechtes Loch den Klaviaturbalken (bzw. Tastenbrett), worauf die Tasten liegen, in den Fußraum geführt.
+Damit die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt werden, werden die Seile entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt.
+Dort werden die Hubmagnete in zwei Reihen über die gesamte Breite befestigt.
+Um die Intensität des Tastendrucks zu steuern und die Durabilität des Materials zu verlängern, sollte die Reibung am Seil möglichst gering gehalten werden.
+Dazu werden mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden, die Seile umgelenkt.
+
+
+Wie eben erwähnt wird das Ziehen durch ein Seil ermöglicht.
+Dafür wird ein leichtes, formbares und dehnungsresistentes Material benötigt, da die eine Seite mit dem Hubmagnete und die andere durch ein Loch in der Taste verknotet werden sollt.
+Je leichter das Material ist, desto weniger wird die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verändert.
+Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürrt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
+Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein dehnungsresistentes Seil zu verwenden.
+Würde sich das Seil dehnen lassen, würde ein Teil der Kraft nicht bis zur Taste gelangen und somit den Anschlag abschwächen.
+
+\textit{Nähgarn}
+
+Als Erstes wurden Nähgarn, welches zur Hand war getestet.
+Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung mit 25N des Hubmagnetens nicht stand.
+Vier Fäden funktionierten zu Beginn gut, leierten allerdings schnell aus.
+
+\textit{Nylonsaiten}
+
+Als Nächstes wurde die g-Saite einer Gitarre verwendet.
+Durch den höheren Durchmesser und das stärkere Material riss und leierte die Saite nicht aus.
+Da die Saite kaum Flexibilität liefert, war die Befestigung an der Taste äußerst schwierig.
+Beim Ziehen des Magnetes wurde erst die lockere Schlaufe an der Taste gestreckt, wodurch nicht der vollständige Hub des Magnetes auf die Taste übertragen werden.
+
+\textit{Angelschnur}
+
+Aus Erfahrungen aus dem Angelbereich konnte schnell eine geeignetere Schnur gefunden werden.
+Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
+Mit einem Durchmesser von 1.6mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7kg standhalten.
+Auch nach ausgiebigem Testen erfüllt die Angelschnur die Anforderungen.
+Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein leichtes.
+
+\subsection{Klangdämpfung der Aktuatoren}
+Die Hubmagnete machen beim Anschlagen laute "klack" Geräusche, welche von der Melodie des Klaviers ablenken.
+Genauer handelt es sich um das den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
+Auch hierfür gab es mehrere Ideen und Tests, um das Geräusch zu dämpfen:
+
+\textit{Isolierfolie}
+
+Die erste Überlegung war die Auskleidung des Innenraums der Hubmagnete mit Isolierfolie.
+Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu diesem Zeitpunkt noch zu gering war, um sicherzustellen, dass die Isolierung dem standhält.
+
+\textit{Gummi-Stopper}
+
+Die nächste Idee war das Limitieren des Schlags durch Gummiringe (Dichtungsringe) zwischen Anker und dem äußeren Gehäuse.
+Da für die Befestigung keine zufriedenstellende Lösung gefunden wurde, wurde auch diese Idee verworfen.
+zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden.
+
+Notiz von Oli: Motorlager verwenden zwischen Platte und Klavier
+Notiz von Oli:
+Aktuatoren Geräuschreduzierung Tests:
+
+Weg normal: 10mm
+
+\textit{Schaumstoff}
+
+*siehe bild
+Wie im Bild zu sehen wurde die "Gummi-Stopper"-Idee leicht mit Schaumstoff leicht verändert.
++ Das Klopfgeräusch konnte vollständig verhindert werden.
+- Durch den Schaumstoff kann 1mm Hub nicht verwendet werden, weshalb nur noch 9mm übrig bleiben.
+- Außerdem ist der Aufbau optisch nicht ansprechend.
+
+
+\textit{Seil (2mm Durchmesser) um den Anker}
+
+Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt.
++ Auch hier konnte das Klopfen vollständig beseitigt werden
++ Von außen sieht man keine Veränderung
++ Bezogen auf die Hitzeentwicklung scheint das Seil nach den bisherigen Tests gut Stand zu halten.
+- Durch die Dicke des Seils, werden 2mm Hub nicht verwenden, weshalb nur noch 8mm übrig bleiben.
+
+
 \section{Elektronik}\label{Vorgehen - Hardware}
 
 
@@ -252,136 +381,8 @@ So kann anhand der Helligkeit der LED die Intensität abgelesen werden, mit der 
 
 //Bild vom Schaltplan
 
-\section{Mechanik}\label{vorgehenHW}
 
-\subsection{Auswahl des Klaviers}
-
-Da sich dieses Projekt nicht auf die theoretische Konzeption beschränkt, muss ein entsprechendes Testobjekt - ein reales Klavier - gefunden werden.
-Dieses muss einige Voraussetzungen erfüllen:
-\begin{enumerate}
-	\item 	Der Preis muss im Rahmen des Budgets (gesamt < 2000 €) liegen
-	\item 	Es muss leicht auseinander zu bauen sein, um die Mechanik zugänglich zu machen
-	\item 	Es muss vollständig sein (alle 88 Tasten)
-	\item 	Es muss stimmbar sein
-	\item 	Der Transport muss einfach durchzuführen sein
-\end{enumerate}
-
-
-\subsection{Ansteuerungskonzept}
-
-//Drücken der ziehen, oben oder unten...
-1. Oben
-	Klavierhand
-	Schiene
-	Aufsatz mit 88 oben drüber
-2. unten
-	ziehen
-	drücken
-
-\subsection{Anbringung der Aktuatoren}
-Beim Ansteuerungskonzept der Tasten muss auch beachtet werden, wo die Magnete befestigt werden.
-Wir haben ein Brett, auf welchem sie befestigt werden. Folgende Bedenken:
-1. Wie viel Platzt zwischen Solenoids?-weil Hitze
-bsp. weiß unten und schwarz oben, weil die weißen weiter vorne
-	-> nicht weil funktionalität vor optik (weil zu eng)
- -> Platz maximieren
-
-2. Wie verbinden ohne dass Angelschnuren und andere Solenoids sich in den weg kommen
-(3. spezifischer . in 2 oder 3 Reihen)
-Voteil: Hitze
-Nachteil: Umlenkung, Verkabelung
-
-4. Umlenkung, damit der ganze Hub verwendet werden kann
-
-\includegraphics [width=5cm, height=4cm,angle=-90] {img/skizze_Umlenkung}
-
-*Bild wegen Umlenkung
-
-Erklärung geben: Haben Brett mit 67x25cm für 44 Motoren
-*Bild von Brett-Sikzze
-
-
-
-\subsection{Verbindung Tasten und Hubmagnete}
-
-Es wurde sich dazu entschieden die Tasten durch Ziehen anzusprechen (siehe:\nameref{Ansteuerung}).
-Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen.
-Anschließend wird die Schnur durch ein senkrechtes Loch den Klaviaturbalken (bzw. Tastenbrett), worauf die Tasten liegen, in den Fußraum geführt.
-Damit die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt werden, werden die Seile entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt.
-Dort werden die Hubmagnete in zwei Reihen über die gesamte Breite befestigt.
-Um die Intensität des Tastendrucks zu steuern und die Durabilität des Materials zu verlängern, sollte die Reibung am Seil möglichst gering gehalten werden.
-Dazu werden mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden, die Seile umgelenkt.
-
-
-Wie eben erwähnt wird das Ziehen durch ein Seil ermöglicht.
-Dafür wird ein leichtes, formbares und dehnungsresistentes Material benötigt, da die eine Seite mit dem Hubmagnete und die andere durch ein Loch in der Taste verknotet werden sollt.
-Je leichter das Material ist, desto weniger wird die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verändert.
-Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürrt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
-Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein dehnungsresistentes Seil zu verwenden.
-Würde sich das Seil dehnen lassen, würde ein Teil der Kraft nicht bis zur Taste gelangen und somit den Anschlag abschwächen.
-
-\textit{Nähgarn}
-
-Als Erstes wurden Nähgarn, welches zur Hand war getestet.
-Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung mit 25N des Hubmagnetens nicht stand.
-Vier Fäden funktionierten zu Beginn gut, leierten allerdings schnell aus.
-
-\textit{Nylonsaiten}
-
-Als Nächstes wurde die g-Saite einer Gitarre verwendet.
-Durch den höheren Durchmesser und das stärkere Material riss und leierte die Saite nicht aus.
-Da die Saite kaum Flexibilität liefert, war die Befestigung an der Taste äußerst schwierig.
-Beim Ziehen des Magnetes wurde erst die lockere Schlaufe an der Taste gestreckt, wodurch nicht der vollständige Hub des Magnetes auf die Taste übertragen werden.
-
-\textit{Angelschnur}
-
-Aus Erfahrungen aus dem Angelbereich konnte schnell eine geeignetere Schnur gefunden werden.
-Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
-Mit einem Durchmesser von 1.6mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7kg standhalten.
-Auch nach ausgiebigem Testen erfüllt die Angelschnur die Anforderungen.
-Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein leichtes.
-
-\subsection{Klangdämpfung der Aktuatoren}
-Die Hubmagnete machen beim Anschlagen laute "klack" Geräusche, welche von der Melodie des Klaviers ablenken.
-Genauer handelt es sich um das den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
-Auch hierfür gab es mehrere Ideen und Tests, um das Geräusch zu dämpfen:
-
-\textit{Isolierfolie}
-
-Die erste Überlegung war die Auskleidung des Innenraums der Hubmagnete mit Isolierfolie.
-Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu diesem Zeitpunkt noch zu gering war, um sicherzustellen, dass die Isolierung dem standhält.
-
-\textit{Gummi-Stopper}
-
-Die nächste Idee war das Limitieren des Schlags durch Gummiringe (Dichtungsringe) zwischen Anker und dem äußeren Gehäuse.
-Da für die Befestigung keine zufriedenstellende Lösung gefunden wurde, wurde auch diese Idee verworfen.
-zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden.
-
-Notiz von Oli: Motorlager verwenden zwischen Platte und Klavier
-Notiz von Oli:
-Aktuatoren Geräuschreduzierung Tests:
-
-Weg normal: 10mm
-
-\textit{Schaumstoff}
-
-*siehe bild
-Wie im Bild zu sehen wurde die "Gummi-Stopper"-Idee leicht mit Schaumstoff leicht verändert.
-+ Das Klopfgeräusch konnte vollständig verhindert werden.
-- Durch den Schaumstoff kann 1mm Hub nicht verwendet werden, weshalb nur noch 9mm übrig bleiben.
-- Außerdem ist der Aufbau optisch nicht ansprechend.
-
-
-\textit{Seil (2mm Durchmesser) um den Anker}
-
-Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt.
-+ Auch hier konnte das Klopfen vollständig beseitigt werden
-+ Von außen sieht man keine Veränderung
-+ Bezogen auf die Hitzeentwicklung scheint das Seil nach den bisherigen Tests gut Stand zu halten.
-- Durch die Dicke des Seils, werden 2mm Hub nicht verwenden, weshalb nur noch 8mm übrig bleiben.
-
-
-\subsection{Weitere Ideen und Limitationen}
+\section{Weitere Ideen und Limitationen}
 
 Im Laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten- Gründen nicht weiter
 behandelt wurden.

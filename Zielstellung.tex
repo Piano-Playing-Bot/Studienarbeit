@@ -3,33 +3,108 @@
 
 \nocite{*}
 
-Die Idee der Arbeit besteht ist die Entwicklung eines Klaviers, sowohl von Personen, als auch automatisiert von einem Computer bespielt werden kann.
-Hierfür wird ein kleiner Computer eingesetzt, um Hardware anzusteuern, die in der Lage ist, die Klaviertasten zu betätigen.
-Die Steuerung dieses selbstspielenden Klaviers erfolgt über eine
-Desktop-Anwendung, mittels derer Nutzer:innen zwischen Musikstücken wählen können.
-Darüber hinaus soll die Möglichkeit bestehen, dem Katalog weitere Musikstücke hinzuzufügen.
-Des Weiteren sollen Nutzer:innen die Wiedergabe-Geschwindigkeit -und Lautstärke verändern können.
-Inspiriert von gängigen Musikplayern, soll das Spielen pausiert und zu beliebigen Stellen des Stücks gesprungen werden können.
+
+Das Kernanliegen dieser Arbeit ist die Entwicklung eines multifunktionalen Klaviers,
+das sowohl manuell von Musikern als auch automatisiert durch einen Computer bespielt werden kann.
+Zu diesem Zweck wird ein kompakter Mikrocontroller genutzt, der die Aufgabe hat, spezifische Hardwarekomponenten zu steuern.
+Diese Hardware ist dazu in der Lage, eigenständig die Tasten des Klaviers zu bedienen und somit die Saiten zum Schwingen zu bringen.
+
+Die Interaktion mit dem selbstspielenden Klavier erfolgt über eine Desktop-Anwendung, die es Nutzerinnen und Nutzern ermöglicht,
+aus einer Vielzahl von Musikstücken zu wählen.
+Ein wesentlicher Aspekt des Projekts ist zudem die Flexibilität des Systems: Nutzende sollen in der Lage sein,
+den bestehenden Musik-Katalog durch eigene Stücke zu erweitern.
+Neben der Auswahl von Musikstücken bietet die Anwendung auch die Möglichkeit,
+die Wiedergabegeschwindigkeit und die Lautstärke individuell anzupassen.
+
+In Anlehnung an die Funktionsweise populärer Musikplayer wird angestrebt,
+dass die Wiedergabe nicht nur pausiert, sondern auch innerhalb eines Stücks frei navigiert werden kann.
+Dieses Merkmal unterstreicht nochmals den interaktiven Charakter des Instruments und wie intuitiv dessen Bedienung ist.
+
+
+\newpage
+\section{Anforderungen} \label{sec:zielstellung-anforderungen}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{ | m{2cm} | m{10cm}| m{2cm} | }
+        \hline
+        \textbf{Kategorie} & \textbf{Anforderung} & \textbf{Priorität} \\
+        \hline
+        Allgemein & Flexibilität: Das System muss sowohl manuell als auch automatisch bespielbar sein. & Hoch \\
+        \cline{2-3}
+        & Benutzerinterface: Entwicklung eines klaren und benutzerfreundlichen Interfaces. & Hoch \\
+        \cline{2-3}
+        & Responsivität: Die Anwendung muss auf verschiedenen Computern mit Windows 10 und 11 laufen. & Mittel \\
+        \cline{2-3}
+        \hline
+        Hardware & Tastenbetätigung: Hardware muss in der Lage sein, Klaviertasten autonom zu bedienen. & Hoch \\
+        \cline{2-3}
+        & Anpassbarkeit: Hardware-Komponenten müssen auf unterschiedliche Klaviertypen anpassbar sein. & Mittel \\
+        \hline
+        Software & Musikstück-Auswahl: Nutzer:innen wählen Musikstücke über eine Desktop-Anwendung. & Hoch \\
+        \cline{2-3}
+        & Wiedergabe-Kontrolle: Anpassung der Wiedergabegeschwindigkeit und Lautstärke. & Mittel \\
+        \cline{2-3}
+        & Navigation: Möglichkeit, die Wiedergabe zu pausieren und innerhalb des Stücks zu navigieren. & Mittel \\
+        \cline{2-3}
+        & MIDI-Integration: System muss MIDI-Dateien für die Erweiterung des Katalogs unterstützen. & Mittel \\
+        \hline
+    \end{tabular}
+    \caption{Anforderungen an das selbstspielende Klavier}
+    \label{table:anforderungen}
+\end{table}
 
 
 \section{Vorgehensweise} \label{sec:zielstellung-vorgehen}
-Die Vorgehensweise des Projekts gliedert sich in mehrere Schlüsselschritte.
-Zunächst erfolgt die Konzeptualisierung des selbstspielenden Klaviers, wobei die spezifischen Anforderungen und Funktionalitäten
-definiert werden.//TODO: noch An die Struktur anpassen!!!!
-Hierbei liegt ein besonderer Fokus auf der Identifikation der Schnittstellen zwischen der
-Hardware und Software, wobei die Arduino-Plattform als zentrales Steuerungselement berücksichtigt wird. \newline
 
-Im Anschluss erfolgt die Hardware-Implementierung mithilfe des Arduinos. Dies beinhaltet die sorgfältige
-Auswahl geeigneter Hardwarekomponenten, die in der Lage sind, die Klaviertasten präzise anzusteuern.
-Die Programmierung des Arduinos erfolgt mit dem Ziel, eine nahtlose Integration in das Gesamtsystem zu
-gewährleisten. \newline
+In diesem Kapitel wird der geplante Ablauf des Projektes zur Entwicklung eines multifunktionalen, selbstspielenden Klaviers vorgestellt.
+Die Vorgehensweise ist in mehrere Phasen unterteilt, die jeweils auf die in Anforderungen abgestimmt sind.
 
-Die nachfolgende Etappe konzentriert sich auf die Entwicklung einer
-Desktop-Anwendung, die als Schnittstelle für die Steuerung des selbstspielenden Klaviers dient. Hierbei wird
-besonderes Augenmerk auf die Benutzerfreundlichkeit gelegt, und die Anwendung ermöglicht Nutzer:innen die
-Auswahl und Wiedergabe von Musikstücken aus einem vordefinierten Katalog. \newline
+\textit{Konzeptualisierung und Planung}
 
-Ein weiterer Schwerpunkt liegt auf der Integration von MIDI-Dateien, um dem Katalog kontinuierlich weitere
-Musikstücke hinzufügen zu können.
-Dieser Prozess beinhaltet die Entwicklung einer Schnittstelle, die eine
-unkomplizierte Integration neuer Musikstücke in die bestehende Datenbank ermöglicht.
+Zu Beginn des Projektes steht die Konzeptualisierung, in der die grundlegenden Anforderungen an das System präzise festgelegt werden.
+Besondere Aufmerksamkeit gilt dabei der Schnittstelle zwischen der Hardware, die durch einen kompakten Mikrocontroller gesteuert wird,
+und der Software der Desktop-Anwendung.
+Die Planungsphase umfasst:
+
+\begin{itemize}
+    \item Definition der funktionalen Anforderungen an das Klavier.
+    \item Auswahl und Zusammenbau der Ansteuerung-Hardware.
+    \item Entwurf des Konzepts für die Desktop-Anwendung zur Steuerung.
+    \item Testen der Kombination aus Hard-und Software.
+    \item Anpassungen basierend auf den Testergebnissen.
+\end{itemize}
+
+\textit{Hardware-Implementierung}
+
+Nach der Konzeptualisierung folgt die Implementierungsphase der Hardware:
+
+\begin{itemize}
+    \item Auswahl und Testung von Komponenten, die in der Lage sind, die Klaviertasten autonom zu betätigen.
+    \item Entwicklung eines Prototyps zur Überprüfung der Ansteuerung und Funktionalität der Tasten.
+    \item Integration des Mikrocontrollers in das Gesamtsystem und Programmierung der Steuerungslogik.
+\end{itemize}
+
+\textit{Software-Entwicklung}
+
+Parallel zur Hardware-Entwicklung wird die Software konzipiert und programmiert:
+
+\begin{itemize}
+    \item Entwicklung eines Kommunikationsprotokolls zwischen Anwendungsprogramm und Mikrocontroller.
+    \item Gestaltung der Benutzeroberfläche der Desktop-Anwendung, welche die Auswahl und Wiedergabe der Musikstücke ermöglicht.
+    \item Implementierung von Funktionen zur Anpassung der Wiedergabegeschwindigkeit und Lautstärke.
+    \item Entwicklung eines Systems zur Verwaltung und Erweiterung des Musik-Katalogs, einschließlich der Integration und des Parsings von MIDI-Dateien.
+\end{itemize}
+
+\textit{Integration und Tests}
+
+In der abschließenden Phase werden die Hardware und Software integriert und umfassend getestet:
+
+\begin{itemize}
+    \item Zusammenführung der Hardware- und Softwarekomponenten zu einem einheitlichen System.
+    \item Durchführung von Tests zur Überprüfung der Funktionalität und Benutzerfreundlichkeit.
+    \item Iterative Fehlerbehebung und Feinabstimmung des Systems basierend auf Testergebnissen.
+\end{itemize}
+
+Das Ergebnis dieser Vorgehensweise ist ein benutzerfreundliches, selbstspielendes Klavier,
+das dem Kapitel \nameref{sec:zielstellung-anforderungen} entspricht und einen Mehrwert sowohl für Musiker als auch für Technikaffine bietet.

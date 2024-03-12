@@ -15,11 +15,12 @@ Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertr
 Im Hinblick auf die Aktuatoren muss eine präzise Steuerung der Tasten
 ermöglichet werden, ohne dass Genauigkeit und Geschwindigkeit des Anspielens vernachlässigt werden.
 \newline
-Die Aktuatoren wurden mit den Klaviertasten verbunden, um die mechanische Integrität des Klaviers
+Dafür werden diese mit den Klaviertasten verbunden, um die mechanische Integrität des Klaviers
 zu erhalten und gleichzeitig eine präzise Steuerung zu gewährleisten.\newline
-Die Signalübertragung erfolgt über einen Arduino-Mikrocontroller. Da der Arduino nicht über ausreichend
-viele Ausgänge verfügt, um alle Tasten anzusteuern, wird das Signal mithilfe von Schieberegistern erweitert.
-Diese Erweiterung ermöglicht es, alle 88 Tasten des Klaviers anzusteuern.
+Die Signalübertragung erfolgt über einen Mikrocontroller.
+Da der gängige Mikrocontroller i.d.R. nicht über ausreichende Ausgänge verfügen,
+um alle Tasten anzusteuern, müssen diese erweitert werden.
+Eine solche Erweiterung (siehe Kapitel \ref{output}) ermöglicht es, alle 88 Tasten des Klaviers anzusteuern.
 
 \section{Mechanik}\label{vorgehenHW}
 
@@ -28,7 +29,7 @@ Diese Erweiterung ermöglicht es, alle 88 Tasten des Klaviers anzusteuern.
 Da sich dieses Projekt nicht auf die theoretische Konzeption beschränkt, muss ein entsprechendes Testobjekt - ein reales Klavier - gefunden werden.
 Dieses muss einige Voraussetzungen erfüllen:
 \begin{enumerate}
-	\item 	Der Preis muss im Rahmen des Budgets (gesamt < 2000 €) liegen
+	\item 	Der Preis muss im Rahmen des selbst gestellten Budgets (< 2000 €) liegen
 	\item 	Es muss leicht auseinander zu bauen sein, um die Mechanik zugänglich zu machen
 	\item 	Es muss vollständig sein (alle 88 Tasten)
 	\item 	Es muss stimmbar sein

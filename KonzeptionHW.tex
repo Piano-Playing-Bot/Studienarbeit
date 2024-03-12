@@ -37,7 +37,8 @@ Dieses muss einige Voraussetzungen erfüllen:
 \end{enumerate}
 
 
-\subsection{Ansteuerungskonzept}
+\subsection{Ansteuerungskonzept} \label{konzeptionHW-ansteuerungskonzept}
+Beim Ansteuerungskonzept der Tasten muss auch beachtet werden, wo die Magnete befestigt werden.
 
 //Drücken der ziehen, oben oder unten...
 1. Oben
@@ -48,40 +49,88 @@ Aufsatz mit 88 oben drüber
 ziehen
 drücken
 
-\subsection{Anbringung der Aktuatoren}
-Beim Ansteuerungskonzept der Tasten muss auch beachtet werden, wo die Magnete befestigt werden.
-Wir haben ein Brett, auf welchem sie befestigt werden. Folgende Bedenken:
-1. Wie viel Platzt zwischen Solenoids?-weil Hitze
-bsp. weiß unten und schwarz oben, weil die weißen weiter vorne
--> nicht weil funktionalität vor optik (weil zu eng)
--> Platz maximieren
+\subsection{Aktuator}\label{subsec:aktuator}
 
-2. Wie verbinden ohne dass Angelschnuren und andere Solenoids sich in den weg kommen
-(3. spezifischer . in 2 oder 3 Reihen)
-Voteil: Hitze
-Nachteil: Umlenkung, Verkabelung
+Schrittmotor, Hubmagnete, etc.
 
-4. Umlenkung, damit der ganze Hub verwendet werden kann
+\subsection{Verbindung Tasten und Aktuatoren}
 
-\includegraphics [width=5cm, height=4cm,angle=-90] {img/skizze_Umlenkung}
-
-*Bild wegen Umlenkung
-
-Erklärung geben: Haben Brett mit 67x25cm für 44 Motoren
-*Bild von Brett-Sikzze
-
-
-
-\subsection{Verbindung Tasten und Hubmagnete}
-
-Es wurde sich dazu entschieden die Tasten durch Ziehen anzusprechen (siehe:\nameref{Ansteuerung}).
+Wie in Kapitel \ref{konzeptionHW-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
+Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt.
+In diesem Kapitel wird ein Konzept ausgearbeitet, welches beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden.
+Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit weiter verbessert.
+\newline
 Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen.
-Anschließend wird die Schnur durch ein senkrechtes Loch den Klaviaturbalken (bzw. Tastenbrett), worauf die Tasten liegen, in den Fußraum geführt.
-Damit die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt werden, werden die Seile entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt.
+Anschließend wird jede Schnur jeweils durch ein senkrechtes Loch im Klaviaturbalken (bzw. Tastenbrett), worauf die Tasten liegen, in den Fußraum geführt.
+Damit die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt sind,
+werden die Seile entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt.
 Dort werden die Hubmagnete in zwei Reihen über die gesamte Breite befestigt.
 Um die Intensität des Tastendrucks zu steuern und die Durabilität des Materials zu verlängern, sollte die Reibung am Seil möglichst gering gehalten werden.
 Dazu werden mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden, die Seile umgelenkt.
 
+\textit{Organisation der Aktuatoren}
+
+Die Idee ist, die Hubmagnete entlang der Klaviatur zu befestigen, um die Tasten möglichst senkrecht nach unten ziehen zu können.
+Hierfür müssen folgende Aspekte berücksichtigt werden:
+
+begin{itemize}
+	\item Breite der Hubmagnete
+	\item Hitzeentwicklung
+	\item Seilführung
+	\item Stabilität
+	\item Modularität
+end{itemize}
+
+Ein Hubmagnet hat die Maße 2,5 cm x 6 cm.
+Das Tastenbrett für 88 Tasten ist allerdings nur 140 cm breit, wodurch pro Tastenansteuerung nur ca. 1,6 cm zur Verfügung stehen.
+Bildet man zwei Hubmagnetreihen übereinander, hat jede Tastenansteuerung 3,20 cm Platz.
+
+Durch die 7mm Abstand ist eine Wärmeabfuhr über die Luft in geringem Ausmaß möglich.
+Ob dies ausreicht, muss in späteren Tests (siehe Kapitel \ref{tests}) ermittelt werden.
+
+Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagnete verbunden.
+
+Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung würde allerdings auf Kosten der Stabilität und Funkionalität gehen.
+Deshalb werden die Hubmagnete am Corpus des Klaviers (untere Frontplatte) befestigt.
+
+Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
+sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden.
+
+*Bild von Brett-Sikzze
+
+\textit{Optimierung der Seilführung}
+
+Würde man den Aufbau so belassen, hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend betätigen.
+\newline
+Dies kann man auch mathematisch beweisen:
+\newline geg.:
+\newline Strecke bis zur ersten Reihe Hubmagnete h1 = 17 cm
+\newline Strecke bis zur zweiten Reihe Hubmagnete h2 = 27 cm
+\newline Strecke bis zu den schwarzen Tasten t1 = 12 cm
+\newline Strecke bis zu den weißen Tasten t2 = 18 cm
+
+\newline Seil zur schwarzen Taste im entspannten Zustand ht1_{entspannt}
+\newline Seil zu den weißen Tasten im entspannten Zustand ht2_{entspannt}
+
+\newline ht1_{entspannt} = $\sqrt {h1^{2} + t1^{2}}$ = 20.81 cm
+\newline ht2_{entspannt} = $\sqrt {h2^{2} + t2^{2}}$ = 32.45 cm
+
+\newline ht1_{gespannt} = $\sqrt {(h1 + 1) ^{2} + t1^{2}}$ = 21.63 cm
+\newline ht2_{gespannt} = $\sqrt {(h2 + 1)^{2} + t2^{2}}$ = 33.29 cm
+
+Die Differenz zwischen ht1_{gespannt} und ht1_{entspannt} (bzw. ht2) beschreibt die Tiefe, die eine Taste gedrückt werden kann.
+\newline Diese beträgt 0.82 cm, bzw. 0.84 cm.
+
+\includegraphics [width=8cm, height=10cm] {img/Umlenkung_locker}\caption{Taste locker ohne Umlenkung}
+\includegraphics [width=8cm, height=10cm] {img/Umlenkung_gezogen}\caption{Taste gezogen ohne Umlenkung}
+
+Mittels einer Umlenkung (PVC-Rohr) werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
+Somit wurde die Tiefe, mit der die Taste gedrückt werden kann wieder auf annähernd 1cm erhöht werden.
+
+\includegraphics [width=8cm, height=10cm] {img/mitUmlenkung_locker}\caption{Taste mit Umlenkung}
+
+
+\textit{Auswahl des Seils}
 
 Wie eben erwähnt wird das Ziehen durch ein Seil ermöglicht.
 Dafür wird ein leichtes, formbares und dehnungsresistentes Material benötigt, da die eine Seite mit dem Hubmagnete und die andere durch ein Loch in der Taste verknotet werden sollt.
@@ -312,7 +361,6 @@ In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses 
 
 \subsection{Transistor}
 Durchlaufspannung, Mindestspannung
-\subsection{Aktuator}\label{subsec:aktuator}
 
 \subsection{Schaltplan}
 
@@ -408,3 +456,5 @@ Schieberegistern erhalten können.
 Im Prinzip wäre die Idee hier allerdings wieder die selbe wie beim Rest des Projektes gewesen,
 weswegen wir Kosten an den Aktuatoren und der extra Stromversorgung für die Pedale gespart haben und diese nicht ansteuern.
 
+\paragraph{Wärmeabfuhr}
+Metallplatte unter Aktuatoren

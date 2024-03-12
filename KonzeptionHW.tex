@@ -90,20 +90,20 @@ Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürrt werden, 
 Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein dehnungsresistentes Seil zu verwenden.
 Würde sich das Seil dehnen lassen, würde ein Teil der Kraft nicht bis zur Taste gelangen und somit den Anschlag abschwächen.
 
-\textit{Nähgarn}
+\subsubsection{Nähgarn}
 
 Als Erstes wurden Nähgarn, welches zur Hand war getestet.
 Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung mit 25N des Hubmagnetens nicht stand.
 Vier Fäden funktionierten zu Beginn gut, leierten allerdings schnell aus.
 
-\textit{Nylonsaiten}
+\subsubsection{Nylonsaiten}
 
 Als Nächstes wurde die g-Saite einer Gitarre verwendet.
 Durch den höheren Durchmesser und das stärkere Material riss und leierte die Saite nicht aus.
 Da die Saite kaum Flexibilität liefert, war die Befestigung an der Taste äußerst schwierig.
 Beim Ziehen des Magnetes wurde erst die lockere Schlaufe an der Taste gestreckt, wodurch nicht der vollständige Hub des Magnetes auf die Taste übertragen werden.
 
-\textit{Angelschnur}
+\subsubsection{Angelschnur}
 
 Aus Erfahrungen aus dem Angelbereich konnte schnell eine geeignetere Schnur gefunden werden.
 Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
@@ -116,12 +116,12 @@ Die Hubmagnete machen beim Anschlagen laute "klack" Geräusche, welche von der M
 Genauer handelt es sich um das den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
 Auch hierfür gab es mehrere Ideen und Tests, um das Geräusch zu dämpfen:
 
-\textit{Isolierfolie}
+\subsubsection{Isolierfolie}
 
 Die erste Überlegung war die Auskleidung des Innenraums der Hubmagnete mit Isolierfolie.
 Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu diesem Zeitpunkt noch zu gering war, um sicherzustellen, dass die Isolierung dem standhält.
 
-\textit{Gummi-Stopper}
+\subsubsection{Gummi-Stopper}
 
 Die nächste Idee war das Limitieren des Schlags durch Gummiringe (Dichtungsringe) zwischen Anker und dem äußeren Gehäuse.
 Da für die Befestigung keine zufriedenstellende Lösung gefunden wurde, wurde auch diese Idee verworfen.
@@ -133,7 +133,7 @@ Aktuatoren Geräuschreduzierung Tests:
 
 Weg normal: 10mm
 
-\textit{Schaumstoff}
+\subsubsection{Schaumstoff}
 
 *siehe bild
 Wie im Bild zu sehen wurde die "Gummi-Stopper"-Idee leicht mit Schaumstoff leicht verändert.
@@ -142,7 +142,7 @@ Wie im Bild zu sehen wurde die "Gummi-Stopper"-Idee leicht mit Schaumstoff leich
 - Außerdem ist der Aufbau optisch nicht ansprechend.
 
 
-\textit{Seil (2mm Durchmesser) um den Anker}
+\subsubsection{Seil (2mm Durchmesser) um den Anker}
 
 Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt.
 + Auch hier konnte das Klopfen vollständig beseitigt werden
@@ -316,14 +316,14 @@ Durchlaufspannung, Mindestspannung
 
 \subsection{Schaltplan}
 
-\textit{Arduino}
+\subsubsection{Arduino}
 
 Im Zentrum der Schaltung steht der Mikrocontroller (hier: Arduino Uno R3).
 Dieser erhält Daten und Strom über den integrierten USB-Anschluss, welcher mit dem Computer verbunden wird.
 Da der Arduino limitierte~\nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
 Mit jedem ``in Reihe'' geschaltetem Schieberegister kann die Anzahl PWM-fähiger Ausgänge um 8 erweitert werden.
 
-\textit{Schieberegister}
+\subsubsection{Schieberegister}
 
 Der Arduino wird an fünf Stellen mit dem ersten Schieberegister verbunden:
 
@@ -357,7 +357,7 @@ Jedes weiteres Schieberegister greift die oben genannten Signale ab.
 Der einzige Unterschied befindet sich am Serial (SER) Input Port.
 Das Schieberegister an Position i+1 wird mit dem seriellen Output des Schieberegisters an Position i verbunden. ($\forall i = 0,...,10$)
 
-\textit{MOSFET}
+\subsubsection{MOSFET}
 
 Die Hubmagnete werden jeweils mit 24V und mit bis zu 400mA betrieben.
 Um einen hohen Stromfluss zu steuern, können Transistoren verwendet werden.
@@ -370,11 +370,11 @@ Der GATE-Pin des MOSFETs erhält das Signal, dass die ``Durchlässigkeit'' steue
 Der SOURCE-Pin wird mit Ground des gesamten Systems verbunden.
 Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunden.
 
-\textit{Hubmagnet}
+\subsubsection{Hubmagnet}
 
 Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnetes mit dem +24V verbunden.
 
-\textit{Testen}
+\subsubsection{Testen}
 
 Um die Fehlersuche zu erleichtern, werden LEDs in den Schaltplan mit eingebaut.
 Diese werden jeweils mit einem entsprechenden $1k\Omega$ Widerstand parallel zu den Motoren angeschlossen.

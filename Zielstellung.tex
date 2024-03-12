@@ -10,9 +10,11 @@
 
 
 Das Kernanliegen dieser Arbeit ist die Entwicklung eines multifunktionalen Klaviers,
-das sowohl manuell von Musikern als auch automatisiert durch einen Computer bespielt werden kann.
+das sowohl manuell von Musiker:innen als auch automatisiert durch einen Computer bespielt werden kann.
 Zu diesem Zweck wird ein kompakter Mikrocontroller genutzt, der die Aufgabe hat, spezifische Hardwarekomponenten zu steuern.
 Diese Hardware ist dazu in der Lage, eigenständig die Tasten des Klaviers zu bedienen und somit die Saiten zum Schwingen zu bringen.
+% @Note(Val): Warum starten wir mit einer Beschreibung der Umsetzung statt einer Beschreibung des Ziels hier?
+% @Note(Val): In diesem Kapitel würde ich immer "soll" verwenden, um klarzustellen, dass zum Stand dieses Kapitels noch keine Implementierung existiert
 
 Die Interaktion mit dem selbstspielenden Klavier erfolgt über eine Desktop-Anwendung, die es Nutzerinnen und Nutzern ermöglicht,
 aus einer Vielzahl von Musikstücken zu wählen.
@@ -21,20 +23,22 @@ den bestehenden Musik-Katalog durch eigene Stücke zu erweitern.
 Neben der Auswahl von Musikstücken bietet die Anwendung auch die Möglichkeit,
 die Wiedergabegeschwindigkeit und die Lautstärke individuell anzupassen.
 
+% @Note(Val): Dieser Absatz und generell dieser ganze Einstieg liest sich eher nach einer Werbung statt einer wissenschaftlichen Zielstellung
 In Anlehnung an die Funktionsweise populärer Musikplayer wird angestrebt,
 dass die Wiedergabe nicht nur pausiert, sondern auch innerhalb eines Stücks frei navigiert werden kann.
 Dieses Merkmal unterstreicht nochmals den interaktiven Charakter des Instruments und wie intuitiv dessen Bedienung ist.
 
-
+% @Note(Val): Gibt es einen Grund dafür, den Zeilenumbruch hier zu forcieren?
 \newpage
 \section{Anforderungen} \label{sec:zielstellung-anforderungen}
 
+% @TODO(Val): Hier müsste noch Text kommen. Kruse mag es ja nicht, wenn wir Tabellen/Diagramme direkt unter Überschriften haben
 \begin{table}[ht]
     \centering
     \begin{tabular}{ | m{2cm} | m{10cm}| m{2cm} | }
         \hline
         \textbf{Kategorie} & \textbf{Anforderung} & \textbf{Priorität} \\
-        \hline
+        \hline % @Note(Val): Statt "System" würde ich hier eher "Klavier" schreiben
         Allgemein & Flexibilität: Das System muss sowohl manuell als auch automatisch bespielbar sein. & Hoch \\
         \cline{2-3}
         & Benutzerinterface: Entwicklung eines klaren und benutzerfreundlichen Interfaces. & Hoch \\

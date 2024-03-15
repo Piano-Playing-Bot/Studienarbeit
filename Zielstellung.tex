@@ -17,7 +17,7 @@ Diese Hardware ist dazu in der Lage, eigenständig die Tasten des Klaviers zu be
 % @Note(Val): In diesem Kapitel würde ich immer "soll" verwenden, um klarzustellen, dass zum Stand dieses Kapitels noch keine Implementierung existiert
 
 Die Interaktion mit dem selbstspielenden Klavier erfolgt über eine Desktop-Anwendung, die es Nutzerinnen und Nutzern ermöglicht,
-aus einer Vielzahl von Musikstücken zu wählen.
+aus einer Sammlung von Musikstücken zu wählen.
 Ein wesentlicher Aspekt des Projekts ist zudem die Flexibilität des Systems: Nutzende sollen in der Lage sein,
 den bestehenden Musik-Katalog durch eigene Stücke zu erweitern.
 Neben der Auswahl von Musikstücken bietet die Anwendung auch die Möglichkeit,
@@ -32,16 +32,19 @@ Dieses Merkmal unterstreicht nochmals den interaktiven Charakter des Instruments
 \newpage
 \section{Anforderungen} \label{sec:zielstellung-anforderungen}
 
+Um das Ziel eines selbstspielenden Klaviers messbar zu machen, wurde die untenstehende Tabelle erstellt.
+Darin befinden sich die allgemeinen Anforderungen, die an dieses Projekt gestellt werden.
+
 % @TODO(Val): Hier müsste noch Text kommen. Kruse mag es ja nicht, wenn wir Tabellen/Diagramme direkt unter Überschriften haben
 \begin{table}[ht]
     \centering
     \begin{tabular}{ | m{2cm} | m{10cm}| m{2cm} | }
         \hline
         \textbf{Kategorie} & \textbf{Anforderung} & \textbf{Priorität} \\
-        \hline % @Note(Val): Statt "System" würde ich hier eher "Klavier" schreiben
-        Allgemein & Flexibilität: Das System muss sowohl manuell als auch automatisch bespielbar sein. & Hoch \\
+        \hline
+        Allgemein & Flexibilität: Das Klavier muss sowohl manuell als auch automatisch bespielbar sein. & Hoch \\
         \cline{2-3}
-        & Benutzerinterface: Entwicklung eines klaren und benutzerfreundlichen Interfaces. & Hoch \\
+        & Benutzerinterface: Entwicklung eines intuitiven Interfaces. & Hoch \\
         \cline{2-3}
         & Responsivität: Die Anwendung muss auf verschiedenen Computern mit Windows 10 und 11 laufen. & Mittel \\
         \cline{2-3}
@@ -67,7 +70,7 @@ Dieses Merkmal unterstreicht nochmals den interaktiven Charakter des Instruments
 \section{Vorgehensweise} \label{sec:zielstellung-vorgehen}
 
 In diesem Kapitel wird der geplante Ablauf des Projektes zur Entwicklung eines selbstspielenden Klaviers vorgestellt.
-Die Vorgehensweise ist in mehrere Phasen unterteilt, die jeweils auf die in Anforderungen abgestimmt sind.
+Die Vorgehensweise ist in mehrere Phasen unterteilt, die das parallele Arbeiten vereinfachen.
 
 \subsubsection{Konzeptualisierung und Planung}\label{Vorgehensweise - Konzeptualisierung und Planung}
 
@@ -80,7 +83,7 @@ Die Planungsphase umfasst:
     \item Definition der funktionalen Anforderungen an das Klavier. (siehe Kapitel \ref{sec:zielstellung-anforderungen})
     \item Auswahl der Ansteuerung-Hardware. (siehe Kapitel \ref{vorgehenHW})
     \item Bau der Ansteuerung-Hardware. (siehe Kapitel \ref{umsetzungHW})
-    \item Entwurf des Konzepts für die Desktop-Anwendung zur Steuerung. (siehe Kapitel \ref{vorgehenSW})
+    \item Entwurf des Konzepts für die Desktop-Anwendung. (siehe Kapitel \ref{vorgehenSW})
     \item Entwicklung der Software. (siehe Kapitel \ref{umsetzungSW})
     \item Testen der Kombination aus Hard-und Software. (siehe Kapitel \ref{tests})
     \item Fazit. (siehe Kapitel \ref{fazit})

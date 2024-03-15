@@ -206,10 +206,10 @@ Wie im Bild zu sehen wurde die "Gummi-Stopper"-Idee leicht mit Schaumstoff leich
 
 \subsubsection{Seil (2mm Durchmesser) um den Anker}
 
-Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt.
-+ Auch hier konnte das Klopfen vollständig beseitigt werden
-+ Von außen sieht man keine Veränderung
-+ Bezogen auf die Hitzeentwicklung scheint das Seil nach den bisherigen Tests gut Stand zu halten.
+Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt. \newline
++ Auch hier konnte das Klopfen vollständig beseitigt werden \newline
++ Von außen sieht man keine Veränderung \newline
++ Bezogen auf die Hitzeentwicklung scheint das Seil nach den bisherigen Tests gut Stand zu halten. \newline
 - Durch die Dicke des Seils, werden 2mm Hub nicht verwenden, weshalb nur noch 8mm übrig bleiben.
 
 
@@ -218,17 +218,14 @@ Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nu
 
 \subsection{Mikrocontroller}\label{Ansteuerung}
 Um die Signale des Programmes an die Aktuatoren weitergeben zu können, wird ein Mikrocontroller benötigt.
-Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei für diese Arbeit ein Arduino und ein
-Rasperry Pi betrachtet wurden (Wobei es sich bei einem Rasperry Pi genau genommen um einen Einplatinencontroller
-handelt). \newline
+Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
 
 %Arduino Intro
 \begin{minipage}{0.7\textwidth}
 	\paragraph{Arduino}
-	Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen. Er besteht aus
-	einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten
-	verbunden werden kann. Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit
-	externen Geräten verwendet werden können.
+	Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen.
+	Er besteht aus einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten verbunden werden kann.
+	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können.
 \end{minipage}
 \begin{minipage}{0.3\textwidth}
 	\includegraphics [width=\textwidth] {img/ArduinoR3}
@@ -241,67 +238,73 @@ handelt). \newline
 \end{minipage}
 \begin{minipage}{0.7\textwidth}
 	\paragraph{Rasperry Pi}
-	Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert. Er ist dafür konzipiert, eine breite
-	Palette von Anwendungen zu unterstützen, von Prototypenbau bis IoT.
-	Im Gegensatz zum Arduino verfügt er über einen Prozessor und ist besonders für komplexe und Rechenlastige
-	Projekte geeignet.
+	Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert.
+	Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, von Prototypenbau bis IoT.
+	% @Note(Val): "Im Gegensaz zum Arduino verfügt er über einen Prozessor" - falsch? der Arduino hat offensichtlich auch einen Prozessor...
+	% @Cleanup(Val): Originaler Satz hier: (angepasst für Abgabe an Kruse für Email)
+	% Im Gegensatz zum Arduino verfügt er über einen Prozessor und ist besonders für komplexe und rechenlastige Projekte geeignet.
+	Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet.
 \end{minipage}
 \newline
 
 %Vergleich
-Die Entscheidung für den verwendeten Mikrocontroller traf auf den Arduino. Der Rasperry Pi stand vor allem aufgrund
-seiner höhere Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine Komplexe Ansteuerungslogik
-möglich ist und ein Großteil des Programmes auf dem Rasperry Pi ausgeführt werden kann. Allerdings ist er aufgrund
-seines Betriebssystems und einer erhöhten Latenz nicht für Echtzeit-Anwendungen bzw. Geschwindigkeitskritische
-Anwendungen ausgelegt. Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
-Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die
-Hardware direkt anzusprechen und ist somit besser für Projekte geeignet, welche eine präzise Ansteuerung von
-Aktuatoren benötigt. Zudem ist die Komplexität der Ansteuerung nicht so hoch, dass der Microcontroller über eine
-hohe Rechenleistung verfügen muss. \newline
-Für das Projekt wird spezifisch ein Arduino R3 verwendet. Bei der Auswahl des spezifischen Arduinos wurden der Arduino
-Uno, Nano und R3(auch: mega 2563) betrachtet. Im Prinzip wäre jedes der Modelle für die Anwendung möglich, allerdings
-verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
-gegenüber der 32KB vom Arduino Uno und den 16KB des Arduino Nanos). Der Arduino Uno verfügt zwar über mehr Ports,
-allerdings bringt dies keinen Mehrwert, da die Anzahl der benötigten Ausgänge auch bei einem Arduino Uno nicht erreicht werden
-(siehe Kapitel~\ref{output}).
-Der Arduino R3 bietet - wie die anderen beiden Modelle auch - PWM (Pulsweitenmodulation) Pins, die im Rahmen des Projekts
-genutzt wurden.
+% @Note(Val): Das war der originale Satz, aber der klang sehr komisch...: "Die Entscheidung für den verwendeten Mikrocontroller traf auf den Arduino."
+Es wurde sich letztendlich für den Arduino entschieden.
+Der Rasperry Pi stand vor allem aufgrund seiner höhere Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine Komplexe Ansteuerungslogik möglich ist und ein Großteil des Programmes auf dem Rasperry Pi ausgeführt werden kann.
+Allerdings ist er aufgrund seines Betriebssystems und einer erhöhten Latenz nicht für Echtzeit-Anwendungen bzw. Geschwindigkeitskritische Anwendungen ausgelegt.
+Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
+Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen und ist somit besser für Projekte geeignet, welche eine präzise Ansteuerung von Aktuatoren benötigt.
+Zudem ist die Komplexität der Ansteuerung nicht so hoch, dass der Microcontroller über eine hohe Rechenleistung verfügen muss.
+
+Für das Projekt wird spezifisch ein Arduino R3 verwendet. Bei der Auswahl des spezifischen Arduinos wurden der Arduino Uno, Nano und R3(auch: mega 2563) betrachtet.
+Im Prinzip wäre jedes der Modelle für die Anwendung möglich, allerdings verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
+gegenüber der 32KB vom Arduino Uno und den 16KB des Arduino Nanos).
+Der Arduino Uno verfügt zwar über mehr Ports, allerdings bringt dies keinen Mehrwert, da die Anzahl der benötigten Ausgänge auch bei einem Arduino Uno nicht erreicht werden
+(siehe Kapitel \ref{output}).
+Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM} Pins, die im Rahmen des Projekts genutzt werden können.
 
 \subsection{Pulsweitenmodulation (PWM)}\label{PWM}
-Oftmals ist bei der Ansteuerung nicht die gesamte Versorgungsspannung erwünscht bzw. gebraucht. In diesen Fällen muss
-die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
-Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt. Das Signal kann
-dafür die Hälfte der Zeit ausgeschaltet werden, womit zwischen 0V und den vollen 5V durchschnittlich insgesamt 2.5V
-anliegen. Wenn die Frequenz zwischen an- und ausschalten des Signals erhöht wird, desto weniger wird diese ``künstlich''
-simulierte Halbierung wahrgenommen. \newline
-PWM bedient sich im Grunde genau dieser Technik.
-Einfach ausgedrückt, wird die Zeitdauer eines digitalen Signals variiert wird, um einen
-durchschnittlichen Wert zu erzeugen. Bei den PWM- Ausgängen wird die Pulsweite - die Dauer der Einschaltzeit -
-des Signals angepasst, um die gewünschte Spannung zu erreichen. \newline
-\includegraphics [width=13cm, height=8cm] {img/pulsweite} \newline \newline
+Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. gebraucht.
+In diesen Fällen muss die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
+Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt.
+Das Signal kann dafür die Hälfte der Zeit ausgeschaltet werden, womit zwischen 0V und den vollen 5V durchschnittlich insgesamt 2.5V anliegen.
+Je höher die Frequenz zwischen an- und ausschalten des Signals eingestellt wird, desto weniger wird diese ``künstlich'' simulierte Halbierung wahrgenommen.
+
+\ac{PWM} bedient sich im Grunde genau dieser Technik.
+Dabei wird die Zeitdauer eines digitalen Signals variiert wird, um einen durchschnittlichen Wert zu erzeugen.
+Bei den \ac{PWM}-Ausgängen wird die Pulsweite - die Dauer der Einschaltzeit - des Signals angepasst, um die gewünschte Spannung zu erreichen.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics [width=13cm, height=8cm] {img/pulsweite}
+	% @Note(Val): Quelle des Bilds fehlt hier noch
+	\caption{Pulsweite}
+	\label{fig:pulsweite}
+\end{figure}
+
 Spezifischer ausgedrück passiert folgendes:
-Eine Digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das zwischen Ein und Aus umgeschaltet wird
-- zu erzeugen. Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung und Aus
-simulieren.
-Dabei wird der Anteil der Zeit geändert, den das Signal eingeschaltet ist im Vergleich zur Zeit, die das Signal
-ausgeschaltet ist. Um unterschiedliche analoge Werte zu
-erhalten, wird die Pulsweite geändert bzw. moduliert. Wenn dieses Ein-Aus-Muster zum Beispiel schnell genug mit einer LED
-wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit
-der LED steuert. \newline
-Auf den Arduino bezogen sieht die Umsetzung eines PWM Signals wie folgt aus:
+Eine digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das zwischen Ein und Aus umgeschaltet wird - zu erzeugen.
+Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung und 0V simulieren.
+Dabei wird der Anteil der Zeit geändert, für den das Signal eingeschaltet ist im Vergleich zur Zeit, die das Signal ausgeschaltet ist.
+Um unterschiedliche analoge Werte zu erhalten, wird die Pulsweite geändert bzw. moduliert.
+Wenn dieses Ein-Aus-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit der LED steuert.
+% @Note(Val): was ist "Vcc" hier?
+
+% @Note(Val): Hier wechselst du von Ein, Aus zu HIGH, LOW. Einheitliche Benennung wäre hier sinnvoller
+Auf den Arduino bezogen sieht die Umsetzung eines \ac{PWM} Signals wie folgt aus:
 Ein Taktsignal gelangt in die entsprechende Clock.
-Die Clock stellt den entsprechenden PWM-Modus ein. Dabei werden zwei wichtige Werte gesetzt:
-Der erste bestimmt, wann das Signal von HIGH auf LOW
-umschaltet, während der zweite bestimmt, wann es zurückkommt. Das Verhältnis zwischen HIGH und LOW wird als
-Tastverhältnis bezeichnet und bestimmt die Helligkeit unserer LED bzw. die Stärke, mit welcher der Hubmagnet anschlägt.
-Je länger die Ausgabe im HIGH-Zustand bleibt, desto schneller erfolgt der Tastenanschlag. \newline
-Neben dem Tastverhältnis, also das Verhältnis der Einschaltzeit zur
-Periodendauer, welches oft in Prozent ausgedrückt wird, ist auch die Resolution (de: Auflösung) ein variierbarer Parameter.
+Die Clock stellt den entsprechenden \ac{PWM}-Modus ein.
+Dabei werden zwei wichtige Werte gesetzt:
+Der erste bestimmt, wann das Signal von HIGH auf LOW umschaltet, während der zweite bestimmt, wann es zurückkommt.
+Das Verhältnis zwischen HIGH und LOW wird als Tastverhältnis bezeichnet und bestimmt die Helligkeit unserer LED bzw. die Stärke, mit welcher der Hubmagnet anschlägt.
+Je länger die Ausgabe im HIGH-Zustand bleibt, desto schneller erfolgt der Tastenanschlag.
+
+Neben dem Tastverhältnis, also das Verhältnis der Einschaltzeit zur Periodendauer, welches oft in Prozent ausgedrückt wird, ist auch die Resolution (de: Auflösung) ein variierbarer Parameter.
 Die Resolution bezieht sich auf die Anzahl der möglichen diskreten Werte, die das Signal annehmen kann.
 
 
 \subsection{Vermehrung der Ausgänge}\label{output}
-Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Ein Arduino hat keine 88 PWM-Ports, daher
+Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Ein Arduino hat keine 88 \ac{PWM}-Ports, daher
 müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten,
 wobei in dieser Arbeit 3 im Detail betrachtet wurden:
 
@@ -317,19 +320,19 @@ wobei in dieser Arbeit 3 im Detail betrachtet wurden:
 \paragraph{Schieberegister}
 Ein Schieberegister ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
 Datenbits verwendet wird.\newline
-Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell (eins nach dem anderen) in das Register
-eingegeben und dann sequenziell (eins nach dem anderen) aus dem Register ausgegeben werden können. Dies geschieht durch
-die Verwendung von Taktimpulsen, die das Verschieben der Bits steuern.\newline
-Schieberegister bestehen aus einer Reihe von Flip-Flops. Ein Flip-Flop kann als einfacher Speicher/Element betrachtet werden, dass
-binäre Informationen speichert und je nach Eingangssignal den Zustand 1, 0, oder einen \"Flip``-Zustand annimmt. Diese
-FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolge speichern und weitergeben können. \newline
+Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell in das Register eingegeben und dann sequenziell aus dem Register ausgegeben werden können.
+Dies geschieht durch die Verwendung von Taktimpulsen, die das Verschieben der Bits steuern.\newline
+Schieberegister bestehen aus einer Reihe von Flip-Flops.
+Ein Flip-Flop kann als ein einfacher Speicher betrachtet werden, der binäre Informationen speichert und je nach Eingangssignal den Zustand 1, 0, oder einen \enquote{Flip}-Zustand annimmt.
+Diese FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolge speichern und weitergeben können.
 
-Um 88 Ausgänge mit Hilfe von Schieberegistern von nur 3 PWM-Pins des Arduinos anzusteuern, werden insgesamt 11 8-Bit-Schieberegister
-(Also Schieberegister mit 8 Ausgängen) benötigt.
+Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des Arduinos agesteuert werden, umzusetzen, können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
 
+% @Note(Val): Wäre doch eigentlich eine "Aktuator-Matrix" oder "Magnet-Matrix", weil wir ja keine Motoren haben, oder?
 \paragraph{Motor-Matrix}
-Die Motor-Matrix ist einer LED-Matrix nachgeahmt. //TODO: Picture Matrix and use muster to explain it for magnets
-In einer Matrix, werden zwei Reihen an Ports angeschlossen, nach folgendem Muster:
+% @TODO(Jay): Picture Matrix and use muster to explain it for magnets
+Die Motor-Matrix ist einer LED-Matrix nachgeahmt.
+In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
 $$
 \begin{pmatrix}
 	(11) & (12) & (13) & (14) & (15) & (16) & (17) & (18) \\
@@ -344,15 +347,14 @@ $$
 $$
 
 
-Eine LED-Matrix besteht aus einer Anordnung von LEDs in Zeilen und Spalten. Jede LED kann unabhängig von den anderen
-ein- oder ausgeschaltet werden. Die Steuerung erfolgt über Multiplexing, bei dem jede Zeile der Matrix nacheinander
-aktiviert wird, während die entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden. Durch schnelles
-Wechseln zwischen den Zeilen (PWM) erscheint es den BetrachterInnen, als ob alle LEDs gleichzeitig leuchten würden,
-obwohl sie tatsächlich nacheinander aktiviert werden. \newline
+Eine LED-Matrix besteht aus einer Anordnung von LEDs in Zeilen und Spalten.
+Jede LED kann unabhängig von den anderen ein- oder ausgeschaltet werden.
+Die Steuerung erfolgt über Multiplexing, bei dem jede Zeile der Matrix nacheinander aktiviert wird, während die entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
+Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM} erscheint es den Betrachter:nnen, als ob alle LEDs gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
 
-Um das Prinzip einer LED-Matrix auf Aktuatoren zu übertragen, müssen lediglich die LEDs durch die Aktuatoren ersetzt werden.
-Durch Steuerung der Zeilen und Spalten dieses Rasters können verschiedene Motoren selektiv
-aktiviert werden. Dies ermöglicht eine effiziente Steuerung mehrerer Motoren mit einem begrenzten Satz von
+Um das Prinzip einer LED-Matrix auf Aktuatoren zu übertragen, müssen lediglich die LEDs durch Aktuatoren ersetzt werden.
+Durch Steuerung der Zeilen und Spalten dieses Rasters können verschiedene Motoren selektiv aktiviert werden.
+Dies ermöglicht eine effiziente Steuerung mehrerer Motoren mit einem begrenzten Satz von
 Steuersignalen.
 
 //TODO: Nachteile Matrix
@@ -381,8 +383,8 @@ Durchlaufspannung, Mindestspannung
 
 Im Zentrum der Schaltung steht der Mikrocontroller (hier: Arduino Uno R3).
 Dieser erhält Daten und Strom über den integrierten USB-Anschluss, welcher mit dem Computer verbunden wird.
-Da der Arduino limitierte~\nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
-Mit jedem \enquote{in Reihe} geschaltetem Schieberegister kann die Anzahl PWM-fähiger Ausgänge um 8 erweitert werden.
+Da der Arduino limitierte \nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
+Mit jedem \enquote{in Reihe} geschaltetem Schieberegister kann die Anzahl \ac{PWM}-fähiger Ausgänge um 8 erweitert werden.
 
 \subsubsection{Schieberegister}
 
@@ -464,7 +466,7 @@ Diese sind schwerer anzuspielen als die Tasten und benötigen somit Leistungsfä
 Es gab eine Überlegung diese Aktuatoren zu besorgen, da die Pedale klangtechnisch Mehrwert bringen.
 Außerdem hätten wir uns noch Gedanken bezüglich der Schaltug und des Signals machen können.
 Einerseits hätte ein weiteres Schieberegister genutzt werden können, wobei das Signal angepasst wird das die letzten 6 Ausgänge nie ein Signal bekommen.
-ANdererseits hätten die Pedale mit weiteren PWM Ports des Arduinos verbunden werden können und die Signale unabhängig von den
+ANdererseits hätten die Pedale mit weiteren \ac{PWM} Ports des Arduinos verbunden werden können und die Signale unabhängig von den
 Schieberegistern erhalten können.
 Im Prinzip wäre die Idee hier allerdings wieder die selbe wie beim Rest des Projektes gewesen,
 weswegen wir Kosten an den Aktuatoren und der extra Stromversorgung für die Pedale gespart haben und diese nicht ansteuern.

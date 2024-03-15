@@ -180,16 +180,15 @@ typedef struct {
 \end{UnbrokenCodePage}
 
 \section{Logik des Microcontrollers} \label{vorgehenSW-MC}
-kurzer Überblick, vllt. mit SADT-Diagramm
 
-Der \ac{MC} hat grundlegend zwei Aufgaben zu tun.
+Der \ac{MC} hat grundlegend zwei Aufgaben.
 Einerseits muss der \ac{MC} in einem regelmäßigen Zeitintervall Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
-Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren können.
+Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren.
+Da der \ac{MC} nur einen einzelnen CPU-Kern hat, ist es wichtig zu beachten, dass zu jedem Zeitpunkt nur eine dieser beiden Aufgaben bearbeitet werden kann.
 
-Der \ac{MC} hat grundsätzlich zwei Funktionen.
-Eine Funktion, die initial beim Start des \ac{MC} ausgeführt wird und eine weitere Funktion, die daraufhin in einer Endlosschleife ausgeführt wird.
-Demnach müssen die beiden Aufgaben im Körper der Schleife umgesetzt werden.
-Da der \ac{MC} nur einen einzelnen CPU-Kern hat, ist es wichtig zu beachten, dass keine der
+Um die Aktuatoren regelmäßig anzusteuern, kann ein zeitgesteuerter Interrupt verwendet werden.
+Sobald dieser Interrupt ausgeführt wird, können die Signale, die zu den Hubmagneten gesendet werden, verändert werden. % @Note(Val): Der Satz klingt irgendwie komisch
+Dabei wird jedoch vorausgesetzt, dass die Daten für die Aktuatoren zu jedem Zeitpunkt bereitstehen.
 
 % @TODO(Val): Rest schreiben...
 

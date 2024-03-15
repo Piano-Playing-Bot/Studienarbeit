@@ -183,14 +183,22 @@ typedef struct {
 
 Der \ac{MC} hat grundlegend zwei Aufgaben.
 Einerseits muss der \ac{MC} in einem regelmäßigen Zeitintervall Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
-Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren.
-Da der \ac{MC} nur einen einzelnen CPU-Kern hat, ist es wichtig zu beachten, dass zu jedem Zeitpunkt nur eine dieser beiden Aufgaben bearbeitet werden kann.
+Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren können.
+Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearebeitet werden können.
 
-Um die Aktuatoren regelmäßig anzusteuern, kann ein zeitgesteuerter Interrupt verwendet werden.
-Sobald dieser Interrupt ausgeführt wird, können die Signale, die zu den Hubmagneten gesendet werden, verändert werden. % @Note(Val): Der Satz klingt irgendwie komisch
-Dabei wird jedoch vorausgesetzt, dass die Daten für die Aktuatoren zu jedem Zeitpunkt bereitstehen.
+Um das Ansprechen der Aktuatoren in regelmäßigen Abständen umzusetzen, ist die Verwendung eines Timer-gesteuerten Interrupts sinnvoll.
+
+
+Bei Auftreten des Interrupts, sollten dann Daten aus einem Buffer an die Schieberegister weitergeleitet werden.
+Auch ist wichtig, die Ausgaben der Schieberegister zu schließen, bis die nächsten Daten durchgeschoben wurden.
+
+Beim \ac{MC}, der in Kapitel \ref{Ansteuerung} gewählt wurde, müssen dafür jeweils nur die Daten an die richtigen Pins geschrieben werden.
+Damit bei jedem Interrupt, die Daten an die Pins geschrieben werden können, müssen diese Daten vorher in einer globalen Liste vorbereitet werden.
+Bei jedem Interrupt können die Werte, die zu jedem Aktuator geschickt werden sollen, dann einfach aus der Liste gelesen und an die Pins geschrieben werden.
 
 % @TODO(Val): Rest schreiben...
+
+
 
 \section{UI-Arduino Kommunikation} \label{vorgehenSW-SPPP}
 \begin{enumerate}

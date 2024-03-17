@@ -38,16 +38,48 @@ Dieses muss einige Voraussetzungen erfüllen:
 
 
 \subsection{Ansteuerungskonzept} \label{konzeptionHW-ansteuerungskonzept}
-Beim Ansteuerungskonzept der Tasten muss auch beachtet werden, wo die Magnete befestigt werden.
+Das Ansteuerungskonzept für die Tasten eines Klaviers erfordert eine Betrachtung der Befestigungsorte für
+die Aktuatoren. Eine grundlegende Überlegung ist, ob die Saiten oder die Tasten selbst angespielt werden sollen.
 
-//Drücken der ziehen, oben oder unten...
-1. Oben
-Klavierhand
-Schiene
-Aufsatz mit 88 oben drüber
-2. unten
-ziehen
-drücken
+Wenn die Saiten direkt angespielt werden, erfordert dies weniger Kraft im Vergleich zu den Tasten.
+Das bedeutet, dass die Aktuatoren weniger Kraft aufbringen müssen und somit kostengünstigere
+Aktuatoren genutzt werden können. Allerdings geht
+dabei die gesamte Mechanik des Klaviers verloren, was bedeutet, dass Aspekte wie Dämpfung nicht genutzt werden können,
+was wiederum zu einem weniger ansprechenden Klang führt. Zusätzlich müsste das Klavier permanent geöffnet bleiben, und die
+Aktuatoren müssten äußerst präzise die Saiten anschlagen, um akzeptable Ergebnisse zu erzielen.
+
+Die Entscheidung fiel daher darauf, die Tasten anzuspielen, da hier die Klaviermechanik genutzt werden kann, was für einen
+authentischeren Klang sorgt. Die Art und Weise, wie die Aktuatoren an den Tasten angebracht werden können, wurde
+weiter untersucht.
+
+Eine Möglichkeit besteht darin, die Aktuatoren oben über den Tasten anzubringen, entweder in Form einer nachgebildeten
+``Klavierhand'' mit zehn ``Fingern'' oder in Form einer Schiene mit 88 Aktuatoren auf den Tasten. Die Klavierhand-Option würde
+dem tatsächlichen Klavierspiel ähnlicher sehen, erfordert jedoch aufgrund der Bewegung und Präzision eine komplexe Logik und
+Montage. Die Schienenoption bietet eine einfachere Ansteuerung, erfordert jedoch einen Aktuator für jede Taste und schränkt die
+normale Spielbarkeit des Klaviers ein, solange der ``Piano Player'' montiert ist.
+
+Eine andere Möglichkeit besteht darin, die Aktuatoren unter den Tasten anzubringen. Dies kann entweder durch Ziehen mittels
+Seilen oder ähnlichem erfolgen oder durch Drücken vom hinteren Ende der Tasten. Beide Optionen ermöglichen es, das Klavier sowohl vom
+``Piano Player'' als auch von einem menschlichen Spieler zu spielen. Da dies eine der Anforderungen für das Projekt ist,
+wurde entschieden, dass die Ansteuerung von unten erfolgen muss. Bei beiden Varianten wird jede Taste mit einem Aktuator
+ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten im Gegensatz zu der von oben Spielenden ``Klavierhand''
+erhöht.
+Generell ist die Drückoption ästhetisch ansprechender, erfordert jedoch Präzision und könnte die
+Tastenempfindlichkeit beeinträchtigen. Das Problem mit der Präzisen Ansteuerung fällt beim Ziehen der Tasten weg.\newline
+//TODO: Warum?
+Für das Drücken der Tasten fallen noch weitere Probleme an. Um die Tasten drücken zu können, muss ein möglichst großer
+Hebel aufgebracht werden, damit die Aktuatoren möglichste wenig Kraft aufbrauchen müssen. Dass bedeutet, dass
+die Aktuatoren soweit hinten wie möglich angebracht werden.\newline
+//BILD\newline
+Bei dem genutzten Klavier befindet sich hinten ein Holraum welcher genutzt werden kann. Dieser ist allerdings
+nicht durchgängig, was den
+Einbau von Löchern erfordert. Diese Löcher müssen räumlich so platziert werden, dass sie keine wichtigen Teile der
+Klaviermechanik stören. Dies könnte zu einer verringerten Hebelkraft und somit zu unterschiedlichen Anforderungen an
+die Tasten führen. Dies muss in der Softwarelogik berücksichtigt werden, um eine konsistente Leistung zu gewährleisten.
+
+Insgesamt fiel die Entscheidung also auf das Konzept des Ziehens von unten.
+Bei diesem Konzept wird die geringste mechanische Präzision benötigt und das Klavier ist trotz Montage des Bots noch
+spielbar.
 
 \subsection{Aktuator}\label{subsec:aktuator}
 

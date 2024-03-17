@@ -147,13 +147,13 @@ Allerdings bedeutet das auch, dass ein einfacher, fortlaufender Index nicht mehr
 Das bedeutet also eine ineffizientere Verwendung der Datenstruktur.
 Hier wurde sich entschieden, dass eine Halbierung des Speicherplatzes diesen Performanz-Verlust nicht wert ist.
 
-Listing \ref{code:PidiCmd struct} zeigt die endgültige Datenstruktur, die für ein individuellen \ac{PIDI}-Kommand gewählt wurde.
-Ein \ac{PIDI}-Kommand stellt dabei die Änderung einer Anschlagsstärke eines Tons dar.
+Listing \ref{code:PidiCmd struct} zeigt die endgültige Datenstruktur, die für ein individuellen \lstinline{PidiCmd} gewählt wurde.
+Ein \lstinline{PidiCmd} stellt dabei die Änderung einer Anschlagsstärke eines Tons dar.
 Die Töne selbst wurden als ein Paar aus Oktave und Taste in der Oktave dargestellt, da angenommen werden durfte, wie viele Tasten es pro Oktave auf einem Klavier gibt.
 Die nullte Oktave bezeichnet die mittlere Oktave des Pianos.
 Die \enquote{velocity} gibt in dieser Struktur die Anschlagsstärke an.
 Zuletzt gibt die \enquote{time} noch die Zeit in Millisekunden nach Start des Musikstücks an, zu dem diese Änderung durchgeführt werden soll.
-Eine Liste von \ac{PIDI}-Kommandos muss aufsteigend nach der Zeit sortiert sein.
+Eine Liste von \lstinline{PidiCmd}os muss aufsteigend nach der Zeit sortiert sein.
 
 \begin{UnbrokenCodePage}[style=CStyle, caption={Definition eines \ac{PIDI}-Kommands}, label={code:PidiCmd struct}]
 typedef enum {
@@ -182,23 +182,46 @@ typedef struct {
 \section{Logik des Microcontrollers} \label{vorgehenSW-MC}
 
 Der \ac{MC} hat grundlegend zwei Aufgaben.
-Einerseits muss der \ac{MC} in einem regelmäßigen Zeitintervall Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
+Einerseits muss der \ac{MC} Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
 Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren können.
 Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearebeitet werden können.
 
-Um das Ansprechen der Aktuatoren in regelmäßigen Abständen umzusetzen, ist die Verwendung eines Timer-gesteuerten Interrupts sinnvoll.
+Um die richtigen Werte zu den Aktuatoren zu senden, müssen nacheinander alle Werte an die Schieberegister gesendet werden.
+Der Wert des letzten Schieberegister-Ausgangs muss dabei zuerst gesendet werden, da es dann als erstes komplett durchgeschoben wurde.
+Sobald alle Werte ausgesandt wurden, müssen die Ausgänge der Schieberegister gesperrt werden, damit diese nicht ständig fluktuieren.
+All das kann beim \ac{MC}, der in Kapitel \ref{Ansteuerung} gewählt wurde, über das Ansprechen der \ac{PWM}-Pins des \ac{MC}s getan werden.
 
+Wann immer die Signale für die Aktuatoren ausgesandt werden sollen, müssen diese Werte vorher bereitstehen.
+Da 88 Aktuatoren angesteuert werden können sollen, muss eine Liste von 88 \ac{PWM}-Werten befüllt werden.
+Im Folgenden soll diese Liste \lstinline{piano} genannt werden.
+Um \lstinline{piano} zu befüllen müssen die Informationen des Musikstücks verwendet werden, die wie in Abschnitt \ref{vorgehenSW-PIDI} beschrieben, als eine Liste von \lstinline{PidiCmd}s gespeichert werden.
 
-Bei Auftreten des Interrupts, sollten dann Daten aus einem Buffer an die Schieberegister weitergeleitet werden.
-Auch ist wichtig, die Ausgaben der Schieberegister zu schließen, bis die nächsten Daten durchgeschoben wurden.
+Der große Vorteil der \lstinline|PidiCmd|-Struktur, liegt in einfachen Anpassung der \lstinline|piano| Liste.
+Nachdem das \lstinline|piano| korrekt initialisiert wurde, muss der Code nur linear durch die Liste der zeitlich sortierten Kommandos gehen und das \lstinline|piano| entsprechend anpassen.
+Da \lstinline|PidiCmd|s jeweils erst zu einer gewissen Zeit nach Start des Musikstücks angewandt werden sollen, muss neben dem Index in die Liste von \ac{PidiCmd}s auch die seitdem vergangene Zeit gespeichert werden.
+Mit diesen beiden Werten, kann dann zu jedem Zeitpunkt geprüft werden, ob der nächste \lstinline{PidiCmd} angewandt werden soll oder nicht.
+Diese Logik ist in Listing \ref{code:Apply PIDICmds} in Pseudocode dargestellt.
 
-Beim \ac{MC}, der in Kapitel \ref{Ansteuerung} gewählt wurde, müssen dafür jeweils nur die Daten an die richtigen Pins geschrieben werden.
-Damit bei jedem Interrupt, die Daten an die Pins geschrieben werden können, müssen diese Daten vorher in einer globalen Liste vorbereitet werden.
-Bei jedem Interrupt können die Werte, die zu jedem Aktuator geschickt werden sollen, dann einfach aus der Liste gelesen und an die Pins geschrieben werden.
+\begin{UnbrokenCodePage}[style=CStyle, caption={Nutzung der \lstinline|PidiCmd|-Struktur}, label={code:Apply PIDICmds}]
+PIDICmds *cmds; // assume this array to be initialized already
+u8  piano[88];  // list of values to send to magnets
+u64 index        = 0;
+u64 start_time   = currentTime(); // time in milliseconds
+u64 elapsed_time = 0;
+while (index < length(cmds)) {
+    while (index < length(cmds) && cmds[index].time <= elapsed_time) {
+        applyCmd(piano, cmds[index]);
+        index++;
+    }
+    elapsed_time = getElapsedTimeSince(start_time);
+}
+\end{UnbrokenCodePage}
+
+Die in Listing \ref{code:Apply PIDICmds} erwähnten Funktionen \lstinline|currentTime| und \lstinline|getElapsedTimeSince| sind über die eingebaute Uhr des \ac{MC} umsetzbar.
+Die Funktion \lstinline|aplyCmd| muss dagegen die Stärke des Tastenanschlags an der richtigen Stelle in der \lstinline|piano| Liste speichern.
+Da die \lstinline|PidiCmd|-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktutor, der diese Taste betätigt, hier geschehen.
 
 % @TODO(Val): Rest schreiben...
-
-
 
 \section{UI-Arduino Kommunikation} \label{vorgehenSW-SPPP}
 \begin{enumerate}

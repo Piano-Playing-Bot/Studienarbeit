@@ -249,7 +249,7 @@ Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nu
 
 
 \subsection{Mikrocontroller}\label{Ansteuerung}
-Um die Signale des Programmes an die Aktuatoren weitergeben zu können, wird ein Mikrocontroller benötigt.
+Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein Mikrocontroller gut geeignet.
 Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
 
 %Arduino Intro
@@ -296,6 +296,7 @@ Der Arduino Uno verfügt zwar über mehr Ports, allerdings bringt dies keinen Me
 Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM} Pins, die im Rahmen des Projekts genutzt werden können.
 
 \subsection{Pulsweitenmodulation (PWM)}\label{PWM}
+Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert.
 Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. gebraucht.
 In diesen Fällen muss die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
 Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt.
@@ -342,8 +343,8 @@ wobei in dieser Arbeit 3 im Detail betrachtet wurden:
 
 \begin{enumerate}
 	\item Schieberegister
-	\item Motor-Matrix ohne Demultiplexer
-	\item Motor-Matrix mit Demultiplexer
+	\item Aktuator-Matrix ohne Demultiplexer
+	\item Aktuator-Matrix mit Demultiplexer
 \end{enumerate}
 
 % Wäre es smart zu erwähnen was es noch für Möglichkeiten gibt? Also Arduino Mega muss ich soweiso erwähnen, aber z.B
@@ -361,9 +362,9 @@ Diese FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolg
 Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des Arduinos agesteuert werden, umzusetzen, können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
 
 % @Note(Val): Wäre doch eigentlich eine "Aktuator-Matrix" oder "Magnet-Matrix", weil wir ja keine Motoren haben, oder?
-\paragraph{Motor-Matrix}
+\paragraph{Aktuator-Matrix}
 % @TODO(Jay): Picture Matrix and use muster to explain it for magnets
-Die Motor-Matrix ist einer LED-Matrix nachgeahmt.
+Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
 In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
 $$
 \begin{pmatrix}
@@ -381,19 +382,23 @@ $$
 
 Eine LED-Matrix besteht aus einer Anordnung von LEDs in Zeilen und Spalten.
 Jede LED kann unabhängig von den anderen ein- oder ausgeschaltet werden.
+
 Die Steuerung erfolgt über Multiplexing, bei dem jede Zeile der Matrix nacheinander aktiviert wird, während die entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
 Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM} erscheint es den Betrachter:nnen, als ob alle LEDs gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
 
+
+
+
+% TODO(Jay): Nachteile Matrix
+
+
+\paragraph{Aktuator-Matrix mit Demultiplexer}
+% TODO(Jay)
 Um das Prinzip einer LED-Matrix auf Aktuatoren zu übertragen, müssen lediglich die LEDs durch Aktuatoren ersetzt werden.
 Durch Steuerung der Zeilen und Spalten dieses Rasters können verschiedene Motoren selektiv aktiviert werden.
 Dies ermöglicht eine effiziente Steuerung mehrerer Motoren mit einem begrenzten Satz von
 Steuersignalen.
-
-//TODO: Nachteile Matrix
-
-
-\paragraph{Demultiplexer}
-//TODO \newline
+\newline
 \paragraph{74HC959 Schieberegister}
 In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau:
 //TODO: Diskussion, dass wir uns für Schieberegister entschieden haben \newline

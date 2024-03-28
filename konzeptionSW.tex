@@ -61,11 +61,6 @@ Konzeptionelle Überlegungen dazu werden in \ref{vorgehenSW-MIDI} erläutert.
 
 
 \section{Datenformat für Musikstücke} \label{vorgehenSW-PIDI}
-% \begin{enumerate}
-%     \item Existierendes vs. Custom Format
-%     \item Darstellung von Tönen (nicht an geg. Piano mit 88 Tasten gebunden)
-%     \item Speicher vs Performanz im Design des Formats (inkl. Alternativen)
-% \end{enumerate}
 
 Es gibt bereits viele Datenformate, die zum Speichern von Musikstücken verwendet werden können. Dabei lassen sich solche Formate generell in zwei fundamental verschiedenen Designs unterscheiden.
 
@@ -74,43 +69,49 @@ Zum Einen gibt es generelle Audioformate. Dazu gehören solche Formate wie MP3, 
 Diese Formate speichern für jeden Zeitpunkt des Audios die Information über das Geräusch, das zu diesem Zeitpunkt abzuspielen ist.
 
 Zum Anderen gibt es Formate, die speziell für Musikstücke entwickelt wurden.
-Das Vorzeige-Beispiel wäre hier das MIDI-Format.
+Das Vorzeige-Beispiel wäre hier das \ac{MIDI}-Format.
 Bei diesen Formaten werden stattdessen Informationen über Noten, die für eine gewisse Zeit zu spielen sind, gespeichert.
 Das genaue Geräusch, das am Ende abgespielt werden sollte, wird dabei noch von anderen Faktoren beeinflusst.
 So könnten mehrere Noten gleichzeitig zu spielen sein.
 Auch könnte zum Beispiel das Instrument von Nutzer:innen dynamisch änderbar sein.
 
 % @Note(Val): Ich sage öftermal "dieses Projekt". Gefällt uns das stilistisch? Machen wir das einheitlich?
-Die zweite Art an Format ist im Kontext dieses Projekts zu bevorzugen, da es dem Format der Ausgabe näher kommt.
+Die zweite Art an Formaten ist im Kontext dieses Projekts zu bevorzugen, da es dem Format der Ausgabe näher kommt.
 Die erstgenannten Formate speichern direkt die Informationen, die von digitalen Lautsprechern zum Abspielen von Audio benötigt werden.
 Auch wenn je nach Format und Platform womöglich noch einige Datentransformationen getan werden müssen, bevor der Lautsprecher die Daten erhalten kann, ist eine Umwandlung von Informationen nicht notwendig.
 % @Note(Val): Sollte hier vielleicht erwähnt werden, warum Informations-Umwandlung zu vermeiden ist?
 
 Zum Anspielen eines Klaviers, werden stattdessen zu jedem Zeitpunkt die Information über derzeit zu spielende Tasten benötigt.
 Formate der zweiten Art speichern genau jene Informationen und sind damit perfekt für diese Aufgabe geeignet.
-Auf den ersten Blick erscheint die Verwendung eines Formats wie MIDI damit eine gute Idee.
+Auf den ersten Blick erscheint die Verwendung eines Formats wie \ac{MIDI} damit eine gute Idee.
 Es gibt hier allerdings noch weitere Aspekte, die zu beachten sind.
 
 Dieses Projekt will explizit eine höhere Performanz als die schnellsten menschlichen Pianist:innen erreichen (siehe Kapitel \ref*{Zielstellung}).
 Entsprechend sollte das gewählte Datenformat der Musikstücke auch möglichst schnell in das Format umgeformt werden können, das für die Ausgabe an die Aktuatoren benötigt wird.
-Am performantesten ist es natürlich, einfach eine Liste jener Daten zu speichern, die zu jedem Zeitpunkt an die Aktuatoren ausgegeben werden müssen, da dann überhaupt keine Datentransformation mehr nötig ist.
+Am performantesten wäre es hierbei, eine Liste jener Daten zu speichern, die zu jedem Zeitpunkt an die Aktuatoren ausgegeben werden müssen, da dann gar keine Datentransformation mehr nötig ist.
 
 % @Note(Val): Muss ich erklären, warum erhöhte Kommunikation die Performanz beeinträchtigen könnte oder ist das selbsterklärend?
 Allerdings muss das Datenformat auch möglichst wenig Speicherplatz verbrauchen.
 Da der Code auf einem \ac{MC} laufen muss, ist Speicherplatz relativ begrenzt.
 Der \ac{MC} muss dabei nicht das gesamte Musikstück auf einmal gespeichert haben, da restliche Teile des Musikstücks auch später von der \ac{UI} nachgereicht werden können.
-Das verringert die Wichtigkeit des Speicherplatzes jedoch nur zu Teilen, da ein solches Streamen der Daten mehr Kommunikation zwischen \ac{UI} und {MC} benötigt und erhöhte Kommunikation die Performanz gefährden kann.
+Das verringert die Wichtigkeit des Speicherplatzes jedoch nur zu Teilen, da ein solches Streamen der Daten mehr Kommunikation zwischen \ac{UI} und {MC} benötigt.
+Da die Latenzen der Kommunikation relativ hoch sein können, gefährdet dies wiederrum das Ziel der Performanz.
+% @TODO(Eine Anmerkung wie hoch Latenz & Throughput sein können (oder wo diese Zahlen genannt werden), wäre hier gut)
 
-% @TODO(Val): Quellen für MIDI Details einfügen
-MIDI schneidet hier nun nicht allzu gut ab.
-Auch wenn MIDI die relevanten Informationen direkt abspeichert, speichert es ebenfalls noch eine relativ große Menge weiterer Daten ab.
-Das liegt daran, das MIDI ein generelles Format ist, das eine Vielzahl von digitalen Instrumenten und Synthesizers untersützen möchte.
-Deswegen enthalten MIDI-Dateien oftmals eine Vielzahl von Metadaten, die hier irrelevant sind.
-Weiterhin gibt es in einer MIDI-Datei auch mehrere sogenannte Channels, damit unterschiedliche Instrumente gleichzeitig angespielt werden können.
-% @TODO(Val):  Vllt. Nicht-linearität von MIDI-Dateien erwähnen (i.e. zeitliche Sortierung ist nur innerhalb von Chunks festgelegt)
+% @TODO(Val): Quellen für \ac{MIDI} Details einfügen
+\ac{MIDI} schneidet hierbei an sich sehr gut ab.
+\ac{MIDI} speichert Noten sehr kompakt ab.
+Dafür verwendet
+
+\ac{MIDI} schneidet hier nun nicht allzu gut ab.
+Auch wenn \ac{MIDI} die relevanten Informationen direkt abspeichert, speichert es ebenfalls noch eine relativ große Menge weiterer Daten ab.
+Das liegt daran, das \ac{MIDI} ein generelles Format ist, das eine Vielzahl von digitalen Instrumenten und Synthesizers untersützen möchte.
+Deswegen enthalten \ac{MIDI}-Dateien oftmals eine Vielzahl von Metadaten, die hier irrelevant sind.
+Weiterhin gibt es in einer \ac{MIDI}-Datei auch mehrere sogenannte Channels, damit unterschiedliche Instrumente gleichzeitig angespielt werden können.
+% @TODO(Val):  Vllt. Nicht-linearität von \ac{MIDI}-Dateien erwähnen (i.e. zeitliche Sortierung ist nur innerhalb von Chunks festgelegt)
 
 % @Note(Val): Muss das mit einer Quelle belegt werden?
-MIDI-Alternativen haben die selben Probleme, da sie ebenfalls einen allgemeinen Anwendungsfall abbilden.
+\ac{MIDI}-Alternativen haben die selben Probleme, da sie ebenfalls einen allgemeinen Anwendungsfall abbilden.
 Da der Anwendungsfall dieser Arbeit eingeschränkter ist, lassen sich weitere Optimierungen am Datenformat durchführen.
 Entsprechend muss dann aber auch ein eigenes Datenformat für diese Arbeit entwickelt werden.
 Dabei ist es sinnvolll klar festzuhalten, welche Rahmenbedingungen vom Format angenommen werden können.
@@ -239,9 +240,9 @@ Da die \lstinline|PidiCmd|-Struktur die Anordnung und Anzahl verfügbarer Aktuat
     \item Generelle Diskussion bzgl. API-Design vllt
 \end{enumerate}
 
-\section{Parsing von MIDI} \label{vorgehenSW-MIDI}
+\section{Parsing von \ac{MIDI}} \label{vorgehenSW-MIDI}
 \begin{enumerate}
     \item Überblick über Midi
-    \item Vergleich MIDI vs PIDI
+    \item Vergleich \ac{MIDI} vs PIDI
 \end{enumerate}
 (Kapitel vllt uninteressant?)

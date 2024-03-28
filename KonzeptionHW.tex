@@ -82,8 +82,17 @@ Bei diesem Konzept wird die geringste mechanische Präzision benötigt und das K
 spielbar.
 
 \subsection{Aktuator}\label{subsec:aktuator}
-
-Schrittmotor, Hubmagnete, etc.
+Für die Entscheidung der Aktuatoren wurden vier Arten betrachtet:
+\begin{enumerate}
+	\item Hubmagnete
+	\item Linearmotoren
+	\item Servomotoren
+	\item Schrittmotoren
+\end{enumerate}
+\paragraph{Hubmagnet}
+\paragraph{Linearmotor}
+\paragraph{Servomotor}
+\paragraph{Schrittmotor}
 
 \subsection{Verbindung Tasten und Aktuatoren}
 
@@ -339,12 +348,11 @@ Die Resolution bezieht sich auf die Anzahl der möglichen diskreten Werte, die d
 \subsection{Vermehrung der Ausgänge}\label{output}
 Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Ein Arduino hat keine 88 \ac{PWM}-Ports, daher
 müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten,
-wobei in dieser Arbeit 3 im Detail betrachtet wurden:
+wobei in dieser Arbeit 2 im Detail betrachtet wurden:
 
 \begin{enumerate}
 	\item Schieberegister
-	\item Aktuator-Matrix ohne Demultiplexer
-	\item Aktuator-Matrix mit Demultiplexer
+	\item Aktuator-Matrix
 \end{enumerate}
 
 % Wäre es smart zu erwähnen was es noch für Möglichkeiten gibt? Also Arduino Mega muss ich soweiso erwähnen, aber z.B
@@ -360,7 +368,14 @@ Ein Flip-Flop kann als ein einfacher Speicher betrachtet werden, der binäre Inf
 Diese FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolge speichern und weitergeben können.
 
 Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des Arduinos agesteuert werden, umzusetzen, können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
-
+\paragraph{74HC959 Schieberegister}
+In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau:
+\begin{minipage}{0.4\textwidth}
+	\includegraphics [width=\textwidth] {img/Schieberegister}
+\end{minipage}
+\begin{minipage}{0.6\textwidth}
+	//TODO Ausgänge und so erklären
+\end{minipage}
 % @Note(Val): Wäre doch eigentlich eine "Aktuator-Matrix" oder "Magnet-Matrix", weil wir ja keine Motoren haben, oder?
 \paragraph{Aktuator-Matrix}
 % @TODO(Jay): Picture Matrix and use muster to explain it for magnets
@@ -383,33 +398,39 @@ $$
 Eine LED-Matrix besteht aus einer Anordnung von LEDs in Zeilen und Spalten.
 Jede LED kann unabhängig von den anderen ein- oder ausgeschaltet werden.
 
-Die Steuerung erfolgt über Multiplexing, bei dem jede Zeile der Matrix nacheinander aktiviert wird, während die entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
-Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM} erscheint es den Betrachter:nnen, als ob alle LEDs gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
-
-
-
+Die Steuerung erfolgt kann mit oder ohne Multiplexing erfolgen.
+Prinzipiell wird jede Zeile der Matrix nacheinander aktiviert, während die
+entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
+Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM} erscheint es den Betrachter:nnen, als ob alle LEDs
+gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
+%ohne Multiplexer
+%Todo(Jay) add picture from Tinkercad
+%mit Multiplexer
+%Was ist ein Multiplexer, warum hilft er bei Martix wie sieht allg Schaltung aus?
+Ein Multiplexer (Beziehungsweise ein Demultiplexer) ist ein integrierter Schaltkreis, welcher in der Lage ist aus
+mehreren Eingangssignalen ein einzelnes zu erstellen beziehungsweise aus einem einzelnen SIgnal mehrere Ausgangssignale zu erstellen.
+Der Schaltkreis basiert auf einfachen Logik gattern.
+Im Gegensatz zu der LED-Matrix ohne Demultiplexer, werden also weniger Eingänge benötigt.
 
 % TODO(Jay): Nachteile Matrix
 
+%TODO(Jay): Diskussion, dass wir uns für Schieberegister entschieden haben
 
-\paragraph{Aktuator-Matrix mit Demultiplexer}
-% TODO(Jay)
-Um das Prinzip einer LED-Matrix auf Aktuatoren zu übertragen, müssen lediglich die LEDs durch Aktuatoren ersetzt werden.
-Durch Steuerung der Zeilen und Spalten dieses Rasters können verschiedene Motoren selektiv aktiviert werden.
-Dies ermöglicht eine effiziente Steuerung mehrerer Motoren mit einem begrenzten Satz von
-Steuersignalen.
-\newline
-\paragraph{74HC959 Schieberegister}
-In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau:
-//TODO: Diskussion, dass wir uns für Schieberegister entschieden haben \newline
-\begin{minipage}{0.4\textwidth}
-	\includegraphics [width=\textwidth] {img/Schieberegister}
-\end{minipage}
-\begin{minipage}{0.6\textwidth}
-	//TODO Ausgänge und so erklären
-\end{minipage}
-\newline
+Für die praktische Konzeption wird ein Schieberegister genutzt. Die LED-Matrix hat zwar nicht das gleiche Latenzproblem
+der Schieberegister, aber da die Latenz vernachlässigt werden kann,
+%muss ich im Kapitel Schieberegister erklären
+wurde die auch bei der Entscheidung nicht weiter betrachtret. Die Schieberegister bieten eine simplere Schaltung als
+die Matrix. Außerdem ist die ansteuerung auf Software ebene leichter.
+Zudem wurde die Entscheidung auf Basis des Zeitaufwands getroffen. Das Löten der Matrix-Schaltung hätte eine Vielzahl an
+Lötstellen benötigt als wir mit den Schieberegistern haben.
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Er wähne ich dass wir am Anfang einfach noch nicht sicher waren ob die Matrix für die Magnete richtig funktioniert?
+% Cause das ganze basiert auf PWM-Signalen. Je nachdem welcher Magnet wie angesteuert wird, dachte ich es kann zu Problemen
+% führen weil die Schaltungen sich in die quere kommen. Also wir wussten noch nicht welche Aktuatoren wir nutzen.
+% Das hätten wir easy evaluieren können, schien aber unnötig considering dass wir auch Schieberegister nutzen konnten
+% bei denen wir aus Erfahrungsberichten schon wussten dass es funktioniert
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Transistor}
 Durchlaufspannung, Mindestspannung

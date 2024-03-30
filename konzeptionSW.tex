@@ -190,49 +190,102 @@ typedef struct PidiCmd {
 } PidiCmd;
 \end{UnbrokenCodePage}
 
+
 \section{Logik des Microcontrollers} \label{vorgehenSW-MC}
 
 Der \ac{MC} hat grundlegend zwei Aufgaben.
 Einerseits muss der \ac{MC} Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
 Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren können.
-Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearebeitet werden können.
+Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearebeitet werden.
 
-Um die richtigen Werte zu den Aktuatoren zu senden, müssen nacheinander alle Werte an die Schieberegister gesendet werden.
+Um die richtigen Werte zu den Aktuatoren zu senden, müssen nacheinander alle Werte an die Schieberegister gegeben werden.
 Der Wert des letzten Schieberegister-Ausgangs muss dabei zuerst gesendet werden, da es dann als erstes komplett durchgeschoben wurde.
 Sobald alle Werte ausgesandt wurden, müssen die Ausgänge der Schieberegister gesperrt werden, damit diese nicht ständig fluktuieren.
-All das kann beim \ac{MC}, der in Kapitel \ref{Ansteuerung} gewählt wurde, über das Ansprechen der \ac{PWM}-Pins des \ac{MC}s getan werden.
+All das kann beim Arduino, der in Kapitel \ref{Ansteuerung} als \ac{MC} gewählt wurde, über das Ansprechen spezieller \ac{PWM}-Pins getan werden.
 
 Wann immer die Signale für die Aktuatoren ausgesandt werden sollen, müssen diese Werte vorher bereitstehen.
-Da 88 Aktuatoren angesteuert werden können sollen, muss eine Liste von 88 \ac{PWM}-Werten befüllt werden.
+Da 88 Aktuatoren angesteuert werden sollen, muss also eine Liste von 88 \ac{PWM}-Werten befüllt werden.
 Im Folgenden soll diese Liste \lstinline{piano} genannt werden.
 Um \lstinline{piano} zu befüllen müssen die Informationen des Musikstücks verwendet werden, die wie in Abschnitt \ref{vorgehenSW-PIDI} beschrieben, als eine Liste von \lstinline{PidiCmd}s gespeichert werden.
 
-Der große Vorteil der \lstinline|PidiCmd|-Struktur, liegt in einfachen Anpassung der \lstinline|piano| Liste.
-Nachdem das \lstinline|piano| korrekt initialisiert wurde, muss der Code nur linear durch die Liste der zeitlich sortierten Kommandos gehen und das \lstinline|piano| entsprechend anpassen.
-Da \lstinline|PidiCmd|s jeweils erst zu einer gewissen Zeit nach Start des Musikstücks angewandt werden sollen, muss neben dem Index in die Liste von \ac{PidiCmd}s auch die seitdem vergangene Zeit gespeichert werden.
-Mit diesen beiden Werten, kann dann zu jedem Zeitpunkt geprüft werden, ob der nächste \lstinline{PidiCmd} angewandt werden soll oder nicht.
-Diese Logik ist in Listing \ref{code:Apply PIDICmds} in Pseudocode dargestellt.
+Die \lstinline{PidiCmd}-Struktur ist nicht nur sehr speichereffizient, sondern erlaubt auch eine performante Anpassung der \lstinline{piano} Liste.
+Da die \lstinline{PidiCmd}s zeitlich sortiert sein müssen, reicht ein laufender Index in die Liste.
+Um zu entscheiden, ob eine Note gespielt werden soll, wird außerdem die Zeit benötigt, die seit Spielen des letzten \lstinline{PidiCmd}s vergangen ist.
+Außerdem muss überprüft werden, ob einige der zurzeit spielenden Töne wieder ausgeschaltet werden sollten.
+Um dies schnell berechnen zu können, wird eine Liste mit allen zurzeit gespielten Noten gehalten.
+Für jede Note wird dabei die Zeit gespeichert, für die sie noch weiterhin gespielt werden sollte.
+Listing \ref{code:Apply PIDICmds} stellt diese Logik in Pseudocode dar.
 
-\begin{UnbrokenCodePage}[style=CStyle, caption={Nutzung der \lstinline|PidiCmd|-Struktur}, label={code:Apply PIDICmds}]
+\begin{UnbrokenCodePage}[style=CStyle, caption={Nutzung der \lstinline{PidiCmd}-Struktur}, label={code:Apply PIDICmds}]
 PIDICmds *cmds; // assume this array to be initialized already
 u8  piano[88];  // list of values to send to magnets
-u64 index        = 0;
-u64 start_time   = currentTime(); // time in milliseconds
-u64 elapsed_time = 0;
-while (index < length(cmds)) {
-    while (index < length(cmds) && cmds[index].time <= elapsed_time) {
+u32 index = 0;
+while (true) {  // Endless Loop of Microcontroller
+    u32 start_time   = currentTime(); // time in milliseconds
+    u32 elapsed_time = 0;
+    update_played_keys(elapsed_time);
+    while (index < length(cmds) && cmds[index].dt <= elapsed_time) {
         applyCmd(piano, cmds[index]);
+        elapsed_time -= cmds[index].dt;
+        add_to_played_keys(cmds[index].dt);
         index++;
     }
-    elapsed_time = getElapsedTimeSince(start_time);
+    elapsed_time += getElapsedTimeSince(start_time);
 }
 \end{UnbrokenCodePage}
 
-Die in Listing \ref{code:Apply PIDICmds} erwähnten Funktionen \lstinline|currentTime| und \lstinline|getElapsedTimeSince| sind über die eingebaute Uhr des \ac{MC} umsetzbar.
-Die Funktion \lstinline|aplyCmd| muss dagegen die Stärke des Tastenanschlags an der richtigen Stelle in der \lstinline|piano| Liste speichern.
-Da die \lstinline|PidiCmd|-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktutor, der diese Taste betätigt, hier geschehen.
+Die in Listing \ref{code:Apply PIDICmds} erwähnten Funktionen \lstinline{currentTime} und \lstinline{getElapsedTimeSince} sind über die eingebaute Uhr des \ac{MC} umsetzbar.
+Die Funktion \lstinline{aplyCmd} setzt die Stärke des Tastenanschlags an der richtigen Stelle in der \lstinline{piano} Liste.
+Da die \lstinline{PidiCmd}-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktutor, der diese Taste betätigt, hier geschehen.
+Zuletzt verwendet das Listing noch die Funktionen \lstinline{update_played_keys} und \lstinline{add_to_played_keys}.
+Diese benötigen eine Liste der zurzeit gespielten Töne.
+Weil nur eine bestimmte Anzahl der Aktuatoren zu einem Zeitpunkt aktiv sein dürfen (siehe Kapitel \ref{???}), kann diese Liste klein gehalten werden.
 
-% @TODO(Val): Rest schreiben...
+Sollte ein Musikstück diese Obergrenze zu gleichzeitig zu spielender Noten überschreiten wollen, müssen einige Töne früher beendet werden als eigentlich abgesehen.
+Hier gibt es mehrere Strategien, die jeweils eigene Vor- und Nachteile mit sich bringen.
+Die am leichtesten zu implementierende Idee, würde neue Noten einfach nicht spielen lassen.
+Entweder könnten diese neuen Noten übersprungen werden, oder es könnte gewartet werden, bis eine der zurzeit spielenden Noten wieder ausklingen sollen, bevor weitere \lstinline{PidiCmd}s überhaupt betrachtet werden.
+Letztere Strategie würde quasi die Geschwindigkeit des Musikstücks kurzzeitig anpassen und eher ungewollte Anpassungen an der Natur des Stücks vornehmen.
+Um den Nachteil der ersten Strategie aufzuzeigen, soll ein Beispiel verwendet werden.
+
+Angenommen es dürfen nur 5 Aktuatoren auf einmal aktiviert werden.
+Nun werden gerade C, D, E, F und G der mittleren Oktave gespielt.
+Das C soll nur noch für ein paar Millisekunden gespielt werden.
+Davor soll aber nun ein B gespielt werden.
+Dieses B soll nun für eine ganze Sekunde gespielt werden.
+Optimal wäre es hier, das C, das sowieso bald ausklingen soll, ein paar Millisekunden früher zu auszuschalten, dami das B zum richtigen Zeitpunkt schon gespielt werden kann.
+Die zuerst genannte Strategie würde dagegen das C einfach überhaupt nicht spielen.
+
+Aus diesem Beispiel lässt sich eine alternative Strategie entwickeln.
+So lassen sich die Längen, für die die bereits gespielten Töne und den neu zu spielenden Ton vergleichen.
+Die Töne, die am frühesten wieder ausklingen sollen, können dann bereits ein wenig früher abgebrochen werden.
+Da die Liste bereits gespielter Töne kurz sein muss, ist eine Iteration über alle bereits gespielten Töne nicht besonders zeitaufwendig.
+Nichtsdestotrotz ist dieses Vorgehen komplizierter und rechenaufwendiger als die beiden erstgenannten Ideen.
+
+Eine weitere Möglichkeit wäre statt der Länge die Anschlagsstärken zu vergleichen.
+Es kann davon ausgegangen werden, dass das Fehlen stärker zu spielender Töne eher schlecht auffallen würde als das Fehlen leiserer Töne.
+Es ließe sich auch eine Heuristik erstellen, die sowohl die Anschlagsstärke als auch die noch verbleibende Spiellänge mit einander vermischt.
+Ohne Testen an realen Musikstücken, ist es jedoch schwer zu sagen, wie eine solche Heuristik aussehen sollte.
+Hier ist es also sinnvoll eine leicht anpassbare Heuristik zu verwenden und während des Testens dann zu analysieren, welche Heuristik am besten klingende Resultate mit sich bringt.
+
+% @TODO(Val): Spezifiziere diese Anforderungen auch wirklich in Kapitel Zielstellung
+Die benötigte Logik zum Anspielen des Klaviers ist damit fast vollständig besprochen.
+Es fehlt jedoch noch die Logik zum dynamischen Anhalten und Anpassen der Lautstärke und Spielgeschwindigkeit, die in Kapitel \ref{Zielstellung} spezifiziert wurden.
+
+Das Anhalten kann über eine einfachen Bool'schen Wert gelöst werden.
+Wenn angehalten wurde, soll statt den Werten aus der \lstinline{piano} Liste, eine Null an jeden Aktuator gesendet werden.
+Auch sollen keine weiteren \lstinline{PidiCmd}s angewandt werden.
+
+Die Lautstärke ist über Erhöhen der Anschlagsstärke umsetzbar.
+Da \lstinline{PidiCmd}s die Anschlagsstärke in einem abstrakten Wert von 0 bis 15 darstellen, kann dieser Wert über einen Lautstärke-Faktor skaliert einfach skaliert werden.
+
+Die Geschwindigkeit kann ebenfalls über einen Faktor implementiert werden.
+Dieser Faktor skaliert dabei jedoch die Messung der vergangenen Zeit.
+Hierbei ist aufzupassen, dass nicht die in Listing \ref{code:Apply PIDICmds} verwendete Variable \lstinline{elapsed_time} skaliert wird, sondern der Term \lstinline{getElapsedTimeSince}, der zur \lstinline{elapsed_time} hinzu addiert wird.
+Ansosten würde nämlich die akkumulierte Zeit der Vergangenheit angepasst werden, statt die Geschwindigkeit der zurzeit laufenden Zeit zu verändern.
+
+
+
 
 \section{UI-Arduino Kommunikation} \label{vorgehenSW-SPPP}
 \begin{enumerate}
@@ -240,6 +293,7 @@ Da die \lstinline|PidiCmd|-Struktur die Anordnung und Anzahl verfügbarer Aktuat
     \item Grundlagen der Kommunikation (Files, Polling, etc.)
     \item Prinzip der minimalen Arbeit → Custom Protocol → SPPP
     \item Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
+    \item Streaming → Current\_Cmds, Next\_Cmds Buffer beim Arduino
 \end{enumerate}
 
 \section{UI} \label{vorgehenSW-UI}

@@ -7,6 +7,7 @@
 \nocite{*}
 \chapter{Konzeption - Software} \label{vorgehenSW}
 \chapterauthor{Val Richter}
+% @TODO(Val): Sprich nicht einfach von UI (siehe auch Kruses Email dazu)
 
 Wie in Kapitel \ref{Zielstellung} beschrieben, benötigt dieses Projekt einen Desktop-Anwendung für die Nutzer:innen-Interaktion mit dem selbst-spielenden Klavier.
 Außerdem wurde in Kapitel \ref{Hardware - Konzeption} bereits aufgezeigt, dass für die Ansteurung der Motoren ein \ac{MC} verwendet werden soll, der natürlich auch eine bestimmte Software ausführen muss.
@@ -28,7 +29,7 @@ Der \ac{MC} erhält Daten zum abzuspielenden Musikstück von der \ac{UI} und sch
         % 	\put(5,7){\line(-1,-2){5}}
         % 	\put(1,12){\line(1,0){8}}
         % \end{tikzpicture}
-        \node (user) [rect] {User}; % @TODO: draw Useer as stick figure
+        \node (user) [rect] {User}; % @TODO(Val): draw Useer as stick figure
         \node (ui) [rect, below of=user] {UI};
         \node (mc) [rect, right of=ui, xshift=1.5cm] {\ac{MC}};
         \node (hw) [rect, right of=mc, xshift=1.5cm] {Hardware};
@@ -197,6 +198,7 @@ Der \ac{MC} hat grundlegend zwei Aufgaben.
 Einerseits muss der \ac{MC} Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
 Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren können.
 Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearebeitet werden.
+Während die Anspiellogik in diesem Kapitel erläutert wird, soll die Kommunikation mit der \ac{UI} im nächsten Kapitel \ref{vorgehenSW-SPPP} dargelegt werden.
 
 Um die richtigen Werte zu den Aktuatoren zu senden, müssen nacheinander alle Werte an die Schieberegister gegeben werden.
 Der Wert des letzten Schieberegister-Ausgangs muss dabei zuerst gesendet werden, da es dann als erstes komplett durchgeschoben wurde.
@@ -285,8 +287,6 @@ Hierbei ist aufzupassen, dass nicht die in Listing \ref{code:Apply PIDICmds} ver
 Ansosten würde nämlich die akkumulierte Zeit der Vergangenheit angepasst werden, statt die Geschwindigkeit der zurzeit laufenden Zeit zu verändern.
 
 
-
-
 \section{UI-Arduino Kommunikation} \label{vorgehenSW-SPPP}
 \begin{enumerate}
     \item Wie wird Kommunikation mit Arduino i.d.R. gelöst
@@ -295,6 +295,25 @@ Ansosten würde nämlich die akkumulierte Zeit der Vergangenheit angepasst werde
     \item Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
     \item Streaming → Current\_Cmds, Next\_Cmds Buffer beim Arduino
 \end{enumerate}
+
+Den in Kapitel \ref{Zielstellung} gestellten Anforderungen nach, soll über die \ac{UI} das automatisch gespielte Musikstück dynamisch wählbar sein.
+Das bringt mit sich, dass die \ac{UI} Daten an den \ac{MC} senden können muss.
+Abgesehen von den zu spielenden Noten, muss die \ac{UI} dem \ac{MC} auch mitteilen können, ob angehalten werden soll, oder sich Lautstärke oder Geschwindigkeit angepasst wurden.
+
+% @TODO(Val): Source for why these questions in particular maybe
+Hierbei sollten mehrere Fragen aufkommen:
+\begin{enumerate}
+    \item Geht die Kommunikation in beide Richtungen oder nur von der \ac{UI} zum \ac{MC}?
+    \item Welche Medien sollen für die Kommunikation unterstüzt werden?
+    \item Über welches Protokoll werden die Daten enkodiert?
+    \item Soll die Kommunikation seriell oder parallel ablaufen?
+    \item Soll die Kommunikation synchron, asynchron oder isochron ablaufen?
+    \item Wie wird Datenkonsistenz sichergestellt?
+    \item Wie wird Datenvollständigkeit sichergestellt?
+    \item Wie wird mit Fehlern umgegangen?
+\end{enumerate}
+
+
 
 \section{UI} \label{vorgehenSW-UI}
 \begin{enumerate}

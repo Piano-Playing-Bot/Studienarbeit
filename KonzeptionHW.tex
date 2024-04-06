@@ -67,11 +67,11 @@ ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten im Gegensat
 erhöht.
 Generell ist die Drückoption ästhetisch ansprechender, erfordert jedoch Präzision und könnte die
 Tastenempfindlichkeit beeinträchtigen. Das Problem mit der Präzisen Ansteuerung fällt beim Ziehen der Tasten weg.\newline
-//TODO: Warum?
+%TODO(Jay): Warum?
 Für das Drücken der Tasten fallen noch weitere Probleme an. Um die Tasten drücken zu können, muss ein möglichst großer
 Hebel aufgebracht werden, damit die Aktuatoren möglichste wenig Kraft aufbrauchen müssen. Dass bedeutet, dass
 die Aktuatoren soweit hinten wie möglich angebracht werden.\newline
-//BILD\newline
+%TODO(Jay) BILD
 Bei dem genutzten Klavier befindet sich hinten ein Holraum welcher genutzt werden kann. Dieser ist allerdings
 nicht durchgängig, was den
 Einbau von Löchern erfordert. Diese Löcher müssen räumlich so platziert werden, dass sie keine wichtigen Teile der
@@ -83,17 +83,75 @@ Bei diesem Konzept wird die geringste mechanische Präzision benötigt und das K
 spielbar.
 
 \subsection{Aktuator}\label{subsec:aktuator}
-Für die Entscheidung der Aktuatoren wurden vier Arten betrachtet:
+%TODO(Jay) Bilder
+Die Aktuatoren werden für die Steuerung der Tasten benötigt.
+An sich ist ein Aktuator ein mechanisches/elektrisches Bauteil, das dazu dient,
+eine bestimmte Aktion auszuführen.
+Sie wandeln Energie in Bewegung, (oder andere physikalische Größen) um, um eine gewünschte Aktion auszuführen
+oder einen Mechanismus zu steuern. \newline
+Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet:
 \begin{enumerate}
-	\item Hubmagnete
-	\item Linearmotoren
-	\item Servomotoren
-	\item Schrittmotoren
+	\item Linearmotor
+	\item Servomotor
+	\item Hubmagnet
 \end{enumerate}
-\paragraph{Hubmagnet}
+
 \paragraph{Linearmotor}
+Ein Linearmotor ist ein Aktuator, der eine lineare Bewegung erzeugt. Er besteht aus einer festen Spule und einem
+beweglichen Magneten oder umgekehrt. Wenn Strom durch
+die Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Teil des Motors in eine lineare Bewegung zieht. \newline
+Physikalische Grundlagen:\newline
+- Die Funktionsweise eines Linearmotors beruht auf dem Prinzip der elektromagnetischen Induktion. Wenn Strom durch die
+Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Magneten anzieht oder abstößt, je nach Polarität des Stroms. \newline
+- Die Richtung und Geschwindigkeit der Bewegung des Linearmotors hängt von der Stärke und Richtung des angelegten Stroms
+sowie von der Geometrie des Motors ab.
+
 \paragraph{Servomotor}
-\paragraph{Schrittmotor}
+Ein Servomotor ist ein elektromechanischer Aktuator, der eine Bewegung durch eine Drehung ermöglicht.
+Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus. Der Elektromotor erzeugt eine rotierende
+Bewegung, die durch das Getriebe in eine Bewegung umgewandelt wird. Der
+Feedback-Mechanismus, oft ein Potentiometer oder ein Encoder, misst die genaue Position des Motors und gibt diese
+Informationen an die Steuerung zurück.\newline
+
+Physikalische Grundlagen: \newline
+- Der Elektromotor nutzt das Prinzip der elektromagnetischen Induktion, um eine Drehbewegung zu erzeugen. Dies geschieht
+durch das Anlegen einer Spannung an die Spulen des Motors, die ein magnetisches Feld erzeugen und den Rotor des Motors in
+Bewegung versetzen. \newline
+- Das Getriebe dient dazu, die Geschwindigkeit und das Drehmoment des Motors zu regulieren und die Bewegung an die
+Anforderungen der Anwendung anzupassen. \newline
+- Der Feedback-Mechanismus misst die Position des Motors durch Erfassung von Änderungen des magnetischen Feldes oder der
+Winkelposition des Rotors und ermöglicht so eine präzise Steuerung.
+
+\paragraph{Hubmagnet}
+Ein Hubmagnet, (auch: Solenoid) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
+Stroms erzeugt. Er besteht aus einer Spule, die einen magnetischen Kern umgibt. Wenn Strom durch die Spule fließt, erzeugt
+sie ein Magnetfeld, das den Kern anzieht und eine lineare Bewegung erzeugt.\newline
+Physikalische Grundlagen:\newline
+- Der Hubmagnet nutzt das Prinzip der elektromagnetischen Induktion, um eine lineare Bewegung zu erzeugen. Wenn Strom
+durch die Spule fließt, erzeugt sie ein Magnetfeld, das den magnetischen Kern anzieht. Je nach Polarität des Stroms bewegt
+sich der Kern entweder in Richtung der Spule oder von ihr weg. \newline
+- Die Stärke der Bewegung des Hubmagneten hängt von der Stärke des Stroms, der Anzahl der Wicklungen und der
+Spule des Magneten ab.
+
+\paragraph{Entscheidungsfindung}
+Prinzipiell kann jeder der genannten Aktuatoren für das Projekt verwendet werden. Die Entscheidung fiel aufgrund
+mehrerer Vortzeile allerdings auf den Hubmagneten:
+\begin{enumerate}
+	\item Servo-Motor: Bei diesem Motor ist eine Bewegungsbeschränkung mit eingebaut, welche in jedem Motor ausgebaut
+	werden müsste. Dies ist zu umständlich, wenn es bessere Varianten - wie den Hubmagneten - gibt. Außerdem hätte
+	eine Umlenkung stattfinden müssen, da die erzeugte Bewegung eine Rotation im Gegensatz zu einer linearen Bewegung
+	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschrenkung nicht
+	weiter betrachtet wurden. Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
+	sie bei Ende der Stromversorgung waren. Für das Klavier werden Aktuatoren benötigt, welche wieder auf die vorherige
+	Position zurück schalten, die Klaviertaste also in dem Sinne wieder \`loslassen' können.
+	\item Linear-Motor: Auch hier kam das Problem auf, dass die Motoren nicht automatisch wieder an ihre vorherige
+	Position zurückschalten wenn der Stromfluss stoppt.
+	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellen
+	Tastendrücken sinnvoll ist. Außerdem schalten Sie wenn die Stromversorgung abbrichtr wieder auf ihre vorherige
+	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren. Da
+	das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinaus zu gehen, führte dies
+	lediglich dazu dass Kostenintensivere Solenoids bestellt werden mussten.
+
 
 \subsection{Verbindung Tasten und Aktuatoren}
 
@@ -362,21 +420,37 @@ wobei in dieser Arbeit 2 im Detail betrachtet wurden:
 \paragraph{Schieberegister}
 Ein Schieberegister ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
 Datenbits verwendet wird.\newline
-Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell in das Register eingegeben und dann sequenziell aus dem Register ausgegeben werden können.
+Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell in das Register eingegeben und dann
+sequenziell aus dem Register ausgegeben werden können.
 Dies geschieht durch die Verwendung von Taktimpulsen, die das Verschieben der Bits steuern.\newline
 Schieberegister bestehen aus einer Reihe von Flip-Flops.
-Ein Flip-Flop kann als ein einfacher Speicher betrachtet werden, der binäre Informationen speichert und je nach Eingangssignal den Zustand 1, 0, oder einen \enquote{Flip}-Zustand annimmt.
+Ein Flip-Flop kann als ein einfacher Speicher betrachtet werden, der binäre Informationen speichert und je nach
+Eingangssignal den Zustand 1, 0, oder einen \enquote{Flip}-Zustand annimmt.
 Diese FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolge speichern und weitergeben können.
 
-Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des Arduinos agesteuert werden, umzusetzen, können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
+Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des Arduinos agesteuert werden, umzusetzen,
+können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
 \paragraph{74HC959 Schieberegister}
 In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau:
 \begin{minipage}{0.4\textwidth}
-	\includegraphics [width=\textwidth] {img/Schieberegister}
+	\includegraphics [width=0.4\textwidth] {img/Schieberegister}
 \end{minipage}
 \begin{minipage}{0.6\textwidth}
-	//TODO Ausgänge und so erklären
+	\begin{enumerate}
+		\item Q0-Q7: Ausgänge (parallelgeschaltet)
+		\item Vcc: Anschluss Versorgungsspannung (+)
+		\item Gnd: Anschluss Versorgugsspannung (-)
+		\item DS: Data Signal, serieller Dateneingang
+		\item OE: Output Enable, zur Aktivierung der Ausgänge
+		\item SHCP: Shift Clock, Clock-Eingang zur Übernahme Data Signals in Schieberegister
+		\item STCP: Store Clock, Wechsel Low auf High kopiert Inhalt des Schieberegister in Ausgaberegister
+		\item MR: Master Reset, leerung Schift-register
+		\item Q7S: Überlauf für Kaskadierung
+	\end{enumerate}
 \end{minipage}
+
+Vorteile des Schieberegisters:\newline
+Nachteile des Schieberegisters:
 % @Note(Val): Wäre doch eigentlich eine "Aktuator-Matrix" oder "Magnet-Matrix", weil wir ja keine Motoren haben, oder?
 \paragraph{Aktuator-Matrix}
 % @TODO(Jay): Picture Matrix and use muster to explain it for magnets
@@ -395,46 +469,111 @@ $$
 \end{pmatrix}
 $$
 
-
 Eine LED-Matrix besteht aus einer Anordnung von LEDs in Zeilen und Spalten.
-Jede LED kann unabhängig von den anderen ein- oder ausgeschaltet werden.
-
-Die Steuerung erfolgt kann mit oder ohne Multiplexing erfolgen.
+Jede LED kann unabhängig von den anderen ein- oder ausgeschaltet werden.\newline
+Eine LED-Matrix sieht im Allgemeinen so aus:\newline
+\includegraphics[width=0.45\textwidth]{img/LED-Matrix}
+Die Steuerung der Matrix kann mit oder ohne Multiplexing erfolgen.
 Prinzipiell wird jede Zeile der Matrix nacheinander aktiviert, während die
 entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
 Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM} erscheint es den Betrachter:nnen, als ob alle LEDs
-gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
+gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.\newline
 %ohne Multiplexer
+Matrix ohne Multiplexer:\newline
+Bei einer LED-Matrix ohne Multiplexer werden die LEDs direkt über die GPIO-Pins (General Purpose Input/Output) des
+Mikrocontrollers angesteuert. Jede LED ist einzeln mit einem Pin des Mikrocontrollers verbunden. Um die LEDs anzusteuern,
+muss der Mikrocontroller jeden Pin einzeln aktivieren oder deaktivieren, um die entsprechende LED ein- oder auszuschalten.
+Hierbei werden viele Pins benötigt, um die gesamte Matrix anzusteuern, was besonders bei größeren Matrizen unpraktisch
+sein kann. Zum Beispiel erfordert eine 8x8-Matrix 64 Pins, was für viele Mikrocontroller zu viel sein kann. \newline
 %Todo(Jay) add picture from Tinkercad
 %mit Multiplexer
 %Was ist ein Multiplexer, warum hilft er bei Martix wie sieht allg Schaltung aus?
-Ein Multiplexer (Beziehungsweise ein Demultiplexer) ist ein integrierter Schaltkreis, welcher in der Lage ist aus
-mehreren Eingangssignalen ein einzelnes zu erstellen beziehungsweise aus einem einzelnen SIgnal mehrere Ausgangssignale zu erstellen.
+Matrix mit Multiplexer: \newline
+Ein Multiplexer (Beziehungsweise ein Demultiplexer) ist eine Schaltung, die es ermöglicht, mehrere Signale auf einem
+einzelnen Kanal zu multiplexen (kombinieren) und dann selektiv zu demultiplexen (trennen)
 Der Schaltkreis basiert auf einfachen Logik gattern.
-Im Gegensatz zu der LED-Matrix ohne Demultiplexer, werden also weniger Eingänge benötigt.
+In Bezug auf eine LED-Matrix bedeutet dies,
+dass anstatt jeden einzelnen Pin der Matrix direkt mit einem GPIO-Pin des Mikrocontrollers zu verbinden, nur wenige Pins
+benötigt werden, um die Matrix anzusteuern.
+Der Vorteil des Multiplexers - die effizientere Ressourcennutzung - kommt allerdings mit einer komplexeren Schaltung und
+möglichen Latenzen einher.
+% TODO(Jay): Picture from Tinkercad
 
-% TODO(Jay): Nachteile Matrix
+\paragraph{Entscheidungsfindung}
+Nach weiterer Evaluation der Matrix schien es aus mehreren Gründen schwer möglich, das Prinzip von LEDs auf Aktuatoren
+zu übertragen, weswegen die Entscheidung auf die Verwendung von Schieberegistern fiel. \newline
+Eine LED-Matrix wird, wie bereits erklärt,
+typischerweise durch PWM angesteuert, um den Eindruck zu erwecken, dass alle
+LEDs gleichzeitig leuchten, obwohl sie tatsächlich nacheinander aktiviert werden. Dieses Prinzip funktioniert gut für LEDs,
+da sie einen langsamen Reaktionsmechanismus haben und das menschliche Auge träge ist. Da die Aktuatoren via PWM
+angesteuert werden,
+Allerdings gibt es einige Gründe,
+warum dieses Prinzip möglicherweise nicht sinnvoll ist, wenn man präzise Aktuatoren durch dasselbe Prinzip ansteuern
+möchte:
+\begin{enumerate}
+	\item Stromversorgung und Energieeffizienz: LED-Matrizen werden oft mit einer relativ niedrigen Leistung betrieben, da
+	LEDs im Vergleich zu Aktuatoren weniger Strom verbrauchen. Aktuatoren benötigen eine höhere Stromversorgung,
+	um eine ausreichende Leistung für den Betrieb zu gewährleisten. Die Schaltung, die für eine LED-Matrix optimiert ist,
+	könnte möglicherweise nicht die erforderliche Leistung für die Aktuatoren liefern.
+	\item Interferenz und ungenaue Steuerung durch die Matrixstruktur: Bei der Verwendung einer Aktuatoren-Matrix über PWM
+	könnte es zu Interferenzen kommen, die die Präzision der Steuerung beeinträchtigen. Da die PWM-Signale zeilenweise
+	multiplexiert werden, kann es vorkommen, dass die PWM-Signale nicht mit der benötigten Stärke für jeden Aktuator geliefert
+	werden. Dies liegt daran, dass verschiedene Aktuatoren in derselben Zeile unterschiedliche PWM-Signale benötigen können,
+	was zu ungenauer Steuerung führen kann. Dies kann zu Kompromissen bei der Präzision und Leistung der Aktuatoren führen.
+	\item Feedback und Regelung: Präzise Aktuatoren erfordern oft ein Feedbacksystem, um ihre Position oder andere Parameter
+	zu überwachen und gegebenenfalls anzupassen. Das Zeilenmultiplexing via PWM bietet jedoch keinen einfachen Weg, um ein
+	solches Feedback zu integrieren, was die Regelung der Aktuatoren erschweren könnte.
+	\item Komplexität der Schaltung bei selbstgebauter Aktuator-Matrix: Die Implementierung einer Aktuator-Matrix über eine
+	LED-Matrix hinaus wäre technisch anspruchsvoller und erfordert eine komplexere Schaltung. Im Gegensatz dazu ist die
+	Verwendung von Schieberegistern eine einfachere (und bewährte) Methode zur Ansteuerung der Aktuatoren. Der Einsatz von
+	Schieberegistern vereinfacht die Schaltung und erleichtert die Steuerung der Aktuatoren, was insgesamt zu einer
+	zuverlässigeren und Lösung führt.
+	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix eine Vielzahl an Pins, welche der Mikrocontroller
+	nicht liefert. Da die Matrix verwendet werden sollte um eben dieses Problem zu lösen, schien es nicht sinnvoll
+	das Prinzip einzusetzen.
+	\item Ressourcen: Desweiteren basiert die Entscheidung auf unzureichenden Ressourcen für die Matrix. Im Internet gab es
+	keine ausreichenden Anleitungen/Ressourcen, die die Implementierung einer LED-Matrix mit Aktuatoren ausreichend
+	unterstützen würden. Zusätzlich dazu lieferten die Simulationen via Tinkercad keine befriedigenden Ergebnisse
+	für die Aktuator-Matrix.
+	Im Gegensatz dazu sind Schieberegister gut dokumentiert und es gibt ausreichende Ressourcen, um ihre
+	Verwendung für die Ansteuerung von Aktuatoren zu verstehen und umzusetzen.
+\end{enumerate}
+Die Kombination dieser Faktoren führte zu
+unserer Entscheidung, Schieberegister anstelle einer Matrix für die präzise Steuerung der Aktuatoren zu verwenden.
 
-%TODO(Jay): Diskussion, dass wir uns für Schieberegister entschieden haben
-
-Für die praktische Konzeption wird ein Schieberegister genutzt. Die LED-Matrix hat zwar nicht das gleiche Latenzproblem
-der Schieberegister, aber da die Latenz vernachlässigt werden kann,
-%muss ich im Kapitel Schieberegister erklären
-wurde die auch bei der Entscheidung nicht weiter betrachtret. Die Schieberegister bieten eine simplere Schaltung als
-die Matrix. Außerdem ist die ansteuerung auf Software ebene leichter.
-Zudem wurde die Entscheidung auf Basis des Zeitaufwands getroffen. Das Löten der Matrix-Schaltung hätte eine Vielzahl an
-Lötstellen benötigt als wir mit den Schieberegistern haben.
-
-%%%%%%%%%%%%%%%%%%%%%%%%
-% Er wähne ich dass wir am Anfang einfach noch nicht sicher waren ob die Matrix für die Magnete richtig funktioniert?
-% Cause das ganze basiert auf PWM-Signalen. Je nachdem welcher Magnet wie angesteuert wird, dachte ich es kann zu Problemen
-% führen weil die Schaltungen sich in die quere kommen. Also wir wussten noch nicht welche Aktuatoren wir nutzen.
-% Das hätten wir easy evaluieren können, schien aber unnötig considering dass wir auch Schieberegister nutzen konnten
-% bei denen wir aus Erfahrungsberichten schon wussten dass es funktioniert
-%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Transistor}
-Durchlaufspannung, Mindestspannung
+Ein Transistor ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
+(den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern. Es gibt verschiedene Arten
+von Transistoren, aber die grundlegenden Prinzipien ihrer Funktionsweise sind ähnlich.\newline
+
+Funktionsweise eines Transistors:
+Ein Transistor besteht typischerweise aus einem Halbleitermaterial wie Silizium und kann in drei Haupttypen unterteilt
+werden: Bipolartransistor (NPN und PNP) und MOSFET (Metalloxid-Halbleiter-Feldeffekttransistor).  \newline
+Bipolartransistor: Die Steuerung des Stromflusses erfolgt durch die Änderung des Stroms, der in die Basis des
+Transistors fließt, was den Stromfluss zwischen Emitter und Collector beeinflusst. \newline
+%Note(Jay) soll ich Emitter und Collector noch erklären?
+MOSFET: Bei einem MOSFET wird der Stromfluss zwischen Source und Drain durch das Anlegen einer Spannung an das Gate
+gesteuert, wodurch ein elektrisches Feld im Halbleiter erzeugt wird, das den Stromfluss reguliert. \newline
+%TODO(Jay) MOSFET Bild und Schaltung
+Unterschied zwischen Transistor und MOSFET: \newline
+Ein MOSFET ist eine spezielle Art von Transistor, der auf einem anderen Prinzip basiert als der Bipolartransistor. Der
+Hauptunterschied liegt in der Steuerung des Stromflusses: Während beim Bipolartransistor der Strom durch die Basis
+gesteuert wird, erfolgt die Steuerung beim MOSFET durch das Anlegen einer Spannung an das Gate.
+Bei n-MOSFETs (negativ dotierte MOSFETs, welche in diesem Projekt verwendet wurden) wird durch das Anlegen einer
+positiven Spannung am Gate ein
+elektrisches Feld erzeugt, das die Leitfähigkeit zwischen Source und Drain beeinflusst. Dies führt dazu, dass der n-MOSFET
+in einem bestimmten Bereich des Gate-Spannungsbereichs als Schalter oder Verstärker arbeiten kann. \newline
+
+Verwendung von Transistoren in Aktuatoren-Schaltungen:
+Transistoren werden in Aktuatoren-Schaltungen verwendet, um die Aktuatoren
+zu steuern. Sie dienen als Schalter, der den Stromfluss zu den Aktuatoren regelt.
+Dabei ist es wichtig, auf die Durchlassspannung und Mindestspannung des MOSFETs zu achten. Die Durchlassspannung ist die
+minimale Spannung, die an das Gate angelegt werden muss, um den MOSFET in den leitenden Zustand zu versetzen. Die
+Mindestspannung ist die minimale Spannung, die zwischen Source und Gate anliegen muss, um den MOSFET zuverlässig zu
+sperren. Es ist entscheidend, sicherzustellen, dass die Spannungen in der Schaltung diese Anforderungen erfüllen, um
+eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu vermeiden.
+
 
 \subsection{Schaltplan}
 

@@ -7,6 +7,7 @@
 \nocite{*}
 \chapter{Konzeption - Software} \label{vorgehenSW}
 \chapterauthor{Val Richter}
+% @TODO(Val): Sprich nicht einfach von UI (siehe auch Kruses Email dazu)
 
 Wie in Kapitel \ref{Zielstellung} beschrieben, benötigt dieses Projekt einen Desktop-Anwendung für die Nutzer:innen-Interaktion mit dem selbst-spielenden Klavier.
 Außerdem wurde in Kapitel \ref{Hardware - Konzeption} bereits aufgezeigt, dass für die Ansteurung der Motoren ein \ac{MC} verwendet werden soll, der natürlich auch eine bestimmte Software ausführen muss.
@@ -28,7 +29,7 @@ Der \ac{MC} erhält Daten zum abzuspielenden Musikstück von der \ac{UI} und sch
         % 	\put(5,7){\line(-1,-2){5}}
         % 	\put(1,12){\line(1,0){8}}
         % \end{tikzpicture}
-        \node (user) [rect] {User}; % @TODO: draw Useer as stick figure
+        \node (user) [rect] {User}; % @TODO(Val): draw Useer as stick figure
         \node (ui) [rect, below of=user] {UI};
         \node (mc) [rect, right of=ui, xshift=1.5cm] {\ac{MC}};
         \node (hw) [rect, right of=mc, xshift=1.5cm] {Hardware};
@@ -99,63 +100,71 @@ Da die Latenzen der Kommunikation relativ hoch sein können, gefährdet dies wie
 % @TODO(Eine Anmerkung wie hoch Latenz & Throughput sein können (oder wo diese Zahlen genannt werden), wäre hier gut)
 
 % @TODO(Val): Quellen für \ac{MIDI} Details einfügen
-\ac{MIDI} schneidet hierbei an sich sehr gut ab.
-\ac{MIDI} speichert Noten sehr kompakt ab.
-Dafür verwendet
+\ac{MIDI} schneidet hierbei an sich sehr gut ab, da Noten sehr kompakt abgespeichert werden.
+Dafür wird eine Enkodierung variabler Länge verwendet.
+Da \ac{MIDI} allerdings ein generelles Format ist, das ein Vielzahl von digitalen Instrumenten und Synthesizers unterstützen möchte, beinhält der \ac{MIDI}-Standard eine Vielzahl optionaler Metadaten, die für dieses Projekt irrelevant sind.
+Entsprechend würde nur ein Subset des \ac{MIDI}-Standards zum Speichern der Musikdaten in Frage kommen.
+Nichtsdestotrotz kann das Format für diesen eingeschränkten Anwendungsfall noch optimiert werden.
+Um diese Verbesserungen zu motivieren, soll zuerst die Enodierung von Noten in \ac{MIDI} erläutert werden.
 
-\ac{MIDI} schneidet hier nun nicht allzu gut ab.
-Auch wenn \ac{MIDI} die relevanten Informationen direkt abspeichert, speichert es ebenfalls noch eine relativ große Menge weiterer Daten ab.
-Das liegt daran, das \ac{MIDI} ein generelles Format ist, das eine Vielzahl von digitalen Instrumenten und Synthesizers untersützen möchte.
-Deswegen enthalten \ac{MIDI}-Dateien oftmals eine Vielzahl von Metadaten, die hier irrelevant sind.
-Weiterhin gibt es in einer \ac{MIDI}-Datei auch mehrere sogenannte Channels, damit unterschiedliche Instrumente gleichzeitig angespielt werden können.
-% @TODO(Val):  Vllt. Nicht-linearität von \ac{MIDI}-Dateien erwähnen (i.e. zeitliche Sortierung ist nur innerhalb von Chunks festgelegt)
+\ac{MIDI} speichert die Notenfolgen in sogenannten \enquote{Nachrichten}.
+Nachrichten können auch andere Daten tragen, hier sollen aber nur die Nachrichten zum Spielen von Tönen betrachtet werden.
+Jede dieser Nachrichten folgt einer relativen Zeitangabe, im Standard \enquote{delta time} genannt.
+\enquote{delta time} gibt an, wie viele Schläge der virtuellen \ac{MIDI}-Uhr zwischen der letzten Nachricht und dieser vergehen sollen.
+Die \ac{MIDI}-Uhr kann direkt in Angaben einer Wand-Uhr umgerechnet werden.
+Hier ist jedoch wichtig zu bemerken, dass diese \ac{MIDI}-Uhr sehr viel genauer als eine Angabe in Millisekunden ist.
+Auch ist zu erwähnen, dass diese \enquote{delta time} eine variable Länge hat, mindestens aber immer ein Byte verwendet.
 
-% @Note(Val): Muss das mit einer Quelle belegt werden?
-\ac{MIDI}-Alternativen haben die selben Probleme, da sie ebenfalls einen allgemeinen Anwendungsfall abbilden.
-Da der Anwendungsfall dieser Arbeit eingeschränkter ist, lassen sich weitere Optimierungen am Datenformat durchführen.
-Entsprechend muss dann aber auch ein eigenes Datenformat für diese Arbeit entwickelt werden.
-Dabei ist es sinnvolll klar festzuhalten, welche Rahmenbedingungen vom Format angenommen werden können.
+Nach der \enquote{delta time} folgt dann genau ein Byte für den \enquote{Ereignis-Code} der Nachricht.
+Dieser gibt in jeweils 4 Bits den \enquote{Status} und den \enquote{Kanal} des Ereignisses an.
+Während der Status angibt, was für eine Aktion ausgeführt werden soll und damit auch wie viele Datenbytes für diese Nachricht noch folgen, besagt der Kanal, für welches Instrument dieses Ereignis gilt.
+Wenn die Note gespielt werden soll, folgen darauf noch zwei Bytes, die jeweils die Note und die Anspielstärke abspeichern.
+Wenn mit dem Spielen der Note aufgehört werden soll, folgt nur ein Byte, das die jeweilige Note angibt.
 
-Das Datenformat, das im Folgenden \enquote{\ac{PIDI}} genannt wird, soll zu spielende Tonfolgen für ein einzelnes Piano speichern.
-Dabei darf \ac{PIDI} keine Annahmen über die Anzahl an Tasten auf dem Piano oder deren Anordnung machen.
-Das ist speziell deshalb sinnvoll, weil nicht alle Pianos die selbe Anzahl Tasten haben und Hardware-seitig dann nicht unbedingt alle Tasten anspielbar sein müssen.
-Zusätzlich wird das Architektur-Prinzip der \enquote{Seperation of Concerns} dabei bewahrt, da die \ac{UI} dann nichts über die genaue Anzahl vorhandener Tasten beim Piano wissen muss.
-\ac{PIDI} darf weiterhin annehmen, das jede Taste immer entweder nur gedrückt oder nicht gedrückt sein kann.
-Die Stärke, mit der eine Taste gespielt wird, soll dabei aber in einem Bereich von mindestens 8 unterschiedlichen Werten liegen.
-Zuletzt darf die Geschwindigkeit, mit der Daten an die Aktuatoren weitergegeben werden, nicht vorausgesetzt werden.
+Hierbei fallen einige Daten auf, die in diesem Projekt unnötig sind.
+So gibt es hier zum Beispiel nur ein einziges Instrument, weswegen die Notwendigkeit unterschiedlicher Kanäle wegfällt.
+Auch ist die sehr hohe Auflösung der \enquote{delta time} hier nicht benötigt.
+Stattdessen würde eine Auflösung in Millisekunden oder Centisekunden für dieses Projekt ausreichen.
 
-Eine Option wäre die Speicherung der Zustände jeder Taste des Pianos.
-Da nicht angenommen werden soll, wie viele Tasten das Piano hat, müsste dabei eine arbiträre Anzahl an Tasten für das virtuelle Piano gewählt werden.
-Für jeden Zeitpunkt des Musikstücks müsste dann für jede Taste des virtuellen Pianos ein Anschlagswert gespeichert werden.
-Die Anzahl benötigten Speichers wächst dabei linear mit der Länge des Musikstücks und wäre schon bei Stücken mehrer Sekunden sehr hoch.
-Dafür ist die Transformation dieses Formats in für die Aktuatoren benötigte Format trivial und sehr effizient.
-Zur Speicherplatzoptimierung könnte dieses Format noch mithilfe von Kompressionstechniken noch verdichtet werden.
-Je besser die Kompression dabei sein soll, desto komplexer und langsamer muss auch die Dekompression werden.
+Weiterhin fällt auf, dass für das Spielen jedes Tons in \ac{MIDI} mindestens zwei Nachrichten benötigt werden.
+Einmal eine Nachricht zum Starten des Ton-Spielens und einmal eine Nachricht zum Aufhören.
+Diese zweite Nachricht wäre nicht nötig, wenn zusammen mit der ersten Nachricht eine Länge, mit der der Ton gespielt werden soll, gespeichert würde.
+Diese Speicher-Optimierung bringt allerdings auch Nachteile mit sich.
+So verkompliziert es die Transformation der Musikdaten, bevor sie zum Ansteuern der Aktuatoren verwendet werden können.
+Auch müssen die zeitlichen Längen, für die die zurzeit spielenden Töne noch zu spielen sind, gespeichert werden.
+Dies könnte im Generellen einiges an Speicherplatz verbrauchen.
+In diesem speziellen Anwendungsfall lässt sich allerdings annehmen, dass Noten in der Regel nur für relativ kurze Zeiten gespielt werden und dass nur relativ wenige Noten auf einmal gespielt werden.
+Da wie in Kapitel \ref{???} erklärt, auch nur eine geringe Anzahl der Aktuatoren auf einmal aktiviert werden sollen, kann die Menge zusätzlich benötigten Speichers hier sehr gering gehalten werden.
 
-Eine alternative Idee ist nur das Speichern von Änderungen.
-Dabei müsste nur jeder Zeitpunkt gespeichert werden, in dem sich die Anschlagsstärke mindestens eines Tons verändert.
-Der verbrauchte Speicherplatz wächst damit nur noch linear mit der Anzahl sich verändernder Tasten-Anschläge.
-Im Regelfall sollte damit also eine niedrigere Speicher-Auslastung möglich sein.
-Zusätzlich ist die Performanz mit dieser Speicherart ähnlich gut, wenn nicht sogar besser.
-Für jede Anschlagsveränderung muss nur ein Wert in der Ausgabe an die Aktuatoren angepasst werden.
-Sind die Daten noch zeitlich sortiert, kann ein laufender Index verwendet zu werden, um die nächste Anschlagsänderung zu erhalten.
-Es wurde sich entsprechend entschieden, diese Speicherung für das \ac{PIDI}-Format zu verwenden.
+Aufgrund all dieser möglichen Verbesserungen des Formats, wurde sich entschieden, ein eigenes Datenformat für diesen Anwendungsfall zu entwickeln, welches im Folgenden \enquote{\ac{PIDI}} genannt wird.
+Abgesehen von einer effizienten Speichernutzung, soll das \ac{PIDI}-Format auch performant zum Ansteuern der Aktuatoren transformiert werden können und möglichst simpel zu benutzen sein.
+Außerdem soll es trotz der starken Einschränkung auf diesen Anwendungsfall variabel genug sein, um für unterschiedliche Konfigurationen von Klavieren verwendbar zu sein.
+Das ist deshalb sinnvoll, da es die Möglichkeit bietet, die Anzahl verbundener Tasten des Klaviers jederzeit zu verändern.
+Während Testphasen müssen somit nicht alle Tasten des Klaviers über Aktuatoren anspielbar sein.
+Auch kann das \ac{PIDI}-Format dann in ähnlichen Projekten mit einer womöglich anderen Anzahl anspielbarer Tasten auf dem Klavier verwendet werden.
 
-Es ist hierbei noch zu bemerken, dass für das Spielen jedes Tons mindestens zwei Anschlagsänderungen vorliegen, da der Ton sowohl anfangen als auch aufhören muss zu spielen.
-Die Anschlagsstärke muss dabei auch nur beim Anfangen oder Ändern der Stärke gespeichert werden, da beim Aufhören des Spielens immer eine Anschlagsstärke von Null daliegt.
-Aufgrund dieser Beochbachtungen, kann das \ac{PIDI}-Format bzgl. Speicherplatz weiter optimiert werden.
-So könnte zum Beispiel immer eine Länge des Anschlagens gespeichert werden, statt eine weitere Änderung zum Stoppen des Anschlags zu speichern.
-Allerdings bedeutet das auch, dass ein einfacher, fortlaufender Index nicht mehr ausreichen würde, um zu wissen, ob sich die Daten für die Aktuatoren ändern müssen.
-Das bedeutet also eine ineffizientere Verwendung der Datenstruktur.
-Hier wurde sich entschieden, dass eine Halbierung des Speicherplatzes diesen Performanz-Verlust nicht wert ist.
+Listing \ref{code:PidiCmd struct} zeigt die endgültige Datenstruktur, die für ein individuellen \lstinline{PidiCmd} gewählt wurde, in Form eines C-Bitfields.
+Ein \lstinline{PidiCmd} stellt dabei das Anspielens eines Tons dar.
+Die Töne selbst wurden als ein Paar aus Oktave und Taste in der Oktave dargestellt, da die Anzahl Tasten in einer Oktave auf praktisch allen Klavieren gleich ist.
+Die nullte Oktave bezeichnet hierbei die mittlere Oktave des Pianos, während positive und negative Zahlen in Relation zur mittleren Oktave zu verstehen sind.
+Mit jeweils 4 Bits können alle 12 Tasten in einer Oktave und alle Oktaven, die auch auf großen Klavieren Platz finden, verwendet können.
 
-Listing \ref{code:PidiCmd struct} zeigt die endgültige Datenstruktur, die für ein individuellen \lstinline{PidiCmd} gewählt wurde.
-Ein \lstinline{PidiCmd} stellt dabei die Änderung einer Anschlagsstärke eines Tons dar.
-Die Töne selbst wurden als ein Paar aus Oktave und Taste in der Oktave dargestellt, da angenommen werden durfte, wie viele Tasten es pro Oktave auf einem Klavier gibt.
-Die nullte Oktave bezeichnet die mittlere Oktave des Pianos.
-Die \enquote{velocity} gibt in dieser Struktur die Anschlagsstärke an.
-Zuletzt gibt die \enquote{time} noch die Zeit in Millisekunden nach Start des Musikstücks an, zu dem diese Änderung durchgeführt werden soll.
-Eine Liste von \lstinline{PidiCmd}os muss aufsteigend nach der Zeit sortiert sein.
+Die \enquote{velocity} eines \lstinline{PidiCmd}s gibt die Anschlagsstärke an.
+Um Speicherplatz zu sparen und da genauere Präzision beim Anspielen sich auf Hardware-Seiten eh als Schwierigkeit ergeben hat (siehe Kapitel \ref{???}), wurde sich entschieden, nur 4 Bits für die \enquote{velocity} bereitzustellen.
+Zuletzt gibt es dann noch die \lstinline{dt} und \lstinline{len}, die respektiv jeweils die Zeit seit der zuletzt gespielten Note und die Spiellänge der Note darstellen.
+Während in \ac{MIDI} eine sehr hohe und dynamisch veränderbare Auflösung für die \enquote{delta time} verwendet wurde, ist \lstinline{dt} hier immer in Millisekunden enkodiert.
+Mit den dafür allokierten 12 Bits können $\frac{2^{12}}{1000} = 4,096$ Sekunden ohne Anspielen eines neuen Tons enkodiert werden.
+Da die Anspiellänge zusätzlich noch für jeden zurzeit gespielten Ton gespeichert werden muss, wurde entschieden genau 1 Byte dafür zu verwenden.
+Dies erlaubt eine leichte und speicher-effiziente Nutzung außerhalb der \lstinline{PidiCmd}-Datenstruktur.
+Da 8 Bits nur Spiellängen von bis zu $\frac{2^8}{1000} = 0,256$ Sekunden abspeichern können, wurde entschieden hier stattdessen eine Enkodierung in Centisekunden zu benutzen.
+Damit können bis zu $\frac{2^8}{1000} = 2,56$ Sekunden abgespeichert werden.
+
+Insgesamt benötigt ein \lstinline{PidiCmd} dann genau 4 Byte.
+Damit passt die Datenstruktur gut in CPU-Register, was eine schnellere Benutzung ermöglicht.
+Wenn davon ausgegangen wird, dass die meisten Töne mit einer Anspielstärke gespielt werden und ausklingen bevor sie mit einer anderen oder derselben Stärke wieder gespielt werden, dann benötigt \ac{MIDI} für jeden Ton mindestens 7 Bytes.
+Dabei werden 4 Bytes zum initialen Anspielen und 3 Bytes zum Ausklingen des Tons verwendet.
+\ac{PIDI} benötigt dagegen immer genau 4 Bytes für jeden Ton.
+Damit ist verbraucht \ac{PIDI}-Format mindestens $\frac{7}{4} = 1,75$-Mal weniger Speicher als das \ac{MIDI}-Format.
 
 \begin{UnbrokenCodePage}[style=CStyle, caption={Definition eines \ac{PIDI}-Kommands}, label={code:PidiCmd struct}]
 typedef enum {
@@ -173,57 +182,110 @@ typedef enum {
     PIANO_KEY_B,
 } PianoKey;
 
-typedef struct {
-    u64  time;
-    u8   velocity;
-    i8   octave;
-    PianoKey key;
+typedef struct PidiCmd {
+    uint32_t dt : 12,
+    velocity    : 4,
+    len         : 8,
+    octave      : 4, // needs to be sign-extended when used, because it's a signed 4-Bit integer
+    key         : 4;
 } PidiCmd;
 \end{UnbrokenCodePage}
+
 
 \section{Logik des Microcontrollers} \label{vorgehenSW-MC}
 
 Der \ac{MC} hat grundlegend zwei Aufgaben.
 Einerseits muss der \ac{MC} Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
 Andererseits muss der \ac{MC} auch mit der \ac{UI} kommunizieren können.
-Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearebeitet werden können.
+Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearebeitet werden.
+Während die Anspiellogik in diesem Kapitel erläutert wird, soll die Kommunikation mit der \ac{UI} im nächsten Kapitel \ref{vorgehenSW-SPPP} dargelegt werden.
 
-Um die richtigen Werte zu den Aktuatoren zu senden, müssen nacheinander alle Werte an die Schieberegister gesendet werden.
+Um die richtigen Werte zu den Aktuatoren zu senden, müssen nacheinander alle Werte an die Schieberegister gegeben werden.
 Der Wert des letzten Schieberegister-Ausgangs muss dabei zuerst gesendet werden, da es dann als erstes komplett durchgeschoben wurde.
 Sobald alle Werte ausgesandt wurden, müssen die Ausgänge der Schieberegister gesperrt werden, damit diese nicht ständig fluktuieren.
-All das kann beim \ac{MC}, der in Kapitel \ref{Ansteuerung} gewählt wurde, über das Ansprechen der \ac{PWM}-Pins des \ac{MC}s getan werden.
+All das kann beim Arduino, der in Kapitel \ref{Ansteuerung} als \ac{MC} gewählt wurde, über das Ansprechen spezieller \ac{PWM}-Pins getan werden.
 
 Wann immer die Signale für die Aktuatoren ausgesandt werden sollen, müssen diese Werte vorher bereitstehen.
-Da 88 Aktuatoren angesteuert werden können sollen, muss eine Liste von 88 \ac{PWM}-Werten befüllt werden.
+Da 88 Aktuatoren angesteuert werden sollen, muss also eine Liste von 88 \ac{PWM}-Werten befüllt werden.
 Im Folgenden soll diese Liste \lstinline{piano} genannt werden.
 Um \lstinline{piano} zu befüllen müssen die Informationen des Musikstücks verwendet werden, die wie in Abschnitt \ref{vorgehenSW-PIDI} beschrieben, als eine Liste von \lstinline{PidiCmd}s gespeichert werden.
 
-Der große Vorteil der \lstinline|PidiCmd|-Struktur, liegt in einfachen Anpassung der \lstinline|piano| Liste.
-Nachdem das \lstinline|piano| korrekt initialisiert wurde, muss der Code nur linear durch die Liste der zeitlich sortierten Kommandos gehen und das \lstinline|piano| entsprechend anpassen.
-Da \lstinline|PidiCmd|s jeweils erst zu einer gewissen Zeit nach Start des Musikstücks angewandt werden sollen, muss neben dem Index in die Liste von \ac{PidiCmd}s auch die seitdem vergangene Zeit gespeichert werden.
-Mit diesen beiden Werten, kann dann zu jedem Zeitpunkt geprüft werden, ob der nächste \lstinline{PidiCmd} angewandt werden soll oder nicht.
-Diese Logik ist in Listing \ref{code:Apply PIDICmds} in Pseudocode dargestellt.
+Die \lstinline{PidiCmd}-Struktur ist nicht nur sehr speichereffizient, sondern erlaubt auch eine performante Anpassung der \lstinline{piano} Liste.
+Da die \lstinline{PidiCmd}s zeitlich sortiert sein müssen, reicht ein laufender Index in die Liste.
+Um zu entscheiden, ob eine Note gespielt werden soll, wird außerdem die Zeit benötigt, die seit Spielen des letzten \lstinline{PidiCmd}s vergangen ist.
+Außerdem muss überprüft werden, ob einige der zurzeit spielenden Töne wieder ausgeschaltet werden sollten.
+Um dies schnell berechnen zu können, wird eine Liste mit allen zurzeit gespielten Noten gehalten.
+Für jede Note wird dabei die Zeit gespeichert, für die sie noch weiterhin gespielt werden sollte.
+Listing \ref{code:Apply PIDICmds} stellt diese Logik in Pseudocode dar.
 
-\begin{UnbrokenCodePage}[style=CStyle, caption={Nutzung der \lstinline|PidiCmd|-Struktur}, label={code:Apply PIDICmds}]
+\begin{UnbrokenCodePage}[style=CStyle, caption={Nutzung der \lstinline{PidiCmd}-Struktur}, label={code:Apply PIDICmds}]
 PIDICmds *cmds; // assume this array to be initialized already
 u8  piano[88];  // list of values to send to magnets
-u64 index        = 0;
-u64 start_time   = currentTime(); // time in milliseconds
-u64 elapsed_time = 0;
-while (index < length(cmds)) {
-    while (index < length(cmds) && cmds[index].time <= elapsed_time) {
+u32 index = 0;
+while (true) {  // Endless Loop of Microcontroller
+    u32 start_time   = currentTime(); // time in milliseconds
+    u32 elapsed_time = 0;
+    update_played_keys(elapsed_time);
+    while (index < length(cmds) && cmds[index].dt <= elapsed_time) {
         applyCmd(piano, cmds[index]);
+        elapsed_time -= cmds[index].dt;
+        add_to_played_keys(cmds[index].dt);
         index++;
     }
-    elapsed_time = getElapsedTimeSince(start_time);
+    elapsed_time += getElapsedTimeSince(start_time);
 }
 \end{UnbrokenCodePage}
 
-Die in Listing \ref{code:Apply PIDICmds} erwähnten Funktionen \lstinline|currentTime| und \lstinline|getElapsedTimeSince| sind über die eingebaute Uhr des \ac{MC} umsetzbar.
-Die Funktion \lstinline|aplyCmd| muss dagegen die Stärke des Tastenanschlags an der richtigen Stelle in der \lstinline|piano| Liste speichern.
-Da die \lstinline|PidiCmd|-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktutor, der diese Taste betätigt, hier geschehen.
+Die in Listing \ref{code:Apply PIDICmds} erwähnten Funktionen \lstinline{currentTime} und \lstinline{getElapsedTimeSince} sind über die eingebaute Uhr des \ac{MC} umsetzbar.
+Die Funktion \lstinline{aplyCmd} setzt die Stärke des Tastenanschlags an der richtigen Stelle in der \lstinline{piano} Liste.
+Da die \lstinline{PidiCmd}-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktutor, der diese Taste betätigt, hier geschehen.
+Zuletzt verwendet das Listing noch die Funktionen \lstinline{update_played_keys} und \lstinline{add_to_played_keys}.
+Diese benötigen eine Liste der zurzeit gespielten Töne.
+Weil nur eine bestimmte Anzahl der Aktuatoren zu einem Zeitpunkt aktiv sein dürfen (siehe Kapitel \ref{???}), kann diese Liste klein gehalten werden.
 
-% @TODO(Val): Rest schreiben...
+Sollte ein Musikstück diese Obergrenze zu gleichzeitig zu spielender Noten überschreiten wollen, müssen einige Töne früher beendet werden als eigentlich abgesehen.
+Hier gibt es mehrere Strategien, die jeweils eigene Vor- und Nachteile mit sich bringen.
+Die am leichtesten zu implementierende Idee, würde neue Noten einfach nicht spielen lassen.
+Entweder könnten diese neuen Noten übersprungen werden, oder es könnte gewartet werden, bis eine der zurzeit spielenden Noten wieder ausklingen sollen, bevor weitere \lstinline{PidiCmd}s überhaupt betrachtet werden.
+Letztere Strategie würde quasi die Geschwindigkeit des Musikstücks kurzzeitig anpassen und eher ungewollte Anpassungen an der Natur des Stücks vornehmen.
+Um den Nachteil der ersten Strategie aufzuzeigen, soll ein Beispiel verwendet werden.
+
+Angenommen es dürfen nur 5 Aktuatoren auf einmal aktiviert werden.
+Nun werden gerade C, D, E, F und G der mittleren Oktave gespielt.
+Das C soll nur noch für ein paar Millisekunden gespielt werden.
+Davor soll aber nun ein B gespielt werden.
+Dieses B soll nun für eine ganze Sekunde gespielt werden.
+Optimal wäre es hier, das C, das sowieso bald ausklingen soll, ein paar Millisekunden früher zu auszuschalten, dami das B zum richtigen Zeitpunkt schon gespielt werden kann.
+Die zuerst genannte Strategie würde dagegen das C einfach überhaupt nicht spielen.
+
+Aus diesem Beispiel lässt sich eine alternative Strategie entwickeln.
+So lassen sich die Längen, für die die bereits gespielten Töne und den neu zu spielenden Ton vergleichen.
+Die Töne, die am frühesten wieder ausklingen sollen, können dann bereits ein wenig früher abgebrochen werden.
+Da die Liste bereits gespielter Töne kurz sein muss, ist eine Iteration über alle bereits gespielten Töne nicht besonders zeitaufwendig.
+Nichtsdestotrotz ist dieses Vorgehen komplizierter und rechenaufwendiger als die beiden erstgenannten Ideen.
+
+Eine weitere Möglichkeit wäre statt der Länge die Anschlagsstärken zu vergleichen.
+Es kann davon ausgegangen werden, dass das Fehlen stärker zu spielender Töne eher schlecht auffallen würde als das Fehlen leiserer Töne.
+Es ließe sich auch eine Heuristik erstellen, die sowohl die Anschlagsstärke als auch die noch verbleibende Spiellänge mit einander vermischt.
+Ohne Testen an realen Musikstücken, ist es jedoch schwer zu sagen, wie eine solche Heuristik aussehen sollte.
+Hier ist es also sinnvoll eine leicht anpassbare Heuristik zu verwenden und während des Testens dann zu analysieren, welche Heuristik am besten klingende Resultate mit sich bringt.
+
+% @TODO(Val): Spezifiziere diese Anforderungen auch wirklich in Kapitel Zielstellung
+Die benötigte Logik zum Anspielen des Klaviers ist damit fast vollständig besprochen.
+Es fehlt jedoch noch die Logik zum dynamischen Anhalten und Anpassen der Lautstärke und Spielgeschwindigkeit, die in Kapitel \ref{Zielstellung} spezifiziert wurden.
+
+Das Anhalten kann über eine einfachen Bool'schen Wert gelöst werden.
+Wenn angehalten wurde, soll statt den Werten aus der \lstinline{piano} Liste, eine Null an jeden Aktuator gesendet werden.
+Auch sollen keine weiteren \lstinline{PidiCmd}s angewandt werden.
+
+Die Lautstärke ist über Erhöhen der Anschlagsstärke umsetzbar.
+Da \lstinline{PidiCmd}s die Anschlagsstärke in einem abstrakten Wert von 0 bis 15 darstellen, kann dieser Wert über einen Lautstärke-Faktor skaliert einfach skaliert werden.
+
+Die Geschwindigkeit kann ebenfalls über einen Faktor implementiert werden.
+Dieser Faktor skaliert dabei jedoch die Messung der vergangenen Zeit.
+Hierbei ist aufzupassen, dass nicht die in Listing \ref{code:Apply PIDICmds} verwendete Variable \lstinline{elapsed_time} skaliert wird, sondern der Term \lstinline{getElapsedTimeSince}, der zur \lstinline{elapsed_time} hinzu addiert wird.
+Ansosten würde nämlich die akkumulierte Zeit der Vergangenheit angepasst werden, statt die Geschwindigkeit der zurzeit laufenden Zeit zu verändern.
+
 
 \section{UI-Arduino Kommunikation} \label{vorgehenSW-SPPP}
 \begin{enumerate}
@@ -231,7 +293,27 @@ Da die \lstinline|PidiCmd|-Struktur die Anordnung und Anzahl verfügbarer Aktuat
     \item Grundlagen der Kommunikation (Files, Polling, etc.)
     \item Prinzip der minimalen Arbeit → Custom Protocol → SPPP
     \item Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
+    \item Streaming → Current\_Cmds, Next\_Cmds Buffer beim Arduino
 \end{enumerate}
+
+Den in Kapitel \ref{Zielstellung} gestellten Anforderungen nach, soll über die \ac{UI} das automatisch gespielte Musikstück dynamisch wählbar sein.
+Das bringt mit sich, dass die \ac{UI} Daten an den \ac{MC} senden können muss.
+Abgesehen von den zu spielenden Noten, muss die \ac{UI} dem \ac{MC} auch mitteilen können, ob angehalten werden soll, oder sich Lautstärke oder Geschwindigkeit angepasst wurden.
+
+% @TODO(Val): Source for why these questions in particular maybe
+Hierbei sollten mehrere Fragen aufkommen:
+\begin{enumerate}
+    \item Geht die Kommunikation in beide Richtungen oder nur von der \ac{UI} zum \ac{MC}?
+    \item Welche Medien sollen für die Kommunikation unterstüzt werden?
+    \item Über welches Protokoll werden die Daten enkodiert?
+    \item Soll die Kommunikation seriell oder parallel ablaufen?
+    \item Soll die Kommunikation synchron, asynchron oder isochron ablaufen?
+    \item Wie wird Datenkonsistenz sichergestellt?
+    \item Wie wird Datenvollständigkeit sichergestellt?
+    \item Wie wird mit Fehlern umgegangen?
+\end{enumerate}
+
+
 
 \section{UI} \label{vorgehenSW-UI}
 \begin{enumerate}

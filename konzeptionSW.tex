@@ -205,6 +205,8 @@ Der Wert des letzten Schieberegister-Ausgangs muss dabei zuerst gesendet werden,
 Sobald alle Werte ausgesandt wurden, müssen die Ausgänge der Schieberegister gesperrt werden, damit diese nicht ständig fluktuieren.
 All das kann beim Arduino, der in Kapitel \ref{Ansteuerung} als \ac{MC} gewählt wurde, über das Ansprechen spezieller \ac{PWM}-Pins getan werden.
 
+% @TODO(Val): Absatz bzgl. Notwendigkeit von Interrupts beim Ansprechen von PWM einfügen
+
 Wann immer die Signale für die Aktuatoren ausgesandt werden sollen, müssen diese Werte vorher bereitstehen.
 Da 88 Aktuatoren angesteuert werden sollen, muss also eine Liste von 88 \ac{PWM}-Werten befüllt werden.
 Im Folgenden soll diese Liste \lstinline{piano} genannt werden.
@@ -305,14 +307,77 @@ Hierbei sollten mehrere Fragen aufkommen:
 \begin{enumerate}
     \item Geht die Kommunikation in beide Richtungen oder nur von der \ac{UI} zum \ac{MC}?
     \item Welche Medien sollen für die Kommunikation unterstüzt werden?
-    \item Über welches Protokoll werden die Daten enkodiert?
     \item Soll die Kommunikation seriell oder parallel ablaufen?
+    \item Über welches Protokoll werden die Daten enkodiert?
     \item Soll die Kommunikation synchron, asynchron oder isochron ablaufen?
     \item Wie wird Datenkonsistenz sichergestellt?
     \item Wie wird Datenvollständigkeit sichergestellt?
     \item Wie wird mit Fehlern umgegangen?
+% @Note(Val): Die Arten von Kommunikation (seriell/parallel, (asyn-/syn-/iso-)chron) erklär ich hier nicht, da wir bei Leser:innen von einem Wissenstand einer generellen IT Bachelor Student:in ausgehen.
 \end{enumerate}
 
+Zuerst mag eine einseitige Kommunikation ausreichend erscheinen.
+Allerdings erlaubt eine zweiseitige Kommunikation bessere Portabilität der Anwendung.
+So muss die \ac{UI} wissen, über welchen Port der \ac{MC} angesprochen werden kann.
+Da nicht alle Maschinen die gleichen Ports zur Verfügung stehen haben, sollte dieser Port dynamisch wählbar sein.
+Um den korrekten Port entsprechend auch dynamisch finden zu können, muss der \ac{MC} ein einzigartiges Signal über den Port zu der \ac{UI} schicken können.
+Hier kann besipielsweise ein spezielles \enquote{PING}-Signal über jeden verfügbaren Port geschickt werden.
+Während der \enquote{PING} von anderen Ports ignoriert wird, kann der \ac{MC} mit dem entsprechenden \enquote{PONG}-Signal antworten.
+Somit kann die \ac{UI} jederzeit die Verfügbarkeit des \ac{MC}s und dessen Port prüfen.
+
+Mögliche Übertragungsmedien für die Kommunikation lassen sich in die Kategorien \enquote{Kabel} und \enquote{Kabellos} einteilen.
+Kabellose Medien wie WLAN oder Bluetooth benötigen bei dem in Kapitel \ref{???} gewählten \ac{MC} ein weiteres Modul.
+Das würde die Kosten weiter erhöhen und damit entgegen dem Ziel einer möglichst preisgünstigen Entwicklung sprechen.
+Nichtsdestotrotz sollte die Kommunikation erweiterbar konzipiert werden, um auch leicht kabellos umgesetzt werden zu können.
+Da es im gewählten \ac{MC} jedoch schon eingebaut ist und damit die preisgünstigste Möglichkeit darstellt, soll hier eine Verbindung über ein USB-Kabel zwischen \ac{MC} und \ac{UI} angenommen werden.
+
+Damit wird auch die nächste Frage bereits beantwortet, da über das USB-Kabel nur eine serielle Kommunikation möglich ist.
+Der gewählte \ac{MC} schränkt auch die möglichen Protokolle zur Übertragung von Daten ein.
+So unterstützt der Arduino Uno R3 nur die folgenden drei Übertragungsprotokolle:
+\begin{enumerate}
+    \item \ac{I2C}
+    \item \ac{SPC}
+    \item \ac{UART}
+\end{enumerate}
+\ac{I2C} und \ac{SPC} sind beides Protokolle, die für die Kommunikation mit Periphergeräten gedacht wurden.
+\ac{UART} wird dagegen von Arduino Dokumentation für generelle Kommunikation mit einem PC empfohlen. % @TODO(Val): Source - Documentation/Examples
+Da die Desktop-Anwendung das selbe Protokoll sprechen können muss, ist die Nutzung von \ac{UART} auch insoweit sinnvoll, dass Windows nativ die Nutzung des \ac{UART}-Protokolls über sogenannte \enquote{COM}-Ports ermöglicht.
+Da \ac{UART} verwendet wird, steht auch fest, dass die Übertragung von Daten asynchron abläuft.
+
+Das \ac{UART}-Protokoll bringt auf Level der Bit-Übertragung bereits Mechanismen zum Sicherstellen der Datenkonsistenz und Vollständigkeit mit sich. % @Note(Val): Mention what mechanisms these are maybe
+Bis jetzt wurde jedoch nur geklärt wie die Bits der Nachrichten übertragen werden, nicht jedoch wie diese Nachrichten aussehen sollen.
+Das benötigt ein weiteres Protokoll, das diesmal jedoch über Software in den Anwendungen des Arduinos und Desktops implementiert werden muss.
+Im Folgenden soll dieses Protokoll \enquote{\ac{SPPP}} genannt werden.
+
+Es wäre hierbei möglich ein bereits existierendes, generelles Kommunikationsprotokoll zu verwenden.
+Zum Beispiel könnten die Daten über das \ac{HTTP} gesendet werden.
+Jedoch muss selbst dann noch ein spezielles Schema spezifiziert werden, in dem die Daten angeordnet werden.
+Entsprechend ist es sinnvoll hier ein eigenes, einfaches Protokoll zu entwerfen, dass alle Anforderungen an die Kommunikation abdecken kann.
+Dabei muss das \ac{SPPP} die folgenden Anforderungen erfüllen.
+
+\begin{enumerate}
+    \item Ping % @TODO(Val)
+    \item Die Lautstärke muss von der \ac{UI} an den \ac{MC} gesendet werden können
+    \item Die Geschwindigkeit muss von der \ac{UI} an den \ac{MC} gesendet werden können
+    \item PIDI % @TODO(Val)
+    \item Timeline-Jump % @TODO(Val)
+    \item Die \ac{UI} muss dem \ac{MC} sagen können, dass die Musik angehalten oder fortgesetzt werden soll
+\end{enumerate}
+
+% @TODO(Val): Erweiterte Anforderungen, die hier ignoriert werden
+% -> Mehrere Nutzer:innen (z.B. bei kabelloser Verbindung)
+% -> Datenverlust hier praktisch kein großes Risiko
+
+% @TODO(Val): Genereller Aufbau von SPPP Nachrichten
+
+% @TODO(Val): Detailierter Aufbau von PIDI Nachrichten
+
+% @Decide(Val): Rest gehört eher ins Umsetzungs-Kapitel oder?
+% @TODO(Val): Lesen/Schreiben der Daten auf Arduino
+
+% @TODO(Val): Lesen/Schreiben der Daten auf Windows
+% @TODO(Val): Erklärung virtueller COM-Ports auf Windows
+% @Note(Val): Documentaion of COM-Ports: https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/configuration-of-com-ports
 
 
 \section{UI} \label{vorgehenSW-UI}

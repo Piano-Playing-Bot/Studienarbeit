@@ -36,6 +36,11 @@
 \usepackage{tikz}						% Used for drawing directly in LaTeX
 \usepackage{amsmath}					% Advanced Maths
 
+%% Table-Header
+%% taken from: https://tex.stackexchange.com/a/102970
+\newcommand*{\theadstart}[1]{\hline \multicolumn{1}{|c|}{\bfseries #1}}
+\newcommand*{\theadcol}[1]{\multicolumn{1}{c|}{\bfseries #1}}
+
 %%
 %% Tikz Style Configuration
 %%

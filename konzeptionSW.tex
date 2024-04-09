@@ -321,7 +321,7 @@ Allerdings erlaubt eine zweiseitige Kommunikation bessere Portabilität der Anwe
 So muss die \ac{UI} wissen, über welchen Port der \ac{MC} angesprochen werden kann.
 Da nicht alle Maschinen die gleichen Ports zur Verfügung stehen haben, sollte dieser Port dynamisch wählbar sein.
 Um den korrekten Port entsprechend auch dynamisch finden zu können, muss der \ac{MC} ein einzigartiges Signal über den Port zu der \ac{UI} schicken können.
-Hier kann besipielsweise ein spezielles \enquote{PING}-Signal über jeden verfügbaren Port geschickt werden.
+Hier kann beispielsweise ein spezielles \enquote{PING}-Signal über jeden verfügbaren Port geschickt werden.
 Während der \enquote{PING} von anderen Ports ignoriert wird, kann der \ac{MC} mit dem entsprechenden \enquote{PONG}-Signal antworten.
 Somit kann die \ac{UI} jederzeit die Verfügbarkeit des \ac{MC}s und dessen Port prüfen.
 
@@ -344,6 +344,8 @@ So unterstützt der Arduino Uno R3 nur die folgenden drei Übertragungsprotokoll
 Da die Desktop-Anwendung das selbe Protokoll sprechen können muss, ist die Nutzung von \ac{UART} auch insoweit sinnvoll, dass Windows nativ die Nutzung des \ac{UART}-Protokolls über sogenannte \enquote{COM}-Ports ermöglicht.
 Da \ac{UART} verwendet wird, steht auch fest, dass die Übertragung von Daten asynchron abläuft.
 
+% @Note(Val): Sollte erwähnt werden, dass UI & MC die selbe Baud-Rate, Daten-Bit-Siue, etc. haben müssen?
+% Siehe List hier: https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter#Transmitting_and_receiving_serial_data
 Das \ac{UART}-Protokoll bringt auf Level der Bit-Übertragung bereits Mechanismen zum Sicherstellen der Datenkonsistenz und Vollständigkeit mit sich. % @Note(Val): Mention what mechanisms these are maybe
 Bis jetzt wurde jedoch nur geklärt wie die Bits der Nachrichten übertragen werden, nicht jedoch wie diese Nachrichten aussehen sollen.
 Das benötigt ein weiteres Protokoll, das diesmal jedoch über Software in den Anwendungen des Arduinos und Desktops implementiert werden muss.
@@ -353,31 +355,92 @@ Es wäre hierbei möglich ein bereits existierendes, generelles Kommunikationspr
 Zum Beispiel könnten die Daten über das \ac{HTTP} gesendet werden.
 Jedoch muss selbst dann noch ein spezielles Schema spezifiziert werden, in dem die Daten angeordnet werden.
 Entsprechend ist es sinnvoll hier ein eigenes, einfaches Protokoll zu entwerfen, dass alle Anforderungen an die Kommunikation abdecken kann.
-Dabei muss das \ac{SPPP} die folgenden Anforderungen erfüllen.
+Dabei muss das \ac{SPPP} die folgenden Anforderungen erfüllen, welche basierend auf den in Kapitel \ref{Zielstellung} gestellten Anforderungen abgeleitet wurden.
 
 \begin{enumerate}
-    \item Ping % @TODO(Val)
+    \item Die \ac{UI} muss einen \enquote{Ping} senden können, auf die der \ac{MC} mit einem \enquote{Pong} antwortet, damit der genaue Port, an dem der Arduino ist, identifiziert werden kann.
+    \item Die \ac{UI} muss dem \ac{MC} sagen können, dass die Musik angehalten oder fortgesetzt werden soll
     \item Die Lautstärke muss von der \ac{UI} an den \ac{MC} gesendet werden können
     \item Die Geschwindigkeit muss von der \ac{UI} an den \ac{MC} gesendet werden können
-    \item PIDI % @TODO(Val)
-    \item Timeline-Jump % @TODO(Val)
-    \item Die \ac{UI} muss dem \ac{MC} sagen können, dass die Musik angehalten oder fortgesetzt werden soll
+    \item Musikdaten in Form von \lstinline|PidiCmd|s muss von der \ac{UI} an den \ac{MC} gesendet werden können
+    \item Die \ac{UI} muss dem \ac{MC} sagen können, dass zu einem beliebigen Zeitpunkt im Musikstück gesprungen werden soll
+    \item Fehler in der Kommunikation sollten erkannt werden, damit \ac{UI} und \ac{MC} diese entsprechen behandeln können
+    \item Die Latenz beim Senden von Nachrichten sollte möglichst gering und mindestens unter einer Sekunde sein
+    \item Das Protokoll soll erweiterbar sein, sodass leicht weitere Versionen erstellt werden können, ohne Backwards-Compatibility zu brechen
 \end{enumerate}
 
-% @TODO(Val): Erweiterte Anforderungen, die hier ignoriert werden
-% -> Mehrere Nutzer:innen (z.B. bei kabelloser Verbindung)
-% -> Datenverlust hier praktisch kein großes Risiko
+Aus den Anforderungen wird klar, dass es unterschiedliche Arten an Nachrichten gibt, die vom Protokoll unterstützt werden müssen.
+Eine entsprechend simpler Aufbau von \ac{SPPP} Nachrichten besteht aus einer ID, die den Typ der Nachricht identifiziert, und einem Datensatz, der je nach Nachrichten-Typ unterschiedlich spezifiziert ist.
+Damit lässt sich das Protokoll auch leicht erweitern, da neue Nachrichten-Typen einfach hinzugefügt werden können.
+Es empfiehlt sich außerdem jede Nachricht mit bestimmten \enquote{Magic Bytes} zu starten, um keine arbiträren Datenströme als Nachrichten zu interpretieren.
 
-% @TODO(Val): Genereller Aufbau von SPPP Nachrichten
+Um die Latenz der Nachrichten unabhängig technisch Gegebenheiten gering zu halten, empfiehlt es sich, die Anzahl zu übertragener Bytes möglichst gering zu halten.
+Entsprechend wurde entschieden, die \enquote{Magic Bytes} sowie die IDs der Nachrichten-Typen auf jeweils ein einzelnes Byte zu reduzieren.
+Zur leichteren Identifizierung werden Nachrichten-IDs nur ASCII-enkodierte Buchstaben verwendet.
+Weiterhin wird hier die Konvention genutzt, dass Großbuchstaben eine Nachricht der \ac{UI} und Kleinbuchstaben eine Nachricht des \ac{MC}s spezifzieren.
 
-% @TODO(Val): Detailierter Aufbau von PIDI Nachrichten
+Die meisten Nachrichten müssen jeweils nur eine einzelne Zahl übersenden.
+Tabelle \ref{table:SPPP-Messages} listet alle Nachrichtentypen mit ihren jeweils zu übertragenen Daten auf.
 
-% @Decide(Val): Rest gehört eher ins Umsetzungs-Kapitel oder?
-% @TODO(Val): Lesen/Schreiben der Daten auf Arduino
+Wie in den Anforderungen oben erwähnt, benötigt es jedoch noch einer Möglichkeit Fehler in der Kommunikation zu erkennen.
+Es gibt hierbei grundsätzlich drei Arten an potenziellen Fehlern:
 
-% @TODO(Val): Lesen/Schreiben der Daten auf Windows
-% @TODO(Val): Erklärung virtueller COM-Ports auf Windows
-% @Note(Val): Documentaion of COM-Ports: https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/configuration-of-com-ports
+\begin{enumerate}
+    \item Inkorrekte Daten werden empfangen
+    \item Die Nachricht wird nicht empfangen
+    \item Teile der Nachricht werden nicht empfangen
+\end{enumerate}
+
+Die erste Art an Fehlern soll hier erstmal ignoriert werden, da sie dank der von USB und \ac{UART} versicherten Datenkonsitenz ein relativ geringes Eintrittsrisiko darstellt.
+Nichtsdestotrotz ist dies eine mögliche Fehlerquelle, die in Erweiterungen an diese Arbeit ausgebessert werden sollte. % @TODO(Val): Bei Limitationen erwähnen
+Eine mögliche Sicherstellung der Datenkonsistenz würde beispielsweise über das Mitsenden eines Kontroll-Bytes.
+
+Der zweite Fehler kann sowohl durch Fehler in der Übertragung, als auch durch ein Fehler bei der Software des Empfängers entstehen.
+Eine einfache Lösung dieses Problems, lässt den Empfänger eine Empfangsbestätigung zurücksenden.
+Das selbe Prinzip wird bei der oben erwänten \enquote{Ping} und \enquote{Pong}-Nachricht verwendet.
+Ein mögliches Problem beim Senden einer Empfangsbestätigung ist die Ungewissheit, ob die Empfangsbestätigung selbst empfangen wurde.
+Dann müsste nämlich eine Empfangsbestätigung für die Empfangsbestätigung gesendet würde, welche ebenfalls wieder als empfangen bestätigt werden müsste, bis nur noch Empfangsbestätigungen hin und her geschickt würden.
+
+Es stellt sich jedoch heraus, dass das hier kein Problem ist.
+Sollte eine Empfangsbestätigung nicht empfangen werden, muss der Sender die selbe Nachricht nochmal senden.
+Solange das zweimalig Erhalten der selben Nachricht genau die selben Auswirkungen hat wie das einmalige Erhalten der Nachricht, wird keine Empfangsbestätigung für die Empfangsbestätigung selbst benötigt, da die Nachricht ohne Risiken einfach nochmal geschickt werden kann.
+Wenn die in Tabelle \ref{table:SPPP-Messages} gelisteten Nachrichtentypen betrachtet werden, fällt außerdem auf, dass nur die Nachrichten, die von der \ac{UI} gesendet werden, eine Empfangsbestätigung benötigen.
+Diese Bestätigung soll über die \enquote{Success}-Nachricht gegeben werden, welche entsprechend nur vom \ac{MC} geschickt werden muss.
+
+Da der Austausch von \enquote{Ping}- und \enquote{Pong}-Nachrichten dem selben Prinzip der Empfangsbestätigung folgt, sollte die Frage aufkommen, warum statt einer eigenen \enquote{Pong}-Nachricht nicht einfach die selbe \enquote{Success}-Nachrich gesendet werden kann.
+Der Grund dafür liegt in den \enquote{Music}-Nachrichten, die eine variable Länge haben.
+Da dieses Protokoll - wie auch das in Kapitel \ref{vorgehenSW-PIDI} spezifzierte \ac{PIDI}-Format - portabel für verschiedene Hardware-Voraussetzungen sein soll, kann die \ac{UI} nicht die Speicherkapazitäten des \ac{MC}s voraussetzen.
+Entsprechend muss der \ac{MC} der \ac{UI} irgendwie mitteilen, was die akzeptierte Maximallänge für die \enquote{Music}-Nachricht ist.
+Da die \enquote{Ping}-Nachricht im Regelfall sowieso die zuerst gesendete Nachricht wäre, kann der \ac{MC} deren Empfangsbestätigung nutzen, um der \ac{UI} dieses Maximum mitzuteilen.
+Damit ist die \enquote{Ping}-Nachricht nun notwendigerweise die zuerst gesendete Nachricht in diesem Protokoll.
+
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|p{6mm}|p{80mm}|p{55mm}|}
+        \theadstart{ID} & \theadcol{Beschreibung} & \theadcol{Payload} \\ \hline
+        \enquote{P} & \enquote{Ping}-Nachricht & - \\ \hline
+        \enquote{p} & \enquote{Pong}-Nachricht - Antwort vom \ac{MC} auf Ping-Nachricht & Maximal-Anzahl von \lstinline|PidiCmd|s pro \enquote{Music}-Nachricht \\ \hline
+        \enquote{C} & \enquote{Continue}-Nachricht, zum Anhalten bzw. Fortsetzen der Musik & 1 Byte; Nur bei 0 soll die Musik angehalten werden \\ \hline
+        \enquote{V} & \enquote{Volume}-Nachricht - setzt die Lautstärke & 32-bit Floating-Point Wert \\ \hline
+        \enquote{S} & \enquote{Speed}-Nachricht - setzt die Abspielgeschwindigkeit & 32-bit Floating-Point Wert \\ \hline
+        \enquote{s} & \enquote{Success}-Nachricht - Antwort vom \ac{MC} auf jede erfolgreich erhaltene Nachricht & - \\ \hline
+        \enquote{M} & \enquote{Music}-Nachricht & siehe Abschnitt \ref{SPPP-Pidi-Messages} \\ \hline
+        \enquote{r} & \enquote{Request}-Nachricht - vom \ac{MC} geschickt (siehe Abschnitt \ref{SPPP-Pidi-Messages}) & - \\ \hline
+    \end{tabular}
+    \caption{\ac{SPPP}-Nachrichten}
+    \label{table:SPPP-Messages}
+\end{table}
+% @TODO(Val): Update code & Protocol-Specification to fit this description
+% @TODO(Val): Put full Spec in Appendix
+
+\subsection{Musik-Nachrichten} \label{SPPP-Pidi-Messages}
+\begin{enumerate}
+    \item Notwendigkeit für Streaming
+    \item Umsetzung von Streaming über Double-Buffer, Request-Nachrichten, Indexe in Music-Nachrichten
+    \item Kurze Erklärung, warum Empfangsbestätigungen bei Request-Nachrichten nicht notwendig sind
+    \item Notwendigkeit eines abstrakt-definierten PlayedKeys
+    \item Aufbau der Music-Nachricht (bzw. kurze Erklärung \& Spec in Anhang?)
+\end{enumerate}
 
 
 \section{UI} \label{vorgehenSW-UI}

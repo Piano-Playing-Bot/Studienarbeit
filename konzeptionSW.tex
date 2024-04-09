@@ -7,7 +7,6 @@
 \nocite{*}
 \chapter{Konzeption - Software} \label{vorgehenSW}
 \chapterauthor{Val Richter}
-% @TODO(Val): Sprich nicht einfach von UI (siehe auch Kruses Email dazu)
 
 Wie in Kapitel \ref{Zielstellung} beschrieben, benötigt dieses Projekt einen Desktop-Anwendung für die Nutzer:innen-Interaktion mit dem selbst-spielenden Klavier.
 Außerdem wurde in Kapitel \ref{Hardware - Konzeption} bereits aufgezeigt, dass für die Ansteurung der Motoren ein \ac{MC} verwendet werden soll, der natürlich auch eine bestimmte Software ausführen muss.
@@ -290,13 +289,6 @@ Ansosten würde nämlich die akkumulierte Zeit der Vergangenheit angepasst werde
 
 
 \section{UI-Arduino Kommunikation} \label{vorgehenSW-SPPP}
-\begin{enumerate}
-    \item Wie wird Kommunikation mit Arduino i.d.R. gelöst
-    \item Grundlagen der Kommunikation (Files, Polling, etc.)
-    \item Prinzip der minimalen Arbeit → Custom Protocol → SPPP
-    \item Asynchrone Umsetzung → Threading bei UI; Message-Buffer bei Arduino
-    \item Streaming → Current\_Cmds, Next\_Cmds Buffer beim Arduino
-\end{enumerate}
 
 Den in Kapitel \ref{Zielstellung} gestellten Anforderungen nach, soll über die \ac{UI} das automatisch gespielte Musikstück dynamisch wählbar sein.
 Das bringt mit sich, dass die \ac{UI} Daten an den \ac{MC} senden können muss.
@@ -375,14 +367,40 @@ Damit lässt sich das Protokoll auch leicht erweitern, da neue Nachrichten-Typen
 Es empfiehlt sich außerdem jede Nachricht mit bestimmten \enquote{Magic Bytes} zu starten, um keine arbiträren Datenströme als Nachrichten zu interpretieren.
 
 Um die Latenz der Nachrichten unabhängig technisch Gegebenheiten gering zu halten, empfiehlt es sich, die Anzahl zu übertragener Bytes möglichst gering zu halten.
-Entsprechend wurde entschieden, die \enquote{Magic Bytes} sowie die IDs der Nachrichten-Typen auf jeweils ein einzelnes Byte zu reduzieren.
+Entsprechend wurde entschieden, die IDs der Nachrichten-Typen auf jeweils ein einzelnes Byte zu reduzieren.
 Zur leichteren Identifizierung werden Nachrichten-IDs nur ASCII-enkodierte Buchstaben verwendet.
-Weiterhin wird hier die Konvention genutzt, dass Großbuchstaben eine Nachricht der \ac{UI} und Kleinbuchstaben eine Nachricht des \ac{MC}s spezifzieren.
+Weiterhin wird hier die Konvention eingeführt, dass Großbuchstaben eine Nachricht der \ac{UI} und Kleinbuchstaben eine Nachricht des \ac{MC}s spezifzieren.
+
+Die Magic Bytes des Protokolls werden als die 3-Byte Sequenz \enquote{SPP} definiert.
+Ein einzelnes Byte wäre zu unsicher, da jedes zufällig empfangene Byte eine $\frac{1}{256} = 0,39\%$ Chance hat das Magic Byte zu sein.
 
 Die meisten Nachrichten müssen jeweils nur eine einzelne Zahl übersenden.
 Tabelle \ref{table:SPPP-Messages} listet alle Nachrichtentypen mit ihren jeweils zu übertragenen Daten auf.
 
-Wie in den Anforderungen oben erwähnt, benötigt es jedoch noch einer Möglichkeit Fehler in der Kommunikation zu erkennen.
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|p{6mm}|p{80mm}|p{55mm}|}
+        \theadstart{ID} & \theadcol{Beschreibung} & \theadcol{Payload} \\ \hline
+        \enquote{P} & \enquote{Ping}-Nachricht & - \\ \hline
+        \enquote{p} & \enquote{Pong}-Nachricht - Antwort vom \ac{MC} auf Ping-Nachricht & Maximal-Anzahl von \lstinline|PidiCmd|s pro \enquote{Music}-Nachricht \\ \hline
+        \enquote{C} & \enquote{Continue}-Nachricht, zum Anhalten bzw. Fortsetzen der Musik & 1 Byte; Nur bei 0 soll die Musik angehalten werden \\ \hline
+        \enquote{V} & \enquote{Volume}-Nachricht - setzt die Lautstärke & 32-bit Floating-Point Wert \\ \hline
+        \enquote{S} & \enquote{Speed}-Nachricht - setzt die Abspielgeschwindigkeit & 32-bit Floating-Point Wert \\ \hline
+        \enquote{s} & \enquote{Success}-Nachricht - Antwort vom \ac{MC} auf jede erfolgreich erhaltene Nachricht & - \\ \hline
+        \enquote{M} & \enquote{Music}-Nachricht & siehe Abschnitt \ref{SPPP-Pidi-Messages} \\ \hline
+        \enquote{r} & \enquote{Request}-Nachricht - vom \ac{MC} geschickt (siehe Abschnitt \ref{SPPP-Pidi-Messages}) & - \\ \hline
+    \end{tabular}
+    \caption{\ac{SPPP}-Nachrichten}
+    \label{table:SPPP-Messages}
+\end{table}
+% @TODO(Val): Update code & Protocol-Specification to fit this description
+% @TODO(Val): Update magic bytes to be `SPP`
+% @TODO(Val): Put full Spec in Appendix
+
+\subsection{Fehlerbehandlung} \label{SPPP-Error-Handling}
+
+% @Note(Val): Einleitung hier redet von 'Erkennung' der Fehler, Subsection-Titel ist aber 'Fehlerbehandlung' - da sollte eins von beiden wahrscheinlich gefixt werden
+Wie in den oben gelisteten Anforderungen erwähnt, benötigt es jedoch noch eine Möglichkeit Fehler in der Kommunikation zu erkennen.
 Es gibt hierbei grundsätzlich drei Arten an potenziellen Fehlern:
 
 \begin{enumerate}
@@ -407,41 +425,80 @@ Solange das zweimalig Erhalten der selben Nachricht genau die selben Auswirkunge
 Wenn die in Tabelle \ref{table:SPPP-Messages} gelisteten Nachrichtentypen betrachtet werden, fällt außerdem auf, dass nur die Nachrichten, die von der \ac{UI} gesendet werden, eine Empfangsbestätigung benötigen.
 Diese Bestätigung soll über die \enquote{Success}-Nachricht gegeben werden, welche entsprechend nur vom \ac{MC} geschickt werden muss.
 
-Da der Austausch von \enquote{Ping}- und \enquote{Pong}-Nachrichten dem selben Prinzip der Empfangsbestätigung folgt, sollte die Frage aufkommen, warum statt einer eigenen \enquote{Pong}-Nachricht nicht einfach die selbe \enquote{Success}-Nachrich gesendet werden kann.
+Ein weiteres Problem, das mit Empfangsbestätigungen auftreten kann, ist das Zurordnen der Nachricht, die nun als empfangen bestätigt wurde.
+Sollte die \ac{UI} beispielsweise zwei Nachrichten direkt nacheinander schicken und dann nur eine einzelne \enquote{Success}-Nachricht zurück erhalten, ist unklar welche der beiden Nachrichten nun angekommen ist und welche nicht.
+Dies kann gelöst werden, indem jeder Nachricht eine einzigartige Nummer zugeordnet wird und die \enquote{Success}-Nachricht diese Nummer referenziert.
+
+Alternativ kann auch einfach spezifziert werden, dass eine neue Nachricht nur gesendet werden darf, wenn eine \enquote{Success}-Nachricht erhalten wurde oder eine gewisse Zeit vergangen ist.
+Diese Zeit wird auch als \enquote{Timeout} benannt. % @TODO(Val): Mention other protocols (like HTTP, Websockets, etc.) using timeouts like this too
+Die zweite Methode bringt mit sich, dass das \ac{SPPP} Protokoll synchron wird und mag deshalb weniger flexibel als die asynchrone, erste Lösungsvariante erscheinen.
+Allerdings erleichtert die Synchronisierung des Protokolls auch den Umgang mit dem 3. Fehler, wie nachher gezeigt wird.
+Entsprechend wird sich für diese Lösungsmöglichkeit entschieden.
+
+Weiterhin sollte die Frage aufkommen, warum statt einer eigenen \enquote{Pong}-Nachricht nicht einfach die selbe \enquote{Success}-Nachrich gesendet werden kann, wenn der Austausch von \enquote{Ping}- und \enquote{Pong}-Nachrichten genauso dem Prinzip der Empfangsbestätigung folgt.
 Der Grund dafür liegt in den \enquote{Music}-Nachrichten, die eine variable Länge haben.
 Da dieses Protokoll - wie auch das in Kapitel \ref{vorgehenSW-PIDI} spezifzierte \ac{PIDI}-Format - portabel für verschiedene Hardware-Voraussetzungen sein soll, kann die \ac{UI} nicht die Speicherkapazitäten des \ac{MC}s voraussetzen.
 Entsprechend muss der \ac{MC} der \ac{UI} irgendwie mitteilen, was die akzeptierte Maximallänge für die \enquote{Music}-Nachricht ist.
 Da die \enquote{Ping}-Nachricht im Regelfall sowieso die zuerst gesendete Nachricht wäre, kann der \ac{MC} deren Empfangsbestätigung nutzen, um der \ac{UI} dieses Maximum mitzuteilen.
 Damit ist die \enquote{Ping}-Nachricht nun notwendigerweise die zuerst gesendete Nachricht in diesem Protokoll.
 
-\begin{table}[htbp]
-    \centering
-    \begin{tabular}{|p{6mm}|p{80mm}|p{55mm}|}
-        \theadstart{ID} & \theadcol{Beschreibung} & \theadcol{Payload} \\ \hline
-        \enquote{P} & \enquote{Ping}-Nachricht & - \\ \hline
-        \enquote{p} & \enquote{Pong}-Nachricht - Antwort vom \ac{MC} auf Ping-Nachricht & Maximal-Anzahl von \lstinline|PidiCmd|s pro \enquote{Music}-Nachricht \\ \hline
-        \enquote{C} & \enquote{Continue}-Nachricht, zum Anhalten bzw. Fortsetzen der Musik & 1 Byte; Nur bei 0 soll die Musik angehalten werden \\ \hline
-        \enquote{V} & \enquote{Volume}-Nachricht - setzt die Lautstärke & 32-bit Floating-Point Wert \\ \hline
-        \enquote{S} & \enquote{Speed}-Nachricht - setzt die Abspielgeschwindigkeit & 32-bit Floating-Point Wert \\ \hline
-        \enquote{s} & \enquote{Success}-Nachricht - Antwort vom \ac{MC} auf jede erfolgreich erhaltene Nachricht & - \\ \hline
-        \enquote{M} & \enquote{Music}-Nachricht & siehe Abschnitt \ref{SPPP-Pidi-Messages} \\ \hline
-        \enquote{r} & \enquote{Request}-Nachricht - vom \ac{MC} geschickt (siehe Abschnitt \ref{SPPP-Pidi-Messages}) & - \\ \hline
-    \end{tabular}
-    \caption{\ac{SPPP}-Nachrichten}
-    \label{table:SPPP-Messages}
-\end{table}
-% @TODO(Val): Update code & Protocol-Specification to fit this description
-% @TODO(Val): Put full Spec in Appendix
+Es bleibt nun noch der 3. Fehler zu behandeln.
+Wenn ein Teil der gesendeten Nachricht ausfällt, gibt es zwei Möglichkeiten.
+Entweder werden weitere Bytes empfangen, sodass eine scheinbar vollständige, wenn auch inkorrekte Nachricht erhalten wird.
+Das ist im Endeffekt wieder das 1. Problem und wird ebenso im Rahmen dieser Arbeit ignoriert.
+Weitere Versionen des Protokolls sollten diese Quellen möglicher Dateninkonsistenz jedoch behandeln.
+Es ist allerdings auch möglich, dass keine weiteren Bytes empfangen werden und die Nachricht unvollständig bleibt.
+Da das Protokoll synchron ist und keine weiteren Nachrichten gesendet werden sollten, bevor Empfangsbestätigung zurückgeschickt wurde, ist dies tatsächlich der sehr viel wahrscheinlichere Fall.
+Da für die Behandlung des 2. Problems sowieso schon ein Timeout festgelegt werden muss, kann dieser Timeout hier ebenfalls verwendet werden.
+Sobald der Timeout abgelaufen ist und die Nachricht noch nicht vollständig empfangen wurde, soll diese einfach verworfen werden.
+Sollten die fehlenden Bytes nach Ablauf des Timeouts eintreffen, werden diese ignoriert, da sie sehr wahrscheinlich nicht mit den Magic-Bytes des \ac{SPPP} Protokolls beginnen.
 
-\subsection{Musik-Nachrichten} \label{SPPP-Pidi-Messages}
-\begin{enumerate}
-    \item Notwendigkeit für Streaming
-    \item Umsetzung von Streaming über Double-Buffer, Request-Nachrichten, Indexe in Music-Nachrichten
-    \item Kurze Erklärung, warum Empfangsbestätigungen bei Request-Nachrichten nicht notwendig sind
-    \item Notwendigkeit eines abstrakt-definierten PlayedKeys
-    \item Aufbau der Music-Nachricht (bzw. kurze Erklärung \& Spec in Anhang?)
-\end{enumerate}
+In den oben genannten Anforderungen wurde die maximale Latenz für Nachrichten auf 1 Sekunde gesetzt.
+Diese Anforderung kann eins-zu-eins als Wert des Timeouts von \ac{SPPP}-Nachrichten übernommen werden.
+Die \ac{UI} muss dabei jedoch den doppelten \ac{Timeout} als Wert nehmen, da sie zusätzlich noch auf den Eingang der Empfangsbestätigung warten muss.
 
+\subsection{\enquote{Music}-Nachrichten} \label{SPPP-Pidi-Messages}
+
+Die grundlegende Aufgabe, für die die Kommunikation zwischen \ac{UI} und \ac{MC} benötigt wird, ist das Transferieren der zu spielenden Musikdaten.
+Wie in Kapitel \ref{vorgehenSW-MC} beschrieben, verwendet der \ac{MC} das selbst-erstellte \ac{PIDI}-Format zum Speichern der Musikdaten.
+Entsprechend ist es sinnvoll, diese Daten direkt im gleichen Format an den \ac{MC} zu schicken.
+
+Da der Speicherplatz des \ac{MC}s jedoch vergleichsweise stark begrenzt ist, können viele Songs nicht komplett gespeichert werden.
+Auch wenn diese Limitation mit Erweiterungen der Hardware gelöst werden könnten, würden diese die Kosten weiter ansteigen.
+Um den Ziel der Arbeit gerecht zu werden, darf ein großer Speicherplatz nicht vorausgesetzt werden.
+Wenn also nicht davon auszugehen ist, dass das gesamte Musikstück auf einmal auf dem \ac{MC} gespeichert werden kann, müssen die Musikdaten in Teilen nach einander geschickt werden.
+In anderen Worten: es ist ein Streaming der Musikdaten notwendig.
+
+Eine erste Problematik, die hierbei aufkommt ist die Latenz der Nachrichten.
+Wenn nach Spielen eines Teils des Songs immer eine längere Wartezeit folgt, bevor die nächsten Töne gespielt werden können, macht es das selbst-spielende Klavier praktisch unnutzbar.
+Diese Problematik ist auch als \enquote{Buffering} bekannt. % @TODO(Val): Source for Buffering
+Die einfachste Art dem Vorzeubugen ist durch die Verwendung von zwei Buffern für die \lstinline|PidiCmd|s.
+Ein Buffer hält die derzeit zu spielenden \lstinline|PidiCmd|s, während der zweite Buffer mit den danach zu spielenden \lstinline|PidiCmd|s befüllt werden kann.
+Sobald der erste Buffer fertig gespielt wurde, können die beiden Buffer effizient mit einem Tausch ihrer Pointer gewechselt werden.
+
+Das Problem des Bufferings kann dann nur noch vorkommen, wenn der erste Buffer fertig gespielt wurde, bevor der nächste Buffer aufgefüllt werden konnte.
+Eine einfache Verbesserung dieser Strategie ist die Nutzung von mehr Buffern als nur zwei.
+Wenn drei Buffer genutzt werden, zum Beispiel, müssen zwei Buffer durchgespielt werden, bevor der nächste Buffer aufgefüllt werden muss.
+Auch können die Buffer bereits getauscht werden, bevor die Nachricht fertig gelesen wurde, solange zumindest ein \lstinline|PidiCmd| bereits gelesen wurde.
+
+Die nächste Schwierigkeit kommt daher, dass die \ac{UI} wissen muss, wann der nächste Teil des Musikstücks benötigt wird.
+Die \ac{UI} könnte versuchen selbst die vergangene Zeit zu zählen und die selben Berechnung wie der \ac{MC} machen, um zu wissen, wieweit der \ac{MC} bis jetzt gespielt hat.
+Falls hierbei jedoch ein Fehler auftritt, würde die Musikdaten zum falschen Zeitpunkt gesendet werden.
+Abgesehen davon wäre dies auch ein relativ großer Entwicklungsaufwand.
+Einfacher ist es, wenn der \ac{MC} eine bestimmte Nachricht schickt, um den nächsten Teil des Musikstücks anzufordern.
+In Tabelle \ref{table:SPPP-Messages} ist diese Nachricht als \enquote{Request}-Nachricht spezifiziert.
+
+Die \enquote{Request}-Nachricht ist die einzige Nachricht, die der \ac{MC} schickt, ohne auf eine Nachricht der \ac{UI} zu antworten.
+Trotzdem muss die \ac{UI} hier nicht mit einer Empfangsbestätigung antworten, da sie sowieso mit einer Nachricht antwortet.
+Nur ist die Antwort der \ac{UI} eine \enquote{Music}-Nachricht stattdessen.
+
+% @TODO(Val): Notwendigkeit eines abstrakt-definierten PlayedKeys
+
+% @TODO(Val): Aufbau der Music-Nachricht (bzw. kurze Erklärung \& Spec in Anhang?)
+
+% @TODO(Val): Erklären wie eine Music-Nachricht aussieht, wenn Musikstück fertig ist
+
+% @TODO(Val): Limitation: Es wurde nicht getestet, um Flash-Speicher (der oftmals ausreichend groß ist) zum Speichern eines gesamten Songs ausgereicht hätte und welche Performanz-Probleme das mit sich gebracht hätte. Dann wäre Streaming unnötig. Wurde aber nicht getestet, ob das überhaupt eine viable Alternative wäre
 
 \section{UI} \label{vorgehenSW-UI}
 \begin{enumerate}

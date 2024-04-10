@@ -12,9 +12,9 @@
 
 Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
 Die Grundfragen, welche bei der Konstruktion auftraten, betrafen die Auswahl und Implementierung der
-Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des Arduinos.
+Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des Mikrocontrollers.
 Im Hinblick auf die Aktuatoren muss eine präzise Steuerung der Tasten
-ermöglichet werden, ohne dass Genauigkeit und Geschwindigkeit des Anspielens vernachlässigt werden.
+ermöglicht werden, ohne dass Genauigkeit und Geschwindigkeit des Anspielens vernachlässigt werden.
 \newline
 Dafür werden diese mit den Klaviertasten verbunden, um die mechanische Integrität des Klaviers
 zu erhalten und gleichzeitig eine präzise Steuerung zu gewährleisten.\newline
@@ -143,33 +143,53 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschrenkung nicht
 	weiter betrachtet wurden. Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
 	sie bei Ende der Stromversorgung waren. Für das Klavier werden Aktuatoren benötigt, welche wieder auf die vorherige
-	Position zurück schalten, die Klaviertaste also in dem Sinne wieder \`loslassen' können.
+	Position zurückschalten, die Klaviertaste also in dem Sinne wieder \`loslassen' können.
 	\item Linear-Motor: Auch hier kam das Problem auf, dass die Motoren nicht automatisch wieder an ihre vorherige
-	Position zurückschalten wenn der Stromfluss stoppt.
+	Position zurückschalten, wenn der Stromfluss stoppt.
 	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellen
-	Tastendrücken sinnvoll ist. Außerdem schalten Sie wenn die Stromversorgung abbrichtr wieder auf ihre vorherige
+	Tastendrücken sinnvoll ist. Außerdem schalten Sie wenn die Stromversorgung abbricht wieder auf ihre vorherige
 	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren. Da
-	das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinaus zu gehen, führte dies
-	lediglich dazu dass Kostenintensivere Solenoids bestellt werden mussten.
+	das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinauszugehen, führte dies
+	lediglich dazu, dass Kostenintensivere Solenoids bestellt werden mussten.
 \end{enumerate}
 
+\newpage
 
 \subsection{Verbindung Tasten und Aktuatoren}
 
 Wie in Kapitel \ref{konzeptionHW-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
-Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt.
-In diesem Kapitel wird ein Konzept ausgearbeitet, welches beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden.
+Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt. \newline
+In diesem Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden.
 Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit weiter verbessert.
 \newline
 Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen.
-Anschließend wird jede Schnur jeweils durch ein senkrechtes Loch im Klaviaturbalken (bzw. Tastenbrett), worauf die Tasten liegen, in den Fußraum geführt.
+Die Position an der Taste kann nicht frei gewählt werden. Es muss darauf geachtet werden,
+dass man das Loch beim Spielen nicht sieht, dass das Loch möglichst am Ende der Taste ist, um einen großen Hebel zu erzeugen
+und dass das Tastenbrett unter der Taste an der Position gut durchzubohren ist.
+
+
+\includegraphics[width=8cm, height=6cm]{img/test} %%TODO: Bild einfügen
+\caption{Tastenbohrung}
+
+Anschließend wird jede Schnur jeweils durch ein senkrechtes Loch im Klaviaturbalken (bzw. Tastenbrett),
+worauf die Tasten liegen, in den Fußraum geführt.
 Damit die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt sind,
 werden die Seile entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt.
+
+
+\includegraphics[width=8cm, height=6cm]{img/test} %%TODO: Bild einfügen
+\caption{Fußraum des Klaviers}
+
+
 Dort werden die Hubmagnete in zwei Reihen über die gesamte Breite befestigt.
-Um die Intensität des Tastendrucks zu steuern und die Durabilität des Materials zu verlängern, sollte die Reibung am Seil möglichst gering gehalten werden.
+
+%% TODO: Bild einfügen
+\caption{Befestigung der Hubmagnete}
+Um die Intensität des Tastendrucks zu steuern und die Haltbarkeit des Materials zu verlängern,
+sollte die Reibung am Seil möglichst gering gehalten werden.
 Dazu werden mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden, die Seile umgelenkt.
 
-\textit{Organisation der Aktuatoren}
+\textit{Anordnung der Aktuatoren}
 
 Die Idee ist, die Hubmagnete entlang der Klaviatur zu befestigen, um die Tasten möglichst senkrecht nach unten ziehen zu können.
 Hierfür müssen folgende Aspekte berücksichtigt werden:
@@ -192,7 +212,7 @@ Ob dies ausreicht, muss in späteren Tests (siehe Kapitel \ref{tests}) ermittelt
 Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagnete verbunden.
 
 Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung würde allerdings auf Kosten der Stabilität und Funkionalität gehen.
-Deshalb werden die Hubmagnete am Corpus des Klaviers (untere Frontplatte) befestigt.
+Deshalb werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
 
 Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
 sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden.
@@ -201,7 +221,43 @@ sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier 
 
 \textit{Optimierung der Seilführung}
 
-Würde man den Aufbau so belassen, hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend betätigen.
+Würde man die Seile direkt zu den Hubmagneten führen,
+hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend betätigen.
+\newline
+In den folgenden Abbildungen sind die seitliche Ansicht des Klaviers gezeichnet.
+Dabei repräsentieren der schwarze/weiße Block jeweils eine schwarze/ weiße Taste.
+Der grüne und pinke Strich stehen für das Seil, das mit dem Hubmagnet und dem Loch in der Taste verbunden ist.
+Unten links sind die zwei übereinanderliegenden Solenoid-Reihen (blau) abgebildet.
+Der schwarze Strich repräsentiert den Stab im Hubmagneten.
+\newline
+Abb. 3.1 zeigt den intuitiven Aufbau mit entspanntem Seil und ausgeschaltetem Solenoid.
+Abb. 3.2 zeigt den selben Aufbau wie Abb. 3.1, nur, dass der Solenoid angezogen ist.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=8cm, height=10cm]{img/Umlenkung_locker}
+	\caption{Taste locker ohne Umlenkung}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=8cm, height=10cm]{img/Umlenkung_gezogen}
+	\caption{Taste gezogen ohne Umlenkung}
+\end{figure}
+
+\newpage
+
+Mit diesem intuitiven Aufbau funktioniert das Betätigen der Taste nicht, da diese nicht weit genug heruntergezogen wird.
+Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben wurden Umlenkungen eingebaut.
+Mittels dieser Umlenkung (PVC-Rohr) werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
+Somit wurde die Tiefe, mit der die Taste gedrückt werden kann, wieder auf annähernd 1 cm (Hub des Magnets) erhöht werden.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics [width=8cm, height=10cm] {img/mitUmlenkung_locker}
+	\caption{Taste mit Umlenkung}
+\end{figure}
+
 \newline
 Dies kann man auch mathematisch beweisen:
 \newline geg.:
@@ -219,44 +275,19 @@ Dies kann man auch mathematisch beweisen:
 Die Differenz zwischen $ht1_{gespannt}$ und $ht1_{entspannt}$ (bzw. ht2) beschreibt die Tiefe, die eine Taste gedrückt werden kann.
 \newline Diese beträgt 0.82 cm, bzw. 0.84 cm.
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=8cm, height=10cm]{img/Umlenkung_locker}
-	\caption{Taste locker ohne Umlenkung}
-	\label{<label>}
-\end{figure}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=8cm, height=10cm]{img/Umlenkung_gezogen}
-	\caption{Taste gezogen ohne Umlenkung}
-	\label{<label>}
-\end{figure}
-
-Mittels einer Umlenkung (PVC-Rohr) werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
-Somit wurde die Tiefe, mit der die Taste gedrückt werden kann wieder auf annähernd 1cm erhöht werden.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics [width=8cm, height=10cm] {img/mitUmlenkung_locker}
-	\caption{Taste mit Umlenkung}
-	\label{<label>}
-\end{figure}
-
-
 \textit{Auswahl des Seils}
 
 Wie eben erwähnt wird das Ziehen durch ein Seil ermöglicht.
-Dafür wird ein leichtes, formbares und dehnungsresistentes Material benötigt, da die eine Seite mit dem Hubmagnete und die andere durch ein Loch in der Taste verknotet werden sollt.
+Dafür wird ein leichtes, formbares, unelastisches und dehnungsresistentes Material benötigt, welches die Hubmagnete mit den Tasten verbindet.
 Je leichter das Material ist, desto weniger wird die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verändert.
-Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürrt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
-Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein dehnungsresistentes Seil zu verwenden.
-Würde sich das Seil dehnen lassen, würde ein Teil der Kraft nicht bis zur Taste gelangen und somit den Anschlag abschwächen.
+Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
+Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein unelastisches Seil zu verwenden.
+Um häufiges Nachspannen oder Austauschen des Seils entgegenzuwirken, sollte dies so dehnungsresistent wie möglich sein.
 
 \subsubsection{Nähgarn}
 
-Als Erstes wurden Nähgarn, welches zur Hand war getestet.
-Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung mit 25N des Hubmagnetens nicht stand.
+Als Erstes wurde Nähgarn, welches zur Hand war getestet.
+Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung (mit 25N) des Hubmagnetens nicht stand.
 Vier Fäden funktionierten zu Beginn gut, leierten allerdings schnell aus.
 
 \subsubsection{Nylonsaiten}
@@ -270,12 +301,12 @@ Beim Ziehen des Magnetes wurde erst die lockere Schlaufe an der Taste gestreckt,
 
 Aus Erfahrungen aus dem Angelbereich konnte schnell eine geeignetere Schnur gefunden werden.
 Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
-Mit einem Durchmesser von 1.6mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7kg standhalten.
+Mit einem Durchmesser von 1.6 mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7 kg standhalten.
 Auch nach ausgiebigem Testen erfüllt die Angelschnur die Anforderungen.
 Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein leichtes.
 
 \subsection{Klangdämpfung der Aktuatoren}
-Die Hubmagnete machen beim Anschlagen laute "klack" Geräusche, welche von der Melodie des Klaviers ablenken.
+Die Hubmagnete machen beim Anschlagen laute \glqq klack\grqq {} Geräusche, welche von der Melodie des Klaviers ablenken.
 Genauer handelt es sich um das den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
 Auch hierfür gab es mehrere Ideen und Tests, um das Geräusch zu dämpfen:
 
@@ -290,20 +321,15 @@ Die nächste Idee war das Limitieren des Schlags durch Gummiringe (Dichtungsring
 Da für die Befestigung keine zufriedenstellende Lösung gefunden wurde, wurde auch diese Idee verworfen.
 zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden.
 
-Notiz von Oli: Motorlager verwenden zwischen Platte und Klavier
-Notiz von Oli:
-Aktuatoren Geräuschreduzierung Tests:
-
-Weg normal: 10mm
-
 \subsubsection{Schaumstoff}
 
-*siehe bild
-Wie im Bild zu sehen wurde die "Gummi-Stopper"-Idee leicht mit Schaumstoff leicht verändert.
+Wie im Bild unten zu sehen, wurde die \glqqGummi-Stopper"-Idee durch den Einsatz von Schaumstoff leicht verändert.
 + Das Klopfgeräusch konnte vollständig verhindert werden.
-- Durch den Schaumstoff kann 1mm Hub nicht verwendet werden, weshalb nur noch 9mm übrig bleiben.
-- Außerdem ist der Aufbau optisch nicht ansprechend.
+- Durch den Schaumstoff kann 1 mm Hub nicht verwendet werden, weshalb nur noch 9 mm übrig bleiben.
+- Der Aufbau optisch nicht ansprechend.
 
+\includegraphics [width=4cm, height=5cm] {img/Daempfung_Schaumstoff}
+\caption{Hubmagnet: Dämpfung mit Schaumstoff}
 
 \subsubsection{Seil (2mm Durchmesser) um den Anker}
 
@@ -572,7 +598,8 @@ zu steuern. Sie dienen als Schalter, der den Stromfluss zu den Aktuatoren regelt
 Dabei ist es wichtig, auf die Durchlassspannung und Mindestspannung des MOSFETs zu achten. Die Durchlassspannung ist die
 minimale Spannung, die an das Gate angelegt werden muss, um den MOSFET in den leitenden Zustand zu versetzen. Die
 Mindestspannung ist die minimale Spannung, die zwischen Source und Gate anliegen muss, um den MOSFET zuverlässig zu
-sperren. Es ist entscheidend, sicherzustellen, dass die Spannungen in der Schaltung diese Anforderungen erfüllen, um
+sperren.
+Es ist entscheidend, sicherzustellen, dass die Spannungen in der Schaltung diese Anforderungen erfüllen, um
 eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu vermeiden.
 
 

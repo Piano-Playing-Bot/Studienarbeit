@@ -11,11 +11,32 @@
 - Probleme, Schwierigkeiten, Änderungen während der Umsetzung \newline
 - vllt. kurze Code-Schnippsel von besonders interessanten Teilen
 
-% @TODO(Val): Lesen/Schreiben der Daten auf Arduino
-
-% @TODO(Val): Lesen/Schreiben der Daten auf Windows
-% @TODO(Val): Erklärung virtueller COM-Ports auf Windows
 % @Note(Val): Documentaion of COM-Ports: https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/configuration-of-com-ports
+- Code-Strukturierung \newline
+	- keine Klassen, kein OOP \newline
+	- Compression-Oriented Programming (siehe cmuratori) \newline
+	- Speicherplatz-Trennung über custom Allocators (not that interesting) \newline
+	- Parallelisierung basierend auf unabhängigen Codepaths (in der UI) (siehe Blogpost dazu) \newline
+	- Thread-Kommunikation über geteilten read-only Speicher \& Mutexes wenn notwendig \newline
+	- Error-Handling? \newline
+- Kommunikation \newline
+	- Lesen/Schreiben der Daten auf Arduino \newline
+		- Ring-Buffer zum Lesen \newline
+		- Greedy Reading/Parsing bei Music-Nachrichten \newline
+	- Lesen/Schreiben der Daten auf Windows \newline
+		- Finden von COM-Ports (EnumPorts vs. Register, etc.) \newline
+		- Lesen/Schreiben wie bei Dateien \newline
+		- keine native Möglichkeit fürs Polling \newline
+		- Synchrones Lesen einer gesamten Nachricht kann zu langem Blocken führen \newline
+		- Asynchrones Lesn funktioniert nicht \newline
+		- Lesen einzelner Bytes zum Befüllen eines buffers (symmetrisch zu MC) \newline
+		- Lesen in Endlosschleife in eigenem Thread \newline
+		- Schreiben in Chunks (Chunk-Größe über Ausprobieren herausgefunden) \newline
+- Arduino-Programmierung \newline
+	- Bugs durch begrenzten Speicherplatz \newline
+	- Berechnung von Oktave+Note zu Aktuator-Index \newline
+	- Strategie für PlayedKeys Elimination \newline
+- Code der zwischen UI und MC geteilt wurde \newline
 
 \section{Arduino - Technische Gegebenheiten und Optimierungen}
 - Piano Layout (7 Oktaven, 3 Tasten davor, 1 Taste danach)\newline

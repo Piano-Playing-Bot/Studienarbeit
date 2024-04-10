@@ -388,6 +388,7 @@ Tabelle \ref{table:SPPP-Messages} listet alle Nachrichtentypen mit ihren jeweils
         \enquote{S} & \enquote{Speed}-Nachricht - setzt die Abspielgeschwindigkeit & 32-bit Floating-Point Wert \\ \hline
         \enquote{s} & \enquote{Success}-Nachricht - Antwort vom \ac{MC} auf jede erfolgreich erhaltene Nachricht & - \\ \hline
         \enquote{M} & \enquote{Music}-Nachricht & siehe Abschnitt \ref{SPPP-Pidi-Messages} \\ \hline
+        \enquote{N} & \enquote{New-Music}-Nachricht & siehe Abschnitt \ref{SPPP-Pidi-Messages} \\ \hline
         \enquote{r} & \enquote{Request}-Nachricht - vom \ac{MC} geschickt (siehe Abschnitt \ref{SPPP-Pidi-Messages}) & - \\ \hline
     \end{tabular}
     \caption{\ac{SPPP}-Nachrichten}
@@ -492,13 +493,54 @@ Die \enquote{Request}-Nachricht ist die einzige Nachricht, die der \ac{MC} schic
 Trotzdem muss die \ac{UI} hier nicht mit einer Empfangsbestätigung antworten, da sie sowieso mit einer Nachricht antwortet.
 Nur ist die Antwort der \ac{UI} eine \enquote{Music}-Nachricht stattdessen.
 
-% @TODO(Val): Notwendigkeit eines abstrakt-definierten PlayedKeys
+Die \enquote{Request}-Nachricht enthält wie in Tabelle \ref{table:SPPP-Messages} spezifiziert keine weiteren Daten.
+Das heißt, dass die \ac{UI} sich merken muss wie weit im Musikstück die letzte Nachricht fortgeschritten war.
+Ein alternativer Ansatz würde den \ac{MC} speichern lassen, wie viele \lstinline{PidiCmd}s bereits gespielt wurden und würde diesen Index in der \enquote{Request}-Nachricht an die \ac{UI} schicken.
+Beide Methoden nehmen sich nicht besonders viel, hier wurde sich jedoch für die erste Möglichkeit entschieden, da sie der \ac{UI} mehr Flexibilität bietet und weniger Daten übertragen werden müssen.
 
-% @TODO(Val): Aufbau der Music-Nachricht (bzw. kurze Erklärung \& Spec in Anhang?)
+Die soweit beschriebene Strategie funktioniert zum Spielen vollständiger Stücke nacheinander.
+Nun soll die \ac{UI} aber auch die Möglichkeit bieten, während des Spielen eines Stückes zu einem anderen zu wechseln.
+In diesem Fall muss dem \ac{MC} mitgeteilt werden, dass ein neues Stück anfängt und alle Aktuatoren zu Beginn wieder ausgeschaltet werden sollen.
 
-% @TODO(Val): Erklären wie eine Music-Nachricht aussieht, wenn Musikstück fertig ist
+Zusätzlich soll es den Nutzer:innen möglich sein, in einem zurzeit spielenden Stück zu einem anderem Zeitpunkt zu springen.
+In diesem Fall müssen die zurzeit aktiven Aktuatoren womöglich ebenfalls ausgeschaltet werden.
+Jedoch ist es hier im Allgemeinen nicht der Fall, dass alle Aktuatoren ausgeschaltet werden sollten.
+Die Aktuatoren der Noten, die bis zu dem gewählten Zeitpunkt gespielt werden sollen, müssen nämlich angeschaltet werden.
+In Kapitel \ref{vorgehenSW-MC} wurde beschrieben, wie der \ac{MC} eine Liste bereits gespielter Noten für die selbe Problematik verwendet.
+Es liegt entsprechend nahe, das selbe Konzept hier zu verwenden.
+So kann ebenjene Liste direkt auf Seiten der \ac{UI} erstellt werden und zum \ac{MC} geschickt werden.
 
-% @TODO(Val): Limitation: Es wurde nicht getestet, um Flash-Speicher (der oftmals ausreichend groß ist) zum Speichern eines gesamten Songs ausgereicht hätte und welche Performanz-Probleme das mit sich gebracht hätte. Dann wäre Streaming unnötig. Wurde aber nicht getestet, ob das überhaupt eine viable Alternative wäre
+Es müssen hier jedoch noch die Elemente innerhalb dieser Liste spezifiziert werden.
+Im Folgenden sollen diese Elemente als \lstinline|PlayedKey|s bezeichnet werden.
+Wie in Listing \ref{code:Apply PIDICmds} auch, müssen die \lstinline|PlayedKey|s die verbleibende Länge, mit der der Ton gespielt werden soll, speichern.
+Weiterhin muss auch die Stärke, mit der der Ton gespielt werden soll, gespeichert werden.
+Die \lstinline|PlayedKey|-Struktur besteht entsprechend aus einer Referenz auf den Ton, der Länge und Spielstärke.
+Wie im \ac{PIDI}-Format wird die anzuspielende Taste über Oktave und Note definiert.
+Da Oktave, Note, Anspielstärke und Länge im \ac{PIDI}-Format jeweils als 4-Bit Zahlen spezifziert wurden, benötigt eine \lstinline|PlayedKey|-Struktur genau 2 Bytes.
+
+Auf Seiten des \ac{MC}s ergibt es Sinn die Oktave und Note direkt in den Index für den zuständigen Aktuator zu transformieren, damit diese Berechnung nur einmal gemacht werden muss.
+Ein weiterer Unterschied zwischen der \lstinline|PlayedKey|s Liste in der \enquote{Music}-Nachricht und auf dem \ac{MC} ist in der Länge der Liste.
+Da der \ac{MC} nur eine bestimmte Anzahl gleizeitig spielender Tasten haben darf, ist die Länge dessen Liste beschränkt.
+Da das \ac{SPPP} Protokoll ebenjene Feinheiten der Hardware abstrahieren soll, ist diese Limitierung in der \enquote{Music}-Nachricht nicht gegeben.
+Sollten in der Nachricht also mehr \lstinline|PlayedKey|s sein, als der \ac{MC} gleichzeitig spielen darf, muss der \ac{MC} das gleiche Verfahren zum Eliminieren einiger \lstinline|PlayedKey|s anwenden, dass er auch sonst verwendet (siehe Kapitel \ref{vorgehenSW-MC}).
+
+Da diese Liste nur übersendet werden muss, wenn ein neues Musikstück angefangen wird, oder zu einer anderen Stelle im spielende Stück gesprungen wird, gibt es zwei Möglichkeiten.
+Entweder wird ein Byte in der \enquote{Music}-Nachricht eingefügt, dass klarstellt, ob die Liste von \lstinline|PlayedKey|s vorhanden ist oder nicht.
+Oder es wird ein anderer Nachrichten-Typ dafür verwendet.
+Letztere Strategie benötigt kein zusätzliches Byte in der Nachricht und wurde somit gewählt.
+Dafür wird nun die \enquote{New-Music}-Nachricht verwendet.
+Beim Eingang einer \enquote{New-Music}-Nachricht - anders als bei einer \enquote{Music}-Nachricht - ist es nicht erwünscht die zuvor eingegangenen \lstinline|PidiCmd|s noch fertig zu spielen.
+
+Zuletzt mag noch die Frage aufkommen, was passieren soll, wenn das Musikstück fertig gespielt wurde.
+Sollte es dafür ebenfalls einen eigenen Nachrichtentyp geben?
+Das wäre eine simple Lösung, würde das Protokoll aber ein wenig verkomplizieren.
+Sollte die \ac{UI} stattdessen die eingehenden \enquote{Request}-Nachrichten einfach ignorieren?
+Dann würde der \ac{MC} endlos neue \enquote{Request}-Nachrichten schicken und somit unnötige Arbeit auf sich nehmen.
+Stattdessen wurde entschieden, am Ende des Musikstücks eine \enquote{Music}-Nachricht mit einer leeren Liste von \lstinline|PidiCmd|s zu schicken.
+Damit wid das \ac{SPPP} Protokoll nicht unnötig erweitert und der \ac{MC} muss nicht endlos neue Nachrichten schicken.
+Der \ac{MC} sollte dann keine weiteren \enquote{Request}-Nachrichten schicken, sobald beide Buffer von \lstinline|PidiCmd|s leer sind.
+Auf den ersten Blick mag das nach weiterer Arbeit klingen, diese Logik sollte zu Start des \ac{MC}s - bevor das erste Musikstück gespielt wurde - sowieso gelten.
+Entsprechend ist es kein weiterer Aufwand in der Ausführung oder Entwicklung des \ac{MC}s.
 
 \section{UI} \label{vorgehenSW-UI}
 \begin{enumerate}

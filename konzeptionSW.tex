@@ -382,7 +382,7 @@ Tabelle \ref{table:SPPP-Messages} listet alle Nachrichtentypen mit ihren jeweils
     \begin{tabular}{|p{6mm}|p{80mm}|p{55mm}|}
         \theadstart{ID} & \theadcol{Beschreibung} & \theadcol{Payload} \\ \hline
         \enquote{P} & \enquote{Ping}-Nachricht & - \\ \hline
-        \enquote{p} & \enquote{Pong}-Nachricht - Antwort vom \ac{MC} auf Ping-Nachricht & Maximal-Anzahl von \lstinline|PidiCmd|s pro \enquote{Music}-Nachricht \\ \hline
+        \enquote{p} & \enquote{Pong}-Nachricht - Antwort vom \ac{MC} auf Ping-Nachricht & Maximal-Anzahl von \lstinline|PidiCmd|s pro \enquote{Music}-Nachricht als 16-Bit Zahl \\ \hline
         \enquote{C} & \enquote{Continue}-Nachricht, zum Anhalten bzw. Fortsetzen der Musik & 1 Byte; Nur bei 0 soll die Musik angehalten werden \\ \hline
         \enquote{V} & \enquote{Volume}-Nachricht - setzt die Lautstärke & 32-bit Floating-Point Wert \\ \hline
         \enquote{S} & \enquote{Speed}-Nachricht - setzt die Abspielgeschwindigkeit & 32-bit Floating-Point Wert \\ \hline

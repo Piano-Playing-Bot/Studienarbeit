@@ -55,7 +55,7 @@ So ist auch die Wahl der Programmiersprache eine substantive und weitreichende E
 Hier wurde sich entschieden, die gesamte Implementierung in der Programmiersprache C\footnote{Streng genommen ist hier der ISO-Standard C99 gemeint \cite*[siehe ][]{iso.c99}. Der Einfachheit halber wird in dieser Arbeit jedoch nur von \enquote{C} gesprochen.} zu erstellen.
 Da der \ac{MC} vergleichsweise nur sehr begrenzten Speicherplatz zur Verfügung hat, ist die manuelle Speicherverwaltung von C hier sehr wünschenswert.
 
-Aber auch für die Entwicklung der \ac{UI}, wo der verfügbare Speicherplatz praktisch nicht begrenzt ist, wurde sich entschieden C zu verwenden.
+Aber auch für die Entwicklung der Desktop-Anwendung, wo der verfügbare Speicherplatz praktisch nicht begrenzt ist, wurde sich entschieden C zu verwenden.
 Der hauptsächliche Grund dafür ist die Transparenz der Sprache.
 Während viele Nachfolger von C versuchen ihre Semantik abstrakt halten, um die eigentliche Implementierung davon loskoppeln zu können, ist jedes Sprachkonstrukt in C direkt auf die genaue Umsetzung auf dem Computer abzubilden.
 Das kann nicht nur generell die Entwicklung erleichtern, sondern auch bei der Entwicklung von \ac{UI}s im besonderen Maße hilfreich sein, da die Performanz der Anwendung hier eine große Rolle für die Usability spielt.
@@ -79,17 +79,17 @@ Zuletzt ist auch noch amzumerken, dass ein substantiver Beweggrund für die Wahl
 % @TODO(Val): Abschnitt zur Verwendung von Prototypen während Konzept-Phase???
 % Während der Implementierung kam es zu keinen Änderungen zu dem in Kapitel \ref{vorgehenSW} vorgestellten Plans.
 % Das liegt u.a. daran, dass Teile der Konzeption während der Entwicklung von Prototypen, erstellt wurden.
-% So wurden beispielsweise die Möglichkeiten der Kommunikation zwischen \ac{UI} und \ac{MC} mithilfe von Prototypen gefunden.
+% So wurden beispielsweise die Möglichkeiten der Kommunikation zwischen \ac{SAM} und \ac{MC} mithilfe von Prototypen gefunden.
 % Basierend auf den Ergebnissen des Prototypen, wurden dann die Vor- und Nachteile unterschiedlicher Ansätze gefunden und die in Kapitel \ref{vorgehenSW} genannten Entscheidungen getroffen.
 
 Folgend sollen besonders interessante Teile der Entwicklung noch genauer betrachtet werden.
-Da die \ac{UI} den größten Teil der endgültigen Codebasis stellt, ist es interessant zu sehen, wie der oben erwähnte Bottom-Up Ansatz hier abgeschnitten hat.
-Entsprechend wird in Abschnitt \ref{umsetzungSW-UI} auf die entstandene Architektur der \ac{UI} eingegangen.
+Da \ac{SAM} den größten Teil der endgültigen Codebasis stellt, ist es interessant zu sehen, wie der oben erwähnte Bottom-Up Ansatz hier abschneidet.
+Entsprechend wird in Abschnitt \ref{umsetzungSW-UI} auf die entstandene Architektur der Anwendung eingegangen.
 Auch sollen Schwierigkeiten, die während der Programmierung aufgekommen sind, beschrieben werden.
 Hier sind vor allem die Implementierung der Kommmunikation (siehe Abschnitt \ref{umsetzungSW-Kommunikation}) und des \ac{MC}s (siehe Abschnitt \ref{umsetzungSW-MC}) von Interesse.
 
 
-\section{UI} \label{umsetzungSW-UI}
+\section{Desktop Anwendung} \label{umsetzungSW-UI}
 - Grundlagen: Immediate vs. Retained Mode UI \newline
 - Cached Immediate Mode \newline
 - Generelle Diskussion bzgl. API-Design vllt \newline
@@ -97,23 +97,25 @@ Hier sind vor allem die Implementierung der Kommmunikation (siehe Abschnitt \ref
 - Parallelisierung basierend auf unabhängigen Codepaths (siehe Blogpost dazu) \newline
 - Thread-Kommunikation über geteilten read-only Speicher \& Mutexes wenn notwendig \newline
 
+% @TODO(Val): Unterkapitel schreiben
+
 
 \section{Kommunikation} \label{umsetzungSW-Kommunikation}
 
 Die Protokolle der Kommunikation wurden in Kapitel \ref{vorgehenSW-SPPP} detailliert spezifiziert.
-Die Umsetzung des Lesens und Schreibens von Nachrichten braucht allerdings sowohl auf Seiten der \ac{UI} als auch beim \ac{MC} mehr als nur eine Möglichkeit zum De- und Enkodieren der Nachrichten.
+Die Umsetzung des Lesens und Schreibens von Nachrichten braucht allerdings sowohl auf Seiten der Desktop Anwendung als auch beim \ac{MC} mehr als nur eine Möglichkeit zum De- und Enkodieren der Nachrichten.
 Die Kommunikation muss nämlich in den Kontext beider Systeme eingebunden werden.
 Im Folgenden soll darauf eingegangen werden, welche Schwierigkeiten und Auswirkungen diese Kontexte auf die Umsetzung der Kommunikation hatten.
-Zuerst soll in Abschnitt \ref{umsetzungSW-Kommunikation-MC} die Umsetzung auf dem \ac{MC} und dann in Abschnitt \ref{umsetzungSW-Kommunikation-UI} die Umsetzung in der \ac{UI} beschrieben werden.
+Zuerst soll in Abschnitt \ref{umsetzungSW-Kommunikation-MC} die Umsetzung auf dem \ac{MC} und dann in Abschnitt \ref{umsetzungSW-Kommunikation-UI} die Umsetzung in \ac{SAM} beschrieben werden.
 Trotz einiger Unterschiede gilt in beiden Fällen, dass die Kommunikation im Kontext eines Echtzeit-Systems implementiert werden muss.
 
-\subsection{Kommunikation beim \ac{MC}} \label{umsetzungSW-Kommunikation-MC}
+\subsection{Kommunikation auf dem \ac{MC}} \label{umsetzungSW-Kommunikation-MC}
 
 Der gewählte Arduino hat einen einzelnen Kern und kann keinen Code parallel laufen lassen.
-Das Spielen der Musik und das Lesen bzw. Schreiben von Nachrichten an die \ac{UI} müssen entsprechend nach einander abgehandelt werden.
+Das Spielen der Musik und das Lesen bzw. Schreiben von Nachrichten an \ac{SAM} müssen entsprechend nach einander abgehandelt werden.
 Der Ablauf fürs Spielen der Musik wurde in Abschnitt \ref{vorgehenSW-MC} bereits dargestellt.
 Dem \ac{SPPP} Protokoll nach muss der \ac{MC} einkommende Nachrichten lesen und je nach Nachricht eine Antwort senden.
-Auch kann es zu Zuständen kommen, in denen der \ac{MC} ohne Lesen einer einkommenden Nachricht von sich aus eine \enquote{Request}-Nachricht an die \ac{UI} schicken muss.
+Auch kann es zu Zuständen kommen, in denen der \ac{MC} ohne Lesen einer einkommenden Nachricht von sich aus eine \enquote{Request}-Nachricht an \ac{SAM} schicken muss.
 
 Eine naive Implementierung dieser Logik tritt jedoch bald in Probleme.
 Da die Bytes kontinuierlich nacheinander eintreffen, müssen alle einkommenden Bytes in einem Buffer gespeichert werden, bevor sie als \ac{SPPP} Nachricht interpretiert werden können.
@@ -149,11 +151,11 @@ Alles in allem sieht die Logik für den Arduino dann dem in Listing \ref{code:Co
 \end{UnbrokenCodePage}
 
 
-\subsection{Kommunikation bei der \ac{UI}} \label{umsetzungSW-Kommunikation-UI}
+\subsection{Kommunikation auf der Desktop Anwendung} \label{umsetzungSW-Kommunikation-UI}
 % @Note(Val): Documentaion of COM-Ports: https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/configuration-of-com-ports
 
 Es gibt keine standardisierte, Betribssystem-übergreifende API zum Empfangen und Senden von Daten über das \ac{UART} Protokoll.
-Da die \ac{UI} den Anforderungen nach nur auf Windows laufen muss, wird hier auf die Windows-spezifische API dafür zurückgegriffen.
+Da \ac{SAM} den Anforderungen nach nur auf Windows laufen muss, wird hier auf die Windows-spezifische API dafür zurückgegriffen.
 Um dies stattdessen cross-platform zu entwickeln, müsste eine eigene Abstraktion über die Platform-spezifischen APIs für die \ac{UART} Kommunikation gefunden werden.
 Fortführungen dieser Arbeit sollten den Aufwand dieser Erweiterung prüfung und ggf. umsetzen.
 
@@ -165,7 +167,7 @@ Weitere Möglichkeiten zum Lesen, wie zum Beispiel eine Methode fürs Polling vo
 
 Die naive Implementierung des Lesens von \ac{SPPP}-Nachrichten bringt mit hier ebenfalls Probleme mit sich.
 Aufruf zum Lesen von $n$ Bytes blockt bis $n$ Bytes gelesen wurden oder bricht mit einer Fehlermeldung ab.
-Angenommen der Aufruf der \enquote{ReadFile} Funktion läuft in einem seperaten Thread, sodass das Blockieren nicht die Interaktivität der \ac{UI} beeinflusst, bleibt trotzdem noch ein Problem.
+Angenommen der Aufruf der \enquote{ReadFile} Funktion läuft in einem seperaten Thread, sodass das Blockieren nicht die Interaktivität der \ac{UI} beeinflusst, so bleibt trotzdem noch ein Problem.
 Angenommen es sollen genau 4 Bytes gelesen werden, da auf eine \enquote{Request}-Nachricht gewartet wird.
 Nun soll angenommen werden, dass zuerst ein zufälliges Byte gelesen wird, das nichts mit der Nachricht zu tun hat, bevor die Nachricht empfangen wird.
 Das erste Byte soll in diesem Fall ignoriert werden, damit die Nachricht gelesen werden kann.
@@ -174,12 +176,12 @@ Wenn aber genau 4 Bytes gelesen werden, ist dies ohne das Zwischenspeichern der 
 Genau wie beim Arduino ist hier also die Verwendung eines Buffers zum Speichern der empfangenen Bytes unabdingbar.
 Aus den selben Effizienzgründen wird hier ebenfalls ein Ring-Buffer verwendet.
 Dem Ansatz der Semantic Compression nach, wurde hier der duplizierte Code wiederverwendbar zusammengeführt.
-Um Code zwischen Arduino und \ac{UI} zu teilen, wurde eine Bibliothek erstellt, die von beiden inkludiert wird.
+Um Code zwischen Arduino und \ac{SAM} zu teilen, wurde eine Bibliothek erstellt, die von beiden inkludiert wird.
 
 Zum Empfangen der Bytes muss weiterhin die \enquote{ReadFile} Funktion verwendet werden.
 Hier kann sowohl die blockierende als auch die nicht blockierende Version der Funktion verwendet werden.
 Die nicht blockierende Version benötigt zusätzlichen Code zum regelmäßigen Nachschauen, ob Bytes angekommen ist.
-Die blockierende Version muss dagegen im einen seperaten Thread laufen, um die restliche \ac{UI} nicht zu blockieren.
+Die blockierende Version muss dagegen im einen seperaten Thread laufen, um die restliche Anwendung nicht zu blockieren.
 Da nur dieser Thread den Ring-Buffer befüllt und der restliche Code nur aus dem Ring-Buffer liest ist eine Synchronisierung der Threads über Mutexe oder ähnliche Kontrukte nicht nötig.
 Aufgrund des geringeren Entwicklungsaufwands wurde sich für die Nutzung der blockierenden Version entschieden.
 

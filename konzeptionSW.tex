@@ -516,7 +516,8 @@ Wie in Listing \ref{code:Apply PIDICmds} auch, müssen die \lstinline|PlayedKey|
 Weiterhin muss auch die Stärke, mit der der Ton gespielt werden soll, gespeichert werden.
 Die \lstinline|PlayedKey|-Struktur besteht entsprechend aus einer Referenz auf den Ton, der Länge und Spielstärke.
 Wie im \ac{PIDI}-Format wird die anzuspielende Taste über Oktave und Note definiert.
-Da Oktave, Note, Anspielstärke und Länge im \ac{PIDI}-Format jeweils als 4-Bit Zahlen spezifziert wurden, benötigt eine \lstinline|PlayedKey|-Struktur genau 2 Bytes.
+Da Oktave, Note, Anspielstärke im \ac{PIDI}-Format jeweils als 4-Bit Zahlen und die Länge als 8-Bit Zahl spezifziert wurde, benötigt eine \lstinline|PlayedKey|-Struktur 20 Bits.
+Das heißt auch, dass 3 Byte für die Struktur benötigt werden, wobei 4 Bits als Padding verwendet werden.
 
 Auf Seiten des \ac{MC}s ergibt es Sinn die Oktave und Note direkt in den Index für den zuständigen Aktuator zu transformieren, damit diese Berechnung nur einmal gemacht werden muss.
 Ein weiterer Unterschied zwischen der \lstinline|PlayedKey|s Liste in der \enquote{Music}-Nachricht und auf dem \ac{MC} ist in der Länge der Liste.

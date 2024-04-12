@@ -217,6 +217,8 @@ Dabei kann jedoch nicht berechnet werden, wie viel Speicherplatz während der La
 Es kann dadurch vorkommen, dass mehr Speicher benötigt wird als verfügbar ist.
 In diesen Fällen wird bereits verwendeter Speicher überschrieben, was zu viel nicht erwünschten und nicht erwartbaren Verhalten führt.
 Es ist mehrfach während der Entwicklung vorgekommen, dass unerklärliche Fehler aufgetreten sind, die mit einer verringerten Speichernutzung gefixt wurden.
+Um einen besseren Überblick über die Anzahl wirklich verwendeten Speichers zu erhalten, wurden viele lokale Variablen zu globalen Variablen geändert.
+Dadurch taucht deren Speicherplatz-Nutzung in der beim Kompilieren gezeigten Statistik verbleibenden Speichers mit auf.
 
 Weiterhin ist die Programmierung des Arduinos durch das Ausbleiben eines Debuggers erschwert.
 Während es durchaus Debugger für den Arduino gibt, benötigen diese ebenfalls eine gewisse Menge dynamischen Speichers.

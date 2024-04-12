@@ -149,16 +149,59 @@ Alles in allem sieht die Logik für den Arduino dann dem in Listing \ref{code:Co
 \end{UnbrokenCodePage}
 
 
-\subsection{Kommunikation beim \ac{UI}} \label{umsetzungSW-Kommunikation-UI}
-- Finden von COM-Ports (EnumPorts vs. Register, etc.) \newline
-- Lesen/Schreiben wie bei Dateien \newline
-- keine native Möglichkeit fürs Polling \newline
-- Synchrones Lesen einer gesamten Nachricht kann zu langem Blocken führen \newline
-- Asynchrones Lesn funktioniert nicht \newline
-- Lesen einzelner Bytes zum Befüllen eines buffers (symmetrisch zu MC) \newline
-- Lesen in Endlosschleife in eigenem Thread \newline
-- Schreiben in Chunks (Chunk-Größe über Ausprobieren herausgefunden) \newline
+\subsection{Kommunikation bei der \ac{UI}} \label{umsetzungSW-Kommunikation-UI}
 % @Note(Val): Documentaion of COM-Ports: https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/configuration-of-com-ports
+
+Es gibt keine standardisierte, Betribssystem-übergreifende API zum Empfangen und Senden von Daten über das \ac{UART} Protokoll.
+Da die \ac{UI} den Anforderungen nach nur auf Windows laufen muss, wird hier auf die Windows-spezifische API dafür zurückgegriffen.
+Um dies stattdessen cross-platform zu entwickeln, müsste eine eigene Abstraktion über die Platform-spezifischen APIs für die \ac{UART} Kommunikation gefunden werden.
+Fortführungen dieser Arbeit sollten den Aufwand dieser Erweiterung prüfung und ggf. umsetzen.
+
+Auf Windows müssen COM Ports für die Kommunikation verwendet werden.
+COM Ports sind serielle Ports auf Windows, die Daten über das \ac{UART} Protokoll empfangen und senden können.
+Zum Lesen oder Schreiben werden diese Ports als Dateien betrachtet und die Funktionen \enquote{ReadFile} und \enquote{WriteFile} verwendet.
+Alternativ bietet Windows auch asynchrone Versionen der Funktionen an, die den laufenden Thread nicht bis Abschluss der \ac{I/O}-Operation blockieren.
+Weitere Möglichkeiten zum Lesen, wie zum Beispiel eine Methode fürs Polling von Dateien, gibt es nicht. % @TODO(Val): Quelle
+
+Die naive Implementierung des Lesens von \ac{SPPP}-Nachrichten bringt mit hier ebenfalls Probleme mit sich.
+Aufruf zum Lesen von $n$ Bytes blockt bis $n$ Bytes gelesen wurden oder bricht mit einer Fehlermeldung ab.
+Angenommen der Aufruf der \enquote{ReadFile} Funktion läuft in einem seperaten Thread, sodass das Blockieren nicht die Interaktivität der \ac{UI} beeinflusst, bleibt trotzdem noch ein Problem.
+Angenommen es sollen genau 4 Bytes gelesen werden, da auf eine \enquote{Request}-Nachricht gewartet wird.
+Nun soll angenommen werden, dass zuerst ein zufälliges Byte gelesen wird, das nichts mit der Nachricht zu tun hat, bevor die Nachricht empfangen wird.
+Das erste Byte soll in diesem Fall ignoriert werden, damit die Nachricht gelesen werden kann.
+Wenn aber genau 4 Bytes gelesen werden, ist dies ohne das Zwischenspeichern der empfangenen Bytes in einem zusätzlichen Buffer nicht möglich.
+
+Genau wie beim Arduino ist hier also die Verwendung eines Buffers zum Speichern der empfangenen Bytes unabdingbar.
+Aus den selben Effizienzgründen wird hier ebenfalls ein Ring-Buffer verwendet.
+Zum Empfangen der Bytes muss weiterhin die \enquote{ReadFile} Funktion verwendet werden.
+Hier kann sowohl die blockierende als auch die nicht blockierende Version der Funktion verwendet werden.
+Die nicht blockierende Version benötigt zusätzlichen Code zum regelmäßigen Nachschauen, ob Bytes angekommen ist.
+Die blockierende Version muss dagegen im einen seperaten Thread laufen, um die restliche \ac{UI} nicht zu blockieren.
+Da nur dieser Thread den Ring-Buffer befüllt und der restliche Code nur aus dem Ring-Buffer liest ist eine Synchronisierung der Threads über Mutexe oder ähnliche Kontrukte nicht nötig.
+Aufgrund des geringeren Entwicklungsaufwands wurde sich für die Nutzung der blockierenden Version entschieden.
+
+Bei der naiven Implemenierung des Schreibens ist ebenfalls ein vorher unerwartetes Problem aufgetreten.
+Beim Schreiben kurzer Nachrichten hat ein einfacher Aufruf der \enquote{WriteFile} Funktion mi der enkodierten Nachricht ausgreicht.
+Beim Senden längerer Nachrichten - speziell bei \enquote{Music} und \enquote{New-Music} Nachrichten - wurden dagegen nicht alle Bytes vom Arduino empfangen.
+Es gibt mehrere Stellen, an denen der Fehler auftreten könnte.
+Es könnte sein, dass der \ac{MC} nicht schnell geng mit dem Lesen der einkommenden Bytes ist und deshalb einige Bytes überschreibt und überspringt.
+Es ist auh möglich, dass Windows ein Bug beim Senden längerer Byte Arrays hat oder eine andere, nicht dokumentierte Nutzung der \enquote{WriteFile} Funktion erwartet.
+
+Da dieses Problem erst relativ spät in der Entwicklung gefunden wurde, konnte die Quelle des Problems nicht mehr gefunden und beseitig werden.
+Dies liegt zu großen Teilen daran, dass dieser Bug scheinbar nicht-deterministisch auftrat.
+Auch wenn nur große Nachrichten das Problem hatten, trat der Bug nicht bei allen längeren Nachrichten auf.
+Wäre noch genügend Zeit fim Projekt übrig gewesen, wäre der nächste Schritt im Identifizieren des Problems gewesen.
+Um zu sehen, ob empfangene Bytes auf Seiten des Arduino überschrieben werden, könnte die verwendete Standard-Bibliothek um einen konditionalen Debug-Output erweitert werden.
+Sollte dies die Problemquelle sein, könnte sie behoben werden, indem zum Beispiel ein größerer Buffer zum Zwischenspeichern der eintreffenden Bytes verwendet wird.
+Sollte sich herausstellen, dass es auf Seiten des Arduinos keinen Fehler gibt, müsste stattdessen untersucht werden, was genau beim Aufruf der \enquote{WriteFile} Funktion passiert.
+Da der Quellcode von Windows nicht frei verfügbar ist, würde dies einen hohen Aufwand mit sich bringen.
+
+Wie bereits erwähnt, konnte diese Fehlersuche jedoch nicht vollzogen werden.
+Nichtsdestotrotz konnte das Problem noch gelöst werden.
+Experimentell wurde herausgefunden, dass der Fehler nicht auftritt, wenn höchstens 16 Byte auf einmal mit der \enquote{WriteFile} Funktion gesendet werden und ein paar Millisekunden gewartet wird, bevor die nächsten 16 Byte der Nachricht gesendet werden.
+Diese Lösung funktioniert zwar, ist aber nicht unbedingt stailö
+Da der Grund für den Fehler nicht bekannt ist, ist unklar warum diese Lösung genau funktioniert und unter welchen Umständen sie nicht mehr funktionieren würde.
+Fortsetzungen dieserer Arbeit sollten deshalb die Fehlerquelle finden und sauberer lösen.
 
 
 \section{Arduino-Programmierung} \label{umsetzungSW-MC}

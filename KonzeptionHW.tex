@@ -66,8 +66,13 @@ wurde entschieden, dass die Ansteuerung von unten erfolgen muss. Bei beiden Vari
 ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten im Gegensatz zu der von oben Spielenden ``Klavierhand''
 erhöht.
 Generell ist die Drückoption ästhetisch ansprechender, erfordert jedoch Präzision und könnte die
-Tastenempfindlichkeit beeinträchtigen. Das Problem mit der Präzisen Ansteuerung fällt beim Ziehen der Tasten weg.\newline
-%TODO(Jay): Warum?
+Tastenempfindlichkeit beeinträchtigen. Das Problem mit der Präzisen Ansteuerung fällt beim Ziehen der Tasten weg.
+Der Grund dafür liegt darin, dass die Taste nicht
+direkt getroffen werden muss. Stattdessen wird lediglich ein Seil gezogen, das den Aktuator dazu veranlasst, die Taste
+gerade nach unten zu ziehen. Im Gegensatz dazu erfordert das Drücken der Taste eine präzise Ausrichtung und Anwendung der
+Kraft, um die gewünschte Tastenempfindlichkeit zu erreichen. Da das Ziehen des Seils weniger präzise Kontrolle erfordert
+und keine direkte Interaktion mit der Tastenmechanik erfordert, kann es die Tastenempfindlichkeit weniger beeinträchtigen
+als das Drücken der Tasten.\newline
 Für das Drücken der Tasten fallen noch weitere Probleme an. Um die Tasten drücken zu können, muss ein möglichst großer
 Hebel aufgebracht werden, damit die Aktuatoren möglichste wenig Kraft aufbrauchen müssen. Dass bedeutet, dass
 die Aktuatoren soweit hinten wie möglich angebracht werden.\newline
@@ -83,7 +88,7 @@ Bei diesem Konzept wird die geringste mechanische Präzision benötigt und das K
 spielbar.
 
 \subsection{Aktuator}\label{subsec:aktuator}
-%TODO(Jay) Bilder
+
 Die Aktuatoren werden für die Steuerung der Tasten benötigt.
 An sich ist ein Aktuator ein mechanisches/elektrisches Bauteil, das dazu dient,
 eine bestimmte Aktion auszuführen.
@@ -100,11 +105,19 @@ Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei
 Ein Linearmotor ist ein Aktuator, der eine lineare Bewegung erzeugt. Er besteht aus einer festen Spule und einem
 beweglichen Magneten oder umgekehrt. Wenn Strom durch
 die Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Teil des Motors in eine lineare Bewegung zieht. \newline
-Physikalische Grundlagen:\newline
-- Die Funktionsweise eines Linearmotors beruht auf dem Prinzip der elektromagnetischen Induktion. Wenn Strom durch die
-Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Magneten anzieht oder abstößt, je nach Polarität des Stroms. \newline
-- Die Richtung und Geschwindigkeit der Bewegung des Linearmotors hängt von der Stärke und Richtung des angelegten Stroms
-sowie von der Geometrie des Motors ab.
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Die Funktionsweise eines Linearmotors beruht auf dem Prinzip der elektromagnetischen Induktion. Wenn Strom durch die
+	Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Magneten anzieht oder abstößt, je nach Polarität des Stroms.
+	\item Die Richtung und Geschwindigkeit der Bewegung des Linearmotors hängt von der Stärke und Richtung des angelegten Stroms
+	sowie von der Geometrie des Motors ab.
+\end{itemize}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Linearmotor}
+	\caption{Linearmotor}
+	\label{fig:Linearmotor}
+\end{figure}
 
 \paragraph{Servomotor}
 Ein Servomotor ist ein elektromechanischer Aktuator, der eine Bewegung durch eine Drehung ermöglicht.
@@ -112,26 +125,42 @@ Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus
 Bewegung, die durch das Getriebe in eine Bewegung umgewandelt wird. Der
 Feedback-Mechanismus, oft ein Potentiometer oder ein Encoder, misst die genaue Position des Motors und gibt diese
 Informationen an die Steuerung zurück.\newline
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Servomotor}
+	\caption{Servomotor}
+	\label{fig:Servomotor}
+\end{figure}
 
-Physikalische Grundlagen: \newline
-- Der Elektromotor nutzt das Prinzip der elektromagnetischen Induktion, um eine Drehbewegung zu erzeugen. Dies geschieht
-durch das Anlegen einer Spannung an die Spulen des Motors, die ein magnetisches Feld erzeugen und den Rotor des Motors in
-Bewegung versetzen. \newline
-- Das Getriebe dient dazu, die Geschwindigkeit und das Drehmoment des Motors zu regulieren und die Bewegung an die
-Anforderungen der Anwendung anzupassen. \newline
-- Der Feedback-Mechanismus misst die Position des Motors durch Erfassung von Änderungen des magnetischen Feldes oder der
-Winkelposition des Rotors und ermöglicht so eine präzise Steuerung.
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Der Elektromotor nutzt das Prinzip der elektromagnetischen Induktion, um eine Drehbewegung zu erzeugen. Dies geschieht
+	durch das Anlegen einer Spannung an die Spulen des Motors, die ein magnetisches Feld erzeugen und den Rotor des Motors in
+	Bewegung versetzen.
+	\item Das Getriebe dient dazu, die Geschwindigkeit und das Drehmoment des Motors zu regulieren und die Bewegung an die
+	Anforderungen der Anwendung anzupassen.
+	\item Der Feedback-Mechanismus misst die Position des Motors durch Erfassung von Änderungen des magnetischen Feldes oder der
+	Winkelposition des Rotors und ermöglicht so eine präzise Steuerung.
+\end{itemize}
 
 \paragraph{Hubmagnet}
 Ein Hubmagnet, (auch: Solenoid) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
 Stroms erzeugt. Er besteht aus einer Spule, die einen magnetischen Kern umgibt. Wenn Strom durch die Spule fließt, erzeugt
 sie ein Magnetfeld, das den Kern anzieht und eine lineare Bewegung erzeugt.\newline
-Physikalische Grundlagen:\newline
-- Der Hubmagnet nutzt das Prinzip der elektromagnetischen Induktion, um eine lineare Bewegung zu erzeugen. Wenn Strom
-durch die Spule fließt, erzeugt sie ein Magnetfeld, das den magnetischen Kern anzieht. Je nach Polarität des Stroms bewegt
-sich der Kern entweder in Richtung der Spule oder von ihr weg. \newline
-- Die Stärke der Bewegung des Hubmagneten hängt von der Stärke des Stroms, der Anzahl der Wicklungen und der
-Spule des Magneten ab.
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Der Hubmagnet nutzt das Prinzip der elektromagnetischen Induktion, um eine lineare Bewegung zu erzeugen. Wenn Strom
+	durch die Spule fließt, erzeugt sie ein Magnetfeld, das den magnetischen Kern anzieht. Je nach Polarität des Stroms bewegt
+	sich der Kern entweder in Richtung der Spule oder von ihr weg.
+	\item Die Stärke der Bewegung des Hubmagneten hängt von der Stärke des Stroms, der Anzahl der Wicklungen und der
+	Spule des Magneten ab.
+\end{itemize}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Hubmagnet}
+	\caption{Hubmagnet}
+	\label{fig:Hubmagnet}
+\end{figure}
 
 \paragraph{Entscheidungsfindung}
 Prinzipiell kann jeder der genannten Aktuatoren für das Projekt verwendet werden. Die Entscheidung fiel aufgrund
@@ -486,9 +515,9 @@ Diese FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolg
 Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des Arduinos agesteuert werden, umzusetzen,
 können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
 \paragraph{74HC959 Schieberegister}
-In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau:
+In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau: \newline
 \begin{minipage}{0.4\textwidth}
-	\includegraphics [width=0.4\textwidth] {img/Schieberegister}
+	\includegraphics [width=1\textwidth] {img/Schieberegister}
 \end{minipage}
 \begin{minipage}{0.6\textwidth}
 	\begin{enumerate}
@@ -506,7 +535,6 @@ In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses 
 
 Vorteile des Schieberegisters:\newline
 Nachteile des Schieberegisters:
-% @Note(Val): Wäre doch eigentlich eine "Aktuator-Matrix" oder "Magnet-Matrix", weil wir ja keine Motoren haben, oder?
 \paragraph{Aktuator-Matrix}
 % @TODO(Jay): Picture Matrix and use muster to explain it for magnets
 Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
@@ -601,7 +629,7 @@ unserer Entscheidung, Schieberegister anstelle einer Matrix für die präzise St
 Ein Transistor ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
 (den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern. Es gibt verschiedene Arten
 von Transistoren, aber die grundlegenden Prinzipien ihrer Funktionsweise sind ähnlich.\newline
-
+\includegraphics[width=0.45\textwidth]{img/Mosfet} \newline
 Funktionsweise eines Transistors:
 Ein Transistor besteht typischerweise aus einem Halbleitermaterial wie Silizium und kann in drei Haupttypen unterteilt
 werden: Bipolartransistor (NPN und PNP) und MOSFET (Metalloxid-Halbleiter-Feldeffekttransistor).  \newline
@@ -610,7 +638,7 @@ Transistors fließt, was den Stromfluss zwischen Emitter und Collector beeinflus
 %Note(Jay) soll ich Emitter und Collector noch erklären?
 MOSFET: Bei einem MOSFET wird der Stromfluss zwischen Source und Drain durch das Anlegen einer Spannung an das Gate
 gesteuert, wodurch ein elektrisches Feld im Halbleiter erzeugt wird, das den Stromfluss reguliert. \newline
-%TODO(Jay) MOSFET Bild und Schaltung
+
 Unterschied zwischen Transistor und MOSFET: \newline
 Ein MOSFET ist eine spezielle Art von Transistor, der auf einem anderen Prinzip basiert als der Bipolartransistor. Der
 Hauptunterschied liegt in der Steuerung des Stromflusses: Während beim Bipolartransistor der Strom durch die Basis

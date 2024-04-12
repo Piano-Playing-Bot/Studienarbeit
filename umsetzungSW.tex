@@ -173,6 +173,9 @@ Wenn aber genau 4 Bytes gelesen werden, ist dies ohne das Zwischenspeichern der 
 
 Genau wie beim Arduino ist hier also die Verwendung eines Buffers zum Speichern der empfangenen Bytes unabdingbar.
 Aus den selben Effizienzgründen wird hier ebenfalls ein Ring-Buffer verwendet.
+Dem Ansatz der Semantic Compression nach, wurde hier der duplizierte Code wiederverwendbar zusammengeführt.
+Um Code zwischen Arduino und \ac{UI} zu teilen, wurde eine Bibliothek erstellt, die von beiden inkludiert wird.
+
 Zum Empfangen der Bytes muss weiterhin die \enquote{ReadFile} Funktion verwendet werden.
 Hier kann sowohl die blockierende als auch die nicht blockierende Version der Funktion verwendet werden.
 Die nicht blockierende Version benötigt zusätzlichen Code zum regelmäßigen Nachschauen, ob Bytes angekommen ist.
@@ -206,14 +209,26 @@ Fortsetzungen dieserer Arbeit sollten deshalb die Fehlerquelle finden und sauber
 
 \section{Arduino-Programmierung} \label{umsetzungSW-MC}
 
-- Arduino-Programmierung \newline
-	- Bugs durch begrenzten Speicherplatz \newline
-	- Berechnung von Oktave+Note zu Aktuator-Index \newline
-	- Strategie für PlayedKeys Elimination \newline
-- Code der zwischen UI und MC geteilt wurde \newline
+Aufgrund der großen Unterschiede zwischen einem Desktop und einem \ac{MC}, war auch die Programmierung für die beiden Systeme relativ unterschiedlich.
+Der größte, spürbare Unterschied ist wahrschenlich im stark begrenzten Speicherplatz zu finden.
+Während der Arduino ausreichend Flash-Speicher besitzt, ist der dynamische RAM-Speicher mit 2KB stark begrenzt.
+Mit der Verwendung der offiziellen Arduino IDE wird mitgeteilt, wie viel des dynamischen Speichers verwendet wird.
+Dabei kann jedoch nicht berechnet werden, wie viel Speicherplatz während der Laufzeit durch lokale Variablen noch benötigt wird.
+Es kann dadurch vorkommen, dass mehr Speicher benötigt wird als verfügbar ist.
+In diesen Fällen wird bereits verwendeter Speicher überschrieben, was zu viel nicht erwünschten und nicht erwartbaren Verhalten führt.
+Es ist mehrfach während der Entwicklung vorgekommen, dass unerklärliche Fehler aufgetreten sind, die mit einer verringerten Speichernutzung gefixt wurden.
+
+Weiterhin ist die Programmierung des Arduinos durch das Ausbleiben eines Debuggers erschwert.
+Während es durchaus Debugger für den Arduino gibt, benötigen diese ebenfalls eine gewisse Menge dynamischen Speichers.
+Zum Finden von Problemen, die durch Speicherplatzmangel entstanden ist, sind die Debugger entsprechend ungeeignet.
+Aber auch beim Finden anderer Bugs sind sie nicht weiter hilfreich, da sie selbst den Speicher zum Überlaufen bringen können.
+Nichtsdestotrotz konnten Bugs über die Nutzung von Print-Statements gefunden und ausgemerzt werden.
+
+% @TODO(Val): Rest schreiben
+
+- Berechnung von Oktave+Note zu Aktuator-Index \newline
+- Strategie für PlayedKeys Elimination \newline
 
 % - Piano Layout (7 Oktaven, 3 Tasten davor, 1 Taste danach)\newline
-% - Maximale Anzahl gleichzeitig laufender Motoren\newline
 % - Werte durch Ausprobieren erraten (Minimaler Wert um Motor anzukriegen; Clock-Rate)\newline
-% - Begrenzter Speicherplatz\newline
 % - Konstante ‘Framerate’ ohne delay

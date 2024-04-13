@@ -674,67 +674,80 @@ Die Kombination dieser Faktoren führte zu der Entscheidung, Schieberegister ans
 
 
 \subsection{Transistor}
+% @Note(Val): Wir brauchen keine Erklärung von Transistoren, die Leser:innen sollten wissen, was Transistoren sind. Bei Multiplexern davor war die Erklärung zumindest sehr kurz, aber hier hast du mehrere Paragraphen für die Erklärung verwendet. Wenn überhaupt ist hier nur der letzte Teil wichtig: "wie nutzen wir Transistoren"
 Ein Transistor ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
-(den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern. Es gibt verschiedene Arten
-von Transistoren, aber die grundlegenden Prinzipien ihrer Funktionsweise sind ähnlich.\newline
-\includegraphics[width=0.45\textwidth]{img/Mosfet} \newline
-Funktionsweise eines Transistors:
+(dem sogenannten Source und Drain) mithilfe eines dritten Anschlusses (dem Gate) zu steuern. Es gibt verschiedene Arten
+von Transistoren, aber die grundlegenden Prinzipien ihrer Funktionsweise sind ähnlich.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.45\textwidth]{img/Mosfet}
+	\caption{Mosfet}
+	\label{img:mosfet}
+\end{figure}
+
+Funktionsweise eines Transistors: % @Note(Val): Du muss nicht jedem Absatz einen Titel geben...
 Ein Transistor besteht typischerweise aus einem Halbleitermaterial wie Silizium und kann in drei Haupttypen unterteilt
 werden: Bipolartransistor (NPN und PNP) und MOSFET (Metalloxid-Halbleiter-Feldeffekttransistor).  \newline
+% @Note(Val): Entweder machst du eine wirkliche Bullet-List oder du schreibst Sätze statt "<Typ 1>: ... <Typ 2>: ...". Diese Mischung liest sich gerade sehr komisch
 Bipolartransistor: Die Steuerung des Stromflusses erfolgt durch die Änderung des Stroms, der in die Basis des
 Transistors fließt, was den Stromfluss zwischen Emitter und Collector beeinflusst. \newline
-%Note(Jay) soll ich Emitter und Collector noch erklären?
+% @Note(Jay) soll ich Emitter und Collector noch erklären? @Note(Val): Nein. Diese Erklärung ist generell nicht notwendig
 MOSFET: Bei einem MOSFET wird der Stromfluss zwischen Source und Drain durch das Anlegen einer Spannung an das Gate
 gesteuert, wodurch ein elektrisches Feld im Halbleiter erzeugt wird, das den Stromfluss reguliert. \newline
 
-Unterschied zwischen Transistor und MOSFET: \newline
+Unterschied zwischen Transistor und MOSFET: \newline % @Note(Val): Du muss nicht jedem Absatz einen Titel geben...
 Ein MOSFET ist eine spezielle Art von Transistor, der auf einem anderen Prinzip basiert als der Bipolartransistor. Der
 Hauptunterschied liegt in der Steuerung des Stromflusses: Während beim Bipolartransistor der Strom durch die Basis
 gesteuert wird, erfolgt die Steuerung beim MOSFET durch das Anlegen einer Spannung an das Gate.
-Bei n-MOSFETs (negativ dotierte MOSFETs, welche in diesem Projekt verwendet wurden) wird durch das Anlegen einer
+Bei n-MOSFETs (negativ dotierte MOSFETs, welche in diesem Projekt verwendet wurden) wird durch das Anlegen einer % @Note(Val): "in diesem Projekt verwendet wurde" - warum verwenden wir die dann? nicht vorgreifen ist hier wahrscheinlich besser
 positiven Spannung am Gate ein
 elektrisches Feld erzeugt, das die Leitfähigkeit zwischen Source und Drain beeinflusst. Dies führt dazu, dass der n-MOSFET
 in einem bestimmten Bereich des Gate-Spannungsbereichs als Schalter oder Verstärker arbeiten kann. \newline
 
-Verwendung von Transistoren in Aktuatoren-Schaltungen:
-Transistoren werden in Aktuatoren-Schaltungen verwendet, um die Aktuatoren
+Verwendung von Transistoren in Aktuatoren-Schaltungen: % @Note(Val): Du muss nicht jedem Absatz einen Titel geben...
+Transistoren werden in Aktuatoren-Schaltungen verwendet, um die Aktuatoren % @Note(Val): Werden die immer in allen Aktuator-Schaltungen verwendet? Wenn überhaupt ist interessant zu wissen, warum wir Aktuatoren brauchen und das wird hier einfach ignoriert
 zu steuern. Sie dienen als Schalter, der den Stromfluss zu den Aktuatoren regelt.
 Dabei ist es wichtig, auf die Durchlassspannung und Mindestspannung des MOSFETs zu achten. Die Durchlassspannung ist die
 minimale Spannung, die an das Gate angelegt werden muss, um den MOSFET in den leitenden Zustand zu versetzen. Die
 Mindestspannung ist die minimale Spannung, die zwischen Source und Gate anliegen muss, um den MOSFET zuverlässig zu
 sperren.
 Es ist entscheidend, sicherzustellen, dass die Spannungen in der Schaltung diese Anforderungen erfüllen, um
-eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu vermeiden.
+eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu vermeiden. % @Note(Val): Wiederholung des Worts "sicherzustellen"
 
 
 \subsection{Schaltplan} \label{subsec:schaltplan}
 
 \subsubsection{Arduino}
 
-Im Zentrum der Schaltung steht der \ac{MC} (hier: Arduino Uno R3).
+Im Zentrum der Schaltung steht der \ac{MC}.
 Dieser erhält Daten und Strom über den integrierten USB-Anschluss, welcher mit dem Computer verbunden wird.
-Da der Arduino limitierte \nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
+Da der Arduino limitierte \nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet. % @Note(Val): Warum \nameref statt \ac? "PWM-fähige" ließt sich genauso gut, wenn nicht sogar besser...
+% @Note(Val): 'Arduino hat PWM Pins, deshalb verwenden wir Schieberegister' ergibt keinen Sinn. Referenziere doch einfach das vorherige Unterkapitel und sag, dass Schieberegister zusammen mit den PWM Pins verwendet werden, um 88 unterschiedliche PWM Signale zu erhalten
 Mit jedem \enquote{in Reihe} geschaltetem Schieberegister kann die Anzahl \ac{PWM}-fähiger Ausgänge um 8 erweitert werden.
 
 \subsubsection{Schieberegister}
 
+% @Note(Val): Müssen die Schieberegister so verbunden werden und wir schreiben das hier nur hin, damit Menschen es leichter nachbauen können? Falls ja, würde ich das kurz erwähnen. Falls nein, muss erklärt werden, warum wir es so und nich anders verbinden
 Der Arduino wird an fünf Stellen mit dem ersten Schieberegister verbunden:
 
+% @Note(Val): Das geht mit Sicherheit schöner darzustellen (z.B. mit Tikz). Falls ich genug Zeit und Kraft am Ende habe, kann ich das auch Montag vor der Abgabe noch anpassen, aber falls ihr davor schon Kraft & Zeit dafür habt, wäre das super. Ansonsten ist es so wie es jetzt ist auch ok, auch wenn es nicht wirklich schön ist.
 Arduinoport D2 <-> Serial (SER) Input
 
-Über diese Verbindung werden serielle Daten werden hier bitweise in das Register geschoben.
+Über diese Verbindung werden serielle Daten bitweise in das Register geschoben. % @Note(Val): Sind das PWM Sigale? Wenn ja, sollte das vllt erwähnt werden
 
 Arduinoport D3 <-> SHCP (Shift Register Clock Input)
 
 Dieser Pin wird verwendet, um den Takt für das Verschieben der Daten innerhalb des Schieberegisters anzulegen.
 Bei jedem Taktimpuls auf diesem Pin wird das Bit am seriellen Dateneingang in das Register verschoben.
 Das bedeutet, dass bei jeder steigenden Flanke des Taktsignals das Datenbit, das am Eingang anliegt, in das Schieberegister übernommen und alle vorhandenen Daten um eine Position verschoben werden.
+% @Note(Val): Leser:innen wissen wie Schieberegister funktionieren. Der letzte Satz kann mMn weg
 
 Arduinoport D4 <-> STCP (Storage Register Clock Input)
 
 Nachdem die Daten in das Schieberegister eingelesen wurden, wird dieser Pin verwendet, um die im Schieberegister vorhandenen Daten in das Ausgangsregister zu übertragen.
 Ein Taktimpuls auf diesem Pin bewirkt, dass die Daten vom Schieberegister ins Ausgangsregister übernommen werden, sodass alle Ausgänge gleichzeitig aktualisiert werden.
-Das ist besonders relevant, da sonst unter Umständen alle Ausgänge von einer Änderung im letzten Schieberegister bedingst wären.
+Das ist besonders relevant, da sonst unter Umständen alle Ausgänge von einer Änderung im letzten Schieberegister bedingt wären. % @Note(Val): Der letzte Satz ergibt keinen Sinn für mich. Willst du sagen, dass sonst eins der 8 Input-Signale bei allen 8 Ausgaberegistern gespeichert werden würde?
 
 Arduino GND <-> Ground, Output Enable (OE)
 
@@ -743,64 +756,67 @@ Da das Schieberegister zu keiner Zeit deaktiviert sein soll, wird dieser Pin dau
 
 Arduino VCC 5V <-> VCC, $\overline{SRCLR}$ (Reset)
 
-Um das Schiebregister mit den benötigten 5V zu betreiben, wird der entsprechende Pin mit dem 5V Output des Arduino verbunden.
-Zusätzlich wird der $\overline{ }$ SRCLR Port des Schieberegisters, welcher ein Reset ermöglicht dauerhaft mit 5V verbunden.
+Um das Schiebregister mit den benötigten 5V zu betreiben, wird der entsprechende Pin mit der 5V Ausgabe des Arduino verbunden.
+Zusätzlich wird der $\overline{ }$ SRCLR Port des Schieberegisters, welcher einen Reset ermöglicht, dauerhaft mit 5V verbunden.
 
 Jedes weiteres Schieberegister greift die oben genannten Signale ab.
 Der einzige Unterschied befindet sich am Serial (SER) Input Port.
-Das Schieberegister an Position i+1 wird mit dem seriellen Output des Schieberegisters an Position i verbunden. ($\forall i = 0,...,10$)
+Das Schieberegister an Position $i+1$ wird mit der seriellen Ausgabe des Schieberegisters an Position $i$ verbunden.
 
 \subsubsection{MOSFET}
 
 Die Hubmagnete werden jeweils mit 24V und mit bis zu 400mA betrieben.
 Um einen hohen Stromfluss zu steuern, können Transistoren verwendet werden.
-Für hohe Spannungen und schnelle Schaltvorgänge eigenen sich besonders MOSFETs (Metall-Oxid-Halbleiter-Feldeffekttransistor).
-Im Folgenden werden speziell n-MOSFETs verwendet, der mit einem Signal zwischen 0V (leitet nicht) und +5V (voll leitend) angesteuert werden kann.
+Für hohe Spannungen und schnelle Schaltvorgänge eigenen sich besonders MOSFETs (Metall-Oxid-Halbleiter-Feldeffekttransistor). % @Note(Val): Verwendet das Abkürzungsverzeichnis...
+Im Folgenden werden speziell n-MOSFETs verwendet, die mit einem Signal zwischen 0V (nicht leitend) und +5V (voll leitend) angesteuert werden können.
 
 Der folgende Aufbau ist für die insgesamt 88 Ausgänge der 11 Schieberegister identisch, da jeder Ausgang für die Ansteuerung genau eines Motors zuständig ist.
 
-Der GATE-Pin des MOSFETs erhält das Signal, dass die \enquote{``Durchlässigkeit''} steuert aus einem der Outputs des Schieberegisters.
-Der SOURCE-Pin wird mit Ground des gesamten Systems verbunden.
+Der GATE-Pin des MOSFETs erhält das Signal, das die \enquote{Durchlässigkeit} steuert, aus einer der Ausgaben des Schieberegisters.
+Der SOURCE-Pin wird mit dem Ground des gesamten Systems verbunden.
 Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunden.
 
-\subsubsection{Hubmagnet}
+\subsubsection{Hubmagnet} % @Note(Val): Fühlt sich komisch an, einen Titel für einen einzelnen Satz zu haben. Warum brauchn wir diese subsubsections überhaupt? Liest sich auch gut ohne ständige neue Unterüberschriften...
 
 Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnetes mit dem +24V verbunden.
 
 \subsubsection{Testen}
 
-Um die Fehlersuche zu erleichtern, werden LEDs in den Schaltplan mit eingebaut.
+Um die Fehlersuche zu erleichtern, werden LEDs mit in den Schaltplan eingebaut.
 Diese werden jeweils mit einem entsprechenden $1k\Omega$ Widerstand parallel zu den Motoren angeschlossen.
-So kann anhand der Helligkeit der LED die Intensität abgelesen werden, mit der eine Taste gespielt wird.
+So kann anhand der Helligkeit der LED die Intensität abgelesen werden, mit der eine Taste gespielt werden soll.
 
-//Bild vom Schaltplan
+% @TODO(Val): Bild vom Schaltplan
 
 
 \section{Weitere Ideen und Limitationen}
 
-Im Laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten- Gründen nicht weiter
-behandelt wurden.
+Im Laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten-Gründen nicht weiter behandelt wurden.
+
 \paragraph{Anzahl der Aktuatoren}
-Wie bereits erklärt, wurden insgesamt 88 Aktuatoren verbaut, womit jede Taste angespielt werden kann. Trotz der Anzahl an
+% @Note(Val): Der ganze Absatz ist voll von "wir" und "uns" - muss weg
+% @Note(Val): Diese Limitierung gehört nicht in die Konzeption
+Wie bereits erklärt, wurden insgesamt 88 Aktuatoren verbaut, % @Note(Val): Warum wurden die Aktuatoren bereits verbaut, wenn wir nur in der Konzeption sind. Warum sagen wir nicht einfach: "Es ist geplant, insgesamt 88 Aktuatoren zu verbauen" oder so was
+womit jede Taste angespielt werden kann. Trotz der Anzahl an
 Hubmagneten, werden maximal 10 Tasten glechzeitig angespielt. Dies liegt an der Stromversorgung. Ein Hubmagnet benötigt
-eine Stromversorgung von etwa 0.4 Ampere, für 10 Aktuatoren sind das also 4 Ampere. Das Netzteil welches wir verwenden, ist auf
-6(?) Ampere ausgelegt, wobei wir mit einem Netzteil getestet haben, welches 2,8 Ampere unterstützt. Es gibt Netzteile die
-einen höheren Stromföuss ermöglichen, allerdings sind diese um weiten teurer als das Netzteil, für welches wir uns entschieden haben.
+eine Stromversorgung von etwa 0.4 Ampere. Bei 10 Aktuatoren sind das also 4 Ampere. Das Netzteil, das wir verwenden, ist auf % @Note(Val): Warum ist das eine Limitierung der Konzeption, wenn einfach ein besseres Netzteil verwendet werden könnte? Klingt mMn eher nach einer Limitierung der Umsetzung
+6(?) Ampere ausgelegt, wobei wir mit einem Netzteil getestet haben, welches 2,8 Ampere unterstützt.
+Es gibt Netzteile, die einen höheren Stromfluss ermöglichen, allerdings sind diese um weiten teurer als das Netzteil, für welches wir uns entschieden haben.
 Es wäre auch möglich, ein zweites Netzteil parallel zu Schalten, wodurch die Kosten nicht dramatisch gestiegen wären.
 Wir haben hier allerdings keinen Mehrwert mehr gesehen. Die Logik und Ansteuerung des Klaviers bleibt die gleiche, weswegen
 wir bei einem Netzteil mit einem maximalen Stromfluss von 6 Ampere (und 24V Leistung) verblieben sind.
+% @Note(Val): "Kein Mehrwert"? Der Mehrwert ist, dass mehr Tasten gleichzeitig bespielt werden können. Deswegen nennen wir es ja generell als Limitation... Besser wäre hier zu sagen, dass unser Ziel nur die Erstellung eines Prototypen ist, um herauszufinden wie technisch aufwendig die Entwicklung eines selbstspielenden Klaviers ist und wir das mit dieser Limitation genauso zeigen können
 
 \paragraph{Pedalansteuerung}
+% @Note(Val): Wieder viel "wir" und "uns"
 Ein Klavier hat normalerweise zwei oder drei Pedale, welche die Dynamik und den Klang des Klaviers beeinflussen.
-Diese sind schwerer anzuspielen als die Tasten und benötigen somit Leistungsfähigere Aktuatoren als wir für die Tasten nutzen.
-Es gab eine Überlegung diese Aktuatoren zu besorgen, da die Pedale klangtechnisch Mehrwert bringen.
-Außerdem hätten wir uns noch Gedanken bezüglich der Schaltug und des Signals machen können.
-Einerseits hätte ein weiteres Schieberegister genutzt werden können, wobei das Signal angepasst wird das die letzten 6 Ausgänge nie ein Signal bekommen.
-ANdererseits hätten die Pedale mit weiteren \ac{PWM} Ports des Arduinos verbunden werden können und die Signale unabhängig von den
-Schieberegistern erhalten können.
-Im Prinzip wäre die Idee hier allerdings wieder dieselbe wie beim Rest des Projektes gewesen,
-weswegen wir Kosten an den Aktuatoren und der extra Stromversorgung für die Pedale gespart haben und diese nicht ansteuern.
+Diese sind schwerer anzuspielen als die Tasten und benötigen somit Leistungsfähigere Aktuatoren als wir für die Tasten nutzen. % @Note(Val): Mit "schwerer anzuspielen" meinst du, dass es mehr Kraft braucht? Dann sag das lieber direkt. "Die Pedale sind schwerer" oder "brauchen mehr Kraft zum Betätigen", oder so was
+Auch wenn die Pedale für diesen Prototypen nicht angespielt werden können, wäre eine Erweiterung des Schaltplans, um diese dazunehmen zu können, relativ einfach.
+Entweder könnte ein weiteres Schieberegister verwendet werden, um die Signale für die Pedale zu erhalten, oder die Signale könnten unabhängig der Schieberegister von den weiteren \ac{PWM}-Ports des Arduinos kommen.
+% @Note(Val): Vllt erwähnen, dass es für die Software interessant wäre, da Pedale gerade von der Software komplett ignoriert werden? Dann würde es aber keinen Sinn ergeben, die Limitation so früh zu erwähnen. Stattdessen könnten wir vielleicht Limitation allgemein später erwähnen?
 
 \paragraph{Wärmeabfuhr}
-Da die Hitzeentwicklung der Hubmagnete mit dem Dauer der Nutzung stark ansteigt, ist die Holzplatte bezogen auf die Wärmeabfuhr nicht geeignet.
+% @Note(Val): Wieder eine Limitation der Umsetzung nicht der Konzeption
+Da die Hitzeentwicklung der Hubmagnete mit der Dauer der Nutzung stark ansteigt, ist die Holzplatte bezogen auf die Wärmeabfuhr nicht geeignet.
 Besser würde sich hier eine Metallplatte anbieten, auf der die Aktuatoren verschraubt werden.
+% @Note(Val): Hier fehlt ein Grund, warum wir dann keine Metallplatte nutzen

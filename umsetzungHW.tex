@@ -18,7 +18,38 @@ Zusätzlich wurden die Elektronik mit LEDs so erweitert, dass man das Drücken v
 \section{Materialien}
 \chapterauthor{Jakob Kautz}
 \subsection{Liste der Bauteile}
-%TODO(Jay): Add List
+%TODO(Jay): Fix List
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|m{4cm}|m{8cm}|}
+        \hline
+        \textbf{Bauteil} &  \textbf{Anzahl und Begründung}  \\
+        \hline
+        Hubmagnete & 88; jede Taste braucht einen Hubmagneten um angespielt zu werden \\
+        \hline
+        Stromversorgung & 1; Externe Stromversorgung für die Aktuatoren, da diese mehr als die 5V Vcc des Arduinos brauchen \\
+        \hline
+        Arduino & 1; Kommunikation \\
+        \hline
+        Breadboard & 2; Kleinstromschaltung \\
+        \hline
+        Schieberegister & 11, Weitergabe Signal\\
+        \hline
+        Kabel & 9x40stck; Verbindungen \\
+        \hline
+        LEDs & 90; Tests \\
+        \hline
+        1kOhm Widerstände & 90; Sicherheit and shit \\
+        \hline
+        MOSFET & 90; Steuerung Strom \\
+        \hline
+        Angelschnur & ...m; Verbindung Hubmagnet und Taste \\
+        \hline
+    \end{tabular}
+    \caption{Ergebnisse der Anforderungen}
+    \label{table:Bauteile}
+\end{table}
+
 \subsection{Kostenübernahme}
 Die vorher spezifizierte Hardware für den Schaltplan musste für die Erstellung des Prototypen offensichtlich besorgt werden.
 Aufgrund der Kosten, wurde bei einer der betreuenden Firmen angefragt, ob diese die Kosten für das Projekt übernehmen

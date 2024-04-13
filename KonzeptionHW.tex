@@ -189,7 +189,7 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 Wie in Kapitel \ref{konzeptionHW-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
 Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt. \newline
 In diesem Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden.
-Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit weiter verbessert.
+Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit bezüglich den Ansteuerns der Tasten weiter verbessert.
 \newline
 Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen.
 Die Position an der Taste kann nicht frei gewählt werden. Es muss darauf geachtet werden,
@@ -214,34 +214,9 @@ worauf die Tasten liegen, in den Fußraum geführt.
 	\label{fig:klaviatur}
 \end{figure}
 
-Damit die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt sind,
-werden die Seile entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt. (siehe Abbildung \ref{fig:fussraum})
-
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm,angle=-90]{img/Fussraum.jpg}
-	\caption{Fußraum des Klaviers}
-	\label{fig:fussraum}
-\end{figure}
-
-
-
-Dort werden die Hubmagnete in zwei Reihen über die gesamte Breite befestigt. (siehe Abb. \ref{fig:BefestigungHubmagnete})
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Magnetbrett.jpg}
-	\caption{Befestigung der Hubmagnete}
-	\label{fig:BefestigungHubmagnete}
-\end{figure}
-Um die Intensität des Tastendrucks zu steuern und die Haltbarkeit des Materials zu verlängern,
-sollte die Reibung am Seil möglichst gering gehalten werden.
-Dazu werden mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden, die Seile umgelenkt.
-
 \textit{Anordnung der Aktuatoren}
 
-Die Idee ist, die Hubmagnete entlang der Klaviatur zu befestigen, um die Tasten möglichst senkrecht nach unten ziehen zu können.
+Die Idee ist, die Hubmagnete parallel zur Klaviatur zu befestigen, um die Tasten möglichst senkrecht nach unten ziehen zu können.
 Hierfür müssen folgende Aspekte berücksichtigt werden:
 
 \begin{enumerate}
@@ -265,13 +240,19 @@ Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale L�
 Deshalb werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
 
 Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
-sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden.
+sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden.(siehe Abb. \ref{fig:BefestigungHubmagnete})
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Magnetbrett.jpg}
+	\caption{Befestigung der Hubmagnete}
+	\label{fig:BefestigungHubmagnete}
+\end{figure}
 
-\textit{Optimierung der Seilführung}
+\textit{Seilführung}
 
-Würde man die Seile direkt zu den Hubmagneten führen,
-hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend betätigen.
+Würde man die Seile von den Tasten direkt zu den Hubmagneten führen,
+hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend stark betätigen, dass ein Ton erklingt.
 \newline
 In den folgenden Abbildungen sind die seitliche Ansicht des Klaviers gezeichnet.
 Dabei repräsentieren der schwarze/weiße Block jeweils eine schwarze/ weiße Taste.
@@ -284,13 +265,13 @@ Abb. 3.2 zeigt den selben Aufbau wie Abb. 3.1, nur, dass der Solenoid angezogen 
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=8cm, height=10cm]{img/Umlenkung_locker}
+	\includegraphics[width=6cm, height=8cm]{img/Umlenkung_locker}
 	\caption{Taste locker ohne Umlenkung}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=8cm, height=10cm]{img/Umlenkung_gezogen}
+	\includegraphics[width=6cm, height=8cm]{img/Umlenkung_gezogen}
 	\caption{Taste gezogen ohne Umlenkung}
 \end{figure}
 
@@ -299,11 +280,11 @@ Abb. 3.2 zeigt den selben Aufbau wie Abb. 3.1, nur, dass der Solenoid angezogen 
 Mit diesem intuitiven Aufbau funktioniert das Betätigen der Taste nicht, da diese nicht weit genug heruntergezogen wird.
 Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben wurden Umlenkungen eingebaut.
 Mittels dieser Umlenkung (PVC-Rohr) werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
-Somit wurde die Tiefe, mit der die Taste gedrückt werden kann, wieder auf annähernd 1 cm (Hub des Magnets) erhöht werden.
+Somit wurde die Tiefe, mit der die Taste gedrückt werden kann, wieder auf annähernd 1 cm (Hub des Magnets) erhöht.
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=8cm, height=10cm]{img/mitUmlenkung_locker}
+	\includegraphics[width=6cm, height=8cm]{img/mitUmlenkung_locker}
 	\caption{Taste mit Umlenkung}
 \end{figure}
 
@@ -322,11 +303,26 @@ Dies kann man auch mathematisch beweisen:
 \newline $ht2_{gespannt}$ = $\sqrt {(h2 + 1)^{2} + t2^{2}}$ = 33.29 cm
 
 Die Differenz zwischen $ht1_{gespannt}$ und $ht1_{entspannt}$ (bzw. ht2) beschreibt die Tiefe, die eine Taste gedrückt werden kann.
-\newline Diese beträgt 0.82 cm, bzw. 0.84 cm.
+\newline Diese beträgt also ohne Optimierung nur 0.82 cm, bzw. 0.84 cm.
+
+Um also die Intensität des Tastendrucks besser steuern zu können und um die Haltbarkeit des Materials zu verlängern,
+sollte die Reibung am Seil möglichst gering gehalten werden.
+Dazu wurden mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden, die Seile umgelenkt und
+entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt.
+Das hat den positiven Nebeneffekt, dass die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt sind. (siehe Abbildung \ref{fig:fussraum})
+
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm,angle=-90]{img/Fussraum.jpg}
+	\caption{Fußraum des Klaviers}
+	\label{fig:fussraum}
+\end{figure}
+
 
 \textit{Auswahl des Seils}
 
-Wie eben erwähnt wird das Ziehen durch ein Seil ermöglicht.
+Wie eben beschrieben wird das Ziehen durch ein Seil ermöglicht.
 Dafür wird ein leichtes, formbares, unelastisches und dehnungsresistentes Material benötigt, welches die Hubmagnete mit den Tasten verbindet.
 Je leichter das Material ist, desto weniger wird die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verändert.
 Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
@@ -372,15 +368,16 @@ zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden.
 
 \subsubsection{Schaumstoff}
 
-Wie im Bild unten zu sehen, wurde die \enquote{Gummi-Stopper}-Idee durch den Einsatz von Schaumstoff leicht verändert.
-+ Das Klopfgeräusch konnte vollständig verhindert werden.
-- Durch den Schaumstoff kann 1 mm Hub nicht verwendet werden, weshalb nur noch 9 mm übrig bleiben.
-- Der Aufbau optisch nicht ansprechend.
+Wie im Bild (siehe Abb \ref{fig:schaumstoff}) unten zu sehen, wurde die \enquote{Gummi-Stopper}-Idee durch den Einsatz von Schaumstoff leicht verändert.
++ Das Klopfgeräusch konnte vollständig verhindert werden.\newline
+- Durch den Schaumstoff kann 1 mm Hub nicht verwendet werden, weshalb nur noch 9 mm übrig bleiben.\newline
+- Der Aufbau optisch nicht ansprechend.\newline
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=4cm] {img/Daempfung_Schaumstoff}
 	\caption{Hubmagnet: Dämpfung mit Schaumstoff}
+	\label{fig:schaumstoff}
 \end{figure}
 
 \subsubsection{Seil (2mm Durchmesser) um den Anker}

@@ -78,7 +78,7 @@ Die Vorgehensweise ist in mehrere Phasen unterteilt, die das parallele Arbeiten 
 % Dann wäre es zumindest symmetrisch zu Abschnitt "Software-Entwicklung"
 
 Zu Beginn des Projektes stand die Konzeptualisierung, in der die grundlegenden Anforderungen an das System festgelegt wurden.
-Besondere Aufmerksamkeit galt dabei der Schnittstelle zwischen der Hardware, die durch einen kompakten Mikrocontroller gesteuert wird, und der Software der Desktop-Anwendung.
+Besondere Aufmerksamkeit galt dabei der Schnittstelle zwischen der Hardware, die durch einen kompakten \ac{MC} gesteuert wird, und der Software der Desktop-Anwendung.
 Die Planungsphase umfasst: % @Note(Val): Das ist nicht alles die Planungsphase though...
 
 \begin{itemize}
@@ -98,7 +98,7 @@ Nach der Konzeptualisierung folgte die Implementierungsphase der Hardware:
 \begin{itemize}
     \item Auswahl und Testung von Komponenten, die in der Lage sind, die Klaviertasten autonom zu betätigen.
     \item Entwicklung eines Prototyps zur Überprüfung der Ansteuerung und Funktionalität der Tasten.
-    \item Integration des Mikrocontrollers in das Gesamtsystem und Programmierung der Steuerungslogik.
+    \item Integration des \ac{MC}s in das Gesamtsystem und Programmierung der Steuerungslogik. % @Note(Val): Ist eigentlich Teil der Software, oder?
 \end{itemize}
 
 \subsubsection{Software-Entwicklung}\label{Vorgehensweise - Software-Entwicklung}
@@ -106,7 +106,7 @@ Nach der Konzeptualisierung folgte die Implementierungsphase der Hardware:
 Parallel zur Hardware-Entwicklung wird die Software konzipiert und programmiert:
 
 \begin{itemize}
-    \item Entwicklung eines Kommunikationsprotokolls zwischen Anwendungsprogramm und Mikrocontroller.
+    \item Entwicklung eines Kommunikationsprotokolls zwischen Anwendungsprogramm und \ac{MC}.
     \item Gestaltung der Benutzeroberfläche der Desktop-Anwendung, welche die Auswahl und Wiedergabe der Musikstücke ermöglicht.
     \item Implementierung von Funktionen zur Anpassung der Wiedergabegeschwindigkeit und Lautstärke.
     \item Entwicklung eines Systems zur Verwaltung und Erweiterung des Musik-Katalogs, einschließlich der Integration und des Parsings von MIDI-Dateien.

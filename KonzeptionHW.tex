@@ -10,16 +10,23 @@
 \chapter{Konzeption - Hardware}\label{konzeptionHW}~\nocite{*}
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
 
+% @TODO(Val): Bei jedem Unterkapitel sollte der Autor erwähnt werden, weil ihr euch die ja aufgeteilt habt
+
+% @Note(Val): Abschnitt fängt im Präteritum an und geht dann mit Präsenz weiter
+% Glaube, dass Präsenz leichter lesbar ist, aber muss halt einfach einheitlich sei
+% @Note(Val): Der ganze Abschnitt argumentiert falsch herum.
+% Ihr redet von Aktuatoren, Mikrocontrollern, etc. ohne vorher zu erklären, warum die überhaupt benötigt werden.
+% Statt Lösungen zu liefern, sollte hier erstmal erklärt werden, welche Probleme gelöst werden müssen
 Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
 Die Grundfragen, welche bei der Konstruktion auftraten, betrafen die Auswahl und Implementierung der
-Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des Mikrocontrollers.
+Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des \ac{MC}s.
 Im Hinblick auf die Aktuatoren muss eine präzise Steuerung der Tasten
 ermöglicht werden, ohne dass Genauigkeit und Geschwindigkeit des Anspielens vernachlässigt werden.
 \newline
 Dafür werden diese mit den Klaviertasten verbunden, um die mechanische Integrität des Klaviers
 zu erhalten und gleichzeitig eine präzise Steuerung zu gewährleisten.\newline
-Die Signalübertragung erfolgt über einen Mikrocontroller.
-Da der gängige Mikrocontroller i.d.R. nicht über ausreichende Ausgänge verfügen,
+Die Signalübertragung erfolgt über einen \ac{MC}.
+Da der gängige \ac{MC} i.d.R. nicht über ausreichende Ausgänge verfügen,
 um alle Tasten anzusteuern, müssen diese erweitert werden.
 Eine solche Erweiterung (siehe Kapitel \ref{output}) ermöglicht es, alle 88 Tasten des Klaviers anzusteuern.
 
@@ -30,17 +37,20 @@ Eine solche Erweiterung (siehe Kapitel \ref{output}) ermöglicht es, alle 88 Tas
 Da sich dieses Projekt nicht auf die theoretische Konzeption beschränkt, muss ein entsprechendes Testobjekt - ein reales Klavier - gefunden werden.
 Dieses muss einige Voraussetzungen erfüllen:
 \begin{enumerate}
-	\item 	Der Preis muss im Rahmen des selbst gestellten Budgets (< 2000 €) liegen
+	\item 	Der Preis muss im Rahmen des selbst gestellten Budgets (< 2000 €) liegen % @TODO(Val): Wann wurde das Budget auf 2000€ begrenzt? Sollte vielleicht im Zielstellung-Kapitel erwähnt werden
 	\item 	Es muss leicht auseinander zu bauen sein, um die Mechanik zugänglich zu machen
 	\item 	Es muss vollständig sein (alle 88 Tasten)
 	\item 	Es muss stimmbar sein
 	\item 	Der Transport muss einfach durchzuführen sein
 \end{enumerate}
 
+% @TODO(Val): Fühlt sich an als würde hier noch Text fehlen, oder?
+
 
 \subsection{Ansteuerungskonzept} \label{konzeptionHW-ansteuerungskonzept}
+% @Note(Val): mMn fehlt ein Satz hier oder irgendwann davor, dass Aktuatoren benötigt werden. Ist vielleicht offensichtlich, aber ein Satz der Form: "Zum automatischen Anspielen des Klaviers benötigt es Aktuatoren" oder so.
 Das Ansteuerungskonzept für die Tasten eines Klaviers erfordert eine Betrachtung der Befestigungsorte für
-die Aktuatoren. Eine grundlegende Überlegung ist, ob die Saiten oder die Tasten selbst angespielt werden sollen.
+die Aktuatoren. Eine grundlegende Überlegung ist, ob die Saiten oder die Tasten selbst angespielt werden sollen. % @Note(Val): Würde vllt. klarer machen, dass es um das direkte Ansteuern der Tasten bzw. Saiten geht, weil die Saiten (indirekt) ja in jedem Fall angespielt werden (sonst gäbe es ja keinen Ton, soweit ich Pianos verstehe)
 
 Wenn die Saiten direkt angespielt werden, erfordert dies weniger Kraft im Vergleich zu den Tasten.
 Das bedeutet, dass die Aktuatoren weniger Kraft aufbringen müssen und somit kostengünstigere
@@ -48,25 +58,28 @@ Aktuatoren genutzt werden können. Allerdings geht
 dabei die gesamte Mechanik des Klaviers verloren, was bedeutet, dass Aspekte wie Dämpfung nicht genutzt werden können,
 was wiederum zu einem weniger ansprechenden Klang führt. Zusätzlich müsste das Klavier permanent geöffnet bleiben, und die
 Aktuatoren müssten äußerst präzise die Saiten anschlagen, um akzeptable Ergebnisse zu erzielen.
+% @Note(Val): Mit Außnahme des letzten Punkts verstehe ich die Argumente hier ehrlich gesagt nicht. Vieleicht kenne ich mich einfach zu wenig mit Klavieren aus, um das nachvollziehen zu können und wir setzen offensichtlch ein bisschen Klavier-Wissen voraus, aber fals hier für jeden Punkt ein Nebensatz hin könnte, warum das so ist, wäre das wahrscheinlich besser
 
 Die Entscheidung fiel daher darauf, die Tasten anzuspielen, da hier die Klaviermechanik genutzt werden kann, was für einen
 authentischeren Klang sorgt. Die Art und Weise, wie die Aktuatoren an den Tasten angebracht werden können, wurde
 weiter untersucht.
 
 Eine Möglichkeit besteht darin, die Aktuatoren oben über den Tasten anzubringen, entweder in Form einer nachgebildeten
-``Klavierhand'' mit zehn ``Fingern'' oder in Form einer Schiene mit 88 Aktuatoren auf den Tasten. Die Klavierhand-Option würde
-dem tatsächlichen Klavierspiel ähnlicher sehen, erfordert jedoch aufgrund der Bewegung und Präzision eine komplexe Logik und
+\enquote{Klavierhand} mit zehn \enquote{Fingern} oder in Form einer Schiene mit 88 Aktuatoren auf den Tasten. Die Klavierhand-Option würde
+dem tatsächlichen Klavierspiel ähnlicher sehen, erfordert jedoch aufgrund der Bewegung und Präzision eine komplexere Logik und
 Montage. Die Schienenoption bietet eine einfachere Ansteuerung, erfordert jedoch einen Aktuator für jede Taste und schränkt die
-normale Spielbarkeit des Klaviers ein, solange der ``Piano Player'' montiert ist.
+normale Spielbarkeit des Klaviers ein, solange der \enquote{Piano Player} montiert ist.
+% @Note(Val): Das letzte Argument überzeugt nicht, da beide Versionen das manuelle Spielen einschränken (wenn nicht unmöglich machen) solange es montiert ist
 
-Eine andere Möglichkeit besteht darin, die Aktuatoren unter den Tasten anzubringen. Dies kann entweder durch Ziehen mittels
-Seilen oder ähnlichem erfolgen oder durch Drücken vom hinteren Ende der Tasten. Beide Optionen ermöglichen es, das Klavier sowohl vom
-``Piano Player'' als auch von einem menschlichen Spieler zu spielen. Da dies eine der Anforderungen für das Projekt ist,
+Eine andere Möglichkeit besteht darin, die Aktuatoren unter den Tasten anzubringen.
+Die Ansteuerung der Tasten kann dann entweder durch Ziehen mittels
+Seilen oder ähnlichem erfolgen oder durch Drücken vom hinteren Ende der Tasten. Beide Optionen ermöglichen es, das Klavier sowohl vom \enquote{Piano Player} % @Note(Val): Piano Player wurde vorher nie als Begriff verwendet - es sollte vorher irgendwann erwähnt werden, dass wir den Hardware-Teil so nennen (ich nehme an, dass sich Piano Player nur auf die HW bezieht oder meint es den gesamten Prototypen?)
+als auch von einem menschlichen Spieler zu spielen. Da dies eine der Anforderungen für das Projekt ist,
 wurde entschieden, dass die Ansteuerung von unten erfolgen muss. Bei beiden Varianten wird jede Taste mit einem Aktuator
-ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten im Gegensatz zu der von oben Spielenden ``Klavierhand''
+ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten im Gegensatz zu der von oben Spielenden \enquote{Klavierhand}
 erhöht.
 Generell ist die Drückoption ästhetisch ansprechender, erfordert jedoch Präzision und könnte die
-Tastenempfindlichkeit beeinträchtigen. Das Problem mit der Präzisen Ansteuerung fällt beim Ziehen der Tasten weg.
+Tastenempfindlichkeit beeinträchtigen. Das Problem der präzisen Ansteuerung fällt beim Ziehen der Tasten weg. % @Note(Val): Klingt ein bisschen repetetiv mit den vorherigen Sätzen, inhaltlich aber ok
 Der Grund dafür liegt darin, dass die Taste nicht
 direkt getroffen werden muss. Stattdessen wird lediglich ein Seil gezogen, das den Aktuator dazu veranlasst, die Taste
 gerade nach unten zu ziehen. Im Gegensatz dazu erfordert das Drücken der Taste eine präzise Ausrichtung und Anwendung der
@@ -74,37 +87,40 @@ Kraft, um die gewünschte Tastenempfindlichkeit zu erreichen. Da das Ziehen des 
 und keine direkte Interaktion mit der Tastenmechanik erfordert, kann es die Tastenempfindlichkeit weniger beeinträchtigen
 als das Drücken der Tasten.\newline
 Für das Drücken der Tasten fallen noch weitere Probleme an. Um die Tasten drücken zu können, muss ein möglichst großer
-Hebel aufgebracht werden, damit die Aktuatoren möglichste wenig Kraft aufbrauchen müssen. Dass bedeutet, dass
-die Aktuatoren soweit hinten wie möglich angebracht werden.\newline
-%TODO(Jay) BILD
+Hebel aufgebracht werden, damit die Aktuatoren möglichste wenig Kraft aufbrauchen müssen. Das bedeutet, dass
+die Aktuatoren soweit hinten wie möglich angebracht werden sollten.\newline
+% @TODO(Jay): BILD
 Bei dem genutzten Klavier befindet sich hinten ein Holraum welcher genutzt werden kann. Dieser ist allerdings
 nicht durchgängig, was den
 Einbau von Löchern erfordert. Diese Löcher müssen räumlich so platziert werden, dass sie keine wichtigen Teile der
-Klaviermechanik stören. Dies könnte zu einer verringerten Hebelkraft und somit zu unterschiedlichen Anforderungen an
-die Tasten führen. Dies muss in der Softwarelogik berücksichtigt werden, um eine konsistente Leistung zu gewährleisten.
+Klaviermechanik stören. Dies könnte zu einer verringerten Hebelkraft und somit zu unterschiedlichen Anforderungen pro
+Taste führen. Dies muss in der Softwarelogik berücksichtigt werden, um eine konsistente Leistung zu gewährleisten.
 
-Insgesamt fiel die Entscheidung also auf das Konzept des Ziehens von unten.
-Bei diesem Konzept wird die geringste mechanische Präzision benötigt und das Klavier ist trotz Montage des Bots noch
-spielbar.
+Insgesamt fiel die Entscheidung deshalb auf die Strategie des Ziehens von unten.
+Bei diesem Ansatz wird die geringste mechanische Präzision benötigt und das Klavier ist trotz Montage des Bots noch manuell spielbar.
 
 \subsection{Aktuator}\label{subsec:aktuator}
 
+% @Note(Val): Warum kommt hier eine Definition von Aktuatoren, wenn das Wort vorher schon frei verwendet wurde
+% Entweder setzen wir voraus, dass die Leser:innen wissen, was ein Aktuator ist, oder die Definition muss früher kommen
 Die Aktuatoren werden für die Steuerung der Tasten benötigt.
-An sich ist ein Aktuator ein mechanisches/elektrisches Bauteil, das dazu dient,
+Ein Aktuator ist ein mechanisches/elektrisches Bauteil, das dazu dient,
 eine bestimmte Aktion auszuführen.
-Sie wandeln Energie in Bewegung, (oder andere physikalische Größen) um, um eine gewünschte Aktion auszuführen
-oder einen Mechanismus zu steuern. \newline
-Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet:
+Er wandelt Energie in Bewegung (oder andere physikalische Größen) um, um eine gewünschte Aktion herbeizuführen
+oder einen Mechanismus zu steuern. \newline % @TODO(Val): Quelle für Aktuator-Definition
+Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
 \begin{enumerate}
 	\item Linearmotor
 	\item Servomotor
 	\item Hubmagnet
 \end{enumerate}
 
+% @TODO(Val): Quelle für jede Definition der 3 Aktuator-Typen
 \paragraph{Linearmotor}
 Ein Linearmotor ist ein Aktuator, der eine lineare Bewegung erzeugt. Er besteht aus einer festen Spule und einem
 beweglichen Magneten oder umgekehrt. Wenn Strom durch
-die Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Teil des Motors in eine lineare Bewegung zieht. \newline
+die Spule fließt, erzeugt sie % @Question(Val): Ist es richtig zu sagen, dass die Spule ein Magnetfeld erzeugt? (Ich hab physikalisch keine Ahnung, also kann gut sein, dass das so richtig formuliert ist)
+ein Magnetfeld, das den beweglichen Teil des Motors in eine lineare Bewegung zieht. \newline
 Physikalische Grundlagen:
 \begin{itemize}
 	\item Die Funktionsweise eines Linearmotors beruht auf dem Prinzip der elektromagnetischen Induktion. Wenn Strom durch die
@@ -120,11 +136,13 @@ Physikalische Grundlagen:
 \end{figure}
 
 \paragraph{Servomotor}
+% @Note(Val): Hier scheint etwas falsch zu sein. Bei der Entscheidungsfindung später sagt ihr, dass Servomotoren eine rotierende Bewegung erzeugen. Aber hier sagt ihr, dass es mit einer Drehung anfängt und diese dann vom Servomotor in eine Bewegung (ich nehme an lineare Bewegung) umgewandelt wird.
 Ein Servomotor ist ein elektromechanischer Aktuator, der eine Bewegung durch eine Drehung ermöglicht.
 Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus. Der Elektromotor erzeugt eine rotierende
 Bewegung, die durch das Getriebe in eine Bewegung umgewandelt wird. Der
 Feedback-Mechanismus, oft ein Potentiometer oder ein Encoder, misst die genaue Position des Motors und gibt diese
-Informationen an die Steuerung zurück.\newline
+Informationen an die Steuerung zurück.\newline % @Note(Val): Verstehe nicht inwieweit der Feedback-Mechanismus sinnvoll ist
+% @Note(Val): Warum ist das Bild hier zuerst aber ansonsten immer erst nach den physikalischen Grundlgen?
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Servomotor}
@@ -144,9 +162,9 @@ Physikalische Grundlagen:
 \end{itemize}
 
 \paragraph{Hubmagnet}
-Ein Hubmagnet, (auch: Solenoid) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
+Ein Hubmagnet (auch Solenoid genannt) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
 Stroms erzeugt. Er besteht aus einer Spule, die einen magnetischen Kern umgibt. Wenn Strom durch die Spule fließt, erzeugt
-sie ein Magnetfeld, das den Kern anzieht und eine lineare Bewegung erzeugt.\newline
+sie ein Magnetfeld, das den Kern anzieht und somit eine lineare Bewegung erzeugt.\newline
 Physikalische Grundlagen:
 \begin{itemize}
 	\item Der Hubmagnet nutzt das Prinzip der elektromagnetischen Induktion, um eine lineare Bewegung zu erzeugen. Wenn Strom
@@ -169,42 +187,49 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 	\item Servo-Motor: Bei diesem Motor ist eine Bewegungsbeschränkung mit eingebaut, welche in jedem Motor ausgebaut
 	werden müsste. Dies ist zu umständlich, wenn es bessere Varianten - wie den Hubmagneten - gibt. Außerdem hätte
 	eine Umlenkung stattfinden müssen, da die erzeugte Bewegung eine Rotation im Gegensatz zu einer linearen Bewegung
-	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschrenkung nicht
-	weiter betrachtet wurden. Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
+	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschränkung nicht
+	weiter betrachtet wurden. % @Note(Val): Warum erwähnt ihr die rotierende Bewegung dann überhaupt als Nachteil. Und warum werden vorher bei der Erklärung nicht die linearen Servomotoren erklärt?
+	Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
 	sie bei Ende der Stromversorgung waren. Für das Klavier werden Aktuatoren benötigt, welche wieder auf die vorherige
-	Position zurückschalten, die Klaviertaste also in dem Sinne wieder \`loslassen' können.
+	Position zurückschalten, die Klaviertaste also in dem Sinne wieder \enquote{loslassen} können.
 	\item Linear-Motor: Auch hier kam das Problem auf, dass die Motoren nicht automatisch wieder an ihre vorherige
-	Position zurückschalten, wenn der Stromfluss stoppt.
-	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellen
-	Tastendrücken sinnvoll ist. Außerdem schalten Sie wenn die Stromversorgung abbricht wieder auf ihre vorherige
-	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren. Da
-	das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinauszugehen, führte dies
-	lediglich dazu, dass Kostenintensivere Solenoids bestellt werden mussten.
+	Position zurückschalten, wenn der Stromfluss stoppt. % @Question(Val): Das Problem könnte mit einem gegenteiligen Stromfluss gelöst werden, oder? Weiß aber nicht ob das die Schaltung unbedingt verkomplizieren würde. Wenn das überhaupt nicht möglich wäre, wären Servo- & Linear-Motoren ja gar nicht nutzbar und dann wäre die Einleitung für diesen Abschnitt falsch
+	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellem
+	Tastendrücken sinnvoll ist. Außerdem schalten Sie, wenn die Stromversorgung abbricht, wieder auf ihre vorherige
+	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren.
+	Da das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinauszugehen, führte dies lediglich dazu, dass Kostenintensivere Solenoids bestellt werden müssen.
+	% @Note(Val): Der letzte Satz hier ist komisch & wahrscheinlich falsch (was genau bedeutet "genug" hier z.B.)
+	% @Note(Val): Der Nachteil ist doch gar nicht, dass sie weniger Kraft aufbringen, wenn es auch Solenoids gibt, die diese Kraft aufbringen, oder? Der Nachteil ist eher, dass die Solenoids, die solche Kraft aufbringen, mehr kosten, oder?
 \end{enumerate}
 
+% @Note(Val): Warum gibt es hier einen forcierten Seitenumbruch? Braucht es das?
 \newpage
 
 \subsection{Verbindung Tasten und Aktuatoren} \label{subsec:VerbindungTastenAktuatoren}
 
 Wie in Kapitel \ref{konzeptionHW-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
 Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt. \newline
-In diesem Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden.
-Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit bezüglich den Ansteuerns der Tasten weiter verbessert.
+Dieses Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden. % @Note(Val): Beschreibst du nur was gemacht wurde? Dann gibt es keine Entscheidungen hier & dann ist das nicht wirklich Konzipierung, oder?
+Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit beim Ansteuerns der Tasten weiter verbessert. % @Note(Val): "verbessert"? Es wurde doch noch gar nichts umgesetzt. Du meinst der Aufbau wird detailierter ausgearbeitet oder?
+% @Note(Val) Es heißt Akkuratesse statt Akkuratheit (https://www.duden.de/rechtschreibung/Akkuratesse) aber bessere Wörter wären vll Exaktheit oder Genauigket
 \newline
-Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen.
+Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen. % @Note(Val): Erst Problem beschreiben, dann Lösung nennen. Das Problem wurde davor angesprochen und sollte hier mindestens erwähnt oder gar erklärt werden
 Die Position an der Taste kann nicht frei gewählt werden. Es muss darauf geachtet werden,
-dass man das Loch beim Spielen nicht sieht, dass das Loch möglichst am Ende der Taste ist, um einen großen Hebel zu erzeugen
+dass man das Loch beim Spielen nicht sieht. % @Note(Val): Warum ist es wichtig, dass es nicht gesehen wird? Klingt eher als wäre das ein optionaler Bonus
+Außerdem ist wichtig, dass das Loch möglichst am Ende der Taste angebracht wird, um einen größeren Hebeleffekt zu erzeugen,
 und dass das Tastenbrett unter der Taste an der Position gut durchzubohren ist.
-In untenstehender Abbildung sieht man mit rot gekennzeichnet das gebohrte Loch durch das ein Seil (grün) geführt wird.
+In Abbildung \ref{img:Tastenbohrung} sieht man mit Rot gekennzeichnet das gebohrte Loch, durch das ein Seil (in grün dargestellt) geführt wird.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=8cm]{img/Taste_schraeg.jpg}
 	\caption{Tastenbohrung}
+	\label{img:Tastenbohrung}
 \end{figure}
 
 
-Anschließend wird jede Schnur jeweils durch ein senkrechtes Loch (rot in Abbildung \ref{fig:klaviatur} gekennzeichnet) im Klaviaturbalken (bzw. Tastenbrett),
+% @Note(Val): Der Satz ist mit den vielen Einschüben und Klammern schwer zu lesen. Lieber in 2 Sätze teilen und lesbarer machen
+Anschließend wird jede Schnur jeweils durch ein senkrechtes Loch (rot in Abbildung \ref{fig:klaviatur} gekennzeichnet) im Klaviaturbalken (bzw. Tastenbrett), % @Note(Val): Nur einen Begriff einheitlich verwenden, sonst verwirrt es nur
 worauf die Tasten liegen, in den Fußraum geführt.
 
 \begin{figure}[htbp]
@@ -214,7 +239,7 @@ worauf die Tasten liegen, in den Fußraum geführt.
 	\label{fig:klaviatur}
 \end{figure}
 
-\textit{Anordnung der Aktuatoren}
+\subsubsection{Anordnung der Aktuatoren}
 
 Die Idee ist, die Hubmagnete parallel zur Klaviatur zu befestigen, um die Tasten möglichst senkrecht nach unten ziehen zu können.
 Hierfür müssen folgende Aspekte berücksichtigt werden:
@@ -234,13 +259,13 @@ Bildet man zwei Hubmagnetreihen übereinander, hat jede Tastenansteuerung 3,20 c
 Durch die 7mm Abstand ist eine Wärmeabfuhr über die Luft in geringem Ausmaß möglich.
 Ob dies ausreicht, muss in späteren Tests (siehe Kapitel \ref{tests}) ermittelt werden.
 
-Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagnete verbunden.
+Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagneten verbunden.
 
-Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung würde allerdings auf Kosten der Stabilität und Funkionalität gehen.
+Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung würde allerdings auf Kosten der Stabilität und Funkionalität gehen. % @Note(Val): Inwieweit? Hier fehlt eine Erklärung
 Deshalb werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
 
 Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
-sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden.(siehe Abb. \ref{fig:BefestigungHubmagnete})
+sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden (siehe Abb. \ref{fig:BefestigungHubmagnete}). % @Note(Val): Die Abbildung zeigt mir nicht, wie die Platte mit dem Klavier verschraubt wird
 
 \begin{figure}[htbp]
 	\centering
@@ -249,39 +274,44 @@ sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier 
 	\label{fig:BefestigungHubmagnete}
 \end{figure}
 
-\textit{Seilführung}
+\subsubsection{Seilführung}
 
 Würde man die Seile von den Tasten direkt zu den Hubmagneten führen,
-hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend stark betätigen, dass ein Ton erklingt.
+hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend stark betätigen, um einen Ton zu erzeugen.
 \newline
-In den folgenden Abbildungen sind die seitliche Ansicht des Klaviers gezeichnet.
-Dabei repräsentieren der schwarze/weiße Block jeweils eine schwarze/ weiße Taste.
-Der grüne und pinke Strich stehen für das Seil, das mit dem Hubmagnet und dem Loch in der Taste verbunden ist.
-Unten links sind die zwei übereinanderliegenden Solenoid-Reihen (blau) abgebildet.
-Der schwarze Strich repräsentiert den Stab im Hubmagneten.
+In den folgenden Abbildungen ist die seitliche Ansicht des Klaviers gezeichnet.
+Dabei repräsentieren der schwarze bzw. weiße Block jeweils eine schwarze bzw. weiße Taste.
+Der grüne und pinke Strich stehen für die Seile, die den Hubmagneten mit dem Loch in der Taste verbinden.
+Unten links sind die zwei übereinanderliegenden Solenoid-Reihen in blau abgebildet.
+Der schwarze Strich repräsentiert den Stab im Hubmagneten. % @Note(Val): Die Farbe vom Solenoid kannst du dir fast sparen, wenn du die Grafik so klein abbildest. Das blau kann ich nur mit viel reinzoomen sehen
 \newline
-Abb. 3.1 zeigt den intuitiven Aufbau mit entspanntem Seil und ausgeschaltetem Solenoid.
-Abb. 3.2 zeigt den selben Aufbau wie Abb. 3.1, nur, dass der Solenoid angezogen ist.
+Abbildung \ref{img:Umlenkung_locker} zeigt den intuitiven Aufbau mit ausgeschaltetem Solenoid und entsprechend entspanntem Seil und.
+Abbildung \ref{img:Umlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschied, dass der Solenoid hier angezogen ist.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=6cm, height=8cm]{img/Umlenkung_locker}
 	\caption{Taste locker ohne Umlenkung}
+	\label{img:Umlenkung_locker}
 \end{figure}
 
+% @Note(Val): Es wäre besser, wenn sich die beiden Bilder mehr unterscheiden würden. Falls das erste Bild stärker zeigen könnte, dass die Seile locker sind oder es eine Kennzeichnung bei den Seilen gibt, wäre das gut. Alternativ könnten auch die Tasten runtergedrückt sein, um anzuzeigen, dass diese damit betätigt werden
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=6cm, height=8cm]{img/Umlenkung_gezogen}
 	\caption{Taste gezogen ohne Umlenkung}
+	\label{img:Umlenkung_gezogen}
 \end{figure}
 
+% @Note(Val): Warum gibt es hier einen forcierten Seitenumbruch? Braucht es das?
 \newpage
 
-Mit diesem intuitiven Aufbau funktioniert das Betätigen der Taste nicht, da diese nicht weit genug heruntergezogen wird.
-Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben wurden Umlenkungen eingebaut.
-Mittels dieser Umlenkung (PVC-Rohr) werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
-Somit wurde die Tiefe, mit der die Taste gedrückt werden kann, wieder auf annähernd 1 cm (Hub des Magnets) erhöht.
+Mit diesem intuitiven Aufbau funktioniert das Betätigen der Tasten nicht, da diese nicht weit genug heruntergezogen werden.
+Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben, müssen Umlenkungen eingebaut werden.
+Mittels dieser Umlenkung, die mit einem PVC-Rohr umgesetzt werden kann, werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
+Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd 1 cm erhöht, was dem Hub des Magneten entspricht..
 
+% @Note(Val): Wenn die Umlenkung weiter unten im Bild wäre, wären die unterschiedlichen Linien leichter zu sehen
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=6cm, height=8cm]{img/mitUmlenkung_locker}
@@ -289,13 +319,14 @@ Somit wurde die Tiefe, mit der die Taste gedrückt werden kann, wieder auf annä
 \end{figure}
 
 
-Dies kann man auch mathematisch beweisen:
-\newline geg.:
-\newline Strecke bis zur ersten Reihe Hubmagnete h1 = 17 cm
+% @Note(Val): Entweder machst du das hier als Bullet-Points or mit vollständigen Sätzen. Aber so ist das ein bisschen merkwürdig
+Dies kann auch mathematisch bewiesen werden:
+\newline geg.: % @Note(Val): "gegeben" aber ohne "gesucht" und ohne Demarkierung wann etwas nicht mehr gegeben ist... können wir das "geg." einfach streichen?
+\newline Strecke bis zur ersten Reihe Hubmagnete h1 = 17 cm % @Note(Val): Strecke von wo?
 \newline Strecke bis zur zweiten Reihe Hubmagnete h2 = 27 cm
 \newline Strecke bis zu den schwarzen Tasten t1 = 12 cm
 \newline Strecke bis zu den weißen Tasten t2 = 18 cm
-\newline Seil zur schwarzen Taste im entspannten Zustand $ht1_{entspannt}$
+\newline Seil zur schwarzen Taste im entspannten Zustand $ht1_{entspannt}$ % @Note(Val): Du meinst Seillänge? Ist die Seillänge nicht konstant? Warum berechnen wir die?
 \newline Seil zu den weißen Tasten im entspannten Zustand $ht2_{entspannt}$
 \newline $ht1_{entspannt}$ = $\sqrt {h1^{2} + t1^{2}}$ = 20.81 cm
 \newline $ht2_{entspannt}$ = $\sqrt {h2^{2} + t2^{2}}$ = 32.45 cm
@@ -303,13 +334,13 @@ Dies kann man auch mathematisch beweisen:
 \newline $ht2_{gespannt}$ = $\sqrt {(h2 + 1)^{2} + t2^{2}}$ = 33.29 cm
 
 Die Differenz zwischen $ht1_{gespannt}$ und $ht1_{entspannt}$ (bzw. ht2) beschreibt die Tiefe, die eine Taste gedrückt werden kann.
-\newline Diese beträgt also ohne Optimierung nur 0.82 cm, bzw. 0.84 cm.
+\newline Diese beträgt also ohne Optimierung nur 0.82 cm, bzw. 0.84 cm. % @Note(Val): "ohne Optimierung" - was für Optimierungen wären hier denn überhaupt möglich? Ist die Verwendung einer Umlenkun nicht schon eine Optimierung?
 
 Um also die Intensität des Tastendrucks besser steuern zu können und um die Haltbarkeit des Materials zu verlängern,
 sollte die Reibung am Seil möglichst gering gehalten werden.
-Dazu wurden mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden, die Seile umgelenkt und
-entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt.
-Das hat den positiven Nebeneffekt, dass die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt sind. (siehe Abbildung \ref{fig:fussraum})
+Dazu können mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden können (siehe Abbildung \ref{fig:fussraum}), die Seile umgelenkt und
+entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt werden.
+Das hat den positiven Nebeneffekt, dass die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt sind.
 
 
 \begin{figure}[htbp]
@@ -320,58 +351,61 @@ Das hat den positiven Nebeneffekt, dass die Pianist:innen nicht durch Platzmange
 \end{figure}
 
 
-\textit{Auswahl des Seils}
+\subsubsection{Auswahl des Seils}
 
 Wie eben beschrieben wird das Ziehen durch ein Seil ermöglicht.
 Dafür wird ein leichtes, formbares, unelastisches und dehnungsresistentes Material benötigt, welches die Hubmagnete mit den Tasten verbindet.
-Je leichter das Material ist, desto weniger wird die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verändert.
+Je leichter das Material ist, desto weniger geht die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verloren.
 Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
 Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein unelastisches Seil zu verwenden.
 Um häufiges Nachspannen oder Austauschen des Seils entgegenzuwirken, sollte dies so dehnungsresistent wie möglich sein.
 
-\subsubsection{Nähgarn}
+% @Note(Val): Ab hier wird in der Vergangenheit gesprochen. Ich nehme an, dass das hier aber ok ist, da davon gesprochen wird, was umgesetzt und getestet wurde.
+\paragraph{Nähgarn}
 
-Als Erstes wurde Nähgarn, welches zur Hand war getestet.
+Als Erstes wurde Nähgarn, welches zur Hand war, getestet.
 Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung (mit 25N) des Hubmagnetens nicht stand.
 Vier Fäden funktionierten zu Beginn gut, leierten allerdings schnell aus.
 
-\subsubsection{Nylonsaiten}
+\paragraph{Nylonsaiten}
 
 Als Nächstes wurde die g-Saite einer Gitarre verwendet.
 Durch den höheren Durchmesser und das stärkere Material riss und leierte die Saite nicht aus.
-Da die Saite kaum Flexibilität liefert, war die Befestigung an der Taste äußerst schwierig.
-Beim Ziehen des Magnetes wurde erst die lockere Schlaufe an der Taste gestreckt, wodurch nicht der vollständige Hub des Magnetes auf die Taste übertragen werden.
+Da die Saite kaum Flexibilität liefert, war die Befestigung an der Taste jedoch äußerst schwierig.
+Beim Ziehen des Magnetens wurde erst die lockere Schlaufe an der Taste gestreckt, wodurch nicht der vollständige Hub des Magnetens auf die Taste übertragen wurde.
 
-\subsubsection{Angelschnur}
+\paragraph{Angelschnur}
 
+% @Note(Val) "Aus Erfahrungen [...] konnte eine Schnur gefunden werden" klingt sehr falsch
 Aus Erfahrungen aus dem Angelbereich konnte schnell eine geeignetere Schnur gefunden werden.
 Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
 Mit einem Durchmesser von 1.6 mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7 kg standhalten.
-Auch nach ausgiebigem Testen erfüllt die Angelschnur die Anforderungen.
-Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein leichtes.
+Nach ausgiebigem Testen ist eindeutig, dass die Angelschnur die Anforderungen erfüllt.
+Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein Leichtes.
 
 \subsection{Klangdämpfung der Aktuatoren}
-Die Hubmagnete machen beim Anschlagen laute \glqq klack\grqq {} Geräusche, welche von der Melodie des Klaviers ablenken.
-Genauer handelt es sich um das den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
+Die Hubmagnete machen beim Anschlagen laute \enquote{Klack} Geräusche, welche von der Melodie des Klaviers ablenken.
+Genauer handelt es sich um den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
 Auch hierfür gab es mehrere Ideen und Tests, um das Geräusch zu dämpfen:
 
 \subsubsection{Isolierfolie}
 
 Die erste Überlegung war die Auskleidung des Innenraums der Hubmagnete mit Isolierfolie.
-Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu diesem Zeitpunkt noch zu gering war, um sicherzustellen, dass die Isolierung dem standhält.
+Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu diesem Zeitpunkt noch zu gering war, um sicherzustellen, dass die Isolierung dem standhält. % "dem" meint die Hitzeentwicklung? Dann müsste es "ihr" sein.
 
 \subsubsection{Gummi-Stopper}
 
-Die nächste Idee war das Limitieren des Schlags durch Gummiringe (Dichtungsringe) zwischen Anker und dem äußeren Gehäuse.
+Die nächste Idee war das Limitieren des Schlags durch Gummiringe (Dichtungsringe) % @Note(Val): Ein Wort verwenden, oder in einen Satz einbringen (z.B. "Dichtungsringe aus Gummi" oder so)
+zwischen Anker und dem äußeren Gehäuse.
 Da für die Befestigung keine zufriedenstellende Lösung gefunden wurde, wurde auch diese Idee verworfen.
-zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden.
+zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden. % @Note(Val): Das ist kein richtiger Satz und ich habe keine Ahnung was du damit aussagen wolltest. Satz streichen oder verbessern
 
 \subsubsection{Schaumstoff}
 
-Wie im Bild (siehe Abb \ref{fig:schaumstoff}) unten zu sehen, wurde die \enquote{Gummi-Stopper}-Idee durch den Einsatz von Schaumstoff leicht verändert.
-+ Das Klopfgeräusch konnte vollständig verhindert werden.\newline
-- Durch den Schaumstoff kann 1 mm Hub nicht verwendet werden, weshalb nur noch 9 mm übrig bleiben.\newline
-- Der Aufbau optisch nicht ansprechend.\newline
+Wie im Abbildung \ref{fig:schaumstoff} zu sehen ist, wurde die \enquote{Gummi-Stopper}-Idee durch den Einsatz von Schaumstoff leicht modifiziert. \newline
++ Klopfgeräusch wird vollständig verhindert \newline
+- Durch den Schaumstoff wird 1mm des Hubs nicht verwendet, weshalb nur noch 9mm übrig bleiben \newline
+- Der Aufbau ist optisch nicht besonders ansprechend
 
 \begin{figure}[htbp]
 	\centering
@@ -380,13 +414,13 @@ Wie im Bild (siehe Abb \ref{fig:schaumstoff}) unten zu sehen, wurde die \enquote
 	\label{fig:schaumstoff}
 \end{figure}
 
-\subsubsection{Seil (2mm Durchmesser) um den Anker}
+\paragraph{Seil (2mm Durchmesser) um den Anker}
 
-Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt. \newline
+Um das \enquote{Problem} der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt. \newline
 + Auch hier konnte das Klopfen vollständig beseitigt werden \newline
 + Von außen sieht man keine Veränderung \newline
-+ Bezogen auf die Hitzeentwicklung scheint das Seil nach den bisherigen Tests gut Stand zu halten. \newline
-- Durch die Dicke des Seils, werden 2mm Hub nicht verwenden, weshalb nur noch 8mm übrig bleiben.
++ Das Seil scheint ausführlichen Tests nach der Hitzeentwicklung gut Stand zu halten  \newline
+- Durch die Dicke des Seils, werden 2mm des Hubs nicht verwendet, weshalb nur noch 8mm übrig bleiben.
 
 \begin{figure}[htbp]
 	\centering
@@ -394,18 +428,19 @@ Um das "Problem" der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nu
 	\caption{Hubmagnet: Dämpfung mit Seil}
 \end{figure}
 
-\section{Elektronik}\label{Vorgehen - Hardware}
 
+
+\section{Elektronik}\label{konzeptionHW-elektronik}
 
 \subsection{Mikrocontroller}\label{Ansteuerung}
-Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein Mikrocontroller gut geeignet.
-Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
+Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein \ac{MC} gut geeignet.
+Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung, wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
 
 %Arduino Intro
 \begin{minipage}{0.7\textwidth}
 	\paragraph{Arduino}
-	Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen.
-	Er besteht aus einem Mikrocontroller-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten verbunden werden kann.
+	Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen. % @Note(Val): Ist ein Arduino wirklich eine "Platform"? Das klingt irgendwie komisch...
+	Er besteht aus einem \ac{MC}-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten verbunden werden kann.
 	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können.
 \end{minipage}
 \begin{minipage}{0.3\textwidth}
@@ -420,7 +455,7 @@ Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei f
 \begin{minipage}{0.7\textwidth}
 	\paragraph{Rasperry Pi}
 	Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert.
-	Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, von Prototypenbau bis IoT.
+	Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu IoT-Geräten. % @Question(Val): Sollte IoT ins Abkürzungsverzeichnis?
 	% @Note(Val): "Im Gegensaz zum Arduino verfügt er über einen Prozessor" - falsch? der Arduino hat offensichtlich auch einen Prozessor...
 	% @Cleanup(Val): Originaler Satz hier: (angepasst für Abgabe an Kruse für Email)
 	% Im Gegensatz zum Arduino verfügt er über einen Prozessor und ist besonders für komplexe und rechenlastige Projekte geeignet.
@@ -429,28 +464,29 @@ Auf dem Markt steht eine hohe Anzahl an Mikrocontrollern zur Verfügung, wobei f
 \newline
 
 %Vergleich
-% @Note(Val): Das war der originale Satz, aber der klang sehr komisch...: "Die Entscheidung für den verwendeten Mikrocontroller traf auf den Arduino."
+% @Note(Val): Das war der originale Satz, aber der klang sehr komisch...: "Die Entscheidung für den verwendeten \ac{MC} traf auf den Arduino."
 Es wurde sich letztendlich für den Arduino entschieden.
-Der Rasperry Pi stand vor allem aufgrund seiner höhere Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine Komplexe Ansteuerungslogik möglich ist und ein Großteil des Programmes auf dem Rasperry Pi ausgeführt werden kann.
-Allerdings ist er aufgrund seines Betriebssystems und einer erhöhten Latenz nicht für Echtzeit-Anwendungen bzw. Geschwindigkeitskritische Anwendungen ausgelegt.
+Der Rasperry Pi stand vor allem aufgrund seiner höhere Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
+Allerdings ist er aufgrund seines Betriebssystems und einer erhöhten Latenz nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt. % @Note(Val): Worauf bezieht sich die Latenz hier genau?
 Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
-Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen und ist somit besser für Projekte geeignet, welche eine präzise Ansteuerung von Aktuatoren benötigt.
-Zudem ist die Komplexität der Ansteuerung nicht so hoch, dass der Microcontroller über eine hohe Rechenleistung verfügen muss.
+Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, welche eine präzise Ansteuerung von Aktuatoren benötigt. % @Note(Val): Simpel != Präzise. Nur weil der Arduino eine simple Hardware-Interaktion hat, heißt es nicht, dass er die Hardware präzise ansteueren könnte
+Zudem sollte die Ansteuerungslogik nicht besonders komplex sein, weshalb ein Arduino genug Rechenleistung aufweisen können sollte.
 
-Für das Projekt wird spezifisch ein Arduino R3 verwendet. Bei der Auswahl des spezifischen Arduinos wurden der Arduino Uno, Nano und R3(auch: mega 2563) betrachtet.
-Im Prinzip wäre jedes der Modelle für die Anwendung möglich, allerdings verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
+Für das Projekt wird spezifisch ein Arduino R3\footnote{Der Arduino R3 wird auch als \enquote{Mega 2563} bezeichnet.} verwendet.
+Bei der Auswahl des spezifischen Arduinos wurden der Arduino Uno, Nano und R3 betrachtet.
+Im Prinzip wäre jedes der genannten Modelle für die Anwendung möglich, allerdings verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
 gegenüber der 32KB vom Arduino Uno und den 16KB des Arduino Nanos).
 Der Arduino Uno verfügt zwar über mehr Ports, allerdings bringt dies keinen Mehrwert, da die Anzahl der benötigten Ausgänge auch bei einem Arduino Uno nicht erreicht werden
 (siehe Kapitel \ref{output}).
 Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM} Pins, die im Rahmen des Projekts genutzt werden können.
 
-\subsection{Pulsweitenmodulation (PWM)}\label{PWM}
+\subsection{Pulsweitenmodulation}\label{PWM}
 Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert.
-Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. gebraucht.
+Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. benötigt.
 In diesen Fällen muss die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
 Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt.
 Das Signal kann dafür die Hälfte der Zeit ausgeschaltet werden, womit zwischen 0V und den vollen 5V durchschnittlich insgesamt 2.5V anliegen.
-Je höher die Frequenz zwischen an- und ausschalten des Signals eingestellt wird, desto weniger wird diese ``künstlich'' simulierte Halbierung wahrgenommen.
+Je höher die Frequenz zwischen An- und Ausschalten des Signals eingestellt wird, desto weniger wird diese \enquote{künstlich} simulierte Halbierung wahrgenommen.
 
 \ac{PWM} bedient sich im Grunde genau dieser Technik.
 Dabei wird die Zeitdauer eines digitalen Signals variiert wird, um einen durchschnittlichen Wert zu erzeugen.
@@ -460,17 +496,17 @@ Bei den \ac{PWM}-Ausgängen wird die Pulsweite - die Dauer der Einschaltzeit - d
 	\centering
 	\includegraphics [width=13cm, height=8cm] {img/pulsweite}
 	% @Note(Val): Quelle des Bilds fehlt hier noch
-	\caption{Pulsweite}
+	\caption{Pulsweitenmodulation}
 	\label{fig:pulsweite}
 \end{figure}
 
 Spezifischer ausgedrück passiert folgendes:
 Eine digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das zwischen Ein und Aus umgeschaltet wird - zu erzeugen.
 Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung und 0V simulieren.
-Dabei wird der Anteil der Zeit geändert, für den das Signal eingeschaltet ist im Vergleich zur Zeit, die das Signal ausgeschaltet ist.
-Um unterschiedliche analoge Werte zu erhalten, wird die Pulsweite geändert bzw. moduliert.
+Dabei wird der Anteil der Zeit geändert, für den das Signal eingeschaltet ist relativ zur Zeit, in der das Signal ausgeschaltet ist.
+Um unterschiedliche, analoge Werte zu erhalten, wird die Pulsweite moduliert.
 Wenn dieses Ein-Aus-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit der LED steuert.
-% @Note(Val): was ist "Vcc" hier?
+% @Note(Val): was ist "Vcc" hier? Diese Abkürzung wurde vorher nicht erklärt
 
 % @Note(Val): Hier wechselst du von Ein, Aus zu HIGH, LOW. Einheitliche Benennung wäre hier sinnvoller
 Auf den Arduino bezogen sieht die Umsetzung eines \ac{PWM} Signals wie folgt aus:
@@ -478,27 +514,28 @@ Ein Taktsignal gelangt in die entsprechende Clock.
 Die Clock stellt den entsprechenden \ac{PWM}-Modus ein.
 Dabei werden zwei wichtige Werte gesetzt:
 Der erste bestimmt, wann das Signal von HIGH auf LOW umschaltet, während der zweite bestimmt, wann es zurückkommt.
-Das Verhältnis zwischen HIGH und LOW wird als Tastverhältnis bezeichnet und bestimmt die Helligkeit unserer LED bzw. die Stärke, mit welcher der Hubmagnet anschlägt.
+Das Verhältnis zwischen HIGH und LOW wird als Tastverhältnis bezeichnet und bestimmt die Helligkeit der LED bzw. die Stärke, mit der der Hubmagnet anschlägt.
 Je länger die Ausgabe im HIGH-Zustand bleibt, desto schneller erfolgt der Tastenanschlag.
 
-Neben dem Tastverhältnis, also das Verhältnis der Einschaltzeit zur Periodendauer, welches oft in Prozent ausgedrückt wird, ist auch die Resolution (de: Auflösung) ein variierbarer Parameter.
-Die Resolution bezieht sich auf die Anzahl der möglichen diskreten Werte, die das Signal annehmen kann.
+Neben dem Tastverhältnis, also dem Verhältnis der Einschaltzeit zur Periodendauer, welches oft in Prozent ausgedrückt wird, ist auch die Auflösung ein variierbarer Parameter.
+Die Auflösung bezieht sich auf die Anzahl der möglichen diskreten Werte, die das Signal annehmen kann.
 
 
 \subsection{Vermehrung der Ausgänge}\label{output}
-Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Ein Arduino hat keine 88 \ac{PWM}-Ports, daher
+
+Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Der gewählte Arduino hat keine 88 \ac{PWM}-Ports, daher
 müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten,
-wobei in dieser Arbeit 2 im Detail betrachtet wurden:
+wobei in dieser Arbeit 2 im Detail betrachtet werden:
 
 \begin{enumerate}
 	\item Schieberegister
 	\item Aktuator-Matrix
 \end{enumerate}
 
-% Wäre es smart zu erwähnen was es noch für Möglichkeiten gibt? Also Arduino Mega muss ich soweiso erwähnen, aber z.B
-% Shields verbinden oder mehrere Arduinos nutzen weil das haben wir ja kurz überlegt und dann relativ schnell verworfen
+% @Note(Jay): Wäre es smart zu erwähnen was es noch für Möglichkeiten gibt? Also Arduino Mega muss ich soweiso erwähnen, aber z.B
+% @Note(Jay): Shields verbinden oder mehrere Arduinos nutzen weil das haben wir ja kurz überlegt und dann relativ schnell verworfen
 
-\paragraph{Schieberegister}
+\subsubsection{Schieberegister}
 Ein Schieberegister ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
 Datenbits verwendet wird.\newline
 Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell in das Register eingegeben und dann
@@ -511,8 +548,11 @@ Diese FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolg
 
 Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des Arduinos agesteuert werden, umzusetzen,
 können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
+
 \paragraph{74HC959 Schieberegister}
-In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses hat folgenden Aufbau: \newline
+In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet.
+Dieses hat folgenden Aufbau:
+
 \begin{minipage}{0.4\textwidth}
 	\includegraphics [width=1\textwidth] {img/Schieberegister}
 \end{minipage}
@@ -524,15 +564,17 @@ In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet. Dieses 
 		\item DS: Data Signal, serieller Dateneingang
 		\item OE: Output Enable, zur Aktivierung der Ausgänge
 		\item SHCP: Shift Clock, Clock-Eingang zur Übernahme Data Signals in Schieberegister
-		\item STCP: Store Clock, Wechsel Low auf High kopiert Inhalt des Schieberegister in Ausgaberegister
-		\item MR: Master Reset, leerung Schift-register
+		\item STCP: Store Clock, Beim Wechsel von LOW auf HIgh wird der Inhalt des Schieberegisters in das Ausgaberegister kopiert % @Note(Val): Selbe Bezeichnung wie oben verwenden. Entweder LOW/HIGH oder AN/AUS
+		\item MR: Master Reset, Leerung des Schift-Registers
 		\item Q7S: Überlauf für Kaskadierung
 	\end{enumerate}
 \end{minipage}
 
+% @Note(Val): Kommt hier noch was oder soll das weg?
 Vorteile des Schieberegisters:\newline
 Nachteile des Schieberegisters:
-\paragraph{Aktuator-Matrix}
+
+\subsubsection{Aktuator-Matrix}
 % @TODO(Jay): Picture Matrix and use muster to explain it for magnets
 Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
 In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
@@ -550,65 +592,73 @@ $$
 $$
 
 Eine LED-Matrix besteht aus einer Anordnung von LEDs in Zeilen und Spalten.
-Jede LED kann unabhängig von den anderen ein- oder ausgeschaltet werden.\newline
-Eine LED-Matrix sieht im Allgemeinen so aus:\newline
-\includegraphics[width=0.45\textwidth]{img/LED-Matrix}
-Die Steuerung der Matrix kann mit oder ohne Multiplexing erfolgen.
+Jede LED kann unabhängig von den anderen ein- oder ausgeschaltet werden.
+Die Steuerung der Matrix kann sowohl mit als auch ohne Multiplexing erfolgen.
 Prinzipiell wird jede Zeile der Matrix nacheinander aktiviert, während die
 entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
-Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM} erscheint es den Betrachter:nnen, als ob alle LEDs
+Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM}-Signalen erscheint es den Betrachter:nnen, als ob alle LEDs
 gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.45\textwidth]{img/LED-Matrix}
+	\caption{Beispielhafte Darstellung einer LED-Matrix}
+	\label{img:LED-Matrix}
+\end{figure}
+
 %ohne Multiplexer
-Matrix ohne Multiplexer:\newline
-Bei einer LED-Matrix ohne Multiplexer werden die LEDs direkt über die GPIO-Pins (General Purpose Input/Output) des
-Mikrocontrollers angesteuert. Jede LED ist einzeln mit einem Pin des Mikrocontrollers verbunden. Um die LEDs anzusteuern,
-muss der Mikrocontroller jeden Pin einzeln aktivieren oder deaktivieren, um die entsprechende LED ein- oder auszuschalten.
+\paragraph{Matrix ohne Multiplexer}
+
+Bei einer LED-Matrix ohne Multiplexer werden die LEDs direkt über die GPIO-Pins (General Purpose Input/Output) des % @Note(Val): Warum GPIO nicht mit in die Abkürzungen nehmen und dann \ac{GPIO}-Pins schreiben?
+\ac{MC}s angesteuert. Jede LED ist einzeln mit einem Pin des \ac{MC}s verbunden. Um die LEDs anzusteuern,
+muss der \ac{MC} jeden Pin einzeln aktivieren oder deaktivieren, um die entsprechende LED ein- oder auszuschalten.
 Hierbei werden viele Pins benötigt, um die gesamte Matrix anzusteuern, was besonders bei größeren Matrizen unpraktisch
-sein kann. Zum Beispiel erfordert eine 8x8-Matrix 64 Pins, was für viele Mikrocontroller zu viel sein kann. \newline
-%Todo(Jay) add picture from Tinkercad
+sein kann. Zum Beispiel erfordert eine 8x8-Matrix 64 Pins, was für viele \ac{MC}s zu viel sein kann.
+% @Note(Val): Statt arbiträren Beispiel wäre hier eher interessant wie viele Pins wir bräuchten und wie viele wir haben
+
+% @TODO(Jay) add picture from Tinkercad
+
 %mit Multiplexer
 %Was ist ein Multiplexer, warum hilft er bei Martix wie sieht allg Schaltung aus?
-Matrix mit Multiplexer: \newline
-Ein Multiplexer (Beziehungsweise ein Demultiplexer) ist eine Schaltung, die es ermöglicht, mehrere Signale auf einem
-einzelnen Kanal zu multiplexen (kombinieren) und dann selektiv zu demultiplexen (trennen)
-Der Schaltkreis basiert auf einfachen Logik gattern.
-In Bezug auf eine LED-Matrix bedeutet dies,
-dass anstatt jeden einzelnen Pin der Matrix direkt mit einem GPIO-Pin des Mikrocontrollers zu verbinden, nur wenige Pins
-benötigt werden, um die Matrix anzusteuern.
-Der Vorteil des Multiplexers - die effizientere Ressourcennutzung - kommt allerdings mit einer komplexeren Schaltung und
-möglichen Latenzen einher.
-% TODO(Jay): Picture from Tinkercad
+\paragraph{Matrix mit Multiplexer}
 
-\paragraph{Entscheidungsfindung}
+Ein Multiplexer (bzw. ein Demultiplexer) ermöglicht das kombinieren mehrerer Signale zu einem bzw. dem Trennen eines einzelnen Signals zu mehreren, unterschiedlichen Signalen.
+Bei einer LED-Matrix kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit einem GPIO-Pin des \ac{MC}s elimniert werden.
+Entsprechend werden weniger Pins benötigt, um die Matrix anzusteuern.
+Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und möglichen Latenzen einher. % @Note(Val): Sind die Latenzen nur "möglich"? Müsste es nicht entweder klar Latenzen erhöhen oder nicht?
+
+% @TODO(Jay): Picture from Tinkercad
+
+
+\subsubsection{Entscheidungsfindung}
+
+% @Note(Val): Die Aktuatoren wurden bereits entschieden und da es hier teilweise um deren spezifischen Eigenschaften geht (z.B. wie viel Strom sie brauchen) ist es vllt besser von Hubmagneten zu sprechen. Aktuatoren im Allgemeinen benötigen ja nicht unbedingt mehr Strom als LEDs z.B.
 Nach weiterer Evaluation der Matrix schien es aus mehreren Gründen schwer möglich, das Prinzip von LEDs auf Aktuatoren
 zu übertragen, weswegen die Entscheidung auf die Verwendung von Schieberegistern fiel. \newline
 Eine LED-Matrix wird, wie bereits erklärt,
-typischerweise durch PWM angesteuert, um den Eindruck zu erwecken, dass alle
+typischerweise durch \ac{PWM} angesteuert, um den Eindruck zu erwecken, dass alle
 LEDs gleichzeitig leuchten, obwohl sie tatsächlich nacheinander aktiviert werden. Dieses Prinzip funktioniert gut für LEDs,
-da sie einen langsamen Reaktionsmechanismus haben und das menschliche Auge träge ist. Da die Aktuatoren via PWM
-angesteuert werden,
-Allerdings gibt es einige Gründe,
-warum dieses Prinzip möglicherweise nicht sinnvoll ist, wenn man präzise Aktuatoren durch dasselbe Prinzip ansteuern
-möchte:
+da sie einen langsamen Reaktionsmechanismus haben und das menschliche Auge träge ist.
+Beim präzisen Ansteuern von Aktuatoren bringt dieses Prinzip jedoch einige Probleme mit sich:
+
 \begin{enumerate}
-	\item Stromversorgung und Energieeffizienz: LED-Matrizen werden oft mit einer relativ niedrigen Leistung betrieben, da
-	LEDs im Vergleich zu Aktuatoren weniger Strom verbrauchen. Aktuatoren benötigen eine höhere Stromversorgung,
+	\item Stromversorgung und Energieeffizienz: LED-Matrizen werden oft mit einer relativ niedrigen Leistung betrieben. Aktuatoren benötigen dagegen eine höhere Stromversorgung,
 	um eine ausreichende Leistung für den Betrieb zu gewährleisten. Die Schaltung, die für eine LED-Matrix optimiert ist,
-	könnte möglicherweise nicht die erforderliche Leistung für die Aktuatoren liefern.
-	\item Interferenz und ungenaue Steuerung durch die Matrixstruktur: Bei der Verwendung einer Aktuatoren-Matrix über PWM
-	könnte es zu Interferenzen kommen, die die Präzision der Steuerung beeinträchtigen. Da die PWM-Signale zeilenweise
-	multiplexiert werden, kann es vorkommen, dass die PWM-Signale nicht mit der benötigten Stärke für jeden Aktuator geliefert
-	werden. Dies liegt daran, dass verschiedene Aktuatoren in derselben Zeile unterschiedliche PWM-Signale benötigen können,
+	könnte möglicherweise nicht die erforderliche Leistung für die Aktuatoren liefern. % @Note(Val): "möglicherweise"? Das klingt als Wissen wir es nicht. Aber wenn wir es nicht wissen, könnte es ja auch besser sein. Und warum wissen wir es nicht? Muss man das unbedingt testen oder was?
+	\item Interferenz und ungenaue Steuerung durch die Matrixstruktur: Bei der Verwendung einer Aktuatoren-Matrix über \ac{PWM}
+	könnte es zu Interferenzen kommen, die die Präzision der Steuerung beeinträchtigen. Da die \ac{PWM}-Signale zeilenweise
+	multiplexiert werden, kann es vorkommen, dass die \ac{PWM}-Signale nicht mit der benötigten Stärke für jeden Aktuator geliefert
+	werden. Dies liegt daran, dass verschiedene Aktuatoren in derselben Zeile unterschiedliche \ac{PWM}-Signale benötigen können,
 	was zu ungenauer Steuerung führen kann. Dies kann zu Kompromissen bei der Präzision und Leistung der Aktuatoren führen.
 	\item Feedback und Regelung: Präzise Aktuatoren erfordern oft ein Feedbacksystem, um ihre Position oder andere Parameter
-	zu überwachen und gegebenenfalls anzupassen. Das Zeilenmultiplexing via PWM bietet jedoch keinen einfachen Weg, um ein
+	zu überwachen und gegebenenfalls anzupassen. Das Zeilenmultiplexing via \ac{PWM} bietet jedoch keinen einfachen Weg, um ein
 	solches Feedback zu integrieren, was die Regelung der Aktuatoren erschweren könnte.
 	\item Komplexität der Schaltung bei selbstgebauter Aktuator-Matrix: Die Implementierung einer Aktuator-Matrix über eine
 	LED-Matrix hinaus wäre technisch anspruchsvoller und erfordert eine komplexere Schaltung. Im Gegensatz dazu ist die
 	Verwendung von Schieberegistern eine einfachere (und bewährte) Methode zur Ansteuerung der Aktuatoren. Der Einsatz von
 	Schieberegistern vereinfacht die Schaltung und erleichtert die Steuerung der Aktuatoren, was insgesamt zu einer
 	zuverlässigeren und Lösung führt.
-	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix eine Vielzahl an Pins, welche der Mikrocontroller
+	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix eine Vielzahl an Pins, welche der \ac{MC}
 	nicht liefert. Da die Matrix verwendet werden sollte um eben dieses Problem zu lösen, schien es nicht sinnvoll
 	das Prinzip einzusetzen.
 	\item Ressourcen: Desweiteren basiert die Entscheidung auf unzureichenden Ressourcen für die Matrix. Im Internet gab es
@@ -660,7 +710,7 @@ eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu verme
 
 \subsubsection{Arduino}
 
-Im Zentrum der Schaltung steht der Mikrocontroller (hier: Arduino Uno R3).
+Im Zentrum der Schaltung steht der \ac{MC} (hier: Arduino Uno R3).
 Dieser erhält Daten und Strom über den integrierten USB-Anschluss, welcher mit dem Computer verbunden wird.
 Da der Arduino limitierte \nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
 Mit jedem \enquote{in Reihe} geschaltetem Schieberegister kann die Anzahl \ac{PWM}-fähiger Ausgänge um 8 erweitert werden.
@@ -708,7 +758,7 @@ Im Folgenden werden speziell n-MOSFETs verwendet, der mit einem Signal zwischen 
 
 Der folgende Aufbau ist für die insgesamt 88 Ausgänge der 11 Schieberegister identisch, da jeder Ausgang für die Ansteuerung genau eines Motors zuständig ist.
 
-Der GATE-Pin des MOSFETs erhält das Signal, dass die ``Durchlässigkeit'' steuert aus einem der Outputs des Schieberegisters.
+Der GATE-Pin des MOSFETs erhält das Signal, dass die \enquote{``Durchlässigkeit''} steuert aus einem der Outputs des Schieberegisters.
 Der SOURCE-Pin wird mit Ground des gesamten Systems verbunden.
 Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunden.
 

@@ -114,6 +114,8 @@
 \addcontentsline{toc}{chapter}{Inhaltsverzeichnis}
 \cleardoublepage
 
+% @Note: Captions of figures & tables that use acronyms have different names in the text and their contentsline here
+% should be fixed by not using the \ac{} command in captions
 % Abbildungsverzeichnis
 \phantomsection
 \addcontentsline{toc}{chapter}{\listfigurename}
@@ -128,10 +130,6 @@
 
 %	Listingsverzeichnis / Quelltextverzeichnis
 \lstlistoflistings
-\cleardoublepage
-
-% Algorithmenverzeichnis
-\listofalgorithms
 \cleardoublepage
 
 % Abkürzungsverzeichnis
@@ -167,7 +165,6 @@
 \input{umsetzungHW}  \acresetall % Reset acronym definitions between hardware-software transition section
 \input{konzeptionSW}
 \input{umsetzungSW}
-\input{ergebnisseSW}
 \input{tests}
 \input{fazit}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

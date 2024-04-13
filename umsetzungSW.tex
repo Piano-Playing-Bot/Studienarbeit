@@ -97,7 +97,17 @@ Hier sind vor allem die Implementierung der Kommmunikation (siehe Abschnitt \ref
 - Parallelisierung basierend auf unabhängigen Codepaths (siehe Blogpost dazu) \newline
 - Thread-Kommunikation über geteilten read-only Speicher \& Mutexes wenn notwendig \newline
 
-% @TODO(Val): Unterkapitel schreiben
+% @TODO(Val): Erste Entscheidung: Raylib nutzen
+
+% @TODO(Val): Immediate Mode vs Retained Mode UI
+
+% @TODO(Val): IM - RM ist ein Spektrum
+
+% @TODO(Val): Raylib API: Abstraktionslevel unter IM/RM UI
+
+% @TODO(Val): ...
+
+% @TODO(Val): Umgang bei Midi-Dateien mit nicht-Piano Instrumenten erklären (vllt gehört das auch eher in die Konzeption)
 
 
 \section{Kommunikation} \label{umsetzungSW-Kommunikation}
@@ -236,3 +246,26 @@ Nichtsdestotrotz konnten Bugs über die Nutzung von Print-Statements gefunden un
 % - Piano Layout (7 Oktaven, 3 Tasten davor, 1 Taste danach)\newline
 % - Werte durch Ausprobieren erraten (Minimaler Wert um Motor anzukriegen; Clock-Rate)\newline
 % - Konstante ‘Framerate’ ohne delay
+
+% @TODO(Val): Am Anfang erwähnen, dass Ergebnisse hier auch vorkommen
+
+\section{Ergebnisse} \label{umsetzungSW-Ergebnisse}
+
+- Was wurde umgesetzt \newline
+- UX und UI Design (kurz) \newline
+- Messungen: \newline
+	- Kommunikationsgeschwindigkeit \newline
+	- FPS beim Arduino \newline
+	- FPS bei UI \newline
+	- FPS bei Comm-Thread der UI \newline
+	- Speicherverbrauch der UI \newline
+	- Code-Komplexität (ist das interessant?) \newline
+	- Lines of Code (i guess?) \newline
+- Limitationen \newline
+	- nur MIDI, kein Image→/Ton→PIDI \newline
+	- UI Design ist verbesserungsfähig \newline
+	- SPPP garantiert keine Datenkonsistenz \newline
+	- SPPP ist nicht auf mehrere Nutzer:innen ausgelegt \newline
+	- Mögliche Fehler in SPPP (siehe Github issue) \newline
+	- siehe Github issues \newline
+	- Es wurde nicht getestet, ob Flash-Speicher (der oftmals ausreichend groß ist) zum Speichern eines gesamten Songs ausgereicht hätte und welche Performanz-Probleme das mit sich gebracht hätte. Dann wäre Streaming unnötig. Wurde aber nicht getestet, ob das überhaupt eine viable Alternative wäre \newline

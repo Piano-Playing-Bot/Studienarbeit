@@ -15,11 +15,38 @@ Nachdem die Planungsphase abgeschlossen war, mussten die Überlegungen umgesetzt
 Im Rahmen dieser Arbeit wurde ein Prototyp gebaut, welcher 8 Tasten anspielen kann.
 Zusätzlich wurden die Elektronik mit LEDs so erweitert, dass man das Drücken von 40 Tasten simulieren kann.
 
-\section{Prototypenbau}
+\section{Materialien}
+\chapterauthor{Jakob Kautz}
+\subsection{Liste der Bauteile}
+%TODO(Jay): Add List
+\subsection{Kostenübernahme}
+Die vorher spezifizierte Hardware für den Schaltplan musste für die Erstellung des Prototypen offensichtlich besorgt werden.
+Aufgrund der Kosten, wurde bei einer der betreuenden Firmen angefragt, ob diese die Kosten für das Projekt übernehmen
+könnte.
+Damit dies möglich war, wurde ein Kostenvoranschlag gestellt, in welchem die benötigten Material mit den geschätzten
+Kosten aufgeführt wurde: \newline
+%TODO(Jay): Add Kostenschätzung
+Der Kostenanschlag erwies sich im Laufe des Projektes als (teils) unrealistisch. Dies lag insbesondere an der Anforderung
+der Firma. Die Schätzung der Kosten basierte auf Anbietern, bei welchen die Materialien möglichst günstig zu kaufen sind.
+Durch Firmenreglungen mussten diese Allerdings alle bei Conrad oder Reichelt
+%Note(Jay): Stimmt das so?
+gekauft werden. Diese Anbieter verkaufen die Materialien für sehr viel mehr Geld. Die tatsächlichen Kosten liefen
+letztendlich also auf folgende Beträge hinaus: \newline
+%TODO(Jay): Tatsächliche Kosten
 
-Die ursprüngliche Idee war ein Aufbau des in Kapitel \ref{subsec:schaltplan} spezifizierten Schaltplans ausschließlich mit Steckbrettern und Jumperkabeln.
-Dies wurde zu Beginn auch umgesetzt, bis aufgefallen ist, dass sie nicht für einen hohen Strom ausgelegt sind.
-Da wir für jede gedrückte Taste 0.7A benötigen und wir ca. 10 Tasten zeitgleich spielen wollen, muss unser Aufbau mind. 7A unterstützen.
+Der Kostenunterschied betrug daher insgesamt .
+%TODO(Jay): Add difference
+Hierbei ist allerdings zu erwähnen, dass die Kostenschätzung passend gewesen wäre, wenn die ANbieter frei wählbar wären.
+
+\section{Prototypenbau}
+Ursprünglich sollte der Aufbau des in Kapitel \ref{subsec:schaltplan} spezifizierten Schaltplans via Steckbrettern und
+Jumperkabeln umgesetzt werden.
+Zu Beginn wurde dies auch so umgesetzt. Das Problem welches dadurch entstand war, dass die gewählten Platinen den
+benötigten Stromfluss nicht aushalten.\newline
+Jeder Aktuator - also jede gedrückte Taste - zieht einen Strom von 0.7A. Um das Projekt möglichst sinnvoll umzusetzen,
+sollte der Aufbau mindestens 10 Tasten gleichzeitig drücken können, was bedeutet, dass der Aufbau mindestens 7.0A
+Stromfluss problemlos ausstehen muss.
+%TODO(Jay): Wie viel halten Platinen aus? Warum konnten wir ein paar Jumper-Kabel nutzen? Wann brauchten wir die dickeren? Tabelle für welche Kabeldicke für welchen Stromfluss
 % @Note(Val): "wir" muss weg
 % @Note(Val): Wann haben wir entschieden, dass min. 10 Tasten gleichzeitig spielbar sein sollen? Wenn wir das als Anforderung haben wollen, muss das im Anforderungs-Kapitel auch erwähnt werden
 

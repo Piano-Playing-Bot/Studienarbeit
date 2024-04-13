@@ -12,7 +12,7 @@
 Das Kernanliegen dieser Arbeit ist die Entwicklung eines multifunktionalen Klaviers,
 das sowohl manuell von Musiker:innen als auch automatisiert durch einen Computer bespielt werden kann.
 
-Da es wünschenswert ist, dass Nutzer auf eine breite Palette fertiger Stücke zugreifen können und diesen einfach, selbstständig erweitern sollen,
+Da es wünschenswert ist, dass Nutzer:innen auf eine breite Palette fertiger Stücke zugreifen und diese selbstständig erweitern können,
 wäre eine Steuerung über den PC sinnvoll.
 Neben der Auswahl von Musikstücken soll die Anwendung außerdem die Möglichkeit bieten,
 die Wiedergabegeschwindigkeit und die Lautstärke individuell anzupassen.
@@ -20,15 +20,21 @@ die Wiedergabegeschwindigkeit und die Lautstärke individuell anzupassen.
 In Anlehnung an die Funktionsweise populärer Musikplayer wird angestrebt,
 dass die Wiedergabe nicht nur pausiert, sondern auch innerhalb eines Stücks frei navigiert werden kann.
 
-% @Note(Val): Finde den erzwungenen Seitenumbruch hier eher unschön
+% @Note(Val): Finde den erzwungenen Seitenumbruch hier eher unschön - gibt es einen Grund den zu haben?
 \newpage
 
 \section{Anforderungen} \label{sec:zielstellung-anforderungen}
 
+% @Note(Val): Die Anforderungen werden nicht motiviert, sondern einfach gestellt.
+% @Note(Val): Für die Desktop-Anwendung habe ich einiges an Motivation für die Anforderungen geschrieben
+% Das ist gerade im Unterkapitel konzeptionSW-UI, aber sollte vielleicht hierher verschoben werden
+% Eine ähnliche Motivation könnte für die restlichen Anforderungen auch geschrieben werden
 Im Folgenden befinden sich die allgemeinen Anforderungen, die an dieses Projekt gestellt wurden,
 um die Arbeit in kleinere Arbeitspakete aufteilen zu können.
 
+% @Note(Kruse): Ggf. erklären was die Priorisierungen hier für uns und unsere Ergebnisse bedeutet
 
+% @TODO(Val): Hinzufügen von
 \begin{table}[ht]
     \centering
     \begin{tabular}{ | m{1cm} | m{2cm} | m{8cm} | m{2cm} | }
@@ -60,25 +66,24 @@ um die Arbeit in kleinere Arbeitspakete aufteilen zu können.
 
 
 
-
-
-
 \section{Vorgehensweise} \label{sec:zielstellung-vorgehen}
 
 In diesem Kapitel wird der geplante Ablauf des Projektes zur Entwicklung eines selbstspielenden Klaviers vorgestellt.
-Die Vorgehensweise ist in mehrere Phasen unterteilt, die das parallele Arbeiten vereinfachen.
+Die Vorgehensweise ist in mehrere Phasen unterteilt, die das parallele Arbeiten vereinfachen. % @Note(Val): Mehrere Phasen vereinfachen nicht das parallele Arbeiten, weil Phasen per Def. nacheinander ablaufen. Wenn dann können wir sagen, dass es in mehrere Teile geteilt wurde. Alternativ können wir auch einfach konkret sagen, dass wir es zwischen Software und Hardware geteilt haben
 
 \subsubsection{Konzeptualisierung und Planung}\label{Vorgehensweise - Konzeptualisierung und Planung}
+% @Note(Val): Soll das hier nur die Konzeptualisierung der Hardware sein?
+% Dann wäre Hardware-Konzeptualisierung oder so besser als Name
+% Dann lässt es sich aber auch mit Hardware-Implementierung zu "Hardware-Entwicklung" zusammen tun
+% Dann wäre es zumindest symmetrisch zu Abschnitt "Software-Entwicklung"
 
 Zu Beginn des Projektes stand die Konzeptualisierung, in der die grundlegenden Anforderungen an das System festgelegt wurden.
 Besondere Aufmerksamkeit galt dabei der Schnittstelle zwischen der Hardware, die durch einen kompakten Mikrocontroller gesteuert wird, und der Software der Desktop-Anwendung.
-Die Planungsphase umfasst:
+Die Planungsphase umfasst: % @Note(Val): Das ist nicht alles die Planungsphase though...
 
-% @Note(Val): Sollten diese Stichpunkte stattdessen im Fließtext eingegliedert werden?
-% @Note(Val): Scheint auch als würden hier viele Punkte noch fehlen, oder?
 \begin{itemize}
     \item Definition der funktionalen Anforderungen an das Klavier. (siehe Kapitel \ref{sec:zielstellung-anforderungen})
-    \item Auswahl der Ansteuerung-Hardware. (siehe Kapitel \ref{vorgehenHW})
+    \item Auswahl der Ansteuerung-Hardware. (siehe Kapitel \ref{konzeptionHW})
     \item Bau der Ansteuerungs-Hardware. (siehe Kapitel \ref{umsetzungHW})
     \item Entwurf des Konzepts für die Desktop-Anwendung. (siehe Kapitel \ref{vorgehenSW})
     \item Entwicklung der Software. (siehe Kapitel \ref{umsetzungSW})

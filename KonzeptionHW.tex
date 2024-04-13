@@ -648,28 +648,29 @@ Beim präzisen Ansteuern von Aktuatoren bringt dieses Prinzip jedoch einige Prob
 	\item Interferenz und ungenaue Steuerung durch die Matrixstruktur: Bei der Verwendung einer Aktuatoren-Matrix über \ac{PWM}
 	könnte es zu Interferenzen kommen, die die Präzision der Steuerung beeinträchtigen. Da die \ac{PWM}-Signale zeilenweise
 	multiplexiert werden, kann es vorkommen, dass die \ac{PWM}-Signale nicht mit der benötigten Stärke für jeden Aktuator geliefert
-	werden. Dies liegt daran, dass verschiedene Aktuatoren in derselben Zeile unterschiedliche \ac{PWM}-Signale benötigen können,
-	was zu ungenauer Steuerung führen kann. Dies kann zu Kompromissen bei der Präzision und Leistung der Aktuatoren führen.
+	werden. Das liegt daran, dass verschiedene Aktuatoren in derselben Zeile unterschiedliche \ac{PWM}-Signale benötigen können,
+	was zu ungenauer Steuerung führen kann. Dies kann zu Kompromissen bei der Präzision und Leistung der Aktuatoren führen. % @Note(Val): Verstehe ich nicht. Jede LED auf der Matrix kann doch unabhängig der anderen angesteuert werden und andere Signale erhalten. Sonst wäre das ja eh nicht nutzbar für uns.
+	% @Note(Val): Wieder viele Konjunktive. Entweder es ist ein Problem oder nicht.
 	\item Feedback und Regelung: Präzise Aktuatoren erfordern oft ein Feedbacksystem, um ihre Position oder andere Parameter
 	zu überwachen und gegebenenfalls anzupassen. Das Zeilenmultiplexing via \ac{PWM} bietet jedoch keinen einfachen Weg, um ein
-	solches Feedback zu integrieren, was die Regelung der Aktuatoren erschweren könnte.
+	solches Feedback zu integrieren, was die Regelung der Aktuatoren erschweren könnte. % @Note(Val): Vorhin wurde doch nur beim Servo-Motor gesagt, dass es ein Feedback-Mechanismus hat. Aber wir verwenden ja Hubmagnete, die vermutlich dann kein Feedback brauchen. Deswegen hier genauer sein als "Aktuator"
 	\item Komplexität der Schaltung bei selbstgebauter Aktuator-Matrix: Die Implementierung einer Aktuator-Matrix über eine
 	LED-Matrix hinaus wäre technisch anspruchsvoller und erfordert eine komplexere Schaltung. Im Gegensatz dazu ist die
-	Verwendung von Schieberegistern eine einfachere (und bewährte) Methode zur Ansteuerung der Aktuatoren. Der Einsatz von
+	Verwendung von Schieberegistern eine einfachere (und bewährte) Methode zur Ansteuerung der Aktuatoren. Der Einsatz von % @Note(Val): inwieweit sind Schieberegister hierfür bewährt?
 	Schieberegistern vereinfacht die Schaltung und erleichtert die Steuerung der Aktuatoren, was insgesamt zu einer
-	zuverlässigeren und Lösung führt.
-	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix eine Vielzahl an Pins, welche der \ac{MC}
+	zuverlässigeren und Lösung führt. % @Note(Val): Du wiederholst dich 2-3 mal, wenn du sagst dass Schieberegister einfacher sind, erklärst aber nicht warum die Matrix eine komplexere Schaltung benötigt
+	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix eine Vielzahl an Pins, welche der \ac{MC} % @Note(Val): Dieser letzte Punkt ist valide aber können wir mMn auch auslassen, wenn wir genug andere Punkte haben
 	nicht liefert. Da die Matrix verwendet werden sollte um eben dieses Problem zu lösen, schien es nicht sinnvoll
-	das Prinzip einzusetzen.
+	das Prinzip einzusetzen. % @Note(Val): Aber mit Multiplexer braucht es doch nicht mehr so viele Pins, oder? Vielleicht konkret berechnen wie viele Pins dann benötigt wären und sagen, dass es immer noch mehr Pins sind als beim Schieberegister?
 	\item Ressourcen: Desweiteren basiert die Entscheidung auf unzureichenden Ressourcen für die Matrix. Im Internet gab es
 	keine ausreichenden Anleitungen/Ressourcen, die die Implementierung einer LED-Matrix mit Aktuatoren ausreichend
-	unterstützen würden. Zusätzlich dazu lieferten die Simulationen via Tinkercad keine befriedigenden Ergebnisse
+	unterstützen würden. Zusätzlich dazu lieferten die Simulationen via Tinkercad keine befriedigenden Ergebnisse % @TODO(Val): Footnote mit Link auf Tinkercad einfügen, falls du Tinkercad erwähnst.
 	für die Aktuator-Matrix.
 	Im Gegensatz dazu sind Schieberegister gut dokumentiert und es gibt ausreichende Ressourcen, um ihre
 	Verwendung für die Ansteuerung von Aktuatoren zu verstehen und umzusetzen.
 \end{enumerate}
-Die Kombination dieser Faktoren führte zu
-unserer Entscheidung, Schieberegister anstelle einer Matrix für die präzise Steuerung der Aktuatoren zu verwenden.
+
+Die Kombination dieser Faktoren führte zu der Entscheidung, Schieberegister anstelle einer Matrix für die präzise Steuerung der Aktuatoren zu verwenden. % @Note(Val): Wurde davor schon gesagt. Der Satz kann eig weg, können wir aber auch lassen, falls du es so besser zu lesen findest
 
 
 \subsection{Transistor}

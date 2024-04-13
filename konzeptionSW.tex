@@ -8,6 +8,9 @@
 \chapter{Konzeption - Software} \label{vorgehenSW}
 \chapterauthor{Val Richter}
 
+% @Note(Val): Die Reihenfolge ist gerade wahrscheinlich falsch herum für Kruse
+% Kruse fände es wahrscheinlich logischer mit der UI zu starten und dann PIDI-Format, MC & Kommunikation zu besprechen
+
 Wie in Kapitel \ref{Zielstellung} beschrieben, soll eine Desktop-Anwendung für die Nutzer:innen-Interaktion mit dem selbst-spielenden Klavier erstellt werden.
 Die Anwendung soll im Folgenden als \enquote{\ac{SAM}} bezeichnet werden.
 Die fundamentale Aufgabe der Anwendung liegt im Verwalten und Spielen von Musikstücken auf dem selbst-spielenden Klavier.
@@ -567,10 +570,10 @@ Auch sollen Kontrollmöglichkeiten bei der Wiedergabe zur Verfügung stehen.
 
 Der Haupt-Use-Case besteht hierbei im Suchen und nachfolgendem Abspielen eines Musikstücks, während das Hinzufügen neuer Musik zum sofortigen oder späteren Abspielen einen zweiten Use-Case abbildet.
 Diese Rangfolge der Use Cases sollte auch im Design der \ac{UI} wiedergespiegelt sein.
-Ein Ansatz dafür wäre die Teilung der \ac{UI} in zwei Screens, wobei der erste, im Normalfall angezeigte Screen den Katalog darstellt, und der zweite Screen den Import von Musikstücken behandelt. % @Question(Val): Ist die Verwendung von 'Screen' hier verständlich? Gibt es ein besseres Wort dafür?
-Alternativ könnten beide Funktionalitäten auch auf einem einzelnen Screen untegebracht werden mit der Gefahr, die Nutzer:in damit zu überfordern.
+Ein Ansatz dafür wäre die Teilung der \ac{UI} in zwei Seiten, wobei die erste, im Normalfall angezeigte Seite den Katalog darstellt, und die zweite Seite den Import von Musikstücken behandelt.
+Alternativ könnten beide Funktionalitäten auch auf einer einzelnen Seite untegebracht werden mit der Gefahr, die Nutzer:in damit zu überfordern.
 Die selbe Frage stellt sich ebenso für die Wiedergabe.
-Diese kann entweder auf dem selben Screen mitunter gebracht werden oder auf einen seperaten Screen gebracht werden.
+Diese kann entweder auf der selben Seite mit unter gebracht werden oder auf einer seperaten Seite gebracht werden.
 
 Da die Anwendung möglichst intuitiv und leicht erlernbar sein soll, ist es bei diesen Fragen sinnvoll, ein ähnliches Design zu ähnlichen, bekannten Anwendungn zu verwenden.
 Hier sollen vor allem der \enquote{\ac{WMP}} und \enquote{Spotify} zum Vergleich genommen werden.
@@ -622,15 +625,36 @@ Bei \ac{WMP} und Spotify ergibt dies Sinn, da die Nutzer:innen speziell dafür P
 Um den Rahmen dieser Arbeit nicht zu groß zu gestalten, wurde sich jedoch entschieden nur einen Katalog zu haben und diese Kontrollelemente entsprechend auszulassen.
 
 Wie bei \ac{WMP} und Spotify auch, soll die Wedergabe mit Timeline und Kontrollelementen am unteren Rand des Bildschirms angeordnet sein.
-Ein eigener Screen wird für die Wiedergabe entsprechend nicht benötigt.
-Eine Überlastng des Designs und Überforderung der Nutzer:innen ist hierbei ebenfalls nicht zu erwarten, da diese Nutzer:innen eine solche Aufteilung eines einzelnen Screens bereits von \ac{WMP}, Spotify und ähnlichen Anwendungen gewohnt sind.
+Eine eigene Seite wird für die Wiedergabe entsprechend nicht benötigt.
+Eine Überlastng des Designs und Überforderung der Nutzer:innen ist hierbei ebenfalls nicht zu erwarten, da diese Nutzer:innen eine solche Aufteilung einer einzelnen Seite bereits von \ac{WMP}, Spotify und ähnlichen Anwendungen gewohnt sind.
 
 Zuletzt ist nun noch das Hinzufügen von Musikstücken zu beachten.
+Es gibt viele Anwendungen und Webseiten, bei denen Nutzer:innen Dateien hochladen können.
+Es gibt zwei Standardwege, um Dateien zu importieren.
+Entweder gibt es einen Button, der ein Pop-Up im Stile eines Dateiverwaltungssystems öffnet und die Nutzer:in daraus eine Datei auswählen lässt.
+Ein etwas jüngerer und moderner Weg ist über Drag-n-Drop, wobei die Datei aus dem File Explorer in die Anwendung geschoben wird.
+Beide Methoden benötigen keine seperaten Seiten, die Drag-n-Drop Methode mag ohne Anweisung aber nicht offensichtlich sein.
+Ob eine solche Aweisung gut lesbar auf der selben Startseite eingebracht werden kann, ist fragwüdig.
 
+Sollte die Nutzer:in nach dem Import Konfigurationen vornehmen können, ist es sinnvoll eine neue Seite dafür aufzumachen.
+In zukünftigen Erweiterungen der Anwendung, könnten womöglich zuätzliche Informationen abgefragt oder aus der Datei extrahiert und von der Nutzer:in kontrolliert werden.
+Für diese Arbeit soll \ac{SAM} aber wie erwähnt nur die Namen der Musikstücke speichern. Dieser Name könnte sowohl vom Dateinamen übernommen werden oder falls möglich aus Metadaten, die in der Datei gespeichert sind, extrahiert werden.
+Weiterhin wäre es hier wünschenswert, wenn die Nutzer:in den automatisch extrahierten Namen nach Belieben ändern kann.
+Wenn Musikstücke während des Imports umbenannt werden können, sollte es auch später möglich sein, sie noch umzubenennen.
+Ebenso sollte es möglich sein, hnzugefügte Musikstücke später wieder löschen zu können.
 
-% @TODO(Val): Ablauf für Import
-% Datei auswählen (unterstützte Dateiformate) (Fehler möglich)
-% Namen spezifzieren (Fehler möglich)
-% Abbruch-Möglichkeit
+Änderungen an Musikstücken sollten dabei über Eingaben direkt beim dargestellten Musikstück möglich sein.
+Das besagt das UI Design Pattern \enquote{Make it direct}, welches einer intuitiveren Nutzung verhilft.
+Beim Darstellen der Musikstücke sollte entsprechend der Name angezeigt werden, sowie eine Möglichkeit zum Abspielen, Anpassen des Namens und zum Löschen des Musikstücks.
+Wie bereits erwähnt, soll während der Entwicklung experimentell herausgefunden werden, wie diese Aspekte am geschicktesten anzuordnen sind.
 
-% @TODO(Val): Mockups unterschiedlicher Design Möglichkeiten
+Beim Importieren von Musikdateien sollen außerdem falls möglich mehrere Dateiformate akzeptiert werden.
+Der Anforderungstabelle \ref{table:anforderungen} nach, hat das Akzeptieren von \ac{MIDI}-Dateien die höchste Priorität, während andere Dateiformate optional sind.
+
+Zuletzt ist beim Import noch zu beachten, dass die Nutzer:in jederzeit den Import abbrechen können sollte.
+Wenn eine neue Seite angezeigt wird, kann dies über einen links-gerichteten Pfeil gekennzeichnet werden, der u.a. in Browsern als Symbol verwendet wird, um auf die vorherige Seite zu kommen.
+Ansonsten ist ein Button mit dem Text \enquote{Abbrechen} auch intuitiv verständlich.
+
+% @Note(Val): Dieses Kapitel nennt eigentlich nur unterschiedliche Möglichkeiten. Wirkliche Entscheidungen habe ich hier nicht getroffen -> sollte wahrscheinlich geändert werden.
+
+% @Note(Val): Mockups unterschiedlicher Design Möglichkeiten wären schön

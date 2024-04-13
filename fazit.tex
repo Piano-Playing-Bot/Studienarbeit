@@ -11,67 +11,65 @@
 Die Arbeit umfasst eine erfolgreiche Konzeption und Entwicklung des selbstspielenden Pianos, wobei alle in der Zielstellung
 definierten Features erfüllt werden konnten: \newline
 
-\begin{tabular}{| m{4cm} | m{8cm} |}
-    \hline
-    \textbf{Anforderung} &  \textbf{Status}  \\
-    \hline
-    Flexibilität & Erfüllt: Die Aktuatoren werden von manuellen Tastendrücken nicht beeinflusst \\
-    \hline
-    Benutzerinterface & Erfüllt \\
-    \hline
-    Responsivität & Erfüllt \\
-    \hline
-    Tastenbetätigung & Erfüllt: Die verbundenen Tasten können erfolgreich betätigt werden, wobei die Anzahl der Tasten auf
-    40 reduziert wurde\\
-    \hline
-    Anpassbarkeit & Erfüllt: Die Elektronik und Mechanik sind nicht Klavier-abhängig, wobei der Fußraum zum befästigen der Aktuatoren
-    gegeben sein muss oder das Ansteuerungskonzept geändert werden müsste\\
-    \hline
-    Musikstück-Auswahl & Erfüllt \\
-    \hline
-    Wiedergabe-Kontrolle & Erfüllt \\
-    \hline
-    Navigation & Erfüllt \\
-    \hline
-    MIDI-Integration & Erfüllt \\
-    \hline
-\end{tabular} \newline
-%Note(Jay) help this sounds
-Insgesamt konnten im laufe des Projektes viele Erkenntnisse getroffen werden.
-Im Bereich der Hardware umfassen diese ein vertieftes Verständnis für Elektronik, zum Beispiel der Bedeutung der
-Kabeldicke, der Stromversorgungsanforderungen und der Notwendigkeit einer gründlichen Vorplanung.
-Letztendlich gab es viele Dinge die gut liefen, wie auch welche, die Nachträglich anders angegangen werden sollten.
-Positiv zu vermerken ist die erfolgreiche Funktionalität des Schaltplans nach einigen Anpassungen sowie die hilfreiche
-Nutzung von Tinkercad als Simulationswerkzeug.
-Herausforderungen ergaben sich aus dem Zeitmanagement, dem erstmaligen Testen der Schaltung und
-der Sicherheit im Umgang mit Elektronik, insbesondere aufgrund des begrenzten Vorwissens der Teammitglieder. Die
-Projektgröße und die höheren als erwarteten Kosten, insbesondere durch Preisunterschiede bei den Aktuatoren zwischen
-verschiedenen Bezugsquellen, stellten zusätzliche Herausforderungen dar.
-Die Erfahrung aus dem Projekt bietet wertvolle Erkenntnisse im Projektmanagement, in der Recherche und im
-Fachwissen. Es ist jedoch zu beachten, dass der Bau eines selbstspielenden Klaviers mit erheblichem Arbeitsaufwand und
-unvorhersehbaren Kosten verbunden ist.
+% @TODO(Val): Remember to update this when updating the Anforderungen-table in chapter 2
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|m{4cm}|m{8cm}|}
+        \hline
+        \textbf{Anforderung} &  \textbf{Status}  \\
+        \hline
+        Flexibilität & Erfüllt: Die Aktuatoren werden von manuellen Tastendrücken nicht beeinflusst \\
+        \hline
+        Benutzerinterface & Erfüllt \\
+        \hline
+        Responsivität & Erfüllt \\
+        \hline
+        Tastenbetätigung & Erfüllt: Die verbundenen Tasten können erfolgreich betätigt werden, wobei die Anzahl der Tasten auf
+        40 reduziert wurde\\ % @Note(Val): Bei der Umsetzung wird gerade noch gesagt, dass der Prototyp nur 8 Tasten anspielen kann. Dieser Wert (ob 8 oder 40 oder sonst was) muss einheitlich in der Arbeit sein
+        \hline
+        Anpassbarkeit & Erfüllt: Die Elektronik und Mechanik sind nicht Klavier-abhängig, wobei der Fußraum zum befästigen der Aktuatoren
+        gegeben sein muss oder das Ansteuerungskonzept geändert werden müsste\\
+        \hline
+        Musikstück-Auswahl & Erfüllt \\
+        \hline
+        Wiedergabe-Kontrolle & Erfüllt \\
+        \hline
+        Navigation & Erfüllt \\
+        \hline
+        MIDI-Integration & Erfüllt \\
+        \hline
+    \end{tabular}
+    \caption{Ergebnisse der Anforderungen}
+    \label{table:anorderungen-ergebnis}
+\end{table}
 
-Im größeren Kontext betrachtet, wurde das Projekt initiiert, um die eigene Umsetzung selbstspielender Klaviere
-im Gegensatz zu fertig gekauften Player-Pianos zu untersuchen.
-Die Ergebnisse zeigen, dass selbstgebaute Varianten im Vergleich zu käuflichen Produkten erhebliche Kosteneinsparungen
-ermöglichen, jedoch mit einem erheblichen Zeitaufwand und komplexeren Anpassungsmöglichkeiten einhergehen. Gekaufte Versionen
-bieten möglicherweise eine höhere Qualität und eine elegantere Ästhetik, erfordern jedoch erhebliche finanzielle
-Investitionen.
+% @Note(Jay) help this sounds
+Insgesamt konnten im Laufe des Projekts viele Erkenntnisse getroffen werden.
+Im Bereich der Hardware umfassen diese ein vertieftes Verständnis für Elektronik, zum Beispiel der Bedeutung der Kabeldicke, der Stromversorgungsanforderungen und der Notwendigkeit einer gründlichen Vorplanung. % @Note(Val): Mit Außnahme der Stromversorgungsanforderungen wird im Text davor nicht wirklich erklärt, was wir daran hätten lernen können. Kabeldicke kam nie vor und so wie wir es geschrieben haben, haben wir ja gründlich vorher geplant, also gibt es da eigentlich nichts zu lernen von, oder?
+Letztendlich gab es viele Dinge die gut liefen, wie auch welche, die rückblickend anders getan hätten sollten.
+Positiv zu vermerken ist die erfolgreiche Funktionalität des Schaltplans nach einigen Anpassungen sowie die hilfreiche Nutzung von Tinkercad als Simulationswerkzeug. % @Note(Val): Tinkercad wurde vorher in einem einzelnen Nebensatz erwähnt. Wenn wir es im Fazit haben wollen, sollte es bei der Konzeption des Schaltplans vllt. nochmal einen eigenen Satz bekommen oder so
+Herausforderungen ergaben sich vor allem im Zeitmanagement, dem erstmaligen Testen der Schaltung und der Sicherheit im Umgang mit Elektronik, insbesondere aufgrund des begrenzten Vorwissens der Teammitglieder. % @Note(Val): Erneut, es ist unklar worauf sich das bezieht. Hat sich jemand verletzt? Wo ist die Lehre, die auch eine Leser:in daraus ziehen kann?
+Die Projektgröße und die höheren als erwarteten Kosten, insbesondere durch Preisunterschiede bei den Aktuatoren zwischen verschiedenen Bezugsquellen, stellten zusätzliche Herausforderungen dar. % @Note(Val): siehe obige Anmerkung
+Die Erfahrung aus dem Projekt bietet wertvolle Erkenntnisse im Projektmanagement, in der Recherche und im Fachwissen.
+Es ist jedoch zu beachten, dass der Bau eines selbstspielenden Klaviers mit erheblichem Arbeitsaufwand und unvorhersehbaren Kosten verbunden ist. % @Note(Val): Fazit also, dass Menschen es nicht machen sollten?
+
+Im größeren Kontext betrachtet, wurde das Projekt initiiert, um den benötigten Aufwand für die Eigenentwicklung selbstspielender Klaviere im Gegensatz zu fertig gekauften Player-Pianos zu untersuchen. % @Note(Val): "Player-Piano" kam so als Begriff nie auf und ist womöglich verwirrend
+Die Ergebnisse zeigen, dass selbstgebaute Varianten im Vergleich zu käuflichen Produkten erhebliche Kosteneinsparungen ermöglichen, jedoch mit einem erheblichen Zeitaufwand und komplexeren Anpassungsmöglichkeiten einhergehen.
+Gekaufte Versionen bieten möglicherweise eine höhere Qualität und eine elegantere Ästhetik, erfordern jedoch erhebliche finanzielle Investitionen.
 Was Features betrifft, sind diese beim selbst bauen leichter anzupassen.
-Dafür ist allerdings die Funktionsfähigkeit und  Mindesthaltbarkeit nicht garantiert. \newline
-Insgesamt steht fest, dass das Projekt ein Player-Piano selber zu bauen für die Menschen sinnvoll ist, die
-gerne ausprobieren und viel Zeit (rund 40h nur für das Löten der hälfte der Schaltung) für solche Projekte aufbringen.
-Es kann auf jeden Fall sehr viel Erfahrung im Bereich Projektmanagement, Recherche und natürlich Fachbezogenes Wissen
-mitgenommen werden. Vorab sollte allerdings klar sein, dass das Projekt einen hohen Zeitaufwand und - je nach Anbieter der
-Hardware - unerwartet Hohe Kosten mit sich bringt.
+Dafür ist allerdings die Funktionsfähigkeit und  Mindesthaltbarkeit nicht garantiert.
+
+Insgesamt steht fest, dass das Projekt, ein Player-Piano selber zu bauen, für jene Menschen sinnvoll ist, die gerne ausprobieren und viel Zeit (rund 40h nur für das Löten der Hälfte der Schaltung) für solche Projekte aufbringen. % @Note(Val): Grobe Schätzung zum benötigten Zeitaufwand, um alles aufzubauen wäre hier sehr interessant. Wenn Schaltplan bereits steht und alle benötigte Hardware da ist, wie lange braucht es dann die Hardware aufzubauen? Weil wenn das nur 80h oder so sind, dann wäre das mMn voll machbar und gut zu empfehlen. Falls diese Schätzungen auch noch auf die einzelnen Aufgaben aufgeteilt werden könnte (Zeit fürs Löten, Zeit für Befestigung der Aktuatoren, etc.), dann wäre das sehr sinnvoll.
+% @Note(Val): Wenn wir hier auch die Kosten noch nennen könnten, die für die Einzelteile benötigt werden (vielleicht auch im Vergleich unserer Quelle und Alibaba oder so), dann hätten wir unseere Frage vom Start der Arbeit komplett beantwortet.
+Es kann auf jeden Fall sehr viel Erfahrung im Bereich Projektmanagement, Recherche und natürlich Fachbezogenes Wissen mitgenommen werden. % @Note(Val): Wer kann das mitnehmen? Wir? Die Menschen, die unseren Beispiel folgend auch ein selbstspielendes Klavier bauen?
+Vorab sollte allerdings klar sein, dass das Projekt einen hohen Zeitaufwand und - je nach Anbieter der Hardware - unerwartet Hohe Kosten mit sich bringt.
+% @Note(Val): Inwieweit sind die Kosten unerwartet? Die stehen doch auf der Webseite und können schnell berechnet werden. Bei uns waren sie nur unerwartet, weil wir einen anderen Anbieter verwenden mussten als erwartet. Ansonsten sind die Kosten aber sehr erwartbar.
 
 
 \section{Ausblick}
 
-Für zukünftige Entwicklungen bieten sich zahlreiche Möglichkeiten sowohl im Software- als auch im Hardwarebereich des
-Projekts. Auf der Hardwareseite könnten ein verbessertes Sicherheitskonzept für Elektronik, die Fertigstellung der
-Schaltungen für die restlichen Aktuatoren und die Untersuchung von Schalldämmungstechniken in Betracht gezogen werden.
+Für zukünftige Entwicklungen bieten sich zahlreiche Möglichkeiten sowohl im Software- als auch im Hardwarebereich des Projekts an.
+Auf der Hardwareseite könnten ein verbessertes Sicherheitskonzept für Elektronik, die Fertigstellung der Schaltungen für die restlichen Aktuatoren und die Untersuchung von Schalldämmungstechniken in Betracht gezogen werden.
 In Bezug auf Softwareverbesserungen könnte die Unterstützung weiterer Dateiformate wie PDF neben MIDI erwogen werden.
-Es ist zu beachten, dass Projekte dieser Art selten abgeschlossen sind, da ständig neue Funktionen hinzugefügt und
-Verbesserungen vorgenommen werden können.
+Es ist zu beachten, dass Projekte dieser Art selten abgeschlossen sind, da ständig neue Funktionen hinzugefügt und Verbesserungen vorgenommen werden können.
 

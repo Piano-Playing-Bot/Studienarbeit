@@ -546,15 +546,91 @@ Auf den ersten Blick mag das nach weiterer Arbeit klingen, diese Logik sollte zu
 Entsprechend ist es kein weiterer Aufwand in der Ausführung oder Entwicklung des \ac{MC}s.
 
 \section{Desktop Anwendung} \label{vorgehenSW-UI}
-\begin{enumerate}
-    \item UI Design-Plan
-    \item Design Mock-Ups (?)
-    \item Theoretische Grundlagen von UI
-    \item Strukturierung der 3 Hauptaufgaben (Import, Kommunikation, UI)
-\end{enumerate}
 
 \ac{SAM} soll den Nutzer:innen eine Schnittstelle zum Anspielen des Pianos bieten.
-Zum Konzipieren der Anwendung sollten zuerst die Use Cases ausformuliert werden.
-Zusätzlich sollten auch bestehende Standards von \ac{UI}s mit ähnlichen Use Cases beachtet werden, um eine intuitiv nutzbare Nutzeröberfläche für die gegebenen Use Cases zu erstellen.
+Den in Tabelle \ref{table:anforderungen} genannten Anforderungen nach, soll es der Nutzer:in möglich sein Musikstücke aus einem Katalog auszuwählen und dem Katalog neue Stücke hinzuzufügen.
+Weiterhin soll die Wiedergabe über die \ac{UI} steuerbar sein.
+In diesem Kapitel soll diese Anforderungen an die Anwendung genauer spezifiziert werden.
+Zusätzlich soll ein Konzept für das\ac{UI} Design entwickelt werden.
+Diese Planung ist dabei noch nicht direkt mit der Umsetzung oder der Architektur des Codes beschäftigt.
 
-% @TODO(Val): Rest schreiben
+Aus Sicht der Nutzer:innen hat \ac{SAM} zwei entsprechende Aufgaben:
+\begin{enumerate}
+    \item Musik-Verwaltung
+    \item Musik-Wiedergabe
+\end{enumerate}
+
+Die Musik-Verwaltung beinhaltet dabei das Hinzufügen neuer Musikstücke und die Darstellung des Katalogs.
+Um auch die Nutzung eines großen Katalogs leicht möglich zu machen, soll es auch eine Möglichkeit zum Suchen von Musikstücken nach Namen geben.
+Bei der Musik-Wiedergabe muss dagegen mit dem \ac{MC} und somit indirekt mit dem Piano kommuniziert werden.
+Auch sollen Kontrollmöglichkeiten bei der Wiedergabe zur Verfügung stehen.
+
+Der Haupt-Use-Case besteht hierbei im Suchen und nachfolgendem Abspielen eines Musikstücks, während das Hinzufügen neuer Musik zum sofortigen oder späteren Abspielen einen zweiten Use-Case abbildet.
+Diese Rangfolge der Use Cases sollte auch im Design der \ac{UI} wiedergespiegelt sein.
+Ein Ansatz dafür wäre die Teilung der \ac{UI} in zwei Screens, wobei der erste, im Normalfall angezeigte Screen den Katalog darstellt, und der zweite Screen den Import von Musikstücken behandelt. % @Question(Val): Ist die Verwendung von 'Screen' hier verständlich? Gibt es ein besseres Wort dafür?
+Alternativ könnten beide Funktionalitäten auch auf einem einzelnen Screen untegebracht werden mit der Gefahr, die Nutzer:in damit zu überfordern.
+Die selbe Frage stellt sich ebenso für die Wiedergabe.
+Diese kann entweder auf dem selben Screen mitunter gebracht werden oder auf einen seperaten Screen gebracht werden.
+
+Da die Anwendung möglichst intuitiv und leicht erlernbar sein soll, ist es bei diesen Fragen sinnvoll, ein ähnliches Design zu ähnlichen, bekannten Anwendungn zu verwenden.
+Hier sollen vor allem der \enquote{\ac{WMP}} und \enquote{Spotify} zum Vergleich genommen werden.
+Es ist davon auszugehen, dass die meisten Nutzer:innen mit mindestens einer der beiden Anwendungen vertraut ist.
+Selbst wenn nicht, sind beide Anwendungen bekannt genug, um vergleichbare Apps im Design inspiriert zu haben.
+
+Sowohl \ac{WMP} als auch Spotify bieten die Möglichkeit zum Betrachten von Katalogen - sogenannten Playlists - an.
+Beide bieten auch die Möglichkeit an, mehere Playlists zu erstellen.
+Im Rahmen dieser Arbeit soll eine solche Funktionalität nicht angeboten werden.
+Stattdessen soll \ac{SAM} nur einen einzigen Katalog zur Verfügung stellen.
+\ac{WMP} und Spotify bieten außerdem beide die Möglichkeit zum Abspielen von Musik.
+Das Importieren von Musik ist dagegen so direkt bei beiden Apps nicht möglich.
+Deshalb muss dafür eine andere Anwendung zum Vergleich gezogen werden.
+
+Das Öffnen beider Anwendung liefert ein Startbildschirm, der u.a. auf die unterschiedlichen, vorhandenen Playlists verlinkt.
+Da \ac{SAM} nur eine Playlist hat, wäre dies unnötig und würde die Nutzung der Anwendung nur verlangsamen.
+Stattdessen bietet es sich hier an, den Katalog direkt zu zeigen.
+
+Für die Darstellung des Katalogs gibt es mehere Ansätze.
+So stellt \ac{WMP} Listen von Ordnern als Quadrate an, die von links nach rechts und von oben nach unten angeordnet sind.
+Bei der Anzeige einer Playlist, werden die Songs dagegen nur von oben nach unten sortiert und jeder Song nimmt die gesamte horizontale Breite des Fensters ein.
+Spotify nutzt gleichermaßen beide Verfahren, einmal zum Anzeigen von Playlists und Songs.
+Die selben Anzeigemöglichkeiten lassen sich auch in Windows' \enquote{File Explorer} und den Gegenstücken anderer Betriebssysteme dazu finden.
+Es ist dabei bei allen genanntn Beispielen der Fall, dass die Listen-Darstellung zum Anzeigen weiterer Informationen neben dem Namen verwendet wird.
+So verlinkt Spotify in der Listen-Ansicht au die Sänger:innen, das Album des Songs und zeigt zusätzlich die Länge und das Hinzufügedatum des Songs an.
+
+Während es viele Infomationen zu einem Musikstück gibt, die für die Nutzer:innen von \ac{SAM} potenziell interessant zu sehen wären, soll im Rahmen dieser Arbeit nur der Name eines Musikstücks gespeichert und angezeigt werden.
+Entsprechend scheint sich eine Listen-Ansicht nicht unbedingt zu lohnen, da womöglch viel Platz damit ungenutzt bleiben würde.
+Die Darstellung in Rechteck Form ist dagegen auch nicht ideal.
+In den genannten Beispielen wird das Rechteck für ein Bild verwendet, während der Name des Elements unter oder rechts neben dem Bild steht.
+Es ist hier jedoch nicht offensichtlich, wie unterschiedliche Bilder für die Musikstücke gefunden werden könnten.
+Während der Entwicklung sollten falls möglich mehrere Versionen agil ausprobiert werden, um die sinnvollste Darstellung für \ac{SAM} zu finden.
+
+% @Question(Val): Bilder von WMP und Spotify einfügen?
+
+Wie die Wiedergabe gestaltet werden sollte ist dagegen um eindeutiger.
+Sowohl \ac{WMP} als auch Spotify stellen eine Timeline des Musikstücks als einen mit der Zeit ausfüllenden Balkens dar.
+Spotify zeigt beim Hovern über die Leiste auch noch einen Kreis beim derzeitigen Punkt im Musikstück dar.
+Somit erlaubt Spotify das Navigieren im Song sowohl durch Klicken auf einen Punkt in der Timeline als auch durch Drag-n-Drop des Kreises.
+
+Weiterhin stellen beide Anwendungen ober oder unterhalb der Timeline auch noch Buttons für die Kontrollwiedergabe dar.
+In beiden fällen gibt es Buttons zum Pausieren und Fortfahren der Musik, sowie fürs Springen zum nächsten oder vorherigen Song und zum Ein- und Austellen einer \enquote{Shuffle} und einer \enquote{Loop} Funktion.
+Zusätz.ich bieten beide Anwendungen auch einen Lautstärkeregler an.
+Dieser besteht in beide Fällen aus einem teilweise ausgefüllten Balken und einem Lautsprechersymbol, das je nach ausgewählter Lautstärke leicht anders dargestellt wird.
+Da beide Anwendungen außerdem beim Klicken auf das Lautsprechersymbol, die Lautstärke auf null bzw. wieder zurück auf den vorherigen Wert setzen, soll \ac{SAM} die selbe Funktionalität anbieten.
+Die Kontrollelemente sollen von \ac{SAM} generell in gleicher Art implementiert werden.
+Die Mögichkeiten des Shuffle, Looping und zum nächsten bzw. vorherigen Song zu springen nehmen implizit an, dass bei Abspielen eines Songs der gesamte Katalog in einer bestimmten Reihenfolge abgespielt werden soll.
+Bei \ac{WMP} und Spotify ergibt dies Sinn, da die Nutzer:innen speziell dafür Playlists erstellen könne.
+Um den Rahmen dieser Arbeit nicht zu groß zu gestalten, wurde sich jedoch entschieden nur einen Katalog zu haben und diese Kontrollelemente entsprechend auszulassen.
+
+Wie bei \ac{WMP} und Spotify auch, soll die Wedergabe mit Timeline und Kontrollelementen am unteren Rand des Bildschirms angeordnet sein.
+Ein eigener Screen wird für die Wiedergabe entsprechend nicht benötigt.
+Eine Überlastng des Designs und Überforderung der Nutzer:innen ist hierbei ebenfalls nicht zu erwarten, da diese Nutzer:innen eine solche Aufteilung eines einzelnen Screens bereits von \ac{WMP}, Spotify und ähnlichen Anwendungen gewohnt sind.
+
+Zuletzt ist nun noch das Hinzufügen von Musikstücken zu beachten.
+
+
+% @TODO(Val): Ablauf für Import
+% Datei auswählen (unterstützte Dateiformate) (Fehler möglich)
+% Namen spezifzieren (Fehler möglich)
+% Abbruch-Möglichkeit
+
+% @TODO(Val): Mockups unterschiedlicher Design Möglichkeiten

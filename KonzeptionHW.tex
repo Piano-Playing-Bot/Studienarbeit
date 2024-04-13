@@ -48,6 +48,7 @@ Dieses muss einige Voraussetzungen erfüllen:
 
 
 \subsection{Ansteuerungskonzept} \label{konzeptionHW-ansteuerungskonzept}
+\chapterauthor{Jakob Kautz}
 % @Note(Val): mMn fehlt ein Satz hier oder irgendwann davor, dass Aktuatoren benötigt werden. Ist vielleicht offensichtlich, aber ein Satz der Form: "Zum automatischen Anspielen des Klaviers benötigt es Aktuatoren" oder so.
 Das Ansteuerungskonzept für die Tasten eines Klaviers erfordert eine Betrachtung der Befestigungsorte für
 die Aktuatoren. Eine grundlegende Überlegung ist, ob die Saiten oder die Tasten selbst angespielt werden sollen. % @Note(Val): Würde vllt. klarer machen, dass es um das direkte Ansteuern der Tasten bzw. Saiten geht, weil die Saiten (indirekt) ja in jedem Fall angespielt werden (sonst gäbe es ja keinen Ton, soweit ich Pianos verstehe)
@@ -100,7 +101,7 @@ Insgesamt fiel die Entscheidung deshalb auf die Strategie des Ziehens von unten.
 Bei diesem Ansatz wird die geringste mechanische Präzision benötigt und das Klavier ist trotz Montage des Bots noch manuell spielbar.
 
 \subsection{Aktuator}\label{subsec:aktuator}
-
+\chapterauthor{Jakob Kautz}
 % @Note(Val): Warum kommt hier eine Definition von Aktuatoren, wenn das Wort vorher schon frei verwendet wurde
 % Entweder setzen wir voraus, dass die Leser:innen wissen, was ein Aktuator ist, oder die Definition muss früher kommen
 Die Aktuatoren werden für die Steuerung der Tasten benötigt.
@@ -206,6 +207,7 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 \newpage
 
 \subsection{Verbindung Tasten und Aktuatoren} \label{subsec:VerbindungTastenAktuatoren}
+\chapterauthor{Olivier Stenzel}
 
 Wie in Kapitel \ref{konzeptionHW-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
 Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt. \newline
@@ -433,6 +435,7 @@ Um das \enquote{Problem} der schlechten Ästetik beim Schaumstoff zu beseitigen,
 \section{Elektronik}\label{konzeptionHW-elektronik}
 
 \subsection{Mikrocontroller}\label{Ansteuerung}
+\chapterauthor{Jakob Kautz}
 Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein \ac{MC} gut geeignet.
 Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung, wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
 
@@ -481,6 +484,7 @@ Der Arduino Uno verfügt zwar über mehr Ports, allerdings bringt dies keinen Me
 Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM} Pins, die im Rahmen des Projekts genutzt werden können.
 
 \subsection{Pulsweitenmodulation}\label{PWM}
+\chapterauthor{Jakob Kautz}
 Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert.
 Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. benötigt.
 In diesen Fällen muss die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
@@ -522,7 +526,7 @@ Die Auflösung bezieht sich auf die Anzahl der möglichen diskreten Werte, die d
 
 
 \subsection{Vermehrung der Ausgänge}\label{output}
-
+\chapterauthor{Jakob Kautz}
 Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Der gewählte Arduino hat keine 88 \ac{PWM}-Ports, daher
 müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten,
 wobei in dieser Arbeit 2 im Detail betrachtet werden:
@@ -674,6 +678,7 @@ Die Kombination dieser Faktoren führte zu der Entscheidung, Schieberegister ans
 
 
 \subsection{Transistor}
+\chapterauthor{Jakob Kautz}
 Ein Transistor ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
 (den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern. Es gibt verschiedene Arten
 von Transistoren, aber die grundlegenden Prinzipien ihrer Funktionsweise sind ähnlich.\newline
@@ -708,7 +713,7 @@ eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu verme
 
 
 \subsection{Schaltplan} \label{subsec:schaltplan}
-
+\chapterauthor{Olivier Stenzel}
 \subsubsection{Arduino}
 
 Im Zentrum der Schaltung steht der \ac{MC} (hier: Arduino Uno R3).
@@ -773,10 +778,11 @@ Um die Fehlersuche zu erleichtern, werden LEDs in den Schaltplan mit eingebaut.
 Diese werden jeweils mit einem entsprechenden $1k\Omega$ Widerstand parallel zu den Motoren angeschlossen.
 So kann anhand der Helligkeit der LED die Intensität abgelesen werden, mit der eine Taste gespielt wird.
 
-//Bild vom Schaltplan
+%TODO(Jay): Bild vom Schaltplan
 
 
 \section{Weitere Ideen und Limitationen}
+\chapterauthor{Jakob Kautz, Olivier Stenzel}
 
 Im Laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten- Gründen nicht weiter
 behandelt wurden.

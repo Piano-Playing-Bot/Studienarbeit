@@ -8,68 +8,19 @@
 \chapterauthor{Val Richter}
 
 \nocite{*}
-% - Probleme, Schwierigkeiten, Änderungen während der Umsetzung \newline
-% - vllt. kurze Code-Schnippsel von besonders interessanten Teilen
 
-Es steht nun ein Konzept für die benötigten Datenstrukturen und das erwünschte Verhalten der Software-Komponenten.
-Dieses Verhalten kann nun jedoch auf unterschiedliche Arten entwickelt werden.
-Ein möglicher Ansatz für die Entwicklung sieht zum Beispiel initial eine Klassifizierung aller logischen Objekte zur Laufzeit des gewünschten Programms vor.
-Daraufhin kann dann analysiert werden, wie diese Objekte miteinander kommunizieren müssen und welche Daten diese haben und teilen müssen, um das erwünschte Verhalten der Software zu bekommen.
-Im Folgenden soll diese Entwicklungs-Strategie als \enquote{Top-Down}-Ansatz bezeichnet werden.
-Ein Top-Down-Ansatz klingt verlockend, da es scheint, als würde damit direkt die erwünschte Software geschrieben werden können.
-Oftmals scheitert dieses Vorgehen jedoch in der Praxis. % @TODO(Val): Quelle & (belegte) Gründe warum es scheitert
+% @TODO(Val): Einleitungssatz hier schreiben
 
-Ein alternativer, \enquote{Bottom-Up}-Ansatz ist der von Casey Muratori als \enquote{Semantic Compression} \cite{mur.SemanticCompression.14} Getaufte.
-Statt das Programm basierend auf logischen Objekten zu teilen, wird hier stattdessen eine Teilung in Schritte des gewünschten Verhaltens vorgenommen.
-Weiterhin ist diese Teilung iterativ und geschieht während der Entwicklung, statt als seperate Aufgabe davor - wie es im davor beschriebenen Top-Down-Ansatz der Fall ist.
-Sobald ein Teil des erwünschten Verhaltens konkret definiert wurde, kann dies in der einfachsten Art entwickelt werden.
-Hierbei werden Gedanken der Wartbarkeit erstmal ignoriert.
-Auch werden Abstraktionen in diesem Schritt noch nicht fortgeführt.
-Stattdessen wird hier nur betrachtet, ob das erwünschte Teilverhalten funktional richtig implementiert wurden.
-
-Bevor nun jedoch der nächste Teil der Anwendung implementiert wird, kommt die Semantische Kompression.
-Auf lang oder kurz wird es vorkommen, dass zwei Teile des Codes die selbe oder eine ähnliche Folge von Operationen durchlaufen.
-Diesem Ansatz nach wird nun der Code nach solchen semantischen Duplikaten durchsucht.
-Jene Duplikate können dann extrahiert werden und in einzelnen Funktionen oder Datenstrukturen komprimiert werden.
-Diese Komprimierung ist dabei nicht unbedingt eine syntaktische Komprimierung sondern eine semantische \cite[vgl. ]{mur.SemanticCompression.14}.
-
-Beide Strategien zielen am Ende auf Code mit den gleichen Attributen ab.
-Der Code soll gut lesbar, wartbar und erweiterbar sein.
-Der erste Ansatz nimmt dabei an, dass die Teilung in logische Objekte das Verständnis der Codebasis erleichtert.
-Der Bottom-Up Ansatz streitet diese Annahme im Generellen ab und behauptet stattdessen, dass semantisch komprimierter Code besser lesbar und verständlich ist, da es keine unnötigen Abstraktionen gibt und die existierenden Abstraktionen noch so nah an der konkreten Aufgabe sind wie nötig.
-Ähnlich argumentieren beide Strategien, dass sie jeweils höhere Wartbarkeit und Erweiterbarkeit liefern.
-Der fundamentale Gegensatz der beiden Ansätze kann jedoch - wie an dem einen Beispiel hoffentlich sichtbar wurde - in ihrer Haltung gegenüber Abstraktion finden.
-
-Im Top-Down Ansatz wird Abstraktion generell positiv betrachtet.
-Die Entwicklung beginnt mit einer abstrakten Klassifikation vermutlich benötigter Objekte und seperiert die Entwicklung entlang dieser Objekte.
-Eine falsch gewählte Struktur oder Abstraktion dieser Objekte kann die Entwicklung entsprechend stark erschweren.
-Der Bottom-Up Ansatz steht Abstraktion dagegen kritisch gegenüber.
-Abstraktion ist hier immer noch erwünscht, aber nur wenn die Abstraktion die Reduzierung logischer Duplizierungen mit sich bringt und nur genau so weit abstrahiert ist wie nötig.
-Unnötige Abstraktion oder Abstraktion, die auf einem höheren Level als nötig für das zu lösende Problem ist, ist hier negativ konnotiert.
-Weiterhin wird hier nicht angenommen, dass zu Beginn der Entwicklung genug Wissen und Expertise besteht, um eine sinnvolle Architektur für den Code finden zu können.
-Stattdessen ist die Semantische Kompression ein Verfahren zum explorativen Finden einer solchen sinnvollen Architektur.
-Speziell in der Implementierung der Desktop Anwendung \ac{SAM} wurde der Ansatz der Semantic Compression verwendet, da Erfahrungen mit besser und schlechter strukturierter Software dessen Grundannahmen eher unterstützen.
-
-Neben dem Entwicklungsansatz gibt es noch andere Entscheidungen, die die gesamte Entwicklung beeinflussen.
-So ist auch die Wahl der Programmiersprache eine substantive und weitreichende Entscheidung.
-Hier wurde sich entschieden, die gesamte Implementierung in der Programmiersprache C\footnote{Streng genommen ist hier der ISO-Standard C99 gemeint \cite*[siehe ][]{iso.c99}. Der Einfachheit halber wird in dieser Arbeit jedoch nur von \enquote{C} gesprochen.} zu erstellen.
+Es wurde sich entschieden, die gesamte Implementierung der Software in der Programmiersprache C\footnote{Streng genommen ist hier der ISO-Standard C99 gemeint \cite*[siehe ][]{iso.c99}. Der Einfachheit halber wird in dieser Arbeit jedoch nur von \enquote{C} gesprochen.} zu erstellen.
 Da der \ac{MC} vergleichsweise nur sehr begrenzten Speicherplatz zur Verfügung hat, ist die manuelle Speicherverwaltung von C hier sehr wünschenswert.
+Weiterhin ist die Sprache sehr simpel und elegant und erzwingt keinen Programmierstil, wie funktionale oder Objekt-orienterte Sprachen es oft tun.
 
-Aber auch für die Entwicklung der Desktop-Anwendung, wo der verfügbare Speicherplatz praktisch nicht begrenzt ist, wurde sich entschieden C zu verwenden.
-Der hauptsächliche Grund dafür ist die Transparenz der Sprache.
-Während viele Nachfolger von C versuchen ihre Semantik abstrakt halten, um die eigentliche Implementierung davon loskoppeln zu können, ist jedes Sprachkonstrukt in C direkt auf die genaue Umsetzung auf dem Computer abzubilden.
-Das kann nicht nur generell die Entwicklung erleichtern, sondern auch bei der Entwicklung von \ac{UI}s im besonderen Maße hilfreich sein, da die Performanz der Anwendung hier eine große Rolle für die Usability spielt.
-Und eine transparente Sprache kann die Entwicklung performanter Anwendungen erleichtern, da die Arbeit, die von der CPU für eine Aufgabe getan werden muss, leichter zu sehen ist.
-
-Auch erleichtert die Verwendung von C die direkte Nutzung der Windows-API, da die Verwendung eines \ac{FFI}s ausbleibt.
+Zuletzt erleichtert die Verwendung von C die direkte Nutzung der Windows-API, da die Verwendung eines \ac{FFI}s ausbleibt.
 Das hat sich vor allem bei der Entwicklung der Kommunikation (siehe Abschnitt \ref{umsetzungSW-Kommunikation}) als sinnvoll erwiesen.
 Zuletzt ist auch noch amzumerken, dass ein substantiver Beweggrund für die Wahl von C in der hohen Erfahrung der Entwicklerin mit der Sprache lag. % @Note(Val): Sollte ich mich in der 3. Person so selbst benennen?
 
 Folgend sollen besonders interessante Teile der Entwicklung noch genauer betrachtet werden.
-Da \ac{SAM} den größten Teil der endgültigen Codebasis stellt, ist es interessant zu sehen, wie der oben erwähnte Bottom-Up Ansatz hier abschneidet.
-Entsprechend wird in Abschnitt \ref{umsetzungSW-UI} auf die entstandene Architektur der Anwendung eingegangen.
-Auch sollen Schwierigkeiten, die während der Programmierung aufgekommen sind, beschrieben werden.
-Hier sind vor allem die Implementierung der Kommmunikation (siehe Abschnitt \ref{umsetzungSW-Kommunikation}) und des \ac{MC}s (siehe Abschnitt \ref{umsetzungSW-MC}) von Interesse.
+Abschnitt \ref{umsetzungSW-UI} geht dabei auf die Entwicklung von \ac{SAM} ein, während Abschnitt \ref{umsetzungSW-Kommunikation} Schwierigkeiten bei der Umsetzung der Kommunikation und Abschnitt \ref{umsetzungSW-MC} Herausforderungen bei der Programmierung des \ac{MC}s beschreibt.
 
 
 \section{Desktop Anwendung} \label{umsetzungSW-UI}
@@ -105,6 +56,10 @@ Das hat kaum spürbare Auswirkungen auf die Performanz gehabt.
 Trotzdem wurde der Code so beigelassen, was im Nachhinein definitiv den Code verkompliziert und das Anpassen des Codes erschwert hat.
 Die Nutzung von Widgets im Immediate Mode Stil ist hier definitiv als sinnvoller zu charakterisieren.
 
+Bei der Entwicklung der Widgets bleibend lässt sich hier auch der Bottom Up Ansatz evaluieren.
+Zuerst ist zu bemerken, dass viele \ac{UI} Elemente mehrfach verwendet werden und somit eine Kompression derer in einzelne Funktionen oftmals vorgekommen ist.
+Diese Teilung des Codes entlang der Widgets wäre dabei auch sehr wahrschenlich bei einem Top-Down Ansatz gewählt worden.
+Ein Beispiel, das bei einem Top-Down Ansatz zumindest nicht offensichtlich wäre, ist die Datenstruktur eines
 % @TODO(Val): Rest schreiben
 
 % @TODO(Val): Auf Bottom-Up Ansatz eingehen

@@ -2,3 +2,6 @@
 - add images in appendix (jay has images)
 - refer to appendixes in text (especially appendix-demo)
 - update all "ref{???}" throughout the text
+- add citations
+- put *everything* as an acronym
+- make sure, that every mention of anforderungen/ziele gets actually mentioned in chapter 2

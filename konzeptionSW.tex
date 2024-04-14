@@ -56,8 +56,8 @@ Da der \ac{MC} eine möglichst hohe Geschwindigkeit für die Ansteuerung der Mot
 Auch muss das Format möglichst wenig Speicherplatz aufbrauchen, damit möglichst viele Daten auf einmal auf dem \ac{MC} gespeichert werden können.
 Je mehr Speicherplatz das Format nämlich benötigt, desto öfter muss die \ac{UI} Daten an den \ac{MC} schicken, was aufgrund relativ hoher Latenzen in der Kommunikation nicht wünschenswert ist.
 
-Zuletzt soll außerdem auch die Architektur des \ac{SAM} in zwei Teile geteilt werden.
-% @Note(Jay): es ist verwirrend dass du sagst in 2 Teile, aber es gibt 3 separierbare Aufgaben
+% @Note(Val): Check that this is still correct, since I wrote kind of different stuff in the UI section than what I say here
+Zuletzt soll außerdem noch die Anwendung \ac{SAM} spezifiziert werden.
 \ac{SAM} hat an sich drei klar separierbare Aufgaben.
 Zum einen muss \ac{SAM} Nutzer:innen-Eingaben verarbeiten und ein graphisches Interface rendern.
 Zum anderen muss \ac{SAM} wie bereits erwähnt auch Daten an den \ac{MC} schicken.
@@ -72,37 +72,31 @@ Es gibt bereits viele Datenformate, die zum Speichern von Musikstücken verwende
 
 % @Note(Val): Sollten wir Quellen für die unterschiedlichen Formate hier in den Fußzeilen angeben? Z.B. auf die Standards verweisen?
 % @Note(Jay): Wäre glaube ich sinnvoll. Ist es außerdem sinnvoll die Abkürzungen mit aufzunehmen oder reicht es wenn auf die Standards verwiesen wird?
-Zum Einen gibt es generelle Audioformate. Dazu gehören solche Formate wie MP3, WAV oder FLAC.
+Zum Einen gibt es generelle Audioformate. Dazu gehören solche Formate wie MP3\footnote{formal \enquote{MPEG-1 Audio Layer III} bzw. \enquote{MPEG-2 Audio Layer III}; siehe \cite{iso.MP3} für die Spezifikation des Formats}, WAV\footnote{wird auch \enquote{WAVE}-Format genannt; siehe \cite{kab.WaveFileSpecifications.22} für die Spezifikation des Formats} oder FLAC\footnote{formal \enquote{Free Lossless Audio Codec}; siehe \cite{bw.FLAC.24} für die Spezifikation des Formats}.
 Diese Formate speichern für jeden Zeitpunkt des Audios die Information über das Geräusch, das zu diesem Zeitpunkt abzuspielen ist.
 
 Zum Anderen gibt es Formate, die speziell für Musikstücke entwickelt wurden.
 Das Vorzeige-Beispiel wäre hier das \ac{MIDI}-Format.
-Bei diesen Formaten werden stattdessen Informationen über Noten, die für eine gewisse Zeit zu spielen sind, gespeichert.
-% @Question(Jay): Ich würde vllt "statt Informationen über Geräusche..." oder so schreiben, weils sich für mich durch den zwischensatz nicht mehr direkt auf das vorher gesagte bezieht
+Bei diesen Formaten werden statt Geräusch-Daten Informationen über Noten, die für eine gewisse Zeit zu spielen sind, gespeichert.
 Das genaue Geräusch, das am Ende abgespielt werden sollte, wird dabei noch von anderen Faktoren beeinflusst.
-So könnten mehrere Noten gleichzeitig zu spielen sein. % @Note(Jay): Ist das eine logische Konsequenz daraus? Cause das kommt für mich nicht automatisch aus dem gesagten raus.
-Auch könnte zum Beispiel das Instrument von Nutzer:innen dynamisch änderbar sein.
+So könnten beispielsweise mehrere Noten gleichzeitig zu spielen sein.
+Auch könnte das Instrument von Nutzer:innen dynamisch änderbar sein.
 
-% @Note(Val): Ich sage öftermal "dieses Projekt". Gefällt uns das stilistisch? Machen wir das einheitlich?
-% @Note(Jay): find ich okay, ich glaub ich bezieh mich auch öfter nur auf "Projekt"
 Die zweite Art an Formaten ist im Kontext dieses Projekts zu bevorzugen, da es dem Format der Ausgabe näher kommt.
-Die erstgenannten Formate speichern direkt die Informationen, die von digitalen Lautsprechern zum Abspielen von Audio benötigt werden.
-Auch wenn je nach Format und Platform womöglich noch einige Datentransformationen getan werden müssen, bevor der Lautsprecher die Daten erhalten kann, ist eine Umwandlung von Informationen nicht notwendig.
-% @Note(Val): Sollte hier vielleicht erwähnt werden, warum Informations-Umwandlung zu vermeiden ist?
-% @Note(Jay): 1 oder 2 Sätze dazu wären sinnvoll
-% @Note(Jay): Bei dem "auch wenn" weiß man übrigens nicht so ganz ob du über 1 oder 2 redest
-Zum Anspielen eines Klaviers, werden stattdessen zu jedem Zeitpunkt die Information über derzeit zu spielende Tasten benötigt.
-Formate der zweiten Art speichern genau jene Informationen und sind damit perfekt für diese Aufgabe geeignet.
-Auf den ersten Blick erscheint die Verwendung eines Formats wie \ac{MIDI} damit eine gute Idee.
-Es gibt hier allerdings noch weitere Aspekte, die zu beachten sind.
+Zum Anspielen eines Klaviers werden nämlich zu jedem Zeitpunkt die Information über derzeit zu spielende Tasten benötigt.
+Formate der zweiten Art speichern genau jene Informationen und erfordern damit keine weiteren Informations-Umwandlungen mehr. \newline
+Im Gegensatz dazu sind die erstgenannten Formate speziell für digitale Lautsprecher entworfen worden und speichern entsprechend Informationen über die vom Lautsprecher zu spielenden Geräusche.
 
-%%%%%%%%%%%%%%%%%%
-    % @Vorschlag(Jay):
-    % Zum Anspielen eines Klaviers werden zu jedem Zeitpunkt... [erklärung die du zu 2 hast]
-    % Im Gegensatz dazu würde (1) Informationen direkt speichern, die... [erklärung die du zu 1 hast]
-%%%%%%%%%%%%%%%%%%
+Wenn hier von Informations-Umwandlung gesprochen wird, meint dies nicht eine simple Datentransformation.
+Daten sind eine Enkodierung von Informationen und somit können unterschiedliche Daten die selben Informationen darstellen.
+Die Wandlung eines Datensatzes in eine andere Kodierung kan zwar rechenaufwendig werden, ist aber ohne Verlust von Informationen möglich.
+Je nach Kontext können Datentransformationen auch ausgelassen oder stark optimiert werden.
+Falls grundlegend andere Informationen benötigt werden, ist eine Änderung der Daten nicht nur notwendig, sondern oftmals auch vergleichsweise aufwendig.
 
-Dieses Projekt will explizit eine höhere Performanz als die schnellsten menschlichen Pianist:innen erreichen (siehe Kapitel \ref*{Zielstellung}).
+Es ist also festzuhalten, dass die Verwendung eines Formats wie \ac{MIDI} hier sinnvoll ist.
+Bevor \ac{MIDI} selbst gewählt wird, sollten jedoch noch weitere Aspekte beachtet werden.
+
+Dieses Projekt will explizit eine höhere Performanz als die schnellsten menschlichen Pianist:innen erreichen (siehe Kapitel \ref*{Zielstellung}). % @TODO(Val): Muss im Kapitel auch erwähnt werden
 Entsprechend sollte das gewählte Datenformat der Musikstücke auch möglichst schnell in das Format umgeformt werden können, das für die Ausgabe an die Aktuatoren benötigt wird.
 Am performantesten wäre es hierbei, eine Liste jener Daten zu speichern, die zu jedem Zeitpunkt an die Aktuatoren ausgegeben werden müssen, da dann gar keine Datentransformation mehr nötig ist.
 

@@ -9,37 +9,36 @@
 
 \chapter{Konzeption - Hardware}\label{konzeptionHW}~\nocite{*}
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
-
-% @TODO(Val): Bei jedem Unterkapitel sollte der Autor erwähnt werden, weil ihr euch die ja aufgeteilt habt
-
+% TODO(Jay): check einheitlichkeit gendern
+% TODO(Jay): check einheitlichkeit Zeit
 % @Note(Val): Abschnitt fängt im Präteritum an und geht dann mit Präsenz weiter
 % Glaube, dass Präsenz leichter lesbar ist, aber muss halt einfach einheitlich sei
 % @Note(Val): Der ganze Abschnitt argumentiert falsch herum.
 % Ihr redet von Aktuatoren, Mikrocontrollern, etc. ohne vorher zu erklären, warum die überhaupt benötigt werden.
 % Statt Lösungen zu liefern, sollte hier erstmal erklärt werden, welche Probleme gelöst werden müssen
-Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
-Die Grundfragen, welche bei der Konstruktion auftraten, betrafen die Auswahl und Implementierung der
-Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des \ac{MC}s.
-Im Hinblick auf die Aktuatoren muss eine präzise Steuerung der Tasten
-ermöglicht werden, ohne dass Genauigkeit und Geschwindigkeit des Anspielens vernachlässigt werden.
-\newline
-Dafür werden diese mit den Klaviertasten verbunden, um die mechanische Integrität des Klaviers
-zu erhalten und gleichzeitig eine präzise Steuerung zu gewährleisten.\newline
-Die Signalübertragung erfolgt über einen \ac{MC}.
-Da der gängige \ac{MC} i.d.R. nicht über ausreichende Ausgänge verfügen,
-um alle Tasten anzusteuern, müssen diese erweitert werden.
-Eine solche Erweiterung (siehe Kapitel \ref{output}) ermöglicht es, alle 88 Tasten des Klaviers anzusteuern.
+Für die Umsetzung eines selbstspielenden Klaviers werden verschiedene technische Überlegungen angestellt.
+Die Grundfragen, welche bei der Konstruktion auftreten, betreffen die Methode des Anspielens der Klaviertasten, die
+Signalübertragung des \ac{MC}s, sowie die Konzeption der Schaltung.
+Folgende Anforderungen muss die Konzeption abdecken:
+\begin{enumerate}
+	\item Ansteuerungskonzept: Die Tasten müssen möglichst effizient von der Hardware angespielt werden, dies beinhaltet Positionierung der Aktuatoren und die Verbindung zwischen Hardware und Klavier.
+	\item Auswahl der Aktuatoren: Die Aktuatoren \ref{subsec:aktuator} müssen eine präzise Steuerung der Tasten ermöglichen, ohne dass Akkuratheit und Geschwindigkeit des Anspielens der Tasten vernachlässigt wird
+	\item Auswahl des \ac{MC}: Die Aktuatoren benötigen zur Ansteuerung der Klaviertasten die Signale der Software, wobei die Kommunikation via \ac{MC} geschieht.
+\end{enumerate}
+Die Überlegungen und Entscheidungen für die genutzte Hardware sowie den Aufbau dieser werden in diesem Kapitel erläutert.
+Die Hardware-Komponente des Projektes wird im folgenden auch als \enquote{Piano Player} bezeichnet.
 
 \section{Mechanik}\label{konzeptionHW-mechanik}
 
 \subsection{Auswahl des Klaviers}
+
 \chapterauthor{Olivier Stenzel}
 
 Da sich dieses Projekt nicht auf die theoretische Konzeption beschränkt, muss ein entsprechendes Testobjekt - ein reales Klavier - gefunden werden.
 Dieses muss einige Voraussetzungen erfüllen:
 \begin{enumerate}
-	\item 	Der Preis muss im Rahmen des selbst gestellten Budgets (< 2000 €) liegen % @TODO(Val): Wann wurde das Budget auf 2000€ begrenzt? Sollte vielleicht im Zielstellung-Kapitel erwähnt werden
-	\item 	Es muss leicht auseinander zu bauen sein, um die Mechanik zugänglich zu machen
+	\item 	Der Preis muss im Rahmen des selbst gestellten Budgets (< 2000 €) liegen
+	\item 	Es muss leicht auseinander zu bauen sein, damit die Mechanik zugänglich ist
 	\item 	Es muss vollständig sein (alle 88 Tasten)
 	\item 	Es muss stimmbar sein
 	\item 	Der Transport muss einfach durchzuführen sein
@@ -48,167 +47,106 @@ Dieses muss einige Voraussetzungen erfüllen:
 Mittels dieser Anforderungen wurde online ein passendes Klavier für 100€ ersteigert.
 
 \subsection{Ansteuerungskonzept} \label{subsec:konzeptionhw-ansteuerungskonzept}
+
 \chapterauthor{Jakob Kautz}
 
 % @TODO(Jay): Problem Präzision trotz Entscheidung der Ansteuerung
-Um die Saiten zum Schwingen zu bringen ist eine Vorrichtung hilfreich, die elektrische Signale in Bewegung umwandeln kann.
+Das Ansteuerungskonzept bezieht sich auf die Problemstellung, dass die Saiten des Klaviers auf irgendeine Art zum
+schwingen gebracht werden müssen.
+Dafür ist eine Vorrichtung hilfreich, die elektrische Signale in Bewegung umwandeln kann.
 Dies ist die Eigenschaft von Aktuatoren, wie z.b. Motoren.
+
 In diesem Kapitel wird untersucht, wie genau man das Anspielen der Saiten technisch umsetzen kann.
-Dabei ist die grundlegende Überlegung, ob man die Saiten direkt anschlägt,
+Dabei ist eine grundlegende Überlegung, ob man die Saiten direkt anschlägt,
 oder die bestehenden Tasten weiter dafür nutzt.
 
-Wenn die Saiten direkt angespielt werden, erfordert dies weniger Kraft im Vergleich zu den Tasten.
-Das bedeutet, dass die Aktuatoren weniger Kraft aufbringen müssen und somit kostengünstigere
-Aktuatoren genutzt werden können.
+Wenn die Aktuatoren direkt die Saiten des Klaviers anspielen, erfordert dies weniger Kraft im Vergleich zum
+Anspielen der Tasten. Das liegt daran, dass die Tasten eine größere mechanische Übersetzung bieten, um die Saiten
+anzuschlagen. Wenn die Aktuatoren direkt auf die Saiten wirken, müssen sie nur die erforderliche Kraft aufbringen, um
+die Saiten in Schwingung zu versetzen, was im Allgemeinen weniger Kraft erfordert als das Drücken einer Taste mit
+ausreichend Kraft, um den Hammer gegen die Saiten zu schlagen.
+
+Die Verwendung von weniger kraftaufwendigen Aktuatoren kann die Gesamtkosten des Systems senken. Aktuatoren, die weniger
+Kraft erzeugen müssen, sind oft einfacher und kostengünstiger herzustellen (und zu kaufen) und erfordern möglicherweise weniger
+energieintensive Komponenten. Darüber hinaus kann die Verwendung von leistungsschwächeren
+Aktuatoren die Größe und das Gewicht des Systems verringern, was zusätzliche Vorteile hinsichtlich Kosten, Transport und
+Montage bieten kann. \newline
 Allerdings geht dabei die gesamte Mechanik des Klaviers verloren, was bedeutet, dass Aspekte wie Dämpfung nicht genutzt werden können,
 was wiederum zu einem weniger ansprechenden Klang führt. Zusätzlich müsste das Klavier permanent geöffnet bleiben, und die
 Aktuatoren müssten äußerst präzise die Saiten anschlagen, um akzeptable Ergebnisse zu erzielen.
 % @Note(Val): Mit Außnahme des letzten Punkts verstehe ich die Argumente hier ehrlich gesagt nicht. Vieleicht kenne ich mich einfach zu wenig mit Klavieren aus, um das nachvollziehen zu können und wir setzen offensichtlch ein bisschen Klavier-Wissen voraus, aber fals hier für jeden Punkt ein Nebensatz hin könnte, warum das so ist, wäre das wahrscheinlich besser
-
-Die Entscheidung fiel daher darauf, die Tasten anzuspielen, da hier die Klaviermechanik genutzt werden kann, was für einen
-authentischeren Klang sorgt. Die Art und Weise, wie die Aktuatoren an den Tasten angebracht werden können, wurde
-weiter untersucht.
+% @Question(Jay): Ist das so sinnvoller/nachvollziehbarer?
+Da der zweite Punkt - ein ansprechender Klang - für dieses Projekt eine höhere Priorität annimmt, fiel die Entscheidung
+darauf, die Tasten anzuspielen. Somit kann die Klaviermechanik genutzt werden, was für einen
+authentischeren Klang sorgt. \newline
+Nun stellt sich also noch die Frage, wie genau die Aktuatoren mit den Tasten des Klaviers verbunden werden.
 
 Eine Möglichkeit besteht darin, die Aktuatoren oben über den Tasten anzubringen, entweder in Form einer nachgebildeten
-\enquote{Klavierhand} mit zehn \enquote{Fingern} oder in Form einer Schiene mit 88 Aktuatoren auf den Tasten. Die Klavierhand-Option würde
-dem tatsächlichen Klavierspiel ähnlicher sehen, erfordert jedoch aufgrund der Bewegung und Präzision eine komplexere Logik und
-Montage. Die Schienenoption bietet eine einfachere Ansteuerung, erfordert jedoch einen Aktuator für jede Taste und schränkt die
-normale Spielbarkeit des Klaviers ein, solange der \enquote{Piano Player} montiert ist.
-% @Note(Val): Das letzte Argument überzeugt nicht, da beide Versionen das manuelle Spielen einschränken (wenn nicht unmöglich machen) solange es montiert ist
+\enquote{Klavierhand} mit zehn \enquote{Fingern} oder in Form einer Schiene mit 88 Aktuatoren auf den Tasten.
+%TODO(Jay): Bilder was ich meine
+Beide Lösungen bringen allerdings das Problem mit sich, dass sie gegen die in \ref{sec:zielstellung-anforderungen} definierte Anforderung
+der Flexibilität verstoßen, nämlich dass das Klavier sowohl automatisch als auch manuell bespielbar sein soll.\newline
+Außerdem würde die Klavierhand-Option - die dem tatsächlichen Klavierspiel ähnlich sieht -
+aufgrund der Bewegung und Präzision eine komplexere Logik und
+Montage erfordern. Die Schienenoption bietet hier eine viel einfachere Ansteuerung, benötigt jedoch einen Aktuator für jede Taste.
+Außerdem steht diese Variante im Gegensatz zu der in Kapitel \ref{sec:zielstellung-anforderungen} Anforderung, dass der Aufbau für unterschiedliche Klaviere anpassbar
+sein soll. Das liegt daran, dass diese Schiene eine fest vorgegebene Länge hätte, welche für Klaviere welche eine
+andere größe haben, nicht mehr passen würde. \newline
 
-Eine andere Möglichkeit besteht darin, die Aktuatoren unter den Tasten anzubringen.
-Die Ansteuerung der Tasten kann dann entweder durch Ziehen mittels
-Seilen oder ähnlichem erfolgen oder durch Drücken vom hinteren Ende der Tasten. Beide Optionen ermöglichen es, das Klavier sowohl vom \enquote{Piano Player} % @Note(Val): Piano Player wurde vorher nie als Begriff verwendet - es sollte vorher irgendwann erwähnt werden, dass wir den Hardware-Teil so nennen (ich nehme an, dass sich Piano Player nur auf die HW bezieht oder meint es den gesamten Prototypen?)
-als auch von einem menschlichen Spieler zu spielen. Da dies eine der Anforderungen für das Projekt ist,
-wurde entschieden, dass die Ansteuerung von unten erfolgen muss. Bei beiden Varianten wird jede Taste mit einem Aktuator
-ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten im Gegensatz zu der von oben Spielenden \enquote{Klavierhand}
+Eine Alternative hierzu besteht darin, die Aktuatoren unter den Tasten anzubringen, wodurch die Anforderung der Flexibilität
+im Gegensatz zur ersten Option nicht beeinflusst wird.\newline
+Das Klavier kann also sowohl vom \enquote{Piano Player} als auch von einem menschlichen Spieler gleichzeitig bedient werden.
+Da diese Anforderung eine hohe Priorität hat, wird die Ansteuerung von untern erfolgen. \newline
+Grundsätzlich gibt es hierbei zwei Möglichkeiten für die Ansteuerung:
+\begin{enumerate}
+	\item Ziehen der Tasten
+	\item Drücken der Tasten
+\end{enumerate}
+Bei beiden Varianten wird jede Taste mit einem Aktuator
+ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten % @Question(Jay) soll ich späteres Kapitel zu Kosten referenzieren oder so lassen?
+im Gegensatz zu der von oben Spielenden \enquote{Klavierhand}
 erhöht.
-Generell ist die Drückoption ästhetisch ansprechender, erfordert jedoch Präzision und könnte die
-Tastenempfindlichkeit beeinträchtigen. Das Problem der präzisen Ansteuerung fällt beim Ziehen der Tasten weg. % @Note(Val): Klingt ein bisschen repetetiv mit den vorherigen Sätzen, inhaltlich aber ok
-Der Grund dafür liegt darin, dass die Taste nicht
-direkt getroffen werden muss. Stattdessen wird lediglich ein Seil gezogen, das den Aktuator dazu veranlasst, die Taste
-gerade nach unten zu ziehen. Im Gegensatz dazu erfordert das Drücken der Taste eine präzise Ausrichtung und Anwendung der
-Kraft, um die gewünschte Tastenempfindlichkeit zu erreichen. Da das Ziehen des Seils weniger präzise Kontrolle erfordert
-und keine direkte Interaktion mit der Tastenmechanik erfordert, kann es die Tastenempfindlichkeit weniger beeinträchtigen
-als das Drücken der Tasten.\newline
+Generell ist die Drückoption ästhetisch ansprechender, da die Hardware sehr einfach versteckt werden könnte.
+Somit würde die Illusion entstehen, dass die Tasten sich von alleine bewegen. Die Option erfordert jedoch eine hohe Präzision und könnte die
+Tastenempfindlichkeit beeinträchtigen. Außerdem wäre aufgrund der präzisen Montage der Aktuatoren die Anforderung
+der Anpassbarkeit (siehe Kapitel \ref{sec:zielstellung-anforderungen}) komplexer umzusetzen.
+
 Für das Drücken der Tasten fallen noch weitere Probleme an. Um die Tasten drücken zu können, muss ein möglichst großer
-Hebel aufgebracht werden, damit die Aktuatoren möglichste wenig Kraft aufbrauchen müssen. Das bedeutet, dass
-die Aktuatoren soweit hinten wie möglich angebracht werden sollten.\newline
+Hebel aufgebracht werden, damit die Aktuatoren möglichst wenig Kraft für das anspielen aufbrauchen müssen.
+Dieser Punkt ist besonders wichtig, wenn der \enquote{Piano Player} mit unterschiedlichen Lautstärken und Dynamiken spielen soll.
+% @Question(Jay): Ist es offensichtlich dass das daran liegt dass wir dann auch leiser spielen können oder soll ich das noch erwähnen?
+Dies führt dazu, dass die Aktuatoren soweit hinten wie möglich angebracht werden müssen. % @Note(Jay) weil größter Hebel ist offensichtlich, oder?
+\newline
 % @TODO(Jay): BILD
-Bei dem genutzten Klavier befindet sich hinten ein Holraum welcher genutzt werden kann. Dieser ist allerdings
-nicht durchgängig, was den
-Einbau von Löchern erfordert. Diese Löcher müssen räumlich so platziert werden, dass sie keine wichtigen Teile der
-Klaviermechanik stören. Dies könnte zu einer verringerten Hebelkraft und somit zu unterschiedlichen Anforderungen pro
-Taste führen. Dies muss in der Softwarelogik berücksichtigt werden, um eine konsistente Leistung zu gewährleisten.
+Hier tritt das Problem auf:
+Der Holraum, der sich im hinteren Teil des ausgewählten Klaviers befindet, ist nicht durchgängig. Daher ist es
+erforderlich, Löcher einzubauen. Diese müssen räumlich so platziert werden, dass sie keine wichtigen Teile der Klaviermechanik
+stören. Aufgrund des Klavierbaus bedeutet dies, dass die Löcher etwa im mittleren Drittel der Taste angebracht werden müssen.
+Dies führt zu einer verringerten Hebelkraft. Das Problem betrifft nur etwa ein Viertel der Tasten. Die restlichen könnten mit
+voller Hebelkraft von ganz hinten angespielt werden. Allerdings würde dies dazu führen, dass die Tasten
+\begin{enumerate}
+	\item unterschiedlich stark angespielt werden und der Klang somit seltsam ist,
+	\item der Anstoß der Tasten genormt wird und somit nicht die gesamte Dynamik der hinten angebrachten Aktuatoren genutzt
+	wird, damit alle gleich klingen. Dies würde die Software komplexer machen, da dies berücksichtigt werden muss, um eine
+	konsistente Leistung zu gewährleisten.
+\end{enumerate}
+Zur Vereinfachung wäre es daher sinnvoller, alle Tasten von der gleichen Höhe aus anzuspielen. Dies bedeutet, dass alle
+Tasten von weiter vorne angespielt werden und somit ein Teil der möglichen Dynamik verloren geht. \newline
+
+Diese Probleme fallen beim Ziehen der Tasten weg. % @Note(Val): Klingt ein bisschen repetetiv mit den vorherigen Sätzen, inhaltlich aber ok
+Bei der Präzision liegt der Grund dafür darin, dass die Taste nicht
+direkt getroffen werden muss. Stattdessen wird lediglich ein Seil (siehe Kapitel \ref{subsec:VerbindungTastenAktuatoren})
+gezogen, das den Aktuator dazu veranlasst, die Taste
+gerade nach unten zu ziehen.
+Da das Ziehen des Seils weniger präzise Kontrolle erfordert
+und keine direkte Interaktion mit der Tastenmechanik erfordert, kann es auch die Tastenempfindlichkeit weniger beeinträchtigen
+als das Drücken der Tasten.\newline
+Die Hebelkraft ist ebenfalls ein geringeres Problem, da die Aktuatoren Problemlos am vordersten Punkt der Tasten
+befästigt werden können, da hier - im Gegensatz zum hinteren Teil des Klaviers - nichts im Weg ist.
 
 Insgesamt fiel die Entscheidung deshalb auf die Strategie des Ziehens von unten.
 Bei diesem Ansatz wird die geringste mechanische Präzision benötigt und das Klavier ist trotz Montage des Bots noch manuell spielbar.
 
-\subsection{Aktuator}\label{subsec:aktuator}
-\chapterauthor{Jakob Kautz}
-% @Note(Val): Warum kommt hier eine Definition von Aktuatoren, wenn das Wort vorher schon frei verwendet wurde
-% Entweder setzen wir voraus, dass die Leser:innen wissen, was ein Aktuator ist, oder die Definition muss früher kommen
-Die Aktuatoren werden für die Steuerung der Tasten benötigt.
-Ein Aktuator ist ein mechanisches/elektrisches Bauteil, das dazu dient,
-eine bestimmte Aktion auszuführen.
-Er wandelt Energie in Bewegung (oder andere physikalische Größen) um, um eine gewünschte Aktion herbeizuführen
-oder einen Mechanismus zu steuern. \newline % @TODO(Val): Quelle für Aktuator-Definition
-Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
-\begin{enumerate}
-	\item Linearmotor
-	\item Servomotor
-	\item Hubmagnet
-\end{enumerate}
-
-% @TODO(Val): Quelle für jede Definition der 3 Aktuator-Typen
-\paragraph{Linearmotor}
-Ein Linearmotor ist ein Aktuator, der eine lineare Bewegung erzeugt. Er besteht aus einer festen Spule und einem
-beweglichen Magneten oder umgekehrt. Wenn Strom durch
-die Spule fließt, erzeugt sie % @Question(Val): Ist es richtig zu sagen, dass die Spule ein Magnetfeld erzeugt? (Ich hab physikalisch keine Ahnung, also kann gut sein, dass das so richtig formuliert ist)
-ein Magnetfeld, das den beweglichen Teil des Motors in eine lineare Bewegung zieht. \newline
-Physikalische Grundlagen:
-\begin{itemize}
-	\item Die Funktionsweise eines Linearmotors beruht auf dem Prinzip der elektromagnetischen Induktion. Wenn Strom durch die
-	Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Magneten anzieht oder abstößt, je nach Polarität des Stroms.
-	\item Die Richtung und Geschwindigkeit der Bewegung des Linearmotors hängt von der Stärke und Richtung des angelegten Stroms
-	sowie von der Geometrie des Motors ab.
-\end{itemize}
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Linearmotor}
-	\caption{Linearmotor}
-	\label{fig:Linearmotor}
-\end{figure}
-
-\paragraph{Servomotor}
-% @Note(Val): Hier scheint etwas falsch zu sein. Bei der Entscheidungsfindung später sagt ihr, dass Servomotoren eine rotierende Bewegung erzeugen. Aber hier sagt ihr, dass es mit einer Drehung anfängt und diese dann vom Servomotor in eine Bewegung (ich nehme an lineare Bewegung) umgewandelt wird.
-Ein Servomotor ist ein elektromechanischer Aktuator, der eine Bewegung durch eine Drehung ermöglicht.
-Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus. Der Elektromotor erzeugt eine rotierende
-Bewegung, die durch das Getriebe in eine Bewegung umgewandelt wird. Der
-Feedback-Mechanismus, oft ein Potentiometer oder ein Encoder, misst die genaue Position des Motors und gibt diese
-Informationen an die Steuerung zurück.\newline % @Note(Val): Verstehe nicht inwieweit der Feedback-Mechanismus sinnvoll ist
-% @Note(Val): Warum ist das Bild hier zuerst aber ansonsten immer erst nach den physikalischen Grundlgen?
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Servomotor}
-	\caption{Servomotor}
-	\label{fig:Servomotor}
-\end{figure}
-
-Physikalische Grundlagen:
-\begin{itemize}
-	\item Der Elektromotor nutzt das Prinzip der elektromagnetischen Induktion, um eine Drehbewegung zu erzeugen. Dies geschieht
-	durch das Anlegen einer Spannung an die Spulen des Motors, die ein magnetisches Feld erzeugen und den Rotor des Motors in
-	Bewegung versetzen.
-	\item Das Getriebe dient dazu, die Geschwindigkeit und das Drehmoment des Motors zu regulieren und die Bewegung an die
-	Anforderungen der Anwendung anzupassen.
-	\item Der Feedback-Mechanismus misst die Position des Motors durch Erfassung von Änderungen des magnetischen Feldes oder der
-	Winkelposition des Rotors und ermöglicht so eine präzise Steuerung.
-\end{itemize}
-
-\paragraph{Hubmagnet}
-Ein Hubmagnet (auch Solenoid genannt) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
-Stroms erzeugt. Er besteht aus einer Spule, die einen magnetischen Kern umgibt. Wenn Strom durch die Spule fließt, erzeugt
-sie ein Magnetfeld, das den Kern anzieht und somit eine lineare Bewegung erzeugt.\newline
-Physikalische Grundlagen:
-\begin{itemize}
-	\item Der Hubmagnet nutzt das Prinzip der elektromagnetischen Induktion, um eine lineare Bewegung zu erzeugen. Wenn Strom
-	durch die Spule fließt, erzeugt sie ein Magnetfeld, das den magnetischen Kern anzieht. Je nach Polarität des Stroms bewegt
-	sich der Kern entweder in Richtung der Spule oder von ihr weg.
-	\item Die Stärke der Bewegung des Hubmagneten hängt von der Stärke des Stroms, der Anzahl der Wicklungen und der
-	Spule des Magneten ab.
-\end{itemize}
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Hubmagnet}
-	\caption{Hubmagnet}
-	\label{fig:Hubmagnet}
-\end{figure}
-
-\paragraph{Entscheidungsfindung}
-Prinzipiell kann jeder der genannten Aktuatoren für das Projekt verwendet werden. Die Entscheidung fiel aufgrund
-mehrerer Vortzeile allerdings auf den Hubmagneten:
-\begin{enumerate}
-	\item Servo-Motor: Bei diesem Motor ist eine Bewegungsbeschränkung mit eingebaut, welche in jedem Motor ausgebaut
-	werden müsste. Dies ist zu umständlich, wenn es bessere Varianten - wie den Hubmagneten - gibt. Außerdem hätte
-	eine Umlenkung stattfinden müssen, da die erzeugte Bewegung eine Rotation im Gegensatz zu einer linearen Bewegung
-	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschränkung nicht
-	weiter betrachtet wurden. % @Note(Val): Warum erwähnt ihr die rotierende Bewegung dann überhaupt als Nachteil. Und warum werden vorher bei der Erklärung nicht die linearen Servomotoren erklärt?
-	Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
-	sie bei Ende der Stromversorgung waren. Für das Klavier werden Aktuatoren benötigt, welche wieder auf die vorherige
-	Position zurückschalten, die Klaviertaste also in dem Sinne wieder \enquote{loslassen} können.
-	\item Linear-Motor: Auch hier kam das Problem auf, dass die Motoren nicht automatisch wieder an ihre vorherige
-	Position zurückschalten, wenn der Stromfluss stoppt. % @Question(Val): Das Problem könnte mit einem gegenteiligen Stromfluss gelöst werden, oder? Weiß aber nicht ob das die Schaltung unbedingt verkomplizieren würde. Wenn das überhaupt nicht möglich wäre, wären Servo- & Linear-Motoren ja gar nicht nutzbar und dann wäre die Einleitung für diesen Abschnitt falsch
-	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellem
-	Tastendrücken sinnvoll ist. Außerdem schalten Sie, wenn die Stromversorgung abbricht, wieder auf ihre vorherige
-	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren.
-	Da das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinauszugehen, führte dies lediglich dazu, dass Kostenintensivere Solenoids bestellt werden müssen.
-	% @Note(Val): Der letzte Satz hier ist komisch & wahrscheinlich falsch (was genau bedeutet "genug" hier z.B.)
-	% @Note(Val): Der Nachteil ist doch gar nicht, dass sie weniger Kraft aufbringen, wenn es auch Solenoids gibt, die diese Kraft aufbringen, oder? Der Nachteil ist eher, dass die Solenoids, die solche Kraft aufbringen, mehr kosten, oder?
-\end{enumerate}
-
-% @Note(Val): Warum gibt es hier einen forcierten Seitenumbruch? Braucht es das?
-\newpage
 
 \subsection{Verbindung Tasten und Aktuatoren} \label{subsec:VerbindungTastenAktuatoren}
 \chapterauthor{Olivier Stenzel}
@@ -718,6 +656,105 @@ Mindestspannung ist die minimale Spannung, die zwischen Source und Gate anliegen
 sperren.
 Es ist entscheidend, sicherzustellen, dass die Spannungen in der Schaltung diese Anforderungen erfüllen, um
 eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu vermeiden.
+
+\subsection{Aktuator}\label{subsec:aktuator}
+\chapterauthor{Jakob Kautz}
+Die Aktuatoren werden für die Steuerung der Tasten benötigt.
+Ein Aktuator wandelt Energie in Bewegung (oder andere physikalische Größen) um, um eine gewünschte Aktion herbeizuführen
+oder einen Mechanismus zu steuern. \newline % @TODO(Val): Quelle für Aktuator-Definition
+Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
+\begin{enumerate}
+	\item Linearmotor
+	\item Servomotor
+	\item Hubmagnet
+\end{enumerate}
+
+% @TODO(Val): Quelle für jede Definition der 3 Aktuator-Typen
+\paragraph{Linearmotor}
+Ein Linearmotor ist ein Aktuator, der eine lineare Bewegung erzeugt. Er besteht aus einer festen Spule und einem
+beweglichen Magneten oder umgekehrt. Wenn Strom durch
+die Spule fließt, erzeugt sie % @Question(Val): Ist es richtig zu sagen, dass die Spule ein Magnetfeld erzeugt? (Ich hab physikalisch keine Ahnung, also kann gut sein, dass das so richtig formuliert ist)
+ein Magnetfeld, das den beweglichen Teil des Motors in eine lineare Bewegung zieht. \newline
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Die Funktionsweise eines Linearmotors beruht auf dem Prinzip der elektromagnetischen Induktion. Wenn Strom durch die
+	Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Magneten anzieht oder abstößt, je nach Polarität des Stroms.
+	\item Die Richtung und Geschwindigkeit der Bewegung des Linearmotors hängt von der Stärke und Richtung des angelegten Stroms
+	sowie von der Geometrie des Motors ab.
+\end{itemize}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Linearmotor}
+	\caption{Linearmotor}
+	\label{fig:Linearmotor}
+\end{figure}
+
+\paragraph{Servomotor}
+% @Note(Val): Hier scheint etwas falsch zu sein. Bei der Entscheidungsfindung später sagt ihr, dass Servomotoren eine rotierende Bewegung erzeugen. Aber hier sagt ihr, dass es mit einer Drehung anfängt und diese dann vom Servomotor in eine Bewegung (ich nehme an lineare Bewegung) umgewandelt wird.
+Ein Servomotor ist ein elektromechanischer Aktuator, der eine Bewegung durch eine Drehung ermöglicht.
+Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus. Der Elektromotor erzeugt eine rotierende
+Bewegung, die durch das Getriebe in eine Bewegung umgewandelt wird. Der
+Feedback-Mechanismus, oft ein Potentiometer oder ein Encoder, misst die genaue Position des Motors und gibt diese
+Informationen an die Steuerung zurück.\newline % @Note(Val): Verstehe nicht inwieweit der Feedback-Mechanismus sinnvoll ist
+% @Note(Val): Warum ist das Bild hier zuerst aber ansonsten immer erst nach den physikalischen Grundlgen?
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Servomotor}
+	\caption{Servomotor}
+	\label{fig:Servomotor}
+\end{figure}
+
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Der Elektromotor nutzt das Prinzip der elektromagnetischen Induktion, um eine Drehbewegung zu erzeugen. Dies geschieht
+	durch das Anlegen einer Spannung an die Spulen des Motors, die ein magnetisches Feld erzeugen und den Rotor des Motors in
+	Bewegung versetzen.
+	\item Das Getriebe dient dazu, die Geschwindigkeit und das Drehmoment des Motors zu regulieren und die Bewegung an die
+	Anforderungen der Anwendung anzupassen.
+	\item Der Feedback-Mechanismus misst die Position des Motors durch Erfassung von Änderungen des magnetischen Feldes oder der
+	Winkelposition des Rotors und ermöglicht so eine präzise Steuerung.
+\end{itemize}
+
+\paragraph{Hubmagnet}
+Ein Hubmagnet (auch Solenoid genannt) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
+Stroms erzeugt. Er besteht aus einer Spule, die einen magnetischen Kern umgibt. Wenn Strom durch die Spule fließt, erzeugt
+sie ein Magnetfeld, das den Kern anzieht und somit eine lineare Bewegung erzeugt.\newline
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Der Hubmagnet nutzt das Prinzip der elektromagnetischen Induktion, um eine lineare Bewegung zu erzeugen. Wenn Strom
+	durch die Spule fließt, erzeugt sie ein Magnetfeld, das den magnetischen Kern anzieht. Je nach Polarität des Stroms bewegt
+	sich der Kern entweder in Richtung der Spule oder von ihr weg.
+	\item Die Stärke der Bewegung des Hubmagneten hängt von der Stärke des Stroms, der Anzahl der Wicklungen und der
+	Spule des Magneten ab.
+\end{itemize}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Hubmagnet}
+	\caption{Hubmagnet}
+	\label{fig:Hubmagnet}
+\end{figure}
+
+\paragraph{Entscheidungsfindung}
+Prinzipiell kann jeder der genannten Aktuatoren für das Projekt verwendet werden. Die Entscheidung fiel aufgrund
+mehrerer Vortzeile allerdings auf den Hubmagneten:
+\begin{enumerate}
+	\item Servo-Motor: Bei diesem Motor ist eine Bewegungsbeschränkung mit eingebaut, welche in jedem Motor ausgebaut
+	werden müsste. Dies ist zu umständlich, wenn es bessere Varianten - wie den Hubmagneten - gibt. Außerdem hätte
+	eine Umlenkung stattfinden müssen, da die erzeugte Bewegung eine Rotation im Gegensatz zu einer linearen Bewegung
+	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschränkung nicht
+	weiter betrachtet wurden. % @Note(Val): Warum erwähnt ihr die rotierende Bewegung dann überhaupt als Nachteil. Und warum werden vorher bei der Erklärung nicht die linearen Servomotoren erklärt?
+	Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
+	sie bei Ende der Stromversorgung waren. Für das Klavier werden Aktuatoren benötigt, welche wieder auf die vorherige
+	Position zurückschalten, die Klaviertaste also in dem Sinne wieder \enquote{loslassen} können.
+	\item Linear-Motor: Auch hier kam das Problem auf, dass die Motoren nicht automatisch wieder an ihre vorherige
+	Position zurückschalten, wenn der Stromfluss stoppt. % @Question(Val): Das Problem könnte mit einem gegenteiligen Stromfluss gelöst werden, oder? Weiß aber nicht ob das die Schaltung unbedingt verkomplizieren würde. Wenn das überhaupt nicht möglich wäre, wären Servo- & Linear-Motoren ja gar nicht nutzbar und dann wäre die Einleitung für diesen Abschnitt falsch
+	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellem
+	Tastendrücken sinnvoll ist. Außerdem schalten Sie, wenn die Stromversorgung abbricht, wieder auf ihre vorherige
+	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren.
+	Da das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinauszugehen, führte dies lediglich dazu, dass Kostenintensivere Solenoids bestellt werden müssen.
+			% @Note(Val): Der letzte Satz hier ist komisch & wahrscheinlich falsch (was genau bedeutet "genug" hier z.B.)
+			% @Note(Val): Der Nachteil ist doch gar nicht, dass sie weniger Kraft aufbringen, wenn es auch Solenoids gibt, die diese Kraft aufbringen, oder? Der Nachteil ist eher, dass die Solenoids, die solche Kraft aufbringen, mehr kosten, oder?
+\end{enumerate}
 
 
 \subsection{Schaltplan} \label{subsec:schaltplan}

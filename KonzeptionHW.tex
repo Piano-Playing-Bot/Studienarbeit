@@ -11,6 +11,7 @@
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
 % TODO(Jay): check einheitlichkeit gendern
 % TODO(Jay): check einheitlichkeit Zeit
+% TODO(Jay): Hubmagnet erst nach Unterkapitel Aktuatoren verwenden
 % @Note(Val): Abschnitt fängt im Präteritum an und geht dann mit Präsenz weiter
 % Glaube, dass Präsenz leichter lesbar ist, aber muss halt einfach einheitlich sei
 % @Note(Val): Der ganze Abschnitt argumentiert falsch herum.
@@ -50,7 +51,6 @@ Mittels dieser Anforderungen wurde online ein passendes Klavier für 100€ erst
 
 \chapterauthor{Jakob Kautz}
 
-% @TODO(Jay): Problem Präzision trotz Entscheidung der Ansteuerung
 Das Ansteuerungskonzept bezieht sich auf die Problemstellung, dass die Saiten des Klaviers auf irgendeine Art zum
 schwingen gebracht werden müssen.
 Dafür ist eine Vorrichtung hilfreich, die elektrische Signale in Bewegung umwandeln kann.
@@ -133,14 +133,21 @@ voller Hebelkraft von ganz hinten angespielt werden. Allerdings würde dies dazu
 Zur Vereinfachung wäre es daher sinnvoller, alle Tasten von der gleichen Höhe aus anzuspielen. Dies bedeutet, dass alle
 Tasten von weiter vorne angespielt werden und somit ein Teil der möglichen Dynamik verloren geht. \newline
 
-Diese Probleme fallen beim Ziehen der Tasten weg. % @Note(Val): Klingt ein bisschen repetetiv mit den vorherigen Sätzen, inhaltlich aber ok
+Diese Probleme fallen beim Ziehen der Tasten weg beziehungsweise sind weniger ausgeprägt. % @Note(Val): Klingt ein bisschen repetetiv mit den vorherigen Sätzen, inhaltlich aber ok
 Bei der Präzision liegt der Grund dafür darin, dass die Taste nicht
 direkt getroffen werden muss. Stattdessen wird lediglich ein Seil (siehe Kapitel \ref{subsec:VerbindungTastenAktuatoren})
 gezogen, das den Aktuator dazu veranlasst, die Taste
 gerade nach unten zu ziehen.
 Da das Ziehen des Seils weniger präzise Kontrolle erfordert
 und keine direkte Interaktion mit der Tastenmechanik erfordert, kann es auch die Tastenempfindlichkeit weniger beeinträchtigen
-als das Drücken der Tasten.\newline
+als das Drücken der Tasten. Es ist allerdings zu beachten, dass das ziehen der Seile - im Gegensatz zum drücken - keine
+optimalen Ergebnisse im Bereich des Präzisen spielens bringen. Dies hat mehrere Gründe.
+\begin{enumerate}
+	\item Verzögerung: Wenn das Seil sich über die Zeit lockert, kann es sein, dass das betätigen der Taste nicht direkt mit der Bewegung des Aktuators kommt. Außerdem würde die Taste so nicht komplett gedrückt werden.
+	\item Verschleiß: Die Bewegung über Führsysteme oder Umlenkrollen, welche für eine gerade Bewegung der Seile benötigt werden, können zu Reibungsverlust führen. Außerdem könnten die Seile sich durch verschleiß lockern oder verschieben.
+\end{enumerate}
+Letztendlich handelt es sich bei beiden Problemen um Gebrauchserscheinungen, welche durch eine gute Auswahl von Seilen
+und Wartungen am Klavier wenn es öfter in Benutzung ist minimiert werden können.
 Die Hebelkraft ist ebenfalls ein geringeres Problem, da die Aktuatoren Problemlos am vordersten Punkt der Tasten
 befästigt werden können, da hier - im Gegensatz zum hinteren Teil des Klaviers - nichts im Weg ist.
 
@@ -556,7 +563,7 @@ gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert we
 	\caption{Beispielhafte Darstellung einer LED-Matrix}
 	\label{img:LED-Matrix}
 \end{figure}
-
+\newline
 %ohne Multiplexer
 \paragraph{Matrix ohne Multiplexer}
 

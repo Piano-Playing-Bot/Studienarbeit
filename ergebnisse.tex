@@ -1,0 +1,126 @@
+
+
+\chapter{Ergebnisse} \label{ergebnisse}
+\chapterauthor{Jakob Kautz, Olivier Stenzel, Val Richter}
+\nocite{*}
+
+Nachdem sowohl Hardware als auch Software konzipiert und zu großen Teilen umgestzt wurden, soll nun der entstandene Prototyp abgeschlossen werden.
+Dafür wird zuerst in Abschnitt \ref{ergebnisse-prototyp} ein Überblick über den gesamten Prototypen gegeben.
+In Abschnitt \ref{ergebnisse-tests} werden dann mehrere Tests und Messungen am Prototypen ausgeführt.
+Die Ergebnisse der Testungen zeigen einerseits die Fähigkeiten und Limitationen des Prototypen auf, können zu Teilen aber auch verwendet werden, um bestehende Probleme der Umsetzung zu lösen.
+Zuletzt wird in Abschnitt \ref{ergebnisse-limitationen} noch ein Überblick darüber gegeben, was beim Prototypen noch fehlt, um ihn zu einem vollständigen Produkt zu bringen. % @Note(Val): Der Satz klingt komisch, bitte überarbeiten
+Hier werden nicht nur Limitationen der Umsetzung, sondern auch der Konzeption betrachtet, welche in Fortführungen oder Replikationen dieser Arbeit beachtet werden sollten.
+
+
+
+\section{Prototyp} \label{ergebnisse-prototyp}
+
+% @TODO(Val): Prototyp vollständig beschreiben, also auch Hardware
+- Was wurde umgesetzt \newline
+- UX und UI Design (kurz) \newline
+- Messungen: \newline
+	- Kommunikationsgeschwindigkeit \newline
+	- FPS beim Arduino \newline
+	- FPS bei UI \newline
+	- FPS bei Comm-Thread der UI \newline
+	- Speicherverbrauch der UI \newline
+	- Code-Komplexität (ist das interessant?) \newline
+	- Lines of Code (i guess?) \newline
+- Limitationen \newline
+	- nur MIDI, kein Image→/Ton→PIDI \newline
+	- UI Design ist verbesserungsfähig \newline
+	- SPPP garantiert keine Datenkonsistenz \newline
+	- SPPP ist nicht auf mehrere Nutzer:innen ausgelegt \newline
+	- Mögliche Fehler in SPPP (siehe Github issue) \newline
+	- siehe Github issues \newline
+	- Es wurde nicht getestet, ob Flash-Speicher (der oftmals ausreichend groß ist) zum Speichern eines gesamten Songs ausgereicht hätte und welche Performanz-Probleme das mit sich gebracht hätte. Dann wäre Streaming unnötig. Wurde aber nicht getestet, ob das überhaupt eine viable Alternative wäre \newline
+
+
+
+\section{Tests} \label{ergebnisse-tests}
+\chapterauthor{Olivier Stenzel}
+
+% @Note(Val): Der zweite Satz hat nichts mit dem ersten zu tun, auch wenn es so aussieht als würden sie es tun.
+% Wenn ich das richtig verstehe, sagst du, dass wir wir die maximale Geschwindigkeit bestimmen müssen, um die Software nicht schneller werden zu lassen.
+% Aber wenn die Software zu schnell ist, ist das ja gar kein Problem.
+% Es gibt der Software nur das Wissen, dass sie langsamer sein darf.
+% Stattdessen ist das Wissen über die Maximalgeschwindigkeit in sich selbst einfach interessant, da es zeigt wie gut unser kosten-effizienter Prototyp ist
+% @Note(Val): In kurz: Diese Einleitung muss neu geschrieben werden
+Um eine Überbelastung der Komponenten und eine korrekte Funktionalität zu gewährleisten, müssen Software-seitig Begrenzungen eingeführt werden.
+Um zum Beispiel die maximale Geschwindigkeit bestimmen zu können, mit der ein Stück gespielt werden kann, muss die maximale Frequenz eines physischen Tastendrucks berüclsichtigt werden.
+Es wurden folgende Tests durchgeführt:
+
+\subsubsection{T1 Max. Frequenz eines Tastendrucks:}
+
+% @Note(Val): Dieser Test gehört eher in die Software-Umsetzung
+% Alternativ, falls wir den Test hier lassen wollen, müsste ich hier noch ein-zwei Paragraphen dazu schreiben, wie das Problem in der Software gelöst wird
+Erklärung: Software-seitig kann sehr genau angegeben werden, wann welche Taste gespielt wird (siehe Kapitel \enquote{\nameref{vorgehenSW-PIDI}}).
+Hierbei kann auch die Frequenz, mit der dieselbe Taste hintereinander angespielt, wird bis auf mehrere hundert Hertz erhöht werden.
+Da der Hubmagnet, bevor er einen erneuten Tastendruck initiieren kann, wieder in seinen Ausgangszustand zurückkehren muss, ist dieser der limitierende Faktor.
+Im Endprodukt soll sichergestellt werden, dass alle Töne des Stücks auch wirklich erklingen. % @Note(Val): Dieser letzte Satz erklärt, warum es hier ein Problem geben kann. Dieser Satz sollte eher an den Anfang, um das Problem aufzuzeigen. Sonst argumentieren wir wieder falsch herum
+
+Ablauf: Schrittweise wird software-seitig die Frequenz des Anspielens einer Taste erhöht.
+Es werden mehrere Tasten für diesen Test verwendet, wobei der Fokus, auf Grund des höchsten Mechanik-Gewichts, auf der A0 Taste liegt. % @Note(Val): Was wird mit "Mechanik-Gewicht" gemeint? Vorher wird nie erwähnt, dass manche Tasten ein höheres Gewicht haben. Das wäre vielleicht wichtig vorher schon zu erwähnen
+Während des Spielens wird eine Slow-Motion-Aufnahme des Hammers und der Klaviersaite angefertigt ud im Anschluss analysiert.
+Wird die Saite angeschlagen, kann die Frequenz im nächsten Schritt erhöht werden.
+Sollte sie nicht angeschlagen werden, ist die Limitation gefunden und kann in den Code aufgenommen werden.
+
+Ergebnis: Ein Tasten-Magnet-Zyklus dauert durchschnittlich ca. 30ms und maximal ca. 40ms.
+% @TODO(Val): Hier sollte vermutlich die Lösung im Code kurz erklärt werden
+
+\subsubsection{T2 Min. Lautstärke:}
+
+Erklärung: Um den am leisesten spielbaren Ton zu ermitteln, muss die minimale Spannung ermittelt werden, mit der eine Taste betätigt werden kann.
+Wie in Kapitel \enquote{\nameref{subsec:aktuator}} erklärt, benötigt ein Hubmagnet eine entsprechende Ansprechspannung, um den Anker zu bewegen.
+Da diese Spannung im Datenblatt des Hubmagneten nicht ersichtlich ist und das Tastengewicht sowieso mit einbezogen werden muss, muss diese Mindestspannung beim Klavier experimentell ermittelt werden.
+
+Ablauf: Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt (siehe Kapitel \enquote{\nameref{vorgehenSW-MC}}) schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
+Dies wird an allen (mit Fokus auf den tieferen) Tasten durchgeführt, da sich die einzelnen Tasten in ihrem Ansprechverhalten teils deutlich unterscheiden. % @Note(Val): Erneut - warum wird erst jetzt erwähnt, dass sich die Tasten so stark unterscheiden? Wäre das bei der Konzeption oder dem Anbringen der Aktuatoren an das Piano nicht interessant zu wissen?
+Anschließend wird der Größte der einzelnen Minima in den Code mit aufgenommen.
+
+Ergebnis: Das leisteste Anspielen der Tasten ist mit einer Spannung von 17,3V möglich.
+Dieses Ergebnis fließt in die Lautstärkeregelung der Software ein.
+% @TODO(Val): Hier sollte vermutlich die Lösung im Code kurz erklärt werden
+
+
+\paragraph{T3 Min. Akkuratheit:}
+
+
+
+
+
+
+
+
+
+
+
+\section{Limitationen \& Erweiterungsmöglichkeiten} \label{ergebnisse-limitationen}
+\chapterauthor{Jakob Kautz, Olivier Stenzel}
+
+Im Laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten- Gründen nicht weiter
+behandelt wurden.
+\paragraph{Anzahl der Aktuatoren}
+Wie bereits erklärt, wurden insgesamt 88 Aktuatoren verbaut, womit jede Taste angespielt werden kann. Trotz der Anzahl an
+Hubmagneten, werden maximal 10 Tasten glechzeitig angespielt. Dies liegt an der Stromversorgung. Ein Hubmagnet benötigt
+eine Stromversorgung von etwa 0.4 Ampere, für 10 Aktuatoren sind das also 4 Ampere. Das Netzteil welches wir verwenden, ist auf
+6(?) Ampere ausgelegt, wobei wir mit einem Netzteil getestet haben, welches 2,8 Ampere unterstützt. Es gibt Netzteile die
+einen höheren Stromföuss ermöglichen, allerdings sind diese um weiten teurer als das Netzteil, für welches wir uns entschieden haben.
+Es wäre auch möglich, ein zweites Netzteil parallel zu Schalten, wodurch die Kosten nicht dramatisch gestiegen wären.
+Wir haben hier allerdings keinen Mehrwert mehr gesehen. Die Logik und Ansteuerung des Klaviers bleibt die gleiche, weswegen
+wir bei einem Netzteil mit einem maximalen Stromfluss von 6 Ampere (und 24V Leistung) verblieben sind.
+
+\paragraph{Pedalansteuerung}
+Ein Klavier hat normalerweise zwei oder drei Pedale, welche die Dynamik und den Klang des Klaviers beeinflussen.
+Diese sind schwerer anzuspielen als die Tasten und benötigen somit Leistungsfähigere Aktuatoren als wir für die Tasten nutzen.
+Es gab eine Überlegung diese Aktuatoren zu besorgen, da die Pedale klangtechnisch Mehrwert bringen.
+Außerdem hätten wir uns noch Gedanken bezüglich der Schaltug und des Signals machen können.
+Einerseits hätte ein weiteres Schieberegister genutzt werden können, wobei das Signal angepasst wird das die letzten 6 Ausgänge nie ein Signal bekommen.
+ANdererseits hätten die Pedale mit weiteren \ac{PWM} Ports des Arduinos verbunden werden können und die Signale unabhängig von den
+Schieberegistern erhalten können.
+Im Prinzip wäre die Idee hier allerdings wieder dieselbe wie beim Rest des Projektes gewesen,
+weswegen wir Kosten an den Aktuatoren und der extra Stromversorgung für die Pedale gespart haben und diese nicht ansteuern.
+
+\paragraph{Wärmeabfuhr}
+Da die Hitzeentwicklung der Hubmagnete mit dem Dauer der Nutzung stark ansteigt, ist die Holzplatte bezogen auf die Wärmeabfuhr nicht geeignet.
+Besser würde sich hier eine Metallplatte anbieten, auf der die Aktuatoren verschraubt werden.

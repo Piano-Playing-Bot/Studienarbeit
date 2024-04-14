@@ -7,7 +7,7 @@
 Nachdem sowohl Hardware als auch Software konzipiert und zu großen Teilen umgestzt wurden, soll nun der entstandene Prototyp abgeschlossen werden.
 Dafür wird zunächst ein Kurzüberblick über den gesamten Prototypen gegeben.
 In Abschnitt \ref{ergebnisse-tests} werden dann mehrere Tests und Messungen am Prototypen ausgeführt.
-Die Ergebnisse der Testungen zeigen einerseits die Fähigkeiten und Limitationen des Prototypen auf, können zu Teilen aber auch verwendet werden, um bestehende Probleme der Umsetzung zu lösen.
+Die Ergebnisse der Tests zeigen einerseits die Fähigkeiten und Limitationen des Prototypen auf, können zu Teilen aber auch verwendet werden, um bestehende Probleme der Umsetzung zu lösen.
 Zuletzt wird in Abschnitt \ref{ergebnisse-limitationen} noch ein Überblick darüber gegeben, was beim Prototypen noch fehlt, um ihn zu einem vollständigen Produkt zu bringen. % @Note(Val): Der Satz klingt komisch, bitte überarbeiten
 Hier werden nicht nur Limitationen der Umsetzung, sondern auch der Konzeption betrachtet, welche in Fortführungen oder Replikationen dieser Arbeit beachtet werden sollten.
 
@@ -41,38 +41,64 @@ Abschließend werden in Sektion \ref{tests-messungen} noch mehrere Messergebniss
 Wie in einigen Tests ersichtlich wird, ist für eine korrekte Funktionalität der Hardware die Einführung einer Software-seitigen Begrenzungen notwendig.
 Anpassungen der Software, die aufgrund von Testergebnissen durchgeführt wurden, werden bei den jeweiligen Tests ebenfalls spezifiziert.
 
+
 % @Note(Val): Add Softwre-Tests
 \begin{table}[htbp]
 	\centering
-	\begin{tabular}{|c|c|}
+	\begin{tabular}{|l|l|}
 		\theadstart{ID} & \theadcol{Name} \\ \hline
-		T1 & Max. Frequenz eines Tastendrucks \\ \hline
+		T1 & Min. Periodendauer eines Tastendrucks \\ \hline
 		T2 & Min. Lautstärke \\ \hline
 		T3 & Min. Genauigkeit \\ \hline
 	\end{tabular}
-	\caption{Testungen}
+	\caption{Tests}
 	\label{table:tests}
 \end{table}
 
-\subsubsection{T1 Max. Frequenz eines Tastendrucks:}
+\subsubsection{T1: Min. Periodendauer eines Tastendrucks}
 
-% @Note(Val): Dieser Test gehört eher in die Software-Umsetzung
-% Alternativ, falls wir den Test hier lassen wollen, müsste ich hier noch ein-zwei Paragraphen dazu schreiben, wie das Problem in der Software gelöst wird
-Erklärung: Software-seitig kann sehr genau angegeben werden, wann welche Taste gespielt wird (siehe Kapitel \enquote{\nameref{vorgehenSW-PIDI}}).
-Hierbei kann auch die Frequenz, mit der dieselbe Taste hintereinander angespielt, wird bis auf mehrere hundert Hertz erhöht werden.
-Da der Hubmagnet, bevor er einen erneuten Tastendruck initiieren kann, wieder in seinen Ausgangszustand zurückkehren muss, ist dieser der limitierende Faktor.
-Im Endprodukt soll sichergestellt werden, dass alle Töne des Stücks auch wirklich erklingen. % @Note(Val): Dieser letzte Satz erklärt, warum es hier ein Problem geben kann. Dieser Satz sollte eher an den Anfang, um das Problem aufzuzeigen. Sonst argumentieren wir wieder falsch herum
+\paragraph{Erklärung:}
+Mit der Periode eines Tastendrucks ist hier jene Zeit gemeint, die zwischen doppelten Betätigen derselben Taste vergeht.
+Da der Hubmagnet, bevor er einen erneuten Tastendruck initiieren kann, wieder in seinen Ausgangszustand zurückkehren muss, kann diese Periode nicht unendlich reduziert werden, da es sonst nur zu einem konstanten Spielen der Taste kommt.
+Es soll sichergestellt werden, dass alle Töne des Stücks erklingen, weshalb das Erfassen der minimalen Periodendauer bedeutsam ist.
+Software-seitig kann diese Periodendauer genutzt werden, um zu verhindern, dass ein solches \ac{Verschmelzen} von zwei Anschlägen zu einem konstanten Anspielen vorkommt.
 
-Ablauf: Schrittweise wird software-seitig die Frequenz des Anspielens einer Taste erhöht.
-Es werden mehrere Tasten für diesen Test verwendet, wobei der Fokus, auf Grund des höchsten Mechanik-Gewichts, auf der A0 Taste liegt. % @Note(Val): Was wird mit "Mechanik-Gewicht" gemeint? Vorher wird nie erwähnt, dass manche Tasten ein höheres Gewicht haben. Das wäre vielleicht wichtig vorher schon zu erwähnen
+\paragraph{Ablauf:}
+Schrittweise wird software-seitig die Frequenz des Anspielens einer Taste erhöht.
+Es werden mehrere Tasten für diesen Test verwendet, wobei der Fokus, auf Grund des höchsten Mechanik-Gewichts, auf der tiefsten Taste - der A0 Taste - liegt. % @Note(Val): Was wird mit "Mechanik-Gewicht" gemeint? Vorher wird nie erwähnt, dass manche Tasten ein höheres Gewicht haben. Das wäre vielleicht wichtig vorher schon zu erwähnen
 Während des Spielens wird eine Slow-Motion-Aufnahme des Hammers und der Klaviersaite angefertigt ud im Anschluss analysiert.
 Wird die Saite angeschlagen, kann die Frequenz im nächsten Schritt erhöht werden.
-Sollte sie nicht angeschlagen werden, ist die Limitation gefunden und kann in den Code aufgenommen werden.
+Sollte sie nicht angeschlagen werden, ist die maximal verwendbare Frequenz (und damit auch die minimale Periodendauer) gefunden und kann in den Code aufgenommen werden.
 
-Ergebnis: Ein Tasten-Magnet-Zyklus dauert durchschnittlich ca. 30ms und maximal ca. 40ms.
-% @TODO(Val): Hier sollte vermutlich die Lösung im Code kurz erklärt werden
+\paragraph{Ergebnis:}
+Die minimale Periodendauer liegt durchschnittlich bei den Tasten bei ca. 30ms.
+Das höchste Minimum wurde wie erwartet bei der A0 Taste mit ca. 40ms gefunden. \newline
+Software-seitig gibt es nun mehrere Möglichkeiten, dieses Minimum zu forcieren.
+Zum Beispiel könnte im \ac{PIDI}-Format vorgegeben werden, dass zwischen zwei Anschlägen eines einzigen Tons immer min. 40ms liegen müssen.
+Da das \ac{PIDI}-Format aber unabhängig der Hardware sein soll und diese Begrenzung speziell durch die verwendeten Komponenten aufkommt, ist dies eine eher unschöne Lösung.
 
-\subsubsection{T2 Min. Lautstärke:}
+Stattdessen wäre es besser wenn nur der \ac{MC} diese Limitierung beachten muss, da nur dieser Wissen über die spezifische Hardware-Umstzung verwenden soll.
+Der \ac{MC} muss entsprechend Tasten finden, die so lange gespielt werden sollen, dass ihr nächstes Anspielen weniger als 40ms später erfolgt.
+Wenn diese Tasten gefunden wurde, könnte entweder das nächste Anspielen der Taste später erfolgen oder die Spiellänge der Taste reduziert werden.
+Da das Anspielen einer Taste sehr viel klarer zu erkennen ist als das Weiterspielen einer Taste, beeinflusst die zweite Strategie den Klang des Musikstücks geringer.
+
+Da der \ac{MC} allerdings immer nur Teile des Musikstücks erhält, kann nicht einfach zu Spielbeginn das gesamte Stück angepasst werden, um die Periodendauer von min. 40ms einzuhalten.
+Stattdessen müssen die \lstinline|PlayedKey|s, die der \ac{MC} sich speichert, dynamisch während Spielen des Musikstücks angepasst werden.
+Dafür wird durch die nächsten \lstinline|PidiCmd|s iteriert, die in den nächsten 40ms gespielt werden sollen. Falls eine dieser Tasten bereits gespielt wird, muss die Taste jetzt schon aufhören zu spielen.
+
+Dieser Ansatz ist sowohl leicht zu implementieren, als auch performat in der Ausführung.
+Allerdings kommt diese Strategie auch mit Nachteilen.
+Soll eine Taste beispielsweise für 30ms gespielt werden und dann 5ms später wieder angespielt werden, so wird das erste Anspielen übersprungen.
+Ein alternativer Ansatz würde in diesen Fällen das Verschmelzen der Töne in Kauf nehmen.
+Das würde jedoch eine etwas kompliziertere Lösung mit sich bringen und es da diese Fälle in der Praxis eher unwahrscheinlich sind, wurde Einfachheit hier vorgezogen.
+
+Eine größere Limitation dieser Lösung liegt dagegen darin, dass zurzeit nur die nächste \lstinline|PidiCmd|s im derzeit zu spielenden Buffer betrachtet werden.
+Der zweite Buffer von \lstinline|PidiCmd|s, der beim Lesen neuer \ac{Music}-Nachrichten befüllt wird, wird zurzeit ignoriert.
+Das bedeutet, dass die derzeitige Umsetzung des Ansatzes nicht vollständig korrekt ist, da das nächste Anschlagen eines Tons im nächsten Buffer liegen könnte.
+Allerdings wurde hier wieder die Einfachheit der Implementierung als wichtiger gesehen, da diese Fälle in den praktischen, getesteten Musikstücken nicht oder nur sehr selten aufgetreten sind.
+
+
+\subsubsection{T2: Min. Lautstärke:}
 
 Erklärung: Um den am leisesten spielbaren Ton zu ermitteln, muss die minimale Spannung ermittelt werden, mit der eine Taste betätigt werden kann.
 Wie in Kapitel \enquote{\nameref{subsec:aktuator}} erklärt, benötigt ein Hubmagnet eine entsprechende Ansprechspannung, um den Anker zu bewegen.
@@ -87,7 +113,7 @@ Dieses Ergebnis fließt in die Lautstärkeregelung der Software ein.
 % @TODO(Val): Hier sollte vermutlich die Lösung im Code kurz erklärt werden
 
 
-\subsubsection{T3 Min. Genauigkeit:}
+\subsubsection{T3: Min. Genauigkeit:}
 
 % @TODO(Val): muss noch geschrieben werden
 

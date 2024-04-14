@@ -578,11 +578,16 @@ Bei einer LED-Matrix ohne Multiplexer werden die LEDs direkt über die GPIO-Pins
 \ac{MC}s angesteuert. Jede LED ist einzeln mit einem Pin des \ac{MC}s verbunden. Um die LEDs anzusteuern,
 muss der \ac{MC} jeden Pin einzeln aktivieren oder deaktivieren, um die entsprechende LED ein- oder auszuschalten.
 Hierbei werden viele Pins benötigt, um die gesamte Matrix anzusteuern, was besonders bei größeren Matrizen unpraktisch
-sein kann. Zum Beispiel erfordert eine 8x8-Matrix 64 Pins, was für viele \ac{MC}s zu viel sein kann.
-% @Note(Val): Statt arbiträren Beispiel wäre hier eher interessant wie viele Pins wir bräuchten und wie viele wir haben
+sein kann. Für dieses Projekt, wird wie oben aufgeführt, eine 8x8-Matrix benötigt. Es werden also 16 PWM-Fähige Pins
+benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über ???? von diesen Pins.
 
-% @TODO(Jay) add picture from Tinkercad
-
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.75\textwidth]{img/LEDMatrixSchaltung}
+	\caption{Matrix ohne Multiplexer Schematisch}
+	\label{fig:Matrix}
+\end{figure}
+\newpage
 %mit Multiplexer
 %Was ist ein Multiplexer, warum hilft er bei Martix wie sieht allg Schaltung aus?
 \paragraph{Matrix mit Multiplexer}
@@ -591,9 +596,14 @@ Ein Multiplexer (bzw. ein Demultiplexer) ermöglicht das kombinieren mehrerer Si
 Bei einer LED-Matrix kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit einem GPIO-Pin des \ac{MC}s elimniert werden.
 Entsprechend werden weniger Pins benötigt, um die Matrix anzusteuern.
 Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und möglichen Latenzen einher. % @Note(Val): Sind die Latenzen nur "möglich"? Müsste es nicht entweder klar Latenzen erhöhen oder nicht?
-
-% @TODO(Jay): Picture from Tinkercad
-
+\newline
+Um die Komplexität darzustellen, eine Aktuator-Matrix ohne Multiplexer würde für neun Aktuatoren wie folgt aussehen:
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{img/AktMatrix}
+	\caption{Aktuator-Matrix ohne Multiplexer}
+	\label{fig:AktMatrix}
+\end{figure}
 
 \subsubsection{Entscheidungsfindung}
 
@@ -629,7 +639,7 @@ Beim präzisen Ansteuern von Aktuatoren bringt dieses Prinzip jedoch einige Prob
 	das Prinzip einzusetzen. % @Note(Val): Aber mit Multiplexer braucht es doch nicht mehr so viele Pins, oder? Vielleicht konkret berechnen wie viele Pins dann benötigt wären und sagen, dass es immer noch mehr Pins sind als beim Schieberegister?
 	\item Ressourcen: Desweiteren basiert die Entscheidung auf unzureichenden Ressourcen für die Matrix. Im Internet gab es
 	keine ausreichenden Anleitungen/Ressourcen, die die Implementierung einer LED-Matrix mit Aktuatoren ausreichend
-	unterstützen würden. Zusätzlich dazu lieferten die Simulationen via Tinkercad keine befriedigenden Ergebnisse % @TODO(Val): Footnote mit Link auf Tinkercad einfügen, falls du Tinkercad erwähnst.
+	unterstützen würden. Zusätzlich dazu lieferten die Simulationen via Tinkercad\footnote{Tinkercad: https://www.tinkercad.com} keine befriedigenden Ergebnisse
 	für die Aktuator-Matrix.
 	Im Gegensatz dazu sind Schieberegister gut dokumentiert und es gibt ausreichende Ressourcen, um ihre
 	Verwendung für die Ansteuerung von Aktuatoren zu verstehen und umzusetzen.
@@ -757,6 +767,19 @@ Physikalische Grundlagen:
 	\label{fig:Hubmagnet}
 \end{figure}
 
+Ein großer Vorteil von Hubmagneten ist es, dass beim Anschließen nicht darauf geachtet werden muss, wie rum die
+Kabel verbunden werden, weil es
+sich um elektromagnetische Komponenten handelt, die auf Basis des elektromagnetischen Prinzips arbeiten. Das bedeutet,
+dass der Stromfluss durch den Hubmagneten erzeugt wird, um ein Magnetfeld zu erzeugen, das die Bewegung oder das Halten
+von Gegenständen ermöglicht.
+Die Polung ist aufgrund der Symmetrie des Magnetfeldes egal:
+Das Magnetfeld, das durch den Stromfluss im Hubmagneten erzeugt wird, ist in der Regel
+symmetrisch um die Mittelachse des Magneten. Das bedeutet, dass sich die magnetische Kraft gleichmäßig um den Magneten herum
+verteilt, unabhängig davon, welche Polung verwendet wird. Daher spielt es keine Rolle, welcher Anschluss an Plus oder Minus
+angeschlossen wird, da das resultierende Magnetfeld ähnlich sein wird.
+
+%TODO(Jay): QUELLE
+
 \paragraph{Entscheidungsfindung}
 Prinzipiell kann jeder der genannten Aktuatoren für das Projekt verwendet werden. Die Entscheidung fiel aufgrund
 mehrerer Vortzeile allerdings auf den Hubmagneten:
@@ -781,7 +804,23 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 
 
 \subsection{Schaltplan} \label{subsec:schaltplan}
-\chapterauthor{Olivier Stenzel}
+\chapterauthor{Olivier Stenzel, Jakob Kautz}
+
+Der Schaltplan besteht im Großteil aus den bereits aufgeführten Komponenten:
+\begin{enumerate}
+	\item Arduino
+	\item Schieberegister
+	\item MOSFET
+	\item Hubmagnet
+\end{enumerate}
+In diesem Kapitel wird erläutert, wie diese Komponenten miteinander verbunden werden um eine Funktionsfähige
+Schaltung zu erstellen. Die gesamte Schaltung mit allen 88 Hubmagneten wird wie folgt aussehen:
+\begin{figure}[htbp]
+	\centering
+	\includegraphics [width=0.85\textwidth] {img/SchaltungGesamt}
+	\caption{Überblick Schaltplan}
+	\label{img:Schaltplan}
+\end{figure}
 \subsubsection{Arduino}
 
 Im Zentrum der Schaltung steht der \ac{MC} (hier: Arduino Uno R3).
@@ -823,6 +862,13 @@ Jedes weiteres Schieberegister greift die oben genannten Signale ab.
 Der einzige Unterschied befindet sich am Serial (SER) Input Port.
 Das Schieberegister an Position i+1 wird mit dem seriellen Output des Schieberegisters an Position i verbunden. ($\forall i = 0,...,10$)
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{img/SchaltungSchieberegister}
+	\caption{Schaltung der Schieberegister}
+	\label{fig:Shifting}
+\end{figure}
+
 \subsubsection{MOSFET}
 
 Die Hubmagnete werden jeweils mit 24V und mit bis zu 400mA betrieben.
@@ -836,14 +882,34 @@ Der GATE-Pin des MOSFETs erhält das Signal, dass die \enquote{``Durchlässigkei
 Der SOURCE-Pin wird mit Ground des gesamten Systems verbunden.
 Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunden.
 
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{img/MosSchaltung}
+	\caption{Schaltung der Mosfets}
+	\label{fig:SchaltungMosfet}
+\end{figure}
+
 \subsubsection{Hubmagnet}
 
 Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnetes mit dem +24V verbunden.
+Bei Hubmagneten ist es in der Regel egal, welcher Anschluss an Plus und welcher an Minus angeschlossen wird
+(siehe Kapitel \ref{subsec:aktuator}).
 
 \subsubsection{Testen}
 
 Um die Fehlersuche zu erleichtern, werden LEDs in den Schaltplan mit eingebaut.
 Diese werden jeweils mit einem entsprechenden $1k\Omega$ Widerstand parallel zu den Motoren angeschlossen.
 So kann anhand der Helligkeit der LED die Intensität abgelesen werden, mit der eine Taste gespielt wird.
+\newline
 
-%TODO(Jay): Bild vom Schaltplan
+Für insgesamt 4 Hubmagnete (Wobei in dem Schema Motoren gewählt wurden, da das Programm keine Hubmagnete als Komponenten
+zur Verfügung stellt) und 2 Schieberegister sieht die Darstellung des Schaltplans Schematisch wie folgt aus:
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{img/SchematischeSchaltungExp}
+	\caption{Beispielhaftes Schema des Schaltplans}
+	\label{img:SchaltungExpSchema}
+\end{figure}
+
+

@@ -45,20 +45,22 @@ Dieses muss einige Voraussetzungen erfüllen:
 	\item 	Der Transport muss einfach durchzuführen sein
 \end{enumerate}
 
-% @TODO(Val): Fühlt sich an als würde hier noch Text fehlen, oder?
+Mittels dieser Anforderungen wurde online ein passendes Klavier für 100€ ersteigert.
 
-
-\subsection{Ansteuerungskonzept} \label{konzeptionHW-ansteuerungskonzept}
+\subsection{Ansteuerungskonzept} \label{subsec:konzeptionhw-ansteuerungskonzept}
 \chapterauthor{Jakob Kautz}
+
 % @TODO(Jay): Problem Präzision trotz Entscheidung der Ansteuerung
-% @Note(Val): mMn fehlt ein Satz hier oder irgendwann davor, dass Aktuatoren benötigt werden. Ist vielleicht offensichtlich, aber ein Satz der Form: "Zum automatischen Anspielen des Klaviers benötigt es Aktuatoren" oder so.
-Das Ansteuerungskonzept für die Tasten eines Klaviers erfordert eine Betrachtung der Befestigungsorte für
-die Aktuatoren. Eine grundlegende Überlegung ist, ob die Saiten oder die Tasten selbst angespielt werden sollen. % @Note(Val): Würde vllt. klarer machen, dass es um das direkte Ansteuern der Tasten bzw. Saiten geht, weil die Saiten (indirekt) ja in jedem Fall angespielt werden (sonst gäbe es ja keinen Ton, soweit ich Pianos verstehe)
+Um die Saiten zum Schwingen zu bringen ist eine Vorrichtung hilfreich, die elektrische Signale in Bewegung umwandeln kann.
+Dies ist die Eigenschaft von Aktuatoren, wie z.b. Motoren.
+In diesem Kapitel wird untersucht, wie genau man das Anspielen der Saiten technisch umsetzen kann.
+Dabei ist die grundlegende Überlegung, ob man die Saiten direkt anschlägt,
+oder die bestehenden Tasten weiter dafür nutzt.
 
 Wenn die Saiten direkt angespielt werden, erfordert dies weniger Kraft im Vergleich zu den Tasten.
 Das bedeutet, dass die Aktuatoren weniger Kraft aufbringen müssen und somit kostengünstigere
-Aktuatoren genutzt werden können. Allerdings geht
-dabei die gesamte Mechanik des Klaviers verloren, was bedeutet, dass Aspekte wie Dämpfung nicht genutzt werden können,
+Aktuatoren genutzt werden können.
+Allerdings geht dabei die gesamte Mechanik des Klaviers verloren, was bedeutet, dass Aspekte wie Dämpfung nicht genutzt werden können,
 was wiederum zu einem weniger ansprechenden Klang führt. Zusätzlich müsste das Klavier permanent geöffnet bleiben, und die
 Aktuatoren müssten äußerst präzise die Saiten anschlagen, um akzeptable Ergebnisse zu erzielen.
 % @Note(Val): Mit Außnahme des letzten Punkts verstehe ich die Argumente hier ehrlich gesagt nicht. Vieleicht kenne ich mich einfach zu wenig mit Klavieren aus, um das nachvollziehen zu können und wir setzen offensichtlch ein bisschen Klavier-Wissen voraus, aber fals hier für jeden Punkt ein Nebensatz hin könnte, warum das so ist, wäre das wahrscheinlich besser

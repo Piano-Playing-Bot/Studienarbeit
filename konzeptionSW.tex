@@ -431,7 +431,7 @@ Es gibt hierbei grundsätzlich drei Arten an potenziellen Fehlern:
 \end{enumerate}
 
 Die erste Art an Fehlern soll hier erstmal ignoriert werden, da sie dank der von USB und \ac{UART} versicherten Datenkonsitenz ein relativ geringes Eintrittsrisiko darstellt.
-Nichtsdestotrotz ist dies eine mögliche Fehlerquelle, die in Erweiterungen an diese Arbeit ausgebessert werden sollte. % @TODO(Val): Bei Limitationen erwähnen
+Nichtsdestotrotz ist dies eine mögliche Fehlerquelle, die in Erweiterungen an diese Arbeit ausgebessert werden sollte.
 Eine mögliche Sicherstellung der Datenkonsistenz würde beispielsweise über das Mitsenden eines Kontroll-Bytes funktionieren.
 
 Der zweite Fehler kann sowohl durch Fehler in der Übertragung, als auch durch ein Fehler bei der Software des Empfängers entstehen.
@@ -451,8 +451,7 @@ Sollte \ac{SAM} beispielsweise zwei Nachrichten direkt nacheinander schicken und
 Dies kann gelöst werden, indem jeder Nachricht eine einzigartige Nummer zugeordnet wird und die \enquote{Success}-Nachricht diese Nummer referenziert.
 
 Alternativ kann auch spezifziert werden, dass eine neue Nachricht nur gesendet werden darf, wenn eine \enquote{Success}-Nachricht erhalten wurde oder eine gewisse Zeit vergangen ist.
-Diese Zeit wird auch als \enquote{Timeout} benannt. % @TODO(Val): Mention other protocols (like HTTP, Websockets, etc.) using timeouts like this too
-% @Note(Jay): Zu den anderen Protokollen, ist es wichtig zu erwähnen dass die das auch Nutzen?
+Diese Zeit wird auch als \enquote{Timeout} benannt.
 Die zweite Methode bringt mit sich, dass das \ac{SPPP} Protokoll synchron wird und deshalb weniger flexibel als die asynchrone, erste Lösungsvariante erscheinen mag.
 Allerdings erleichtert die Synchronisierung des Protokolls auch den Umgang mit dem 3. Fehler, wie nachher gezeigt wird.
 Entsprechend wird sich für diese Lösungsmöglichkeit entschieden.
@@ -565,17 +564,17 @@ Der \ac{MC} sollte keine weiteren \enquote{Request}-Nachrichten schicken, sobald
 Auf den ersten Blick mag das nach weiterer Arbeit klingen, diese Logik sollte allerdings zu Start des \ac{MC}s - bevor das erste Musikstück gespielt wurde - sowieso gelten.
 Entsprechend ist es kein weiterer Aufwand in der Ausführung oder Entwicklung des \ac{MC}s.
 
+
 \section{Desktop Anwendung} \label{vorgehenSW-UI}
 
 % @TODO(Val): Wiedergabegeschwindigkeit kommt nicht vor, aber wurde bei Anforderungen genannt
 % @TODO(Val): Dieses Unterkapitel erklärt größtenteils warum wir die Anforderungen haben und passt deswegen vielleicht besser in Kapitel 2 statt hierhin
 
-\ac{SAM} soll den Nutzer:innen eine Schnittstelle zum Anspielen des Pianos bieten.
+\ac{SAM} soll der Nutzer:in eine Schnittstelle zum Anspielen des Pianos bieten.
 Den in Tabelle \ref{table:anforderungen} genannten Anforderungen nach, soll es der Nutzer:in möglich sein Musikstücke aus einem Katalog auszuwählen und dem Katalog neue Stücke hinzuzufügen.
 Weiterhin soll die Wiedergabe über die \ac{UI} steuerbar sein.
 In diesem Kapitel soll diese Anforderungen an die Anwendung genauer spezifiziert werden.
 Zusätzlich soll ein Konzept für das \ac{UI} Design entwickelt werden.
-Diese Planung beschäftigt sich dabei noch nicht direkt mit der Umsetzung oder der Architektur des Codes.
 
 Aus Sicht der Nutzer:innen hat \ac{SAM} zwei Aufgaben:
 \begin{enumerate}
@@ -598,87 +597,36 @@ Diese kann entweder auf der selben Seite mit unter gebracht werden oder auf eine
 Da die Anwendung möglichst intuitiv und leicht erlernbar sein soll, ist es bei diesen Fragen sinnvoll, ein ähnliches Design zu ähnlichen, bekannten Anwendungn zu verwenden.
 Hier sollen vor allem der \enquote{\ac{WMP}} und \enquote{Spotify} zum Vergleich genommen werden.
 Es ist davon auszugehen, dass die meisten Nutzer:innen mit mindestens einer der beiden Anwendungen vertraut sind.
-Selbst wenn nicht, sind beide Anwendungen bekannt genug, um vergleichbare Apps im Design inspiriert zu haben.
 
 Sowohl \ac{WMP} als auch Spotify bieten die Möglichkeit zum Betrachten von Katalogen - sogenannten Playlists - an.
 Beide bieten auch die Möglichkeit an, mehere Playlists zu erstellen.
 Im Rahmen dieser Arbeit soll eine solche Funktionalität nicht angeboten werden.
 Stattdessen soll \ac{SAM} nur einen einzigen Katalog zur Verfügung stellen.
 \ac{WMP} und Spotify bieten außerdem beide die Möglichkeit zum Abspielen von Musik.
-Das Importieren von Musik ist dagegen so direkt bei beiden Apps nicht möglich.
-Deshalb muss dafür eine andere Anwendung zum Vergleich gezogen werden.
 
 Das Öffnen beider Anwendung liefert ein Startbildschirm, der u.a. auf die unterschiedlichen, vorhandenen Playlists verlinkt.
 Da \ac{SAM} nur eine Playlist hat, wäre dies unnötig und würde die Nutzung der Anwendung nur verlangsamen.
 Stattdessen bietet es sich hier an, den Katalog direkt zu zeigen.
 
-Für die Darstellung des Katalogs gibt es mehere Ansätze.
-So stellt \ac{WMP} Listen von Ordnern als Quadrate an, die von links nach rechts und von oben nach unten angeordnet sind.
-Bei der Anzeige einer Playlist, werden die Songs dagegen nur von oben nach unten sortiert und jeder Song nimmt die gesamte horizontale Breite des Fensters ein.
-Spotify nutzt gleichermaßen beide Verfahren, einmal zum Anzeigen von Playlists und Songs.
-Die selben Anzeigemöglichkeiten lassen sich auch in Windows' \enquote{File Explorer} und den Gegenstücken anderer Betriebssysteme dazu finden.
-Es ist dabei bei allen genanntn Beispielen der Fall, dass die Listen-Darstellung zum Anzeigen weiterer Informationen neben dem Namen verwendet wird.
-So verlinkt Spotify in der Listen-Ansicht au die Sänger:innen, das Album des Songs und zeigt zusätzlich die Länge und das Hinzufügedatum des Songs an.
+Beim Abspielen der Musik soll wie bei \ac{WMP} und Spotify auch eine Timeline des Musikstücks am unteren Fensterrand angezeigt werden.
+Dabei soll eine Navigation im Musikstück über Klicken auf der Timeline möglich sein.
+Die Kontroll-Elemente, die in Kapitel \ref{Zielstellung} als Anforderungen gestellt wurden, sollen wie in Spotify oberhalb der Leiste dargestellt werden und ähnliche Symbole verwenden.
 
-Während es viele Infomationen zu einem Musikstück gibt, die für die Nutzer:innen von \ac{SAM} potenziell interessant zu sehen wären, soll im Rahmen dieser Arbeit nur der Name eines Musikstücks gespeichert und angezeigt werden.
-Entsprechend scheint sich eine Listen-Ansicht nicht unbedingt zu lohnen, da womöglch viel Platz damit ungenutzt bleiben würde.
-Die Darstellung in Rechteck Form ist dagegen auch nicht ideal.
-In den genannten Beispielen wird das Rechteck für ein Bild verwendet, während der Name des Elements unter oder rechts neben dem Bild steht.
-Es ist hier jedoch nicht offensichtlich, wie unterschiedliche Bilder für die Musikstücke gefunden werden könnten.
-Während der Entwicklung sollten falls möglich mehrere Versionen agil ausprobiert werden, um die sinnvollste Darstellung für \ac{SAM} zu finden.
-
-% @Question(Val): Bilder von WMP und Spotify einfügen?
-% @Note(Jay): Brauchen wir find ich nicht, aber ein Bild von der UI wär glaub ich sinnvoll
-
-Wie die Wiedergabe gestaltet werden sollte ist dagegen um eindeutiger.
-Sowohl \ac{WMP} als auch Spotify stellen eine Timeline des Musikstücks als einen mit der Zeit ausfüllenden Balkens dar.
-Spotify zeigt beim Hovern über die Leiste auch noch einen Kreis beim derzeitigen Punkt im Musikstück dar.
-Somit erlaubt Spotify das Navigieren im Song sowohl durch Klicken auf einen Punkt in der Timeline als auch durch Drag-n-Drop des Kreises.
-
-Weiterhin stellen beide Anwendungen ober oder unterhalb der Timeline auch noch Buttons für die Kontrollwiedergabe dar.
-In beiden fällen gibt es Buttons zum Pausieren und Fortfahren der Musik, sowie fürs Springen zum nächsten oder vorherigen Song und zum Ein- und Austellen einer \enquote{Shuffle} und einer \enquote{Loop} Funktion.
-Zusätz.ich bieten beide Anwendungen auch einen Lautstärkeregler an.
-Dieser besteht in beide Fällen aus einem teilweise ausgefüllten Balken und einem Lautsprechersymbol, das je nach ausgewählter Lautstärke leicht anders dargestellt wird.
-Da beide Anwendungen außerdem beim Klicken auf das Lautsprechersymbol, die Lautstärke auf null bzw. wieder zurück auf den vorherigen Wert setzen, soll \ac{SAM} die selbe Funktionalität anbieten.
-Die Kontrollelemente sollen von \ac{SAM} generell in gleicher Art implementiert werden.
-Die Mögichkeiten des Shuffle, Looping und zum nächsten bzw. vorherigen Song zu springen nehmen implizit an, dass bei Abspielen eines Songs der gesamte Katalog in einer bestimmten Reihenfolge abgespielt werden soll.
-Bei \ac{WMP} und Spotify ergibt dies Sinn, da die Nutzer:innen speziell dafür Playlists erstellen könne.
-Um den Rahmen dieser Arbeit nicht zu groß zu gestalten, wurde sich jedoch entschieden nur einen Katalog zu haben und diese Kontrollelemente entsprechend auszulassen.
-
-Wie bei \ac{WMP} und Spotify auch, soll die Wedergabe mit Timeline und Kontrollelementen am unteren Rand des Bildschirms angeordnet sein.
-Eine eigene Seite wird für die Wiedergabe entsprechend nicht benötigt.
-Eine Überlastng des Designs und Überforderung der Nutzer:innen ist hierbei ebenfalls nicht zu erwarten, da diese Nutzer:innen eine solche Aufteilung einer einzelnen Seite bereits von \ac{WMP}, Spotify und ähnlichen Anwendungen gewohnt sind.
+Anders als \ac{WMP} oder Spotify soll \ac{SAM} in der Lage sein, die Wiedergabegeschwindigkeit anzupassen.
+Dafür könnte entweder ein Slider verwendet werden, wie es auch bei der Konfiguration der Lautstärke üblich ist, oder über Buttons, die die Geschwindigkeit um eine feste Größe de- bzw. inkrementiert wird, wie es beispielsweise im populären Multi-Media-Spieler \enquote{VLC media player}\footnote{\url{https://www.videolan.org/vlc/}} gelöst ist.
+Da anzunehmen ist, dass Buttons leichter als ein Slider zu implementieren sind, wurde sich im Rahmen des Prototypen entschieden, die Wiedergabegeschwindigkeit über Buttons steuern zu lassen.
 
 Zuletzt ist nun noch das Hinzufügen von Musikstücken zu beachten.
-Es gibt viele Anwendungen und Webseiten, bei denen Nutzer:innen Dateien hochladen können.
-Es gibt zwei Standardwege, um Dateien zu importieren.
-Entweder gibt es einen Button, der ein Pop-Up im Stile eines Dateiverwaltungssystems öffnet und die Nutzer:in daraus eine Datei auswählen lässt.
-Ein etwas jüngerer und moderner Weg ist über Drag-n-Drop, wobei die Datei aus dem File Explorer in die Anwendung geschoben wird.
-Beide Methoden benötigen keine seperaten Seiten, die Drag-n-Drop Methode mag ohne Anweisung aber nicht offensichtlich sein.
-Ob eine solche Aweisung gut lesbar auf der selben Startseite eingebracht werden kann, ist fragwüdig.
-% @Note(Jay): Du wechselst oft zwischen Nutzer:in und Nutzer:innen, können wir das vereinheitlichen?
-% @TODO(Jay): Gesamt überall einheitlich gendern
-Sollte die Nutzer:in nach dem Import Konfigurationen vornehmen können, ist es sinnvoll eine neue Seite dafür zu erstellen.
-In zukünftigen Erweiterungen der Anwendung, könnten womöglich zuätzliche Informationen abgefragt oder aus der Datei extrahiert und von der Nutzer:in kontrolliert werden.
-Für diese Arbeit soll \ac{SAM} aber wie erwähnt nur die Namen der Musikstücke speichern. Dieser Name könnte sowohl vom Dateinamen übernommen werden oder falls möglich aus Metadaten, die in der Datei gespeichert sind, extrahiert werden.
-Weiterhin wäre es hier wünschenswert, wenn die Nutzer:in den automatisch extrahierten Namen nach Belieben ändern kann.
-Wenn Musikstücke während des Imports umbenannt werden können, sollte es auch später möglich sein, sie noch umzubenennen.
-Ebenso sollte es möglich sein, hnzugefügte Musikstücke später wieder löschen zu können.
+Da das Importieren neuer Musikstücke einen zweitrangigen Use-Case darstellt, wurde sich entschieden, diesen auf einer zweiten Seite umzusetzen.
+Auf der Startseite soll ein Button zum Importieren exisiteren.
+Der Button soll dann zur zweiten Seite führen, wo die zu importierende Datei ausgewählt werden kann, und für den Import umbenannt werden kann.
 
-Änderungen an Musikstücken sollten dabei über Eingaben direkt beim dargestellten Musikstück möglich sein.
-Das besagt das UI Design Pattern \enquote{Make it direct}, welches einer intuitiveren Nutzung verhilft.
+Es soll der Nutzer:in generell die Möglichkeit gegeben werden, jedes Musikstück im Katalog zu jedem Zeitpunkt umzubenennen und auch wieder zu entfernen.
+Diese Änderungen sollten dabei durch Eingaben direkt beim dargestellten Musikstück möglich sein.
+Das verhilft laut dem \ac{UI} Design Pattern \enquote{Make it direct} eine intuitivere Nutzung zu gestalten.
 Beim Darstellen der Musikstücke sollte entsprechend der Name angezeigt werden, sowie eine Möglichkeit zum Abspielen, Anpassen des Namens und zum Löschen des Musikstücks.
-Wie bereits erwähnt, soll während der Entwicklung experimentell herausgefunden werden, wie diese Aspekte am geschicktesten anzuordnen sind.
-
-Beim Importieren von Musikdateien sollen außerdem falls möglich mehrere Dateiformate akzeptiert werden.
-Der Anforderungstabelle \ref{table:anforderungen} nach, hat das Akzeptieren von \ac{MIDI}-Dateien die höchste Priorität, während andere Dateiformate optional sind.
 
 Zuletzt ist beim Import noch zu beachten, dass die Nutzer:in jederzeit den Import abbrechen können sollte.
-Wenn eine neue Seite angezeigt wird, kann dies über einen links-gerichteten Pfeil gekennzeichnet werden, der u.a. in Browsern als Symbol verwendet wird, um auf die vorherige Seite zu kommen.
-Ansonsten ist ein Button mit dem Text \enquote{Abbrechen} auch intuitiv verständlich.
+Da der Import die Nutzer:in auf eine neue Seite bringt, soll das Abbrechen über einen links-gerichteten Pfeil gekennzeichnet werden, welches ein gängiges Symbol zum Rückkehren auf die vorherige Seite darstellt.
 
-% @Note(Val): Dieses Kapitel nennt eigentlich nur unterschiedliche Möglichkeiten. Wirkliche Entscheidungen habe ich hier nicht getroffen -> sollte wahrscheinlich geändert werden.
-
-% @Note(Val): Mockups unterschiedlicher Design Möglichkeiten wären schön
-
-% @Note(Jay): Ich fänds schon sinnvoll wenn du immer sagst wofür du dich entschieden hast. Ich weiß nicht ob wir Mockups verschiedener Möglichkeiten zwingend brauchen, aber zumindest von dem finalen Resultat sollten wir eins haben.
+% @TODO(Val): Architektur des Codes und dann nur ganz wenig in umsetzungSW

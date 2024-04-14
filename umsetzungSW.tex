@@ -24,49 +24,12 @@ Abschnitt \ref{umsetzungSW-UI} geht dabei auf die Entwicklung von \ac{SAM} ein, 
 
 
 \section{Desktop Anwendung} \label{umsetzungSW-UI}
-- Grundlagen: Immediate vs. Retained Mode UI \newline
-- Cached Immediate Mode \newline
-- Generelle Diskussion bzgl. API-Design vllt \newline
-- Raylib API \newline
-- Parallelisierung basierend auf unabhängigen Codepaths (siehe Blogpost dazu) \newline
-- Thread-Kommunikation über geteilten read-only Speicher \& Mutexes wenn notwendig \newline
-
-Neben dem gewählte Bottom-Up Ansatz gab es vor Beginn der Implementierung von \ac{SAM} noch eine wichtige Entscheidung zu treffen: Die Wahl eienr \ac{UI}-Bibliothek. \newline
-Die Entwicklung einer \ac{UI} ohne die Verwendung existierender Bibliotheken wäre zwar durchaus möglich, wäre aber sehr viel aufwendiger und im Rahmen dieser Arbei nicht umsetzbar und hätte keinen weiteren Mehrwehrt für diese Arbeit gebracht. \newline
-Es gibt viele \ac{UI}-Bibliotheken, die von C aus genutzt werden können.
-Aufgrund bestehender Erfahrungen und sehr simpler Nutzung wurde sich hier für die Nutzung von \enquote{Raylib}\footnote{siehe \url{https://www.raylib.com/}; der Quellcode der verwendeten Version von Raylib ist außerdem im Quellcode von \ac{SAM} enthalten und kann über den Anhang \ref{appndix-code} gefunden werden.} entschieden.
-Raylib ist außerdem portabel auf sehr vielen Platformen nutzbar, wodurch \ac{SAM} mit relativ wenig Aufwand auch auf anderen Platformen laufen kann.
-
-Die API von Raylib ist dabei auf einem relativ niedrigen Niveau.
-So bietet Raylib für \ac{UI}s das Darstellen von Formen, Bildern, Textures und Text an, allerdings gibt es beispielsweise keine Funktion zum Erstellen eines Buttons \cite[vgl. mit Dokumentation][]{san.RaylibCheatsheet.23}. \newline
-Die Erstellung sogenannter \enquote{\ac{UI} Widgets} muss entsprechend selbst entwickelt werden.
-Da es sich hier nicht um eine besonders komplexe \ac{UI} handelt, ist das hier kein großer Nachteil.
-
-Bzgl. der API zum Verwalten von \ac{UI} Widgets gibt es zwei grundsätzliche Ansätze: \enquote{Retained Mode} und \enquote{Immediate Mode} \ac{UI}s:
-\enquote{The approach to bind widgets to objects or handles [...] is called retained mode GUI} \cite[][S. 2]{bre.ExploringImmediateMode.22}. \enquote{In an immediate mode, GUI widgets are created and recreated every frame} \cite[][S. 5]{bre.ExploringImmediateMode.22}. \newline
-Es mag zwar aufwendiger klingen, alle \ac{UI} Widgets jeden Frame neu zu erstellen, allerdings vereinfacht es den Code der \ac{UI} Awendung, da die Entwickler:in nicht manuell den Zustand der \ac{UI} Widgets synchronisiert halten muss \cite[vgl.][S. 10]{bre.ExploringImmediateMode.22}, wodurch eine effizientere Implementierung ermöglicht wird \cite[vgl.][S. 11]{bre.ExploringImmediateMode.22}.
-Entsprechend soll für die Entwicklung von \ac{SAM} eine
-
-Wie bei fast allen binären Kategorisierungen, ist es eigentlich ein Spektrum mit zwei Extrema auf den Seiten.
-So kann die API der \ac{UI} Widgets mehr oder weniger \enquote{data retention} aufweisen.
-Zu Beginn der Entwicklung wurde diese API strikt im Immediate Mode Stil gehalten.
-Als ein Problem mit der Performanz auftrat, wurde nach längerer, erfolgloser Suche angenommen, dass der höhere Aufwand der ständigen Kreation der \ac{UI} Widgets das Problem verursachen könnte.
-Entsprechend wurde angefangen einige der Widgets zwischenzuspeichern.
-Das hat kaum spürbare Auswirkungen auf die Performanz gehabt.
-Trotzdem wurde der Code so beigelassen, was im Nachhinein definitiv den Code verkompliziert und das Anpassen des Codes erschwert hat.
-Die Nutzung von Widgets im Immediate Mode Stil ist hier definitiv als sinnvoller zu charakterisieren.
-
-Bei der Entwicklung der Widgets bleibend lässt sich hier auch der Bottom Up Ansatz evaluieren.
-Zuerst ist zu bemerken, dass viele \ac{UI} Elemente mehrfach verwendet werden und somit eine Kompression derer in einzelne Funktionen oftmals vorgekommen ist.
-Diese Teilung des Codes entlang der Widgets wäre dabei auch sehr wahrschenlich bei einem Top-Down Ansatz gewählt worden.
-Ein Beispiel, das bei einem Top-Down Ansatz zumindest nicht offensichtlich wäre, ist die Datenstruktur eines
-% @TODO(Val): Rest schreiben
-
-% @TODO(Val): Auf Bottom-Up Ansatz eingehen
 
 % @TODO(Val): Umgang bei Midi-Dateien mit nicht-Piano Instrumenten erklären (vllt gehört das auch eher in die Konzeption)
 
 % @TODO(Val): Musikverwaltung über PDIL Format speichern (verweise auf appendix-pdil)
+
+% @TODO(Val): Umgang mit Parallelisierung erklären
 
 
 \section{Kommunikation} \label{umsetzungSW-Kommunikation}

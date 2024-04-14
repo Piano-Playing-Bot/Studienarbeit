@@ -259,12 +259,12 @@ while (true) {  // Endless Loop of Microcontroller
 
 Die in Listing \ref{code:Apply PIDICmds} erwähnten Funktionen \lstinline{currentTime} und \lstinline{getElapsedTimeSince} sind über die eingebaute Uhr des \ac{MC} umsetzbar.
 Die Funktion \lstinline{aplyCmd} setzt die Stärke des Tastenanschlags an der richtigen Stelle in der \lstinline{piano} Liste.
-Da die \lstinline{PidiCmd}-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktutor, der diese Taste betätigt, hier geschehen.
+Da die \lstinline{PidiCmd}-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktuator, der diese Taste betätigt, hier geschehen.
 Zuletzt verwendet das Listing noch die Funktionen \lstinline{update_played_keys} und \lstinline{add_to_played_keys}.
 Diese benötigen eine Liste der zurzeit gespielten Töne.
-Weil nur eine bestimmte Anzahl der Aktuatoren zu einem Zeitpunkt aktiv sein dürfen (siehe Kapitel \ref{???}), kann diese Liste klein gehalten werden.
+Weil nur eine bestimmte Anzahl der Aktuatoren zu einem Zeitpunkt aktiv sein dürfen (siehe Kapitel \ref{Prototyp}), kann diese Liste klein gehalten werden.
 
-Sollte ein Musikstück diese Obergrenze zu gleichzeitig zu spielender Noten überschreiten wollen, müssen einige Töne früher beendet werden als eigentlich abgesehen.
+Sollte ein Musikstück diese Obergrenze zu gleichzeitig zu spielender Noten überschreiten, müssen einige Töne früher beendet werden als eigentlich angesehen.
 Hier gibt es mehrere Strategien, die jeweils eigene Vor- und Nachteile mit sich bringen.
 Die am leichtesten zu implementierende Idee, würde neue Noten einfach nicht spielen lassen.
 Entweder könnten diese neuen Noten übersprungen werden, oder es könnte gewartet werden, bis eine der zurzeit spielenden Noten wieder ausklingen sollen, bevor weitere \lstinline{PidiCmd}s überhaupt betrachtet werden.
@@ -278,6 +278,7 @@ Davor soll aber nun ein B gespielt werden.
 Dieses B soll nun für eine ganze Sekunde gespielt werden.
 Optimal wäre es hier, das C, das sowieso bald ausklingen soll, ein paar Millisekunden früher zu auszuschalten, dami das B zum richtigen Zeitpunkt schon gespielt werden kann.
 Die zuerst genannte Strategie würde dagegen das C einfach überhaupt nicht spielen.
+% @Note(Jay): Wäre es nicht das B das nicht gespielt wird wenn das C schon an ist?
 
 Aus diesem Beispiel lässt sich eine alternative Strategie entwickeln.
 So lassen sich die Längen, für die die bereits gespielten Töne und den neu zu spielenden Ton vergleichen.
@@ -285,11 +286,11 @@ Die Töne, die am frühesten wieder ausklingen sollen, können dann bereits ein 
 Da die Liste bereits gespielter Töne kurz sein muss, ist eine Iteration über alle bereits gespielten Töne nicht besonders zeitaufwendig.
 Nichtsdestotrotz ist dieses Vorgehen komplizierter und rechenaufwendiger als die beiden erstgenannten Ideen.
 
-Eine weitere Möglichkeit wäre statt der Länge die Anschlagsstärken zu vergleichen.
-Es kann davon ausgegangen werden, dass das Fehlen stärker zu spielender Töne eher schlecht auffallen würde als das Fehlen leiserer Töne.
+Eine weitere Möglichkeit wäre statt der Länge die Anschlagstärken zu vergleichen.
+Es kann davon ausgegangen werden, dass das Fehlen stärker zu spielender Töne eher negativ auffallen würde als das Fehlen leiserer Töne.
 Es ließe sich auch eine Heuristik erstellen, die sowohl die Anschlagsstärke als auch die noch verbleibende Spiellänge mit einander vermischt.
 Ohne Testen an realen Musikstücken, ist es jedoch schwer zu sagen, wie eine solche Heuristik aussehen sollte.
-Hier ist es also sinnvoll eine leicht anpassbare Heuristik zu verwenden und während des Testens dann zu analysieren, welche Heuristik am besten klingende Resultate mit sich bringt.
+Hier ist es also sinnvoll eine leicht anpassbare Heuristik zu verwenden und während des Testens dann zu analysieren, welche Heuristik die am besten klingende Resultate mit sich bringt.
 
 % @TODO(Val): Spezifiziere diese Anforderungen auch wirklich in Kapitel Zielstellung
 Die benötigte Logik zum Anspielen des Klaviers ist damit fast vollständig besprochen.
@@ -300,7 +301,7 @@ Wenn angehalten wurde, soll statt den Werten aus der \lstinline{piano} Liste, ei
 Auch sollen keine weiteren \lstinline{PidiCmd}s angewandt werden.
 
 Die Lautstärke ist über Erhöhen der Anschlagsstärke umsetzbar.
-Da \lstinline{PidiCmd}s die Anschlagsstärke in einem abstrakten Wert von 0 bis 15 darstellen, kann dieser Wert über einen Lautstärke-Faktor skaliert einfach skaliert werden.
+Da \lstinline{PidiCmd}s die Anschlagsstärke in einem abstrakten Wert von 0 bis 15 darstellen, kann dieser Wert über einen Lautstärke-Faktor einfach skaliert werden.
 
 Die Geschwindigkeit kann ebenfalls über einen Faktor implementiert werden.
 Dieser Faktor skaliert dabei jedoch die Messung der vergangenen Zeit.

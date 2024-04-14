@@ -9,29 +9,29 @@
 
 \nocite{*}
 
-Diese Studienarbeit befasst sich mit der Frage, welchen Technik- und Kostenaufwand die Eigenentwicklung eines selbstspielenden Klaviers mit sich bringt.
-Professionell hergestellte, selbstspielende Klaviere existieren zwar bereits, sind aber mit Preisen, die leicht über 10.000 Euro gehen können \cite{YamahaU1}, für Privatpersonen oft nicht bezahlbar.
-Hier soll dagegen versucht werden, das Budget so gering wie möglich zu halten, sodass diese Arbeit von möglichst Vielen für die Eigenentwicklung verwendet werden kann.
+Diese Studienarbeit befasst sich mit der Frage, welchen Technik- und Kostenaufwand die Eigenentwicklung eines selbstspielenden Klaviers mit sich bringt. %TODO: Quelle Yamaha klappt nicht richtig
+Professionell hergestellte, selbstspielende Klaviere existieren zwar bereits,
+sind aber mit Preisen, die leicht über 10.000 Euro gehen können \cite{YamahaU1}, für Privatpersonen oft nicht bezahlbar.
+Hier soll dagegen versucht werden, mit einem deutlich geringerem Budget (2000€), ein Klavier zu entwicklen, welches die selben Funktionen bereitstellt, wie das der großen Hersteller.
 
-% @Note(Val): Greife ich hier zu weit vor, wenn ich sage, dass wir eine Desktop Anwendung erstellen?
-% Einerseits ist das ja eine Vorschau, aber im 2. Kapitel wolte Kruse, dass wir das begründen,
-% statt mit der technischen Lösung direkt zu kommen.
-Der Fokus dieser Arbeit liegt dabei in der Konzeption des Instruments, die möglichst breit anwendbar sein soll. % @Note(Val): Der Nebensatz ist hier vllt. überflüssig...
+
+Der Fokus dieser Arbeit liegt dabei in der Konzeption dieses Instruments.
 Über die Konzeption hinaus soll jedoch auch ein Prototyp umgesetzt werden.
-Der Prototyp soll hierbei nicht nur über die Technik zum automatischen Anspielen des Klaviers verfügen, sondern auch über eine Desktop Anwendung, von der aus das Piano angesteuert werden kann.
-Damit soll erkundet werden, wie funktional die Konzeption in der Praxis ist und wie viel Aufwand in der Implementierung steckt.
-Die erstellte Software des Prototypen soll dabei möglichst portabel sein, um für Eigenentwicklungen Anderer mit möglichst wenigen Änderungen verwendbar zu sein.
+Der Prototyp soll hierbei nicht nur über die Technik zum automatischen Anspielen des Klaviers verfügen, sondern auch über eine Computer-Anwendung, von der aus das Piano angesteuert werden kann.
+Damit soll erkundet werden, wie funktional die Konzeption in der Praxis ist und mit wie viel Aufwand die Implementierung verbunden ist.
+Die erstellte Software des Prototypen soll dabei möglichst portabel sein, um für Eigenentwicklungen Anderer, mit möglichst wenigen Änderungen, verwendbar zu sein.
 
 Ähnlich wie die professionellen, selbstspielenden Klaviere, soll der Prototyp dieser Arbeit sowohl manuell von Musiker:innen als auch automatisiert durch einen Computer bespielt werden können.
 Das automatisierte Anspielen des Pianos sollte über die Eingabe breit verwendeter Dateien möglich sein.
 Logische Kandidaten wären hier \ac{MIDI}-Dateien, aber auch generelle Audio-Dateien oder eingescannte bzw. digtal vorliegende Notensheets wären hier naheliegend.
 
-% @Question(Val): Sind diese Vorschauen für die folgenden Kapitel relevant? Normalerweise haben wiss. Arbeiten so etwas immer, aber dem Kruse ist das wahrscheinlich egal und wir haben ja schon ein "Vorgehen" Abschnitt bei den Anforderunge...
+
 Im folgenden Kapitel werden die Anforderungen an den zu entwickelnden Prototypen genauer herausgearbeitet.
-Neben den Anforderungen für diese Arbeit speziell, in der nur ein Prototyp entwickelt werden soll, werden hier auch Ziele für ein selbstpielendes Klavier benannt, die über einen Prototypen hinausreichen.
+Neben den Anforderungen für diese Arbeit speziell, in der nur ein Prototyp entwickelt werden soll,
+werden hier auch Ziele für ein selbstpielendes Klavier benannt, die über den Prototypen hinausreichen.
 Diese Ziele sollen Menschen dienen, die dieser Arbeit folgend ein komplettes, automatisiertes Klavier bauen wollen.
 
-% @Note(Val): Ist das zu kurz, um 4 Kapitel vorzustellen?
+
 Die darauf folgenden Kapitel \enquote{\nameref{konzeptionHW}} und \enquote{\nameref{umsetzungHW}} behandeln die Hardware, bevor dann in den Kapiteln \enquote{\nameref{vorgehenSW}} und \enquote{\nameref{umsetzungSW}} der Software-Teil der Arbeit betrachtet wird.
 Dabei wird jeweils zuerst die Planung durchgeführt und dann auf das Vorgehen und Schwierigkeiten während der Umsetzung sowie die erzielten Ergebnisse des Prototypen eingegangen.
 
@@ -39,7 +39,7 @@ Dabei wird jeweils zuerst die Planung durchgeführt und dann auf das Vorgehen un
 In Kapitel \ref{ergebnisse} werden dann die Fähigkeiten des Prototypen anhand von Tests konkret gezeigt.
 Die Tests sollen aufzeigen, wie gut eine solche Eigenentwicklung laufen kann und wie sie entsprechend gegen professionelle, selbstspielende Klaviere und auch gegen menschliche Pianist:innen aufhält. % @TODO(Val): Das Verb ist hier falsch, oder?
 
-% @Note(Val): Dieser Abschnitt sollte überprüft und ggf. korrigiert werden, wenn die Zusammenfassung geschrieben wurde
+% TODO @Note(Val): Dieser Abschnitt sollte überprüft und ggf. korrigiert werden, wenn die Zusammenfassung geschrieben wurde
 Abschließend zieht Kapitel \ref{fazit} dann ein Fazit über diese Arbeit.
 Hier wird noch einmal zusammengefasst, welche Ergebnisse diese Arbeit sowhol in Form des Prototypen als auch in Form der Konzeption und Software für Andere bringt, die an der Implementierung eines selbstspielenden Klaviers interessiert sind.
 Außerdem wird ein Ausblick gegeben, wie die Entwicklung eines vollständigen Produkts über den Prototypen hinweg aussehen könnte und welche Arbeit dafür noch verbleibt.

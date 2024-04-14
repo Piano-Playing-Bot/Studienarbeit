@@ -65,23 +65,6 @@ Auch erleichtert die Verwendung von C die direkte Nutzung der Windows-API, da di
 Das hat sich vor allem bei der Entwicklung der Kommunikation (siehe Abschnitt \ref{umsetzungSW-Kommunikation}) als sinnvoll erwiesen.
 Zuletzt ist auch noch amzumerken, dass ein substantiver Beweggrund für die Wahl von C in der hohen Erfahrung der Entwicklerin mit der Sprache lag. % @Note(Val): Sollte ich mich in der 3. Person so selbst benennen?
 
-% @TODO(Val): Abschnitt(e) zur Verwendung von Libraries???
-% Neben der Wahl der Programmiersprache wurde ebenfalls entschieden eine möglichst minimale Anzahl von Libraries zu verwenden.
-% Libraries wollen meist in vielen unterschiedlichen Situationen nutzbar sein und haben entsprechend allgemeinere Annahmen als Code, der speziell für einen Anwendungsfall geschrieben wurde.
-% Libraries verstecken außerdem oftmals die Arbeit, die für eine Aufgabe geleistet werden muss.
-% Da, wie eingangs erwähnt, eine hohe Transparenz des Codes erwünscht ist, ist dies hier als Nachteil von Libraries gesehen, auch wenn eben jene Eigenschaft des Versteckens oft als Vorteil von Libraries genannt wird. % @TODO(Val): Quelle dafür einfügen
-% Zuletzt bringen Libraries auch immer die Möglichkeit von Bugs oder unerwünschten Nebeneffekten.
-
-% Libraries können außerdem sowohl die Verständlichkeit und Wartbarkeit des Codes erhöhen als auch verringern.
-% Die Verwendung einer Library erfordert, dass die Entwickler:in die API sowie die Nebeneffekte der Library versteht.
-% Gleichzeitig kann eine Library auch zusammenhängenden Code örtlich sortieren, verwendeten Operationen verständliche Namen geben und deren Komplexität verstecken, bis die Entwickler:in diese Komplexität betrachten muss bzw. will.
-
-% @TODO(Val): Abschnitt zur Verwendung von Prototypen während Konzept-Phase???
-% Während der Implementierung kam es zu keinen Änderungen zu dem in Kapitel \ref{vorgehenSW} vorgestellten Plans.
-% Das liegt u.a. daran, dass Teile der Konzeption während der Entwicklung von Prototypen, erstellt wurden.
-% So wurden beispielsweise die Möglichkeiten der Kommunikation zwischen \ac{SAM} und \ac{MC} mithilfe von Prototypen gefunden.
-% Basierend auf den Ergebnissen des Prototypen, wurden dann die Vor- und Nachteile unterschiedlicher Ansätze gefunden und die in Kapitel \ref{vorgehenSW} genannten Entscheidungen getroffen.
-
 Folgend sollen besonders interessante Teile der Entwicklung noch genauer betrachtet werden.
 Da \ac{SAM} den größten Teil der endgültigen Codebasis stellt, ist es interessant zu sehen, wie der oben erwähnte Bottom-Up Ansatz hier abschneidet.
 Entsprechend wird in Abschnitt \ref{umsetzungSW-UI} auf die entstandene Architektur der Anwendung eingegangen.
@@ -156,7 +139,7 @@ Bei Nachrichten einer fixen Länge kann gewartet werden, bis alle Bytes der Nach
 Bei der \enquote{Music}- und \enquote{New-Music}-Nachricht dagegen, kann aufgrund geringen Speicherplatzes nicht unbedingt gewartet werden, bis die gesamte Nachricht eingetroffen ist.
 Eine alternative Lösung muss entsprechend \enquote{greedy} sein und die empfangenen Bytes der \lstinline|PidiCmd|s und \lstinline|PlayedKey|s direkt auslesen und in die zur Verfügung stehenden Buffer für die nächsten zu spielenden Noten einsortieren.
 Um dies umzusetzen, muss der derzeitige Zustand gespeichert werden, damit sich nach jeder Iteration gemerkt wird, ob die nächsten Bytes einen \lstinline|PidiCmd|, einen \lstinline|PlayedKey|, den Start einer neuen Nachricht oder etwas anderes darstellt.
-Alles in allem sieht die Logik für den Arduino dann dem in Listing \ref{code:Comm-MC} dargestellten Pseudocode sehr ähnlich.
+Alles in allem sieht die Logik für den Arduino dann dem in Listing \ref{code:Comm-MC} dargestellten Pseudocode sehr ähnlich. % @Note(Val): Sollte das Listing überhaupt hierhin? Vielleicht passt es besser in den Anhang oder vielleicht sollten wir es komplett streichen
 
 \begin{UnbrokenCodePage}[style=CStyle, caption={Kommunikation beim \ac{MC}}, label={code:Comm-MC}]
 // @TODO(Val): Vereinfachter Pseudocode des Arduino-Skripts hier
@@ -240,13 +223,7 @@ Zum Finden von Problemen, die durch Speicherplatzmangel entstanden ist, sind die
 Aber auch beim Finden anderer Bugs sind sie nicht weiter hilfreich, da sie selbst den Speicher zum Überlaufen bringen können.
 Nichtsdestotrotz konnten Bugs über die Nutzung von Print-Statements gefunden und ausgemerzt werden.
 
-% @TODO(Val): Rest schreiben
+Mit Ausnahme dieser teilweise schwer zu lösender Bugs, konnte das in Kapitel \ref{vorgehenSW-MC} beschriebene Konzept relativ leicht und nahezu 1-zu-1 in Code umgesetzt werden.
 
-- Berechnung von Oktave+Note zu Aktuator-Index \newline
-- Strategie für PlayedKeys Elimination \newline
-
-% - Piano Layout (7 Oktaven, 3 Tasten davor, 1 Taste danach)\newline
-% - Werte durch Ausprobieren erraten (Minimaler Wert um Motor anzukriegen; Clock-Rate)\newline
-% - Konstante ‘Framerate’ ohne delay
-
-% @TODO(Val): Am Anfang erwähnen, dass Ergebnisse hier auch vorkommen
+Es wurden hier auch mehrere Strategien für das Eliminieren von \lstinline|PlayedKey|s ausprobiert.
+Hier hat sich herausgestellt, dass eine Eliminierung basierend auf der Spiellänge allein die besten Ergebnisse geliefert hat.

@@ -13,7 +13,8 @@
 
 Nachdem die Planungsphase abgeschlossen war, mussten die Überlegungen umgesetzt werden.
 Im Rahmen dieser Arbeit wurde ein Prototyp gebaut, welcher 8 Tasten anspielen kann.
-Zusätzlich wurden die Elektronik mit LEDs so erweitert, dass man das Drücken von 40 Tasten simulieren kann.
+Zusätzlich wurde die Elektronik mit LEDs so erweitert, dass man das Drücken von 40 Tasten simulieren kann. % @Note(Val): Entweder hier oder an späterer Stelle erwähnen, dass es an sich trivial aber halt zeitaufwendig wäre, mehr Tasten anspielbar zu machen
+% @Note(Val): Ich würde hier vielleicht noch gar nicht erwähnen, dass nur 8 Tasten anspielbar sind, weil die ganze Umsetzung ja mit dem Ziel 88 Tasten anspielbar zu machen lief. Kostenschätzung, etc. sind deshalb ja auch höher. Vielleicht ist es besser hier zu sagen, dass das Ziel war, den Prototypen mit möglichst vielen spielbaren Tasten zu gestalten, aber nur 8 bis dato erledigt wurden
 
 \section{Materialien}
 \chapterauthor{Jakob Kautz}
@@ -21,29 +22,29 @@ Zusätzlich wurden die Elektronik mit LEDs so erweitert, dass man das Drücken v
 %TODO(Jay): Fix List
 \begin{table}[htbp]
     \centering
-    \begin{tabular}{|m{4cm}|m{8cm}|}
+    \begin{tabular}{|m{3.8cm}|m{1.7cm}|m{8cm}|}
         \hline
-        \textbf{Bauteil} &  \textbf{Anzahl und Begründung}  \\
+        \textbf{Bauteil} &  \textbf{Anzahl} & \textbf{Begründung}  \\
         \hline
-        Hubmagnete & 88; jede Taste braucht einen Hubmagneten um angespielt zu werden \\
+        Hubmagnete & 88 & jede Taste braucht einen Hubmagneten um angespielt zu werden \\ % @Note(Val): Erwähnen, dass nur 8 der Hubmagnete benötigt wurden
         \hline
-        Stromversorgung & 1; Externe Stromversorgung für die Aktuatoren, da diese mehr als die 5V Vcc des Arduinos brauchen \\
+        Stromversorgung & 1 & Externe Stromversorgung für die Aktuatoren, da diese mehr als die 5V Vcc des Arduinos brauchen \\
         \hline
-        Arduino & 1; Kommunikation \\
+        Arduino & 1 & Kommunikation \\
         \hline
-        Breadboard & 2; Kleinstromschaltung \\
+        Breadboard & 2 & Kleinstromschaltung \\
         \hline
-        Schieberegister & 11, Weitergabe Signal\\
+        Schieberegister & 11 & Weitergabe Signal\\
         \hline
-        Kabel & 9x40stck; Verbindungen \\
+        Kabel & $9\cdot40$ & Verbindungen \\ % @Note(Val): Warum 9*40? Das ist nicht offensichtlich und muss erklärt werden
         \hline
-        LEDs & 90; Tests \\
+        LEDs & 90 & Tests \\ % @Note(Val): Warum 90? Würden 88 nicht ausreichen? Dass die dann im Pack von 90 gekauft werden müsssen ergibt sich, aber die extra 2 sind ja eig nicht benötigt oder? Selbe Note für die anderen 90er hier
         \hline
-        1kOhm Widerstände & 90; Sicherheit and shit \\
+        1kOhm Widerstände & 90 & Sicherheit and shit \\
         \hline
-        MOSFET & 90; Steuerung Strom \\
+        MOSFET & 90 & Steuerung Strom \\
         \hline
-        Angelschnur & ...m; Verbindung Hubmagnet und Taste \\
+        Angelschnur & ...m & Verbindung Hubmagnet und Taste \\ % @Note(Val): Warum m? Brauchen wir nicht eine Angelschnur pro Taste? Also 88 bzw. 8 für den Prototypen?
         \hline
     \end{tabular}
     \caption{Ergebnisse der Anforderungen}
@@ -52,33 +53,32 @@ Zusätzlich wurden die Elektronik mit LEDs so erweitert, dass man das Drücken v
 
 \subsection{Kostenübernahme}
 Die vorher spezifizierte Hardware für den Schaltplan musste für die Erstellung des Prototypen offensichtlich besorgt werden.
-Aufgrund der Kosten, wurde bei einer der betreuenden Firmen angefragt, ob diese die Kosten für das Projekt übernehmen
-könnte.
-Damit dies möglich war, wurde ein Kostenvoranschlag gestellt, in welchem die benötigten Material mit den geschätzten
-Kosten aufgeführt wurde: \newline
-%TODO(Jay): Add Kostenschätzung
+Aufgrund der relativ hohen Kosten für eine Studienarbeit, wurde bei einer der betreuenden Firmen angefragt, ob diese die Kosten für das Projekt übernehmen würde.
+Damit dies möglich war, wurde ein Kostenvoranschlag gestellt, in welchem die benötigten Materialien mit den geschätzten Kosten aufgeführt wurden. % @TODO(Val): Kostenanschlag wird wahrscheinlich eine Tabelle, also referenzier die einfach "(siehe Tabelle \ref{...})" oder so
+
+% @TODO(Jay): Add Kostenschätzung
+
 Der Kostenanschlag erwies sich im Laufe des Projektes als (teils) unrealistisch. Dies lag insbesondere an der Anforderung
 der Firma. Die Schätzung der Kosten basierte auf Anbietern, bei welchen die Materialien möglichst günstig zu kaufen sind.
-Durch Firmenreglungen mussten diese Allerdings alle bei Conrad oder Reichelt
-%Note(Jay): Stimmt das so?
+Durch Firmenreglungen mussten diese allerdings alle bei Conrad oder Reichelt
+% @Note(Jay): Stimmt das so?
 gekauft werden. Diese Anbieter verkaufen die Materialien für sehr viel mehr Geld. Die tatsächlichen Kosten liefen
-letztendlich also auf folgende Beträge hinaus: \newline
-%TODO(Jay): Tatsächliche Kosten
+letztendlich also auf folgende Beträge hinaus: \newline % @TODO(Val): Hier am besten auch einfach wieder nur die Tabelle referenzieren, statt sie unbedingt in die nächste Zeile zu quetschen
+% @TODO(Jay): Tatsächliche Kosten
 
 Der Kostenunterschied betrug daher insgesamt .
-%TODO(Jay): Add difference
-Hierbei ist allerdings zu erwähnen, dass die Kostenschätzung passend gewesen wäre, wenn die ANbieter frei wählbar wären.
+% @TODO(Jay): Add difference
+Hierbei ist allerdings zu erwähnen, dass die Kostenschätzung passend gewesen wäre, wenn die Anbieter frei wählbar wären.
 
 \section{Prototypenbau}
 Ursprünglich sollte der Aufbau des in Kapitel \ref{subsec:schaltplan} spezifizierten Schaltplans via Steckbrettern und
 Jumperkabeln umgesetzt werden.
-Zu Beginn wurde dies auch so umgesetzt. Das Problem welches dadurch entstand war, dass die gewählten Platinen den
+Zu Beginn wurde dies auch so umgesetzt. Das Problem welches dadurch entstand, war, dass die gewählten Platinen den
 benötigten Stromfluss nicht aushalten.\newline
 Jeder Aktuator - also jede gedrückte Taste - zieht einen Strom von 0.7A. Um das Projekt möglichst sinnvoll umzusetzen,
 sollte der Aufbau mindestens 10 Tasten gleichzeitig drücken können, was bedeutet, dass der Aufbau mindestens 7.0A
 Stromfluss problemlos ausstehen muss.
-%TODO(Jay): Wie viel halten Platinen aus? Warum konnten wir ein paar Jumper-Kabel nutzen? Wann brauchten wir die dickeren? Tabelle für welche Kabeldicke für welchen Stromfluss
-% @Note(Val): "wir" muss weg
+% @TODO(Jay): Wie viel halten Platinen aus? Warum konnten wir ein paar Jumper-Kabel nutzen? Wann brauchten wir die dickeren? Tabelle für welche Kabeldicke für welchen Stromfluss
 % @Note(Val): Wann haben wir entschieden, dass min. 10 Tasten gleichzeitig spielbar sein sollen? Wenn wir das als Anforderung haben wollen, muss das im Anforderungs-Kapitel auch erwähnt werden
 
 Aus diesem Grund wurde die gesamte Schaltung, die nach dem Schieberegister kommt, auf einer Lochrasterplatine fest gelötet.
@@ -86,11 +86,11 @@ Hierfür wurde ein 3mm starker Draht für die Stromversorgung verwendet.
 
 \subsection{Klavieranbau}
 Im Rahmen des Protoypen wurde die Elektrik nicht fest am Klavier verschraubt.
-Das Brett mit den Hubmagneten lehnt am Klavier, während die Angelschnüre die Verbindung zu den Tasten herstellen.
-Gespannt werden die Seile durch die Schrauben-Mutter Konstruktion. (siehe Abschnitt \ref{subsec:VerbindungTastenAktuatoren})
+Das Brett mit den Hubmagneten wurde stattdessen nur an das Klavier angelehnt, während die Angelschnüre die Verbindung zu den Tasten herstellen.
+Gespannt werden die Seile durch eine Schrauben-Mutter Konstruktion (siehe Abschnitt \ref{subsec:VerbindungTastenAktuatoren}).
 
 \subsection{Ergebnisse des Prototypen}
-
+% @TODO(Val):
 Das Anspielen klappt iwie aber noch hakelig.
 
 

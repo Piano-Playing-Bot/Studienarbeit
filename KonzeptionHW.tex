@@ -9,7 +9,6 @@
 
 \chapter{Konzeption - Hardware}\label{konzeptionHW}~\nocite{*}
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
-% TODO(Jay): check einheitlichkeit gendern
 % TODO(Jay): check einheitlichkeit Zeit
 % TODO(Jay): Hubmagnet erst nach Unterkapitel Aktuatoren verwenden
 % @Note(Val): Abschnitt fängt im Präteritum an und geht dann mit Präsenz weiter
@@ -159,8 +158,8 @@ Bei diesem Ansatz wird die geringste mechanische Präzision benötigt und das Kl
 \chapterauthor{Olivier Stenzel}
 
 Wie in Kapitel \ref{konzeptionHW-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
-Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt. \newline
-Dieses Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden. % @Note(Val): Beschreibst du nur was gemacht wurde? Dann gibt es keine Entscheidungen hier & dann ist das nicht wirklich Konzipierung, oder?
+Dieses Ziehen wird technisch mittels Aktuatoren umgesetzt. \newline
+Dieses Kapitel beschreibt wie und wo die Aktuatoren am Klavier und den Tasten befestigt werden. % @Note(Val): Beschreibst du nur was gemacht wurde? Dann gibt es keine Entscheidungen hier & dann ist das nicht wirklich Konzipierung, oder?
 Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit beim Ansteuerns der Tasten weiter verbessert. % @Note(Val): "verbessert"? Es wurde doch noch gar nichts umgesetzt. Du meinst der Aufbau wird detailierter ausgearbeitet oder?
 % @Note(Val) Es heißt Akkuratesse statt Akkuratheit (https://www.duden.de/rechtschreibung/Akkuratesse) aber bessere Wörter wären vll Exaktheit oder Genauigket
 \newline
@@ -192,52 +191,52 @@ worauf die Tasten liegen, in den Fußraum geführt.
 
 \subsubsection{Anordnung der Aktuatoren}
 
-Die Idee ist, die Hubmagnete parallel zur Klaviatur zu befestigen, um die Tasten möglichst senkrecht nach unten ziehen zu können.
+Die Idee ist, die Aktuatoren parallel zur Klaviatur zu befestigen, um die Tasten möglichst senkrecht nach unten ziehen zu können.
 Hierfür müssen folgende Aspekte berücksichtigt werden:
 
 \begin{enumerate}
-	\item Breite der Hubmagnete
+	\item Breite der Aktuatoren
 	\item Hitzeentwicklung
 	\item Seilführung
 	\item Stabilität
 	\item Modularität
 \end{enumerate}
 
-Ein Hubmagnet hat die Maße 2,5 cm x 6 cm.
+Einer der im Projekt verwendeten Aktuaoren (siehe Kapitel \ref{subsec:aktuator}) hat die Maße 2,5 cm x 6 cm.
 Das Tastenbrett für 88 Tasten ist allerdings nur 140 cm breit, wodurch pro Tastenansteuerung nur ca. 1,6 cm zur Verfügung stehen.
-Bildet man zwei Hubmagnetreihen übereinander, hat jede Tastenansteuerung 3,20 cm Platz.
+Bildet man zwei Aktuatorreihen übereinander, hat jede Tastenansteuerung 3,20 cm Platz.
 
 Durch die 7mm Abstand ist eine Wärmeabfuhr über die Luft in geringem Ausmaß möglich.
 Ob dies ausreicht, muss in späteren Tests (siehe Kapitel \ref{tests}) ermittelt werden.
 
-Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagneten verbunden.
+Alle Seile werden pro Aktuatorreihe, parallel zwischen Tasten und Aktuatoren verbunden.
 
-Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung würde allerdings auf Kosten der Stabilität und Funkionalität gehen. % @Note(Val): Inwieweit? Hier fehlt eine Erklärung
-Deshalb werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
+Die Aktuatoren direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung würde allerdings auf Kosten der Stabilität und Funkionalität gehen. % @Note(Val): Inwieweit? Hier fehlt eine Erklärung
+Deshalb werden die Aktuatoren am Korpus des Klaviers (untere Frontplatte) befestigt.
 
-Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
+Um die Austauschbarkeit der Komponenten zu verbessern, werden die Aktuatoren nicht direkt an der unteren Frontplatte,
 sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden (siehe Abb. \ref{fig:BefestigungHubmagnete}). % @Note(Val): Die Abbildung zeigt mir nicht, wie die Platte mit dem Klavier verschraubt wird
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Magnetbrett.jpg}
-	\caption{Befestigung der Hubmagnete}
+	\caption{Befestigung der Aktuatoren}
 	\label{fig:BefestigungHubmagnete}
 \end{figure}
 
 \subsubsection{Seilführung}
 
-Würde man die Seile von den Tasten direkt zu den Hubmagneten führen,
+Würde man die Seile von den Tasten direkt zu den Aktuatoren führen,
 hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend stark betätigen, um einen Ton zu erzeugen.
 \newline
 In den folgenden Abbildungen ist die seitliche Ansicht des Klaviers gezeichnet.
 Dabei repräsentieren der schwarze bzw. weiße Block jeweils eine schwarze bzw. weiße Taste.
-Der grüne und pinke Strich stehen für die Seile, die den Hubmagneten mit dem Loch in der Taste verbinden.
-Unten links sind die zwei übereinanderliegenden Solenoid-Reihen in blau abgebildet.
-Der schwarze Strich repräsentiert den Stab im Hubmagneten. % @Note(Val): Die Farbe vom Solenoid kannst du dir fast sparen, wenn du die Grafik so klein abbildest. Das blau kann ich nur mit viel reinzoomen sehen
+Der grüne und pinke Strich stehen für die Seile, die den Aktuatoren mit dem Loch in der Taste verbinden.
+Unten links sind die zwei übereinanderliegenden Aktuator-Reihen in blau abgebildet.
+Der schwarze Strich repräsentiert den Stab der Aktuatoren. % @Note(Val): Die Farbe vom Solenoid kannst du dir fast sparen, wenn du die Grafik so klein abbildest. Das blau kann ich nur mit viel reinzoomen sehen
 \newline
-Abbildung \ref{img:Umlenkung_locker} zeigt den intuitiven Aufbau mit ausgeschaltetem Solenoid und entsprechend entspanntem Seil und.
-Abbildung \ref{img:Umlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschied, dass der Solenoid hier angezogen ist.
+Abbildung \ref{img:Umlenkung_locker} zeigt den intuitiven Aufbau mit ausgeschaltetem Aktuator und entsprechend entspanntem Seil und.
+Abbildung \ref{img:Umlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschied, dass der Aktuator hier angezogen ist.
 
 \begin{figure}[htbp]
 	\centering
@@ -258,9 +257,9 @@ Abbildung \ref{img:Umlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschie
 \newpage
 
 Mit diesem intuitiven Aufbau funktioniert das Betätigen der Tasten nicht, da diese nicht weit genug heruntergezogen werden.
-Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben, müssen Umlenkungen eingebaut werden.
-Mittels dieser Umlenkung, die mit einem PVC-Rohr umgesetzt werden kann, werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
-Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd 1 cm erhöht, was dem Hub des Magneten entspricht..
+Um den gesamten Hub des Aktuators zu Nutzen und an die Taste weiterzugeben, müssen Umlenkungen eingebaut werden.
+Mittels dieser Umlenkung, die mit einem PVC-Rohr umgesetzt werden kann, werden die Seile so geführt, das sie senkrecht auf die Aktuatoren fallen.
+Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd 1 cm erhöht, was dem Hub des Aktuators entspricht..
 
 % @Note(Val): Wenn die Umlenkung weiter unten im Bild wäre, wären die unterschiedlichen Linien leichter zu sehen
 \begin{figure}[htbp]
@@ -273,8 +272,8 @@ Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd
 % @Note(Val): Entweder machst du das hier als Bullet-Points or mit vollständigen Sätzen. Aber so ist das ein bisschen merkwürdig
 Dies kann auch mathematisch bewiesen werden:
 \newline geg.: % @Note(Val): "gegeben" aber ohne "gesucht" und ohne Demarkierung wann etwas nicht mehr gegeben ist... können wir das "geg." einfach streichen?
-\newline Strecke bis zur ersten Reihe Hubmagnete h1 = 17 cm % @Note(Val): Strecke von wo?
-\newline Strecke bis zur zweiten Reihe Hubmagnete h2 = 27 cm
+\newline Strecke bis zur ersten Reihe Aktuatoren h1 = 17 cm % @Note(Val): Strecke von wo?
+\newline Strecke bis zur zweiten Reihe Aktuatoren h2 = 27 cm
 \newline Strecke bis zu den schwarzen Tasten t1 = 12 cm
 \newline Strecke bis zu den weißen Tasten t2 = 18 cm
 \newline Seil zur schwarzen Taste im entspannten Zustand $ht1_{entspannt}$ % @Note(Val): Du meinst Seillänge? Ist die Seillänge nicht konstant? Warum berechnen wir die?
@@ -305,8 +304,8 @@ Das hat den positiven Nebeneffekt, dass die Pianist:innen nicht durch Platzmange
 \subsubsection{Auswahl des Seils}
 
 Wie eben beschrieben wird das Ziehen durch ein Seil ermöglicht.
-Dafür wird ein leichtes, formbares, unelastisches und dehnungsresistentes Material benötigt, welches die Hubmagnete mit den Tasten verbindet.
-Je leichter das Material ist, desto weniger geht die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verloren.
+Dafür wird ein leichtes, formbares, unelastisches und dehnungsresistentes Material benötigt, welches die Aktuatoren mit den Tasten verbindet.
+Je leichter das Material ist, desto weniger geht die Genauigkeit der Kraftübertragung zwischen den Aktuatoren und den Tasten verloren.
 Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
 Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein unelastisches Seil zu verwenden.
 Um häufiges Nachspannen oder Austauschen des Seils entgegenzuwirken, sollte dies so dehnungsresistent wie möglich sein.
@@ -315,7 +314,7 @@ Um häufiges Nachspannen oder Austauschen des Seils entgegenzuwirken, sollte die
 \paragraph{Nähgarn}
 
 Als Erstes wurde Nähgarn, welches zur Hand war, getestet.
-Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung (mit 25N) des Hubmagnetens nicht stand.
+Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung (mit 25N) des Aktuators nicht stand.
 Vier Fäden funktionierten zu Beginn gut, leierten allerdings schnell aus.
 
 \paragraph{Nylonsaiten}
@@ -323,7 +322,7 @@ Vier Fäden funktionierten zu Beginn gut, leierten allerdings schnell aus.
 Als Nächstes wurde die g-Saite einer Gitarre verwendet.
 Durch den höheren Durchmesser und das stärkere Material riss und leierte die Saite nicht aus.
 Da die Saite kaum Flexibilität liefert, war die Befestigung an der Taste jedoch äußerst schwierig.
-Beim Ziehen des Magnetens wurde erst die lockere Schlaufe an der Taste gestreckt, wodurch nicht der vollständige Hub des Magnetens auf die Taste übertragen wurde.
+Beim Ziehen des Magnetens wurde erst die lockere Schlaufe an der Taste gestreckt, wodurch nicht der vollständige Hub des Aktuators auf die Taste übertragen wurde.
 
 \paragraph{Angelschnur}
 
@@ -338,13 +337,13 @@ Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein Leichtes.
 
 \chapterauthor{Olivier Stenzel}
 
-Die Hubmagnete machen beim Anschlagen laute \enquote{Klack} Geräusche, welche von der Melodie des Klaviers ablenken.
+Die Aktuatoren machen beim Anschlagen laute \enquote{Klack} Geräusche, welche von der Melodie des Klaviers ablenken.
 Genauer handelt es sich um den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
 Auch hierfür gab es mehrere Ideen und Tests, um das Geräusch zu dämpfen:
 
 \subsubsection{Isolierfolie}
 
-Die erste Überlegung war die Auskleidung des Innenraums der Hubmagnete mit Isolierfolie.
+Die erste Überlegung war die Auskleidung des Innenraums der Aktuatoren mit Isolierfolie.
 Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu diesem Zeitpunkt noch zu gering war, um sicherzustellen, dass die Isolierung dem standhält. % "dem" meint die Hitzeentwicklung? Dann müsste es "ihr" sein.
 
 \subsubsection{Gummi-Stopper}
@@ -379,7 +378,7 @@ Um das \enquote{Problem} der schlechten Ästetik beim Schaumstoff zu beseitigen,
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=4cm] {img/Hubmagnet_Seil_Daempfung.jpg}
-	\caption{Hubmagnet: Dämpfung mit Seil}
+	\caption{Aktuator: Dämpfung mit Seil}
 \end{figure}
 
 
@@ -647,6 +646,8 @@ Beim präzisen Ansteuern von Aktuatoren bringt dieses Prinzip jedoch einige Prob
 
 Die Kombination dieser Faktoren führte zu der Entscheidung, Schieberegister anstelle einer Matrix für die präzise Steuerung der Aktuatoren zu verwenden. % @Note(Val): Wurde davor schon gesagt. Der Satz kann eig weg, können wir aber auch lassen, falls du es so besser zu lesen findest
 
+
+% @TODO(Jay): Welchen Hubmagneten verwenden wir genau und wie viel Kraft hat dieser
 
 \subsection{Transistor}
 \chapterauthor{Jakob Kautz}

@@ -30,7 +30,7 @@ Stattdessen wird hier nur betrachtet, ob das erwünschte Teilverhalten funktiona
 Bevor nun jedoch der nächste Teil der Anwendung implementiert wird, kommt die Semantische Kompression.
 Auf lang oder kurz wird es vorkommen, dass zwei Teile des Codes die selbe oder eine ähnliche Folge von Operationen durchlaufen.
 Diesem Ansatz nach wird nun der Code nach solchen semantischen Duplikaten durchsucht.
-Solche Duplikate können dann extrahiert werden und in einzelnen Funktionen oder Datenstrukturen komprimiert werden.
+Jene Duplikate können dann extrahiert werden und in einzelnen Funktionen oder Datenstrukturen komprimiert werden.
 Diese Komprimierung ist dabei nicht unbedingt eine syntaktische Komprimierung sondern eine semantische \cite[vgl. ]{mur.SemanticCompression.14}.
 
 Beide Strategien zielen am Ende auf Code mit den gleichen Attributen ab.
@@ -48,7 +48,7 @@ Abstraktion ist hier immer noch erwünscht, aber nur wenn die Abstraktion die Re
 Unnötige Abstraktion oder Abstraktion, die auf einem höheren Level als nötig für das zu lösende Problem ist, ist hier negativ konnotiert.
 Weiterhin wird hier nicht angenommen, dass zu Beginn der Entwicklung genug Wissen und Expertise besteht, um eine sinnvolle Architektur für den Code finden zu können.
 Stattdessen ist die Semantische Kompression ein Verfahren zum explorativen Finden einer solchen sinnvollen Architektur.
-In der Implementierung dieses Projekts wurde der Ansatz der Semantic Compression verwendet, da Erfahrungen mit besser und schlechter strukturierter Software dessen Thesen eher unterstützen.
+Speziell in der Implementierung der Desktop Anwendung \ac{SAM} wurde der Ansatz der Semantic Compression verwendet, da Erfahrungen mit besser und schlechter strukturierter Software dessen Grundannahmen eher unterstützen.
 
 Neben dem Entwicklungsansatz gibt es noch andere Entscheidungen, die die gesamte Entwicklung beeinflussen.
 So ist auch die Wahl der Programmiersprache eine substantive und weitreichende Entscheidung.
@@ -59,7 +59,7 @@ Aber auch für die Entwicklung der Desktop-Anwendung, wo der verfügbare Speiche
 Der hauptsächliche Grund dafür ist die Transparenz der Sprache.
 Während viele Nachfolger von C versuchen ihre Semantik abstrakt halten, um die eigentliche Implementierung davon loskoppeln zu können, ist jedes Sprachkonstrukt in C direkt auf die genaue Umsetzung auf dem Computer abzubilden.
 Das kann nicht nur generell die Entwicklung erleichtern, sondern auch bei der Entwicklung von \ac{UI}s im besonderen Maße hilfreich sein, da die Performanz der Anwendung hier eine große Rolle für die Usability spielt.
-Und eine transparente Sprache kann die Entwicklung performanter Anwendungen, da die Arbeit, die von der CPU für eine Aufgabe getan werden muss, leichter zu sehen ist.
+Und eine transparente Sprache kann die Entwicklung performanter Anwendungen erleichtern, da die Arbeit, die von der CPU für eine Aufgabe getan werden muss, leichter zu sehen ist.
 
 Auch erleichtert die Verwendung von C die direkte Nutzung der Windows-API, da die Verwendung eines \ac{FFI}s ausbleibt.
 Das hat sich vor allem bei der Entwicklung der Kommunikation (siehe Abschnitt \ref{umsetzungSW-Kommunikation}) als sinnvoll erwiesen.
@@ -80,15 +80,34 @@ Hier sind vor allem die Implementierung der Kommmunikation (siehe Abschnitt \ref
 - Parallelisierung basierend auf unabhängigen Codepaths (siehe Blogpost dazu) \newline
 - Thread-Kommunikation über geteilten read-only Speicher \& Mutexes wenn notwendig \newline
 
-% @TODO(Val): Erste Entscheidung: Raylib nutzen
+Neben dem gewählte Bottom-Up Ansatz gab es vor Beginn der Implementierung von \ac{SAM} noch eine wichtige Entscheidung zu treffen: Die Wahl eienr \ac{UI}-Bibliothek. \newline
+Die Entwicklung einer \ac{UI} ohne die Verwendung existierender Bibliotheken wäre zwar durchaus möglich, wäre aber sehr viel aufwendiger und im Rahmen dieser Arbei nicht umsetzbar und hätte keinen weiteren Mehrwehrt für diese Arbeit gebracht. \newline
+Es gibt viele \ac{UI}-Bibliotheken, die von C aus genutzt werden können.
+Aufgrund bestehender Erfahrungen und sehr simpler Nutzung wurde sich hier für die Nutzung von \enquote{Raylib}\footnote{siehe \url{https://www.raylib.com/}; der Quellcode der verwendeten Version von Raylib ist außerdem im Quellcode von \ac{SAM} enthalten und kann über den Anhang \ref{appndix-code} gefunden werden.} entschieden.
+Raylib ist außerdem portabel auf sehr vielen Platformen nutzbar, wodurch \ac{SAM} mit relativ wenig Aufwand auch auf anderen Platformen laufen kann.
 
-% @TODO(Val): Immediate Mode vs Retained Mode UI
+Die API von Raylib ist dabei auf einem relativ niedrigen Niveau.
+So bietet Raylib für \ac{UI}s das Darstellen von Formen, Bildern, Textures und Text an, allerdings gibt es beispielsweise keine Funktion zum Erstellen eines Buttons \cite[vgl. mit Dokumentation][]{san.RaylibCheatsheet.23}. \newline
+Die Erstellung sogenannter \enquote{\ac{UI} Widgets} muss entsprechend selbst entwickelt werden.
+Da es sich hier nicht um eine besonders komplexe \ac{UI} handelt, ist das hier kein großer Nachteil.
 
-% @TODO(Val): IM - RM ist ein Spektrum
+Bzgl. der API zum Verwalten von \ac{UI} Widgets gibt es zwei grundsätzliche Ansätze: \enquote{Retained Mode} und \enquote{Immediate Mode} \ac{UI}s:
+\enquote{The approach to bind widgets to objects or handles [...] is called retained mode GUI} \cite[][S. 2]{bre.ExploringImmediateMode.22}. \enquote{In an immediate mode, GUI widgets are created and recreated every frame} \cite[][S. 5]{bre.ExploringImmediateMode.22}. \newline
+Es mag zwar aufwendiger klingen, alle \ac{UI} Widgets jeden Frame neu zu erstellen, allerdings vereinfacht es den Code der \ac{UI} Awendung, da die Entwickler:in nicht manuell den Zustand der \ac{UI} Widgets synchronisiert halten muss \cite[vgl.][S. 10]{bre.ExploringImmediateMode.22}, wodurch eine effizientere Implementierung ermöglicht wird \cite[vgl.][S. 11]{bre.ExploringImmediateMode.22}.
+Entsprechend soll für die Entwicklung von \ac{SAM} eine
 
-% @TODO(Val): Raylib API: Abstraktionslevel unter IM/RM UI
+Wie bei fast allen binären Kategorisierungen, ist es eigentlich ein Spektrum mit zwei Extrema auf den Seiten.
+So kann die API der \ac{UI} Widgets mehr oder weniger \enquote{data retention} aufweisen.
+Zu Beginn der Entwicklung wurde diese API strikt im Immediate Mode Stil gehalten.
+Als ein Problem mit der Performanz auftrat, wurde nach längerer, erfolgloser Suche angenommen, dass der höhere Aufwand der ständigen Kreation der \ac{UI} Widgets das Problem verursachen könnte.
+Entsprechend wurde angefangen einige der Widgets zwischenzuspeichern.
+Das hat kaum spürbare Auswirkungen auf die Performanz gehabt.
+Trotzdem wurde der Code so beigelassen, was im Nachhinein definitiv den Code verkompliziert und das Anpassen des Codes erschwert hat.
+Die Nutzung von Widgets im Immediate Mode Stil ist hier definitiv als sinnvoller zu charakterisieren.
 
-% @TODO(Val): ...
+% @TODO(Val): Rest schreiben
+
+% @TODO(Val): Auf Bottom-Up Ansatz eingehen
 
 % @TODO(Val): Umgang bei Midi-Dateien mit nicht-Piano Instrumenten erklären (vllt gehört das auch eher in die Konzeption)
 

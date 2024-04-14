@@ -21,7 +21,6 @@ Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das A
 \section{Materialien}
 \chapterauthor{Jakob Kautz}
 \subsection{Liste der Bauteile}
-%TODO(Jay): Fix List
 \begin{table}[htbp]
     \centering
     \begin{tabular}{|m{3.8cm}|m{1.7cm}|m{8cm}|}
@@ -34,7 +33,7 @@ Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das A
         \hline
         Arduino & 1 & Kommunikation \\
         \hline
-        Breadboard & 2 & Erweiterung der Ausgänge \\
+        Breadboard & 10 & Erweiterung der Ausgänge \\
         \hline
         Schaltplatine & 5 & Elektronik für die Aktuatoren\\
         \hline
@@ -46,16 +45,16 @@ Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das A
         \hline
         LEDs & 88 & Tests \\
         \hline
-        1kOhm Widerstände & 90 & Sicherheit and shit \\
+        1kOhm Widerstände & 88 & Sicherheit \\
         \hline
-        MOSFET & 90 & Steuerung Strom \\
+        MOSFET & 88 & Steuerung Strom \\
         \hline
         Feste Anschlussblöcke & 88 & Anschluss von Schaltplatine zu Hubmagnet\\
         \hline
         Angelschnur (1m) & 88 & Verbindung Hubmagnet und Taste \\
         \hline
     \end{tabular}
-    \caption{Ergebnisse der Anforderungen}
+    \caption{Bauteile Übersicht}
     \label{table:Bauteile}
 \end{table}
 
@@ -63,19 +62,47 @@ Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das A
 Die vorher spezifizierte Hardware für den Schaltplan musste für die Erstellung des Prototypen offensichtlich besorgt werden.
 Aufgrund der relativ hohen Kosten für eine Studienarbeit, wurde bei einer der betreuenden Firmen angefragt, ob diese die Kosten für das Projekt übernehmen würde.
 Damit dies möglich war, wurde ein Kostenvoranschlag gestellt, in welchem die benötigten Materialien mit den geschätzten Kosten aufgeführt wurden. % @TODO(Val): Kostenanschlag wird wahrscheinlich eine Tabelle, also referenzier die einfach "(siehe Tabelle \ref{...})" oder so
-
-% @TODO(Jay): Add Kostenschätzung
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|m{3.8cm}|m{5cm}|m{5cm}|}
+        \hline
+        \textbf{Komponente} &  \textbf{Angesetzte Kosten in \euro{}} & \textbf{Tatsächliche Kosten in \euro{}}  \\
+        \hline
+        Klavier && 200\euro{} && 180\euro{} \\
+        \hline
+        Arduino & 30\euro{} & 24\euro{} \\
+        \hline
+        Hubmagnete & 5\euro{} -> 440\euro{} & 13,91\euro{} ->1224.08\euro{} \\
+        \hline
+        Stromversorgung & 50\euro{} & kostenlos von der Uni bereitgestellt \\
+        \hline
+        Breadboard & 3\euro{} -> 30\euro{} & 3.43\euro{} -> 34.3\euro{} \\
+        \hline
+        Schaltplatine & 2\euro{} -> 10\euro{} & 2\euro{} -> 10\euro{}\\
+        \hline
+        Schieberegister & 0.3\euro{} 3.3\euro{}->  & 8\euro{},da nur in Paket erhältlich\\
+        \hline
+        Kabel insgesamt & 0.12\euro{}  -> 67\euro{} & 0.12\euro{}  -> 67\euro{}\\
+        \hline
+        LEDs & Bei der Kostenschätzung nicht mit aufgenommen & 0.10\euro{} -> 8.8\euro{} \\
+        \hline
+        1kOhm Widerstände & 0.10\euro{} -> 8.8\euro{} & 0.10\euro{} -> 8.8\euro{} \\
+        \hline
+        MOSFET & 0.9\euro{} -> 79.2\euro{} & 0.66\euro{} -> 58,08\euro{} \\
+        \hline
+        Feste Anschlussblöcke & Bei der Kostenschätzung nicht mit aufgenommen  & 10\euro{}\\
+        \hline
+        Verbindung gesamt & 100\euro{} & 120\euro{} \\
+        \hline
+    \end{tabular}
+    \caption{Übersicht der Kosten}
+    \label{table:kosten}
+\end{table}
 
 Der Kostenanschlag erwies sich im Laufe des Projektes als (teils) unrealistisch. Dies lag insbesondere an der Anforderung
 der Firma. Die Schätzung der Kosten basierte auf Anbietern, bei welchen die Materialien möglichst günstig zu kaufen sind.
 Durch Firmenreglungen mussten diese allerdings alle bei Conrad oder Reichelt
-% @Note(Jay): Stimmt das so?
-gekauft werden. Diese Anbieter verkaufen die Materialien für sehr viel mehr Geld. Die tatsächlichen Kosten liefen
-letztendlich also auf folgende Beträge hinaus: \newline % @TODO(Val): Hier am besten auch einfach wieder nur die Tabelle referenzieren, statt sie unbedingt in die nächste Zeile zu quetschen
-% @TODO(Jay): Tatsächliche Kosten
-
-Der Kostenunterschied betrug daher insgesamt .
-% @TODO(Jay): Add difference
+gekauft werden. Diese Anbieter verkaufen die Materialien für sehr viel mehr Geld.
 Hierbei ist allerdings zu erwähnen, dass die Kostenschätzung passend gewesen wäre, wenn die Anbieter frei wählbar wären.
 
 \section{Prototypenbau} \label{Prototyp}
@@ -331,7 +358,12 @@ Gespannt werden die Seile durch eine Schrauben-Mutter Konstruktion (siehe Abschn
 
 \subsection{Ergebnisse des Prototypen}
 % @TODO(Val):
-Das Anspielen klappt iwie aber noch hakelig.
-% TODO(Jay): was funktioniert genau, was ist noch einfach hinzuzufügen, wo gabs Probleme
+Der Prototyp des selbstspielenden Klaviers zeigt erfolgreiche Ergebnisse in mehreren Bereichen. Die Implementierung von
+8 Tasten funktioniert zuverlässig, wodurch das Klavier in der Lage ist, Töne korrekt wiederzugeben. Seitens der
+fertig gelöteten Schaltung könnten 40 Tasten angespielt werden, allerdings haben die Tests sich auf 8 beschränkt.
+Alle in Kapitel \ref{sec:zielstellung-anforderungen} definierten Anforderungen konnten von dem Prototypen erfüllt werden.
+Zusätzlich erweist sich die Klangdämpfung, dort wo sie eingesetzt wird, als effektiv. \newline
+Ein großer Teil der fehlt, sind Sicherheitskonzepte, weshalb es nicht unbeaufsichtigt betrieben
+werden sollte, sowie die fertigstellung der Schaltung für die zweite Hälfte der Tasten.
 
 

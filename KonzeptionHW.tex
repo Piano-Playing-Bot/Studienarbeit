@@ -12,52 +12,41 @@
 
 % @TODO(Val): Bei jedem Unterkapitel sollte der Autor erwähnt werden, weil ihr euch die ja aufgeteilt habt
 
-% @Note(Val): Abschnitt fängt im Präteritum an und geht dann mit Präsenz weiter
-% Glaube, dass Präsenz leichter lesbar ist, aber muss halt einfach einheitlich sei
-% @Note(Val): Der ganze Abschnitt argumentiert falsch herum.
-% Ihr redet von Aktuatoren, Mikrocontrollern, etc. ohne vorher zu erklären, warum die überhaupt benötigt werden.
-% Statt Lösungen zu liefern, sollte hier erstmal erklärt werden, welche Probleme gelöst werden müssen
-Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
-Die Grundfragen, welche bei der Konstruktion auftraten, betrafen die Auswahl und Implementierung der
-Aktuatoren, die Methode des Anspielens der Klaviertasten sowie die Signalübertragung des \ac{MC}s.
-Im Hinblick auf die Aktuatoren muss eine präzise Steuerung der Tasten
-ermöglicht werden, ohne dass Genauigkeit und Geschwindigkeit des Anspielens vernachlässigt werden.
-\newline
-Dafür werden diese mit den Klaviertasten verbunden, um die mechanische Integrität des Klaviers
-zu erhalten und gleichzeitig eine präzise Steuerung zu gewährleisten.\newline
-Die Signalübertragung erfolgt über einen \ac{MC}.
-Da der gängige \ac{MC} i.d.R. nicht über ausreichende Ausgänge verfügen,
-um alle Tasten anzusteuern, müssen diese erweitert werden.
-Eine solche Erweiterung (siehe Kapitel \ref{output}) ermöglicht es, alle 88 Tasten des Klaviers anzusteuern.
+Das hier besprochene zu lösende Problem ist das präzise Anschlagen der Klaviersaiten, basierend auf einer Eingabe des Nutzers.
+Dafür wird in diesem Kapitel zunächst ein passendes Klavier (siehe Kapitel \ref{subsec:auswahl-des-klaviers}) gesucht und später so präpariert,
+dass es über eine Verbindung zwischen der Saiten und der Aktuatoren (siehe Kapitel \ref{subsec:VerbindungTastenAktuatoren}) angespielt werden kann.
+Wie die Elektronik für die Signalweitergabe zwischen Computer und Klavier funktioniert wird in Kapitel \ref{subsec:konzeptionhw-ansteuerungskonzept} und \ref{subsec:aktuator} erläutert.
 
-\section{Mechanik}\label{konzeptionHW-mechanik}
+\section{Mechanik} \label{sec:konzeptionhw-mechanik}
 
-\subsection{Auswahl des Klaviers}
+\subsection{Auswahl des Klaviers}\label{subsec:auswahl-des-klaviers}
 \chapterauthor{Olivier Stenzel}
 
 Da sich dieses Projekt nicht auf die theoretische Konzeption beschränkt, muss ein entsprechendes Testobjekt - ein reales Klavier - gefunden werden.
 Dieses muss einige Voraussetzungen erfüllen:
 \begin{enumerate}
-	\item 	Der Preis muss im Rahmen des selbst gestellten Budgets (< 2000 €) liegen % @TODO(Val): Wann wurde das Budget auf 2000€ begrenzt? Sollte vielleicht im Zielstellung-Kapitel erwähnt werden
+	\item 	Der Preis muss im Rahmen des selbst gestellten Budgets (< 2000 €) liegen
 	\item 	Es muss leicht auseinander zu bauen sein, um die Mechanik zugänglich zu machen
 	\item 	Es muss vollständig sein (alle 88 Tasten)
 	\item 	Es muss stimmbar sein
 	\item 	Der Transport muss einfach durchzuführen sein
 \end{enumerate}
 
-% @TODO(Val): Fühlt sich an als würde hier noch Text fehlen, oder?
+Mittels dieser Anforderungen wurde online ein passendes Klavier für 100€ ersteigert.
 
-
-\subsection{Ansteuerungskonzept} \label{konzeptionHW-ansteuerungskonzept}
+\subsection{Ansteuerungskonzept} \label{subsec:konzeptionhw-ansteuerungskonzept}
 \chapterauthor{Jakob Kautz}
-% @Note(Val): mMn fehlt ein Satz hier oder irgendwann davor, dass Aktuatoren benötigt werden. Ist vielleicht offensichtlich, aber ein Satz der Form: "Zum automatischen Anspielen des Klaviers benötigt es Aktuatoren" oder so.
-Das Ansteuerungskonzept für die Tasten eines Klaviers erfordert eine Betrachtung der Befestigungsorte für
-die Aktuatoren. Eine grundlegende Überlegung ist, ob die Saiten oder die Tasten selbst angespielt werden sollen. % @Note(Val): Würde vllt. klarer machen, dass es um das direkte Ansteuern der Tasten bzw. Saiten geht, weil die Saiten (indirekt) ja in jedem Fall angespielt werden (sonst gäbe es ja keinen Ton, soweit ich Pianos verstehe)
+
+Um die Saiten zum Schwingen zu bringen ist eine Vorrichtung hilfreich, die elektrische Signale in Bewegung umwandeln kann.
+Dies ist die Eigenschaft von Aktuatoren, wie z.b. Motoren.
+In diesem Kapitel wird untersucht, wie genau man das Anspielen der Saiten technisch umsetzen kann.
+Dabei ist die grundlegende Überlegung, ob man die Saiten direkt anschlägt,
+oder die bestehenden Tasten weiter dafür nutzt.
 
 Wenn die Saiten direkt angespielt werden, erfordert dies weniger Kraft im Vergleich zu den Tasten.
 Das bedeutet, dass die Aktuatoren weniger Kraft aufbringen müssen und somit kostengünstigere
-Aktuatoren genutzt werden können. Allerdings geht
-dabei die gesamte Mechanik des Klaviers verloren, was bedeutet, dass Aspekte wie Dämpfung nicht genutzt werden können,
+Aktuatoren genutzt werden können.
+Allerdings geht dabei die gesamte Mechanik des Klaviers verloren, was bedeutet, dass Aspekte wie Dämpfung nicht genutzt werden können,
 was wiederum zu einem weniger ansprechenden Klang führt. Zusätzlich müsste das Klavier permanent geöffnet bleiben, und die
 Aktuatoren müssten äußerst präzise die Saiten anschlagen, um akzeptable Ergebnisse zu erzielen.
 % @Note(Val): Mit Außnahme des letzten Punkts verstehe ich die Argumente hier ehrlich gesagt nicht. Vieleicht kenne ich mich einfach zu wenig mit Klavieren aus, um das nachvollziehen zu können und wir setzen offensichtlch ein bisschen Klavier-Wissen voraus, aber fals hier für jeden Punkt ein Nebensatz hin könnte, warum das so ist, wäre das wahrscheinlich besser
@@ -101,338 +90,9 @@ Taste führen. Dies muss in der Softwarelogik berücksichtigt werden, um eine ko
 Insgesamt fiel die Entscheidung deshalb auf die Strategie des Ziehens von unten.
 Bei diesem Ansatz wird die geringste mechanische Präzision benötigt und das Klavier ist trotz Montage des Bots noch manuell spielbar.
 
-\subsection{Aktuator}\label{subsec:aktuator}
-\chapterauthor{Jakob Kautz}
-% @Note(Val): Warum kommt hier eine Definition von Aktuatoren, wenn das Wort vorher schon frei verwendet wurde
-% Entweder setzen wir voraus, dass die Leser:innen wissen, was ein Aktuator ist, oder die Definition muss früher kommen
-Die Aktuatoren werden für die Steuerung der Tasten benötigt.
-Ein Aktuator ist ein mechanisches/elektrisches Bauteil, das dazu dient,
-eine bestimmte Aktion auszuführen.
-Er wandelt Energie in Bewegung (oder andere physikalische Größen) um, um eine gewünschte Aktion herbeizuführen
-oder einen Mechanismus zu steuern. \newline % @TODO(Val): Quelle für Aktuator-Definition
-Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
-\begin{enumerate}
-	\item Linearmotor
-	\item Servomotor
-	\item Hubmagnet
-\end{enumerate}
-
-% @TODO(Val): Quelle für jede Definition der 3 Aktuator-Typen
-\paragraph{Linearmotor}
-Ein Linearmotor ist ein Aktuator, der eine lineare Bewegung erzeugt. Er besteht aus einer festen Spule und einem
-beweglichen Magneten oder umgekehrt. Wenn Strom durch
-die Spule fließt, erzeugt sie % @Question(Val): Ist es richtig zu sagen, dass die Spule ein Magnetfeld erzeugt? (Ich hab physikalisch keine Ahnung, also kann gut sein, dass das so richtig formuliert ist)
-ein Magnetfeld, das den beweglichen Teil des Motors in eine lineare Bewegung zieht. \newline
-Physikalische Grundlagen:
-\begin{itemize}
-	\item Die Funktionsweise eines Linearmotors beruht auf dem Prinzip der elektromagnetischen Induktion. Wenn Strom durch die
-	Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Magneten anzieht oder abstößt, je nach Polarität des Stroms.
-	\item Die Richtung und Geschwindigkeit der Bewegung des Linearmotors hängt von der Stärke und Richtung des angelegten Stroms
-	sowie von der Geometrie des Motors ab.
-\end{itemize}
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Linearmotor}
-	\caption{Linearmotor}
-	\label{fig:Linearmotor}
-\end{figure}
-
-\paragraph{Servomotor}
-% @Note(Val): Hier scheint etwas falsch zu sein. Bei der Entscheidungsfindung später sagt ihr, dass Servomotoren eine rotierende Bewegung erzeugen. Aber hier sagt ihr, dass es mit einer Drehung anfängt und diese dann vom Servomotor in eine Bewegung (ich nehme an lineare Bewegung) umgewandelt wird.
-Ein Servomotor ist ein elektromechanischer Aktuator, der eine Bewegung durch eine Drehung ermöglicht.
-Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus. Der Elektromotor erzeugt eine rotierende
-Bewegung, die durch das Getriebe in eine Bewegung umgewandelt wird. Der
-Feedback-Mechanismus, oft ein Potentiometer oder ein Encoder, misst die genaue Position des Motors und gibt diese
-Informationen an die Steuerung zurück.\newline % @Note(Val): Verstehe nicht inwieweit der Feedback-Mechanismus sinnvoll ist
-% @Note(Val): Warum ist das Bild hier zuerst aber ansonsten immer erst nach den physikalischen Grundlgen?
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Servomotor}
-	\caption{Servomotor}
-	\label{fig:Servomotor}
-\end{figure}
-
-Physikalische Grundlagen:
-\begin{itemize}
-	\item Der Elektromotor nutzt das Prinzip der elektromagnetischen Induktion, um eine Drehbewegung zu erzeugen. Dies geschieht
-	durch das Anlegen einer Spannung an die Spulen des Motors, die ein magnetisches Feld erzeugen und den Rotor des Motors in
-	Bewegung versetzen.
-	\item Das Getriebe dient dazu, die Geschwindigkeit und das Drehmoment des Motors zu regulieren und die Bewegung an die
-	Anforderungen der Anwendung anzupassen.
-	\item Der Feedback-Mechanismus misst die Position des Motors durch Erfassung von Änderungen des magnetischen Feldes oder der
-	Winkelposition des Rotors und ermöglicht so eine präzise Steuerung.
-\end{itemize}
-
-\paragraph{Hubmagnet}
-Ein Hubmagnet (auch Solenoid genannt) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
-Stroms erzeugt. Er besteht aus einer Spule, die einen magnetischen Kern umgibt. Wenn Strom durch die Spule fließt, erzeugt
-sie ein Magnetfeld, das den Kern anzieht und somit eine lineare Bewegung erzeugt.\newline
-Physikalische Grundlagen:
-\begin{itemize}
-	\item Der Hubmagnet nutzt das Prinzip der elektromagnetischen Induktion, um eine lineare Bewegung zu erzeugen. Wenn Strom
-	durch die Spule fließt, erzeugt sie ein Magnetfeld, das den magnetischen Kern anzieht. Je nach Polarität des Stroms bewegt
-	sich der Kern entweder in Richtung der Spule oder von ihr weg.
-	\item Die Stärke der Bewegung des Hubmagneten hängt von der Stärke des Stroms, der Anzahl der Wicklungen und der
-	Spule des Magneten ab.
-\end{itemize}
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Hubmagnet}
-	\caption{Hubmagnet}
-	\label{fig:Hubmagnet}
-\end{figure}
-
-\paragraph{Entscheidungsfindung}
-Prinzipiell kann jeder der genannten Aktuatoren für das Projekt verwendet werden. Die Entscheidung fiel aufgrund
-mehrerer Vortzeile allerdings auf den Hubmagneten:
-\begin{enumerate}
-	\item Servo-Motor: Bei diesem Motor ist eine Bewegungsbeschränkung mit eingebaut, welche in jedem Motor ausgebaut
-	werden müsste. Dies ist zu umständlich, wenn es bessere Varianten - wie den Hubmagneten - gibt. Außerdem hätte
-	eine Umlenkung stattfinden müssen, da die erzeugte Bewegung eine Rotation im Gegensatz zu einer linearen Bewegung
-	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschränkung nicht
-	weiter betrachtet wurden. % @Note(Val): Warum erwähnt ihr die rotierende Bewegung dann überhaupt als Nachteil. Und warum werden vorher bei der Erklärung nicht die linearen Servomotoren erklärt?
-	Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
-	sie bei Ende der Stromversorgung waren. Für das Klavier werden Aktuatoren benötigt, welche wieder auf die vorherige
-	Position zurückschalten, die Klaviertaste also in dem Sinne wieder \enquote{loslassen} können.
-	\item Linear-Motor: Auch hier kam das Problem auf, dass die Motoren nicht automatisch wieder an ihre vorherige
-	Position zurückschalten, wenn der Stromfluss stoppt. % @Question(Val): Das Problem könnte mit einem gegenteiligen Stromfluss gelöst werden, oder? Weiß aber nicht ob das die Schaltung unbedingt verkomplizieren würde. Wenn das überhaupt nicht möglich wäre, wären Servo- & Linear-Motoren ja gar nicht nutzbar und dann wäre die Einleitung für diesen Abschnitt falsch
-	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellem
-	Tastendrücken sinnvoll ist. Außerdem schalten Sie, wenn die Stromversorgung abbricht, wieder auf ihre vorherige
-	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren.
-	Da das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinauszugehen, führte dies lediglich dazu, dass Kostenintensivere Solenoids bestellt werden müssen.
-	% @Note(Val): Der letzte Satz hier ist komisch & wahrscheinlich falsch (was genau bedeutet "genug" hier z.B.)
-	% @Note(Val): Der Nachteil ist doch gar nicht, dass sie weniger Kraft aufbringen, wenn es auch Solenoids gibt, die diese Kraft aufbringen, oder? Der Nachteil ist eher, dass die Solenoids, die solche Kraft aufbringen, mehr kosten, oder?
-\end{enumerate}
-
-% @Note(Val): Warum gibt es hier einen forcierten Seitenumbruch? Braucht es das?
-\newpage
-
-\subsection{Verbindung Tasten und Aktuatoren} \label{subsec:VerbindungTastenAktuatoren}
-\chapterauthor{Olivier Stenzel}
-
-Wie in Kapitel \ref{konzeptionHW-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
-Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt. \newline
-Dieses Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden. % @Note(Val): Beschreibst du nur was gemacht wurde? Dann gibt es keine Entscheidungen hier & dann ist das nicht wirklich Konzipierung, oder?
-Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit beim Ansteuerns der Tasten weiter verbessert. % @Note(Val): "verbessert"? Es wurde doch noch gar nichts umgesetzt. Du meinst der Aufbau wird detailierter ausgearbeitet oder?
-% @Note(Val) Es heißt Akkuratesse statt Akkuratheit (https://www.duden.de/rechtschreibung/Akkuratesse) aber bessere Wörter wären vll Exaktheit oder Genauigket
-\newline
-Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen. % @Note(Val): Erst Problem beschreiben, dann Lösung nennen. Das Problem wurde davor angesprochen und sollte hier mindestens erwähnt oder gar erklärt werden
-Die Position an der Taste kann nicht frei gewählt werden. Es muss darauf geachtet werden,
-dass man das Loch beim Spielen nicht sieht. % @Note(Val): Warum ist es wichtig, dass es nicht gesehen wird? Klingt eher als wäre das ein optionaler Bonus
-Außerdem ist wichtig, dass das Loch möglichst am Ende der Taste angebracht wird, um einen größeren Hebeleffekt zu erzeugen,
-und dass das Tastenbrett unter der Taste an der Position gut durchzubohren ist.
-In Abbildung \ref{img:Tastenbohrung} sieht man mit Rot gekennzeichnet das gebohrte Loch, durch das ein Seil (in grün dargestellt) geführt wird.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=8cm]{img/Taste_schraeg.jpg}
-	\caption{Tastenbohrung}
-	\label{img:Tastenbohrung}
-\end{figure}
 
 
-% @Note(Val): Der Satz ist mit den vielen Einschüben und Klammern schwer zu lesen. Lieber in 2 Sätze teilen und lesbarer machen
-Anschließend wird jede Schnur jeweils durch ein senkrechtes Loch (rot in Abbildung \ref{fig:klaviatur} gekennzeichnet) im Klaviaturbalken (bzw. Tastenbrett), % @Note(Val): Nur einen Begriff einheitlich verwenden, sonst verwirrt es nur
-worauf die Tasten liegen, in den Fußraum geführt.
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Klaviatur.jpg}
-	\caption{Bohrung durch das Tastenbrett}
-	\label{fig:klaviatur}
-\end{figure}
-
-\subsubsection{Anordnung der Aktuatoren}
-
-Die Idee ist, die Hubmagnete parallel zur Klaviatur zu befestigen, um die Tasten möglichst senkrecht nach unten ziehen zu können.
-Hierfür müssen folgende Aspekte berücksichtigt werden:
-
-\begin{enumerate}
-	\item Breite der Hubmagnete
-	\item Hitzeentwicklung
-	\item Seilführung
-	\item Stabilität
-	\item Modularität
-\end{enumerate}
-
-Ein Hubmagnet hat die Maße 2,5 cm x 6 cm.
-Das Tastenbrett für 88 Tasten ist allerdings nur 140 cm breit, wodurch pro Tastenansteuerung nur ca. 1,6 cm zur Verfügung stehen.
-Bildet man zwei Hubmagnetreihen übereinander, hat jede Tastenansteuerung 3,20 cm Platz.
-
-Durch die 7mm Abstand ist eine Wärmeabfuhr über die Luft in geringem Ausmaß möglich.
-Ob dies ausreicht, muss in späteren Tests (siehe Kapitel \ref{tests}) ermittelt werden.
-
-Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagneten verbunden.
-
-Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung würde allerdings auf Kosten der Stabilität und Funkionalität gehen. % @Note(Val): Inwieweit? Hier fehlt eine Erklärung
-Deshalb werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
-
-Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
-sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden (siehe Abb. \ref{fig:BefestigungHubmagnete}). % @Note(Val): Die Abbildung zeigt mir nicht, wie die Platte mit dem Klavier verschraubt wird
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Magnetbrett.jpg}
-	\caption{Befestigung der Hubmagnete}
-	\label{fig:BefestigungHubmagnete}
-\end{figure}
-
-\subsubsection{Seilführung}
-
-Würde man die Seile von den Tasten direkt zu den Hubmagneten führen,
-hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend stark betätigen, um einen Ton zu erzeugen.
-\newline
-In den folgenden Abbildungen ist die seitliche Ansicht des Klaviers gezeichnet.
-Dabei repräsentieren der schwarze bzw. weiße Block jeweils eine schwarze bzw. weiße Taste.
-Der grüne und pinke Strich stehen für die Seile, die den Hubmagneten mit dem Loch in der Taste verbinden.
-Unten links sind die zwei übereinanderliegenden Solenoid-Reihen in blau abgebildet.
-Der schwarze Strich repräsentiert den Stab im Hubmagneten. % @Note(Val): Die Farbe vom Solenoid kannst du dir fast sparen, wenn du die Grafik so klein abbildest. Das blau kann ich nur mit viel reinzoomen sehen
-\newline
-Abbildung \ref{img:Umlenkung_locker} zeigt den intuitiven Aufbau mit ausgeschaltetem Solenoid und entsprechend entspanntem Seil und.
-Abbildung \ref{img:Umlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschied, dass der Solenoid hier angezogen ist.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=6cm, height=8cm]{img/Umlenkung_locker}
-	\caption{Taste locker ohne Umlenkung}
-	\label{img:Umlenkung_locker}
-\end{figure}
-
-% @Note(Val): Es wäre besser, wenn sich die beiden Bilder mehr unterscheiden würden. Falls das erste Bild stärker zeigen könnte, dass die Seile locker sind oder es eine Kennzeichnung bei den Seilen gibt, wäre das gut. Alternativ könnten auch die Tasten runtergedrückt sein, um anzuzeigen, dass diese damit betätigt werden
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=6cm, height=8cm]{img/Umlenkung_gezogen}
-	\caption{Taste gezogen ohne Umlenkung}
-	\label{img:Umlenkung_gezogen}
-\end{figure}
-
-% @Note(Val): Warum gibt es hier einen forcierten Seitenumbruch? Braucht es das?
-\newpage
-
-Mit diesem intuitiven Aufbau funktioniert das Betätigen der Tasten nicht, da diese nicht weit genug heruntergezogen werden.
-Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben, müssen Umlenkungen eingebaut werden.
-Mittels dieser Umlenkung, die mit einem PVC-Rohr umgesetzt werden kann, werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
-Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd 1 cm erhöht, was dem Hub des Magneten entspricht..
-
-% @Note(Val): Wenn die Umlenkung weiter unten im Bild wäre, wären die unterschiedlichen Linien leichter zu sehen
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=6cm, height=8cm]{img/mitUmlenkung_locker}
-	\caption{Taste mit Umlenkung}
-\end{figure}
-
-
-% @Note(Val): Entweder machst du das hier als Bullet-Points or mit vollständigen Sätzen. Aber so ist das ein bisschen merkwürdig
-Dies kann auch mathematisch bewiesen werden:
-\newline geg.: % @Note(Val): "gegeben" aber ohne "gesucht" und ohne Demarkierung wann etwas nicht mehr gegeben ist... können wir das "geg." einfach streichen?
-\newline Strecke bis zur ersten Reihe Hubmagnete h1 = 17 cm % @Note(Val): Strecke von wo?
-\newline Strecke bis zur zweiten Reihe Hubmagnete h2 = 27 cm
-\newline Strecke bis zu den schwarzen Tasten t1 = 12 cm
-\newline Strecke bis zu den weißen Tasten t2 = 18 cm
-\newline Seil zur schwarzen Taste im entspannten Zustand $ht1_{entspannt}$ % @Note(Val): Du meinst Seillänge? Ist die Seillänge nicht konstant? Warum berechnen wir die?
-\newline Seil zu den weißen Tasten im entspannten Zustand $ht2_{entspannt}$
-\newline $ht1_{entspannt}$ = $\sqrt {h1^{2} + t1^{2}}$ = 20.81 cm
-\newline $ht2_{entspannt}$ = $\sqrt {h2^{2} + t2^{2}}$ = 32.45 cm
-\newline $ht1_{gespannt}$ = $\sqrt {(h1 + 1) ^{2} + t1^{2}}$ = 21.63 cm
-\newline $ht2_{gespannt}$ = $\sqrt {(h2 + 1)^{2} + t2^{2}}$ = 33.29 cm
-
-Die Differenz zwischen $ht1_{gespannt}$ und $ht1_{entspannt}$ (bzw. ht2) beschreibt die Tiefe, die eine Taste gedrückt werden kann.
-\newline Diese beträgt also ohne Optimierung nur 0.82 cm, bzw. 0.84 cm. % @Note(Val): "ohne Optimierung" - was für Optimierungen wären hier denn überhaupt möglich? Ist die Verwendung einer Umlenkun nicht schon eine Optimierung?
-
-Um also die Intensität des Tastendrucks besser steuern zu können und um die Haltbarkeit des Materials zu verlängern,
-sollte die Reibung am Seil möglichst gering gehalten werden.
-Dazu können mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden können (siehe Abbildung \ref{fig:fussraum}), die Seile umgelenkt und
-entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt werden.
-Das hat den positiven Nebeneffekt, dass die Pianist:innen nicht durch Platzmangel im Beinbereich eingeschränkt sind.
-
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm,angle=-90]{img/Fussraum.jpg}
-	\caption{Fußraum des Klaviers}
-	\label{fig:fussraum}
-\end{figure}
-
-
-\subsubsection{Auswahl des Seils}
-
-Wie eben beschrieben wird das Ziehen durch ein Seil ermöglicht.
-Dafür wird ein leichtes, formbares, unelastisches und dehnungsresistentes Material benötigt, welches die Hubmagnete mit den Tasten verbindet.
-Je leichter das Material ist, desto weniger geht die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verloren.
-Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
-Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein unelastisches Seil zu verwenden.
-Um häufiges Nachspannen oder Austauschen des Seils entgegenzuwirken, sollte dies so dehnungsresistent wie möglich sein.
-
-% @Note(Val): Ab hier wird in der Vergangenheit gesprochen. Ich nehme an, dass das hier aber ok ist, da davon gesprochen wird, was umgesetzt und getestet wurde.
-\paragraph{Nähgarn}
-
-Als Erstes wurde Nähgarn, welches zur Hand war, getestet.
-Auch doppelt verlegt hielt es der ruckartigen Ziehbewegung (mit 25N) des Hubmagnetens nicht stand.
-Vier Fäden funktionierten zu Beginn gut, leierten allerdings schnell aus.
-
-\paragraph{Nylonsaiten}
-
-Als Nächstes wurde die g-Saite einer Gitarre verwendet.
-Durch den höheren Durchmesser und das stärkere Material riss und leierte die Saite nicht aus.
-Da die Saite kaum Flexibilität liefert, war die Befestigung an der Taste jedoch äußerst schwierig.
-Beim Ziehen des Magnetens wurde erst die lockere Schlaufe an der Taste gestreckt, wodurch nicht der vollständige Hub des Magnetens auf die Taste übertragen wurde.
-
-\paragraph{Angelschnur}
-
-% @Note(Val) "Aus Erfahrungen [...] konnte eine Schnur gefunden werden" klingt sehr falsch
-Aus Erfahrungen aus dem Angelbereich konnte schnell eine geeignetere Schnur gefunden werden.
-Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
-Mit einem Durchmesser von 1.6 mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7 kg standhalten.
-Nach ausgiebigem Testen ist eindeutig, dass die Angelschnur die Anforderungen erfüllt.
-Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein Leichtes.
-
-\subsection{Klangdämpfung der Aktuatoren}
-
-\chapterauthor{Olivier Stenzel}
-
-Die Hubmagnete machen beim Anschlagen laute \enquote{Klack} Geräusche, welche von der Melodie des Klaviers ablenken.
-Genauer handelt es sich um den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
-Auch hierfür gab es mehrere Ideen und Tests, um das Geräusch zu dämpfen:
-
-\subsubsection{Isolierfolie}
-
-Die erste Überlegung war die Auskleidung des Innenraums der Hubmagnete mit Isolierfolie.
-Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu diesem Zeitpunkt noch zu gering war, um sicherzustellen, dass die Isolierung dem standhält. % "dem" meint die Hitzeentwicklung? Dann müsste es "ihr" sein.
-
-\subsubsection{Gummi-Stopper}
-
-Die nächste Idee war das Limitieren des Schlags durch Gummiringe (Dichtungsringe) % @Note(Val): Ein Wort verwenden, oder in einen Satz einbringen (z.B. "Dichtungsringe aus Gummi" oder so)
-zwischen Anker und dem äußeren Gehäuse.
-Da für die Befestigung keine zufriedenstellende Lösung gefunden wurde, wurde auch diese Idee verworfen.
-zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden. % @Note(Val): Das ist kein richtiger Satz und ich habe keine Ahnung was du damit aussagen wolltest. Satz streichen oder verbessern
-
-\subsubsection{Schaumstoff}
-
-Wie im Abbildung \ref{fig:schaumstoff} zu sehen ist, wurde die \enquote{Gummi-Stopper}-Idee durch den Einsatz von Schaumstoff leicht modifiziert. \newline
-+ Klopfgeräusch wird vollständig verhindert \newline
-- Durch den Schaumstoff wird 1mm des Hubs nicht verwendet, weshalb nur noch 9mm übrig bleiben \newline
-- Der Aufbau ist optisch nicht besonders ansprechend
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics [width=4cm] {img/Daempfung_Schaumstoff}
-	\caption{Hubmagnet: Dämpfung mit Schaumstoff}
-	\label{fig:schaumstoff}
-\end{figure}
-
-\paragraph{Seil (2mm Durchmesser) um den Anker}
-
-Um das \enquote{Problem} der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt. \newline
-+ Auch hier konnte das Klopfen vollständig beseitigt werden \newline
-+ Von außen sieht man keine Veränderung \newline
-+ Das Seil scheint ausführlichen Tests nach der Hitzeentwicklung gut Stand zu halten  \newline
-- Durch die Dicke des Seils, werden 2mm des Hubs nicht verwendet, weshalb nur noch 8mm übrig bleiben.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics [width=4cm] {img/Hubmagnet_Seil_Daempfung.jpg}
-	\caption{Hubmagnet: Dämpfung mit Seil}
-\end{figure}
 
 
 
@@ -715,6 +375,111 @@ sperren.
 Es ist entscheidend, sicherzustellen, dass die Spannungen in der Schaltung diese Anforderungen erfüllen, um
 eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu vermeiden.
 
+\subsection{Aktuator}\label{subsec:aktuator}
+\chapterauthor{Jakob Kautz}
+% @Note(Val): Warum kommt hier eine Definition von Aktuatoren, wenn das Wort vorher schon frei verwendet wurde
+% Entweder setzen wir voraus, dass die Leser:innen wissen, was ein Aktuator ist, oder die Definition muss früher kommen
+Die Aktuatoren werden für die Steuerung der Tasten benötigt.
+Ein Aktuator ist ein mechanisches/elektrisches Bauteil, das dazu dient,
+eine bestimmte Aktion auszuführen.
+Er wandelt Energie in Bewegung (oder andere physikalische Größen) um, um eine gewünschte Aktion herbeizuführen
+oder einen Mechanismus zu steuern. \newline % @TODO(Val): Quelle für Aktuator-Definition
+Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
+\begin{enumerate}
+	\item Linearmotor
+	\item Servomotor
+	\item Hubmagnet
+\end{enumerate}
+
+% @TODO(Val): Quelle für jede Definition der 3 Aktuator-Typen
+\paragraph{Linearmotor}
+Ein Linearmotor ist ein Aktuator, der eine lineare Bewegung erzeugt. Er besteht aus einer festen Spule und einem
+beweglichen Magneten oder umgekehrt. Wenn Strom durch
+die Spule fließt, erzeugt sie % @Question(Val): Ist es richtig zu sagen, dass die Spule ein Magnetfeld erzeugt? (Ich hab physikalisch keine Ahnung, also kann gut sein, dass das so richtig formuliert ist)
+ein Magnetfeld, das den beweglichen Teil des Motors in eine lineare Bewegung zieht. \newline
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Die Funktionsweise eines Linearmotors beruht auf dem Prinzip der elektromagnetischen Induktion. Wenn Strom durch die
+	Spule fließt, erzeugt sie ein Magnetfeld, das den beweglichen Magneten anzieht oder abstößt, je nach Polarität des Stroms.
+	\item Die Richtung und Geschwindigkeit der Bewegung des Linearmotors hängt von der Stärke und Richtung des angelegten Stroms
+	sowie von der Geometrie des Motors ab.
+\end{itemize}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Linearmotor}
+	\caption{Linearmotor}
+	\label{fig:Linearmotor}
+\end{figure}
+
+\paragraph{Servomotor}
+% @Note(Val): Hier scheint etwas falsch zu sein. Bei der Entscheidungsfindung später sagt ihr, dass Servomotoren eine rotierende Bewegung erzeugen. Aber hier sagt ihr, dass es mit einer Drehung anfängt und diese dann vom Servomotor in eine Bewegung (ich nehme an lineare Bewegung) umgewandelt wird.
+Ein Servomotor ist ein elektromechanischer Aktuator, der eine Bewegung durch eine Drehung ermöglicht.
+Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus. Der Elektromotor erzeugt eine rotierende
+Bewegung, die durch das Getriebe in eine Bewegung umgewandelt wird. Der
+Feedback-Mechanismus, oft ein Potentiometer oder ein Encoder, misst die genaue Position des Motors und gibt diese
+Informationen an die Steuerung zurück.\newline % @Note(Val): Verstehe nicht inwieweit der Feedback-Mechanismus sinnvoll ist
+% @Note(Val): Warum ist das Bild hier zuerst aber ansonsten immer erst nach den physikalischen Grundlgen?
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Servomotor}
+	\caption{Servomotor}
+	\label{fig:Servomotor}
+\end{figure}
+
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Der Elektromotor nutzt das Prinzip der elektromagnetischen Induktion, um eine Drehbewegung zu erzeugen. Dies geschieht
+	durch das Anlegen einer Spannung an die Spulen des Motors, die ein magnetisches Feld erzeugen und den Rotor des Motors in
+	Bewegung versetzen.
+	\item Das Getriebe dient dazu, die Geschwindigkeit und das Drehmoment des Motors zu regulieren und die Bewegung an die
+	Anforderungen der Anwendung anzupassen.
+	\item Der Feedback-Mechanismus misst die Position des Motors durch Erfassung von Änderungen des magnetischen Feldes oder der
+	Winkelposition des Rotors und ermöglicht so eine präzise Steuerung.
+\end{itemize}
+
+\paragraph{Hubmagnet}
+Ein Hubmagnet (auch Solenoid genannt) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
+Stroms erzeugt. Er besteht aus einer Spule, die einen magnetischen Kern umgibt. Wenn Strom durch die Spule fließt, erzeugt
+sie ein Magnetfeld, das den Kern anzieht und somit eine lineare Bewegung erzeugt.\newline
+Physikalische Grundlagen:
+\begin{itemize}
+	\item Der Hubmagnet nutzt das Prinzip der elektromagnetischen Induktion, um eine lineare Bewegung zu erzeugen. Wenn Strom
+	durch die Spule fließt, erzeugt sie ein Magnetfeld, das den magnetischen Kern anzieht. Je nach Polarität des Stroms bewegt
+	sich der Kern entweder in Richtung der Spule oder von ihr weg.
+	\item Die Stärke der Bewegung des Hubmagneten hängt von der Stärke des Stroms, der Anzahl der Wicklungen und der
+	Spule des Magneten ab.
+\end{itemize}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Hubmagnet}
+	\caption{Hubmagnet}
+	\label{fig:Hubmagnet}
+\end{figure}
+
+\paragraph{Entscheidungsfindung}
+Prinzipiell kann jeder der genannten Aktuatoren für das Projekt verwendet werden. Die Entscheidung fiel aufgrund
+mehrerer Vortzeile allerdings auf den Hubmagneten:
+\begin{enumerate}
+	\item Servo-Motor: Bei diesem Motor ist eine Bewegungsbeschränkung mit eingebaut, welche in jedem Motor ausgebaut
+	werden müsste. Dies ist zu umständlich, wenn es bessere Varianten - wie den Hubmagneten - gibt. Außerdem hätte
+	eine Umlenkung stattfinden müssen, da die erzeugte Bewegung eine Rotation im Gegensatz zu einer linearen Bewegung
+	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschränkung nicht
+	weiter betrachtet wurden. % @Note(Val): Warum erwähnt ihr die rotierende Bewegung dann überhaupt als Nachteil. Und warum werden vorher bei der Erklärung nicht die linearen Servomotoren erklärt?
+	Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
+	sie bei Ende der Stromversorgung waren. Für das Klavier werden Aktuatoren benötigt, welche wieder auf die vorherige
+	Position zurückschalten, die Klaviertaste also in dem Sinne wieder \enquote{loslassen} können.
+	\item Linear-Motor: Auch hier kam das Problem auf, dass die Motoren nicht automatisch wieder an ihre vorherige
+	Position zurückschalten, wenn der Stromfluss stoppt. % @Question(Val): Das Problem könnte mit einem gegenteiligen Stromfluss gelöst werden, oder? Weiß aber nicht ob das die Schaltung unbedingt verkomplizieren würde. Wenn das überhaupt nicht möglich wäre, wären Servo- & Linear-Motoren ja gar nicht nutzbar und dann wäre die Einleitung für diesen Abschnitt falsch
+	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellem
+	Tastendrücken sinnvoll ist. Außerdem schalten Sie, wenn die Stromversorgung abbricht, wieder auf ihre vorherige
+	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren.
+	Da das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinauszugehen, führte dies lediglich dazu, dass Kostenintensivere Solenoids bestellt werden müssen.
+			% @Note(Val): Der letzte Satz hier ist komisch & wahrscheinlich falsch (was genau bedeutet "genug" hier z.B.)
+			% @Note(Val): Der Nachteil ist doch gar nicht, dass sie weniger Kraft aufbringen, wenn es auch Solenoids gibt, die diese Kraft aufbringen, oder? Der Nachteil ist eher, dass die Solenoids, die solche Kraft aufbringen, mehr kosten, oder?
+\end{enumerate}
+
+% @Note(Val): Warum gibt es hier einen forcierten Seitenumbruch? Braucht es das?
+\newpage
 
 \subsection{Schaltplan} \label{subsec:schaltplan}
 \chapterauthor{Olivier Stenzel}

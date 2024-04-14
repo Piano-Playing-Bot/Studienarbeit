@@ -76,7 +76,7 @@ Der Kostenunterschied betrug daher insgesamt .
 % @TODO(Jay): Add difference
 Hierbei ist allerdings zu erwähnen, dass die Kostenschätzung passend gewesen wäre, wenn die Anbieter frei wählbar wären.
 
-\section{Prototypenbau}
+\section{Prototypenbau} \label{Prototyp}
 Ursprünglich sollte der Aufbau des in Kapitel \ref{subsec:schaltplan} spezifizierten Schaltplans via Steckbrettern und
 Jumperkabeln umgesetzt werden.
 Zu Beginn wurde dies auch so umgesetzt. Das Problem welches dadurch entstand, war, dass die gewählten Platinen den
@@ -88,7 +88,12 @@ Stromfluss problemlos ausstehen muss.
 % @Note(Val): Wann haben wir entschieden, dass min. 10 Tasten gleichzeitig spielbar sein sollen? Wenn wir das als Anforderung haben wollen, muss das im Anforderungs-Kapitel auch erwähnt werden
 
 Aus diesem Grund wurde die gesamte Schaltung, die nach dem Schieberegister kommt, auf einer Lochrasterplatine fest gelötet.
-Hierfür wurde ein 3mm starker Draht für die Stromversorgung verwendet.
+Hierfür wurde ein 3mm starker Draht für die Stromversorgung verwendet. \newline
+Es wurde bei den Kabeln und Steckplatinen damit gerechnet, dass maximal 20 Aktuatoren Gleichzeitig gespielt werden.
+Da ein Großteil der Stücke für eine:n einzelne:n Pianist:in geschrieben wurde, kann davon ausgegangen werden, dass
+generell nicht mehr als 10 Tasten Gleichzeitog gespielt werden müssen - tendenziell weniger. Die restlichen 10
+Tastendrücke die dazu gerechnet wurden, sind lediglich eine Versicherung.
+% @Note(Jay): Ich muss wirklich mal die Rechnung durchgehen wie viele wir maximal ansteuern können ohne etwas abzubrennen ich glaub es könnten mehr als 20 sein.
 
 \subsection{Verbindung Tasten und Aktuatoren} \label{subsec:VerbindungTastenAktuatoren}
 \chapterauthor{Olivier Stenzel}

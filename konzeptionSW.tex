@@ -97,10 +97,15 @@ Es ist also festzuhalten, dass die Verwendung eines Formats wie \ac{MIDI} hier s
 Bevor \ac{MIDI} selbst gewählt wird, sollten jedoch noch weitere Aspekte beachtet werden.
 
 Dieses Projekt will explizit eine höhere Performanz als die schnellsten menschlichen Pianist:innen erreichen (siehe Kapitel \ref*{Zielstellung}). % @TODO(Val): Muss im Kapitel auch erwähnt werden
+
+% @Note(Jay): Eine Anforderung an das Projekt ist es anstatt dieses Projekt will?
+% @Question(Jay): Macht das bei der Performanz beim spielen an sich einen unterschied oder nur beim "erstellen" der Liste?
+Dieses Projekt will explizit eine höhere Performanz als die schnellsten menschlichen Pianist:innen erreichen (siehe Kapitel \ref*{Zielstellung}).
 Entsprechend sollte das gewählte Datenformat der Musikstücke auch möglichst schnell in das Format umgeformt werden können, das für die Ausgabe an die Aktuatoren benötigt wird.
 Am performantesten wäre es hierbei, eine Liste jener Daten zu speichern, die zu jedem Zeitpunkt an die Aktuatoren ausgegeben werden müssen, da dann gar keine Datentransformation mehr nötig ist.
 
 % @Note(Val): Muss ich erklären, warum erhöhte Kommunikation die Performanz beeinträchtigen könnte oder ist das selbsterklärend?
+% @Note(Jay): find ich selbsterklärend
 Allerdings muss das Datenformat auch möglichst wenig Speicherplatz verbrauchen.
 Da der Code auf einem \ac{MC} laufen muss, ist Speicherplatz relativ begrenzt.
 Der \ac{MC} muss dabei nicht das gesamte Musikstück auf einmal gespeichert haben, da restliche Teile des Musikstücks auch später von \ac{SAM} nachgereicht werden können.
@@ -116,6 +121,8 @@ Entsprechend würde nur ein Subset des \ac{MIDI}-Standards zum Speichern der Mus
 Nichtsdestotrotz kann das Format für diesen eingeschränkten Anwendungsfall noch optimiert werden.
 Um diese Verbesserungen zu motivieren, soll zuerst die Enodierung von Noten in \ac{MIDI} erläutert werden.
 
+% @Note(Jay): Es könnte interessant sein das zu visualisieren (aslo Noten-sheet zu MIDI)
+% @Note(Jay): Wäre eine Tabelle für welche Daten brauchen wie viel Speicher sinnvoll? Wäre übersichtlicher (zusätzlich, nicht stattdessen though, ich mag die Erklärung)
 \ac{MIDI} speichert die Notenfolgen in sogenannten \enquote{Nachrichten}.
 Nachrichten können auch andere Daten tragen, hier sollen aber nur die Nachrichten zum Spielen von Tönen betrachtet werden.
 Jede dieser Nachrichten folgt einer relativen Zeitangabe, im Standard \enquote{delta time} genannt.
@@ -142,24 +149,27 @@ Diese Speicher-Optimierung bringt allerdings auch Nachteile mit sich.
 So verkompliziert es die Transformation der Musikdaten, bevor sie zum Ansteuern der Aktuatoren verwendet werden können.
 Auch müssen die zeitlichen Längen, für die die zurzeit spielenden Töne noch zu spielen sind, gespeichert werden.
 Dies könnte im Generellen einiges an Speicherplatz verbrauchen.
+% @Note(Jay): Können wir bei relativ kurz und relativ wenige bespielhafte Werte nennen? Also wie i.d.R. max 5-10 Magnete gleichzeitig
 In diesem speziellen Anwendungsfall lässt sich allerdings annehmen, dass Noten in der Regel nur für relativ kurze Zeiten gespielt werden und dass nur relativ wenige Noten auf einmal gespielt werden.
-Da wie in Kapitel \ref{???} erklärt, auch nur eine geringe Anzahl der Aktuatoren auf einmal aktiviert werden sollen, kann die Menge zusätzlich benötigten Speichers hier sehr gering gehalten werden.
+Da wie in Kapitel \ref{Prototyp} erklärt, auch nur eine geringe Anzahl der Aktuatoren auf einmal aktiviert werden sollen, kann die Menge zusätzlich benötigten Speichers hier sehr gering gehalten werden.
 
 Aufgrund all dieser möglichen Verbesserungen des Formats, wurde sich entschieden, ein eigenes Datenformat für diesen Anwendungsfall zu entwickeln, welches im Folgenden \enquote{\ac{PIDI}} genannt wird.
 Abgesehen von einer effizienten Speichernutzung, soll das \ac{PIDI}-Format auch performant zum Ansteuern der Aktuatoren transformiert werden können und möglichst simpel zu benutzen sein.
-Außerdem soll es trotz der starken Einschränkung auf diesen Anwendungsfall variabel genug sein, um für unterschiedliche Konfigurationen von Klavieren verwendbar zu sein.
-Das ist deshalb sinnvoll, da es die Möglichkeit bietet, die Anzahl verbundener Tasten des Klaviers jederzeit zu verändern.
+Außerdem soll es trotz der starken Einschränkung auf diesen Anwendungsfall die Variabilität besitzen, für unterschiedliche Konfigurationen von Klavieren verwendbar zu sein.
+Das ist aus dem Grund sinnvoll, dass es die Möglichkeit bietet, die Anzahl verbundener Tasten des Klaviers jederzeit zu verändern.
+% @Note(Jay): Wie zum Beispiel eine andere Anzahl an Tasten... es geht sonst nicht klar hervor, was die vorherige Aussage mit den Tests zu tun hat (also eigentlich den Satz der da drunter steht etwas angepasst nach oben ziehen).
 Während Testphasen müssen somit nicht alle Tasten des Klaviers über Aktuatoren anspielbar sein.
 Auch kann das \ac{PIDI}-Format dann in ähnlichen Projekten mit einer womöglich anderen Anzahl anspielbarer Tasten auf dem Klavier verwendet werden.
 
 Listing \ref{code:PidiCmd struct} zeigt die endgültige Datenstruktur, die für ein individuellen \lstinline{PidiCmd} gewählt wurde, in Form eines C-Bitfields.
+% @Note(Jay): Wäre es sinnvoll den Quelltext nach hier zu verschieben?
 Ein \lstinline{PidiCmd} stellt dabei das Anspielens eines Tons dar.
 Die Töne selbst wurden als ein Paar aus Oktave und Taste in der Oktave dargestellt, da die Anzahl Tasten in einer Oktave auf praktisch allen Klavieren gleich ist.
 Die nullte Oktave bezeichnet hierbei die mittlere Oktave des Pianos, während positive und negative Zahlen in Relation zur mittleren Oktave zu verstehen sind.
-Mit jeweils 4 Bits können alle 12 Tasten in einer Oktave und alle Oktaven, die auch auf großen Klavieren Platz finden, verwendet können.
+Mit jeweils 4 Bits können alle 12 Tasten in einer Oktave und alle Oktaven, die auch auf großen Klavieren Platz finden, verwendet werden.
 
 Die \enquote{velocity} eines \lstinline{PidiCmd}s gibt die Anschlagsstärke an.
-Um Speicherplatz zu sparen und da genauere Präzision beim Anspielen sich auf Hardware-Seiten eh als Schwierigkeit ergeben hat (siehe Kapitel \ref{???}), wurde sich entschieden, nur 4 Bits für die \enquote{velocity} bereitzustellen.
+Um Speicherplatz zu sparen und da genauere Präzision beim Anspielen sich bereits auf Hardware-Seiten als Schwierigkeit ergeben hat (siehe Kapitel \ref{konzeptionHW-ansteuerungskonzept}), wurde sich entschieden, nur 4 Bits für die \enquote{velocity} bereitzustellen.
 Zuletzt gibt es dann noch die \lstinline{dt} und \lstinline{len}, die respektiv jeweils die Zeit seit der zuletzt gespielten Note und die Spiellänge der Note darstellen.
 Während in \ac{MIDI} eine sehr hohe und dynamisch veränderbare Auflösung für die \enquote{delta time} verwendet wurde, ist \lstinline{dt} hier immer in Millisekunden enkodiert.
 Mit den dafür allokierten 12 Bits können $\frac{2^{12}}{1000} = 4,096$ Sekunden ohne Anspielen eines neuen Tons enkodiert werden.

@@ -34,11 +34,16 @@ Allerdings ist die Anwendung funktional und kann Musikstücke aus einem Katalog 
 \chapterauthor{Olivier Stenzel, Val Richter}
 
 Mit der Fertigstellung des Prototypen, soll dieser nun getestet werden.
-Tabelle \ref{table:tests} listet die unterschiedlichen Tests auf, die durchgeführt wurden.
-In den folgenden Abschnitten wird der Ablauf, die Bedeutung und das Ergebnis jedes Tests ausführlich beleuchtet.
-Abschließend werden in Sektion \ref{tests-messungen} noch mehrere Messergebnisse des Prototypens vorgestellt.
+Dabei sind die Messungen in zwei Teile geteilt.
+Zuerst werden Messungen der Hardware beschrieben (siehe Abschnitt \ref{tests-hw}).
+Deren Ergebnisse haben teilweise Auswirkungen auf die Software, um eine korrekte Funktionalität zu versichern.
+Daraufhin werden Messungen der Software in Abschnitt \ref{tests-sw} dargestellt.
 
-Wie in einigen Tests ersichtlich wird, ist für eine korrekte Funktionalität der Hardware die Einführung einer Software-seitigen Begrenzungen notwendig.
+\subsection{Hardware-Tests} \label{tests-hw}
+\chapterauthor{Olivier Stenzel, Val Richter}
+
+Tabelle \ref{table:hw-tests} listet die unterschiedlichen Messungen auf, die an der Hardware durchgeführt wurden.
+In den folgenden Abschnitten wird der Ablauf, die Bedeutung und das Ergebnis jeder Messung ausführlich beleuchtet.
 Anpassungen der Software, die aufgrund von Testergebnissen durchgeführt wurden, werden bei den jeweiligen Tests ebenfalls spezifiziert.
 
 
@@ -47,15 +52,15 @@ Anpassungen der Software, die aufgrund von Testergebnissen durchgeführt wurden,
 	\centering
 	\begin{tabular}{|l|l|}
 		\theadstart{ID} & \theadcol{Name} \\ \hline
-		T1 & Min. Periodendauer eines Tastendrucks \\ \hline
-		T2 & Min. Lautstärke \\ \hline
-		T3 & Min. Genauigkeit \\ \hline
+		HW-T1 & Min. Periodendauer eines Tastendrucks \\ \hline
+		HW-T2 & Min. Lautstärke \\ \hline
+		HW-T3 & Min. Genauigkeit \\ \hline
 	\end{tabular}
-	\caption{Tests}
-	\label{table:tests}
+	\caption{Hardware-Tests}
+	\label{table:hw-tests}
 \end{table}
 
-\subsubsection{T1: Min. Periodendauer eines Tastendrucks}
+\subsubsection{HW-T1: Min. Periodendauer eines Tastendrucks}
 
 \paragraph{Erklärung:}
 Mit der Periode eines Tastendrucks ist hier jene Zeit gemeint, die zwischen doppelten Betätigen derselben Taste vergeht.
@@ -93,45 +98,76 @@ Ein alternativer Ansatz würde in diesen Fällen das Verschmelzen der Töne in K
 Das würde jedoch eine etwas kompliziertere Lösung mit sich bringen und es da diese Fälle in der Praxis eher unwahrscheinlich sind, wurde Einfachheit hier vorgezogen.
 
 Eine größere Limitation dieser Lösung liegt dagegen darin, dass zurzeit nur die nächste \lstinline|PidiCmd|s im derzeit zu spielenden Buffer betrachtet werden.
-Der zweite Buffer von \lstinline|PidiCmd|s, der beim Lesen neuer \ac{Music}-Nachrichten befüllt wird, wird zurzeit ignoriert.
+Der zweite Buffer von \lstinline|PidiCmd|s, der beim Lesen neuer \enquote{Music}-Nachrichten befüllt wird, wird bei dieser Prüfung zurzeit ignoriert.
 Das bedeutet, dass die derzeitige Umsetzung des Ansatzes nicht vollständig korrekt ist, da das nächste Anschlagen eines Tons im nächsten Buffer liegen könnte.
 Allerdings wurde hier wieder die Einfachheit der Implementierung als wichtiger gesehen, da diese Fälle in den praktischen, getesteten Musikstücken nicht oder nur sehr selten aufgetreten sind.
 
 
-\subsubsection{T2: Min. Lautstärke:}
+\subsubsection{HW-T2: Min. Lautstärke}
 
-Erklärung: Um den am leisesten spielbaren Ton zu ermitteln, muss die minimale Spannung ermittelt werden, mit der eine Taste betätigt werden kann.
-Wie in Kapitel \enquote{\nameref{subsec:aktuator}} erklärt, benötigt ein Hubmagnet eine entsprechende Ansprechspannung, um den Anker zu bewegen.
+\paragraph{Erklärung:}
+Um den leisesten spielbaren Ton zu ermitteln, muss die minimale Spannung ermittelt werden, mit der eine Taste betätigt werden kann.
+Wie in Kapitel \enquote{\nameref{subsec:aktuator}} erklärt, benötigt ein Hubmagnet eine entsprechende Minimalspannung, um den Anker zu bewegen.
 Da diese Spannung im Datenblatt des Hubmagneten nicht ersichtlich ist und das Tastengewicht sowieso mit einbezogen werden muss, muss diese Mindestspannung beim Klavier experimentell ermittelt werden.
 
-Ablauf: Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt (siehe Kapitel \enquote{\nameref{vorgehenSW-MC}}) schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
+\paragraph{Ablauf:}
+Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt, schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
 Dies wird an allen (mit Fokus auf den tieferen) Tasten durchgeführt, da sich die einzelnen Tasten in ihrem Ansprechverhalten teils deutlich unterscheiden. % @Note(Val): Erneut - warum wird erst jetzt erwähnt, dass sich die Tasten so stark unterscheiden? Wäre das bei der Konzeption oder dem Anbringen der Aktuatoren an das Piano nicht interessant zu wissen?
-Anschließend wird der Größte der einzelnen Minima in den Code mit aufgenommen.
+Anschließend wird wieder das Größte der einzelnen Minima in den Code mit aufgenommen.
 
-Ergebnis: Das leisteste Anspielen der Tasten ist mit einer Spannung von 17,3V möglich.
-Dieses Ergebnis fließt in die Lautstärkeregelung der Software ein.
-% @TODO(Val): Hier sollte vermutlich die Lösung im Code kurz erklärt werden
+\paragraph{Ergebnis:}
+Das leisteste Anspielen der Tasten ist mit einer Spannung von 17,3V möglich.
+Als \ac{PWM}-Wert ist dies eine 210 von 256 möglichen Werten.
+Der \ac{MC} hat beim Bespielen von Noten eine Anspielstärke als 4-Bit Zahl gegeben (siehe Listing \ref{code:PidiCmd struct}).
+Um die Anschlagestärke auf die richtige Skalierung zu bringen kann eine lineare Interpolation verwendet werden.
+Listing \ref{code:scaled volume} zeigt, wie das in Code aussehen könnte.
+Dabei werden im Listing auch der Lautstärke-Faktor beachtet und Anschlagsstärken von 0 korrekt auf 0 gesetzt.
+
+\begin{UnbrokenCodePage}[style=CStyle, caption={Skalierung der Lautstärke bei der Ausgabe}, label={code:scaled volume}]
+#define DELTA 0.00001f
+#define MAX_VELOCITY 16
+#define MIN_PWM 210
+#define MAX_PWM 255
+unsigned char velocity; // is assumed to be given as a number between 0 and 15
+float volume_factor;    // is assumed to be given as some positive number
+float t = volume_factor * velocity / (float)MAX_VELOCITY;
+if (t <= DELTA) {
+	set(0); // Sets the specified key to recive a PWM value of 0
+} else {
+	if (t > 1.0f) t = 1.0f;
+	set(MIN_PWM + t*(MAX_PWM - MIN_PWM));
+}
+\end{UnbrokenCodePage}
 
 
-\subsubsection{T3: Min. Genauigkeit:}
+\subsubsection{HW-T3: Min. Genauigkeit:}
 
 % @TODO(Val): muss noch geschrieben werden
 
 
 
-\subsection{Messergebnisse} \label{tests-messungen}
+\subsection{Software-Tests} \label{tests-sw}
+\chapterauthor{Val Richter}
 
-% @TODO(Val): Füg auch Hardware-Messungen hinzu
-Software-Messungen: \newline
-- Kommunikationsgeschwindigkeit \newline
-- FPS beim Arduino \newline
-- FPS bei UI \newline
-- FPS bei Comm-Thread der UI \newline
-- Speicherverbrauch der UI \newline
-- Code-Komplexität (ist das interessant?) \newline
-- Lines of Code (i guess?) \newline
+Tabelle \ref{table:sw-tests} listet die unterschiedlichen Messungen, die an der Software durchgeführt wurden.
+Die Bedeutung dieser Messergebnisse wird im Folgenden beleuchtet.
 
-
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{|l|p{10cm}|l|}
+		\theadstart{ID} & \theadcol{Beschreibung} & \theadcol{Ergebnis} \\ \hline
+		SW-T1 & Durchschnittliche Latenz bei der Kommunikation zwischen \ac{SAM} \& \ac{MC} & ... \\ \hline
+		SW-T2 & Minimale Laufzeit einer Iteration des \ac{MC}s während dem Abspielen eines Musikstücks & ... \\ \hline
+		SW-T3 & Maximale Laufzeit einer Iteration des \ac{MC}s während dem Abspielen eines Musikstücks & ... \\ \hline
+		SW-T4 & Minimale Laufzeit einer Iteration des Kommunikations-Threads in \ac{SAM} während Abspielen eines Musikstücks & ... \\ \hline
+		SW-T5 & Maximale Laufzeit einer Iteration des Kommunikations-Threads in \ac{SAM} während Abspielen eines Musikstücks & ... \\ \hline
+		SW-T6 & Minimale \ac{FPS} von \ac{SAM} während ausfühlicher Nutzung & ... \\ \hline
+		SW-T7 & Maximale \ac{FPS} von \ac{SAM} während ausfühlicher Nutzung & ... \\ \hline
+		SW-T8 & Maximaler Speicherverbrauch von \ac{SAM} bei ausführlicher Nutzung von 30 Minuten & ... \\ \hline
+	\end{tabular}
+	\caption{Software-Tests}
+	\label{table:sw-tests}
+\end{table}
 
 
 

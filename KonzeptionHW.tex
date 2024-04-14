@@ -381,8 +381,9 @@ Um das \enquote{Problem} der schlechten Ästetik beim Schaumstoff zu beseitigen,
 
 \subsection{Mikrocontroller}\label{Ansteuerung}
 \chapterauthor{Jakob Kautz}
-Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein \ac{MC} gut geeignet.
-Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung, wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
+Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein Mikrocontroller (später: \ac{MC}) gut geeignet.
+Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung,
+wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
 
 %Arduino Intro
 \begin{minipage}{0.7\textwidth}
@@ -784,7 +785,7 @@ Arduinoport D4 <-> STCP (Storage Register Clock Input)
 
 Nachdem die Daten in das Schieberegister eingelesen wurden, wird dieser Pin verwendet, um die im Schieberegister vorhandenen Daten in das Ausgangsregister zu übertragen.
 Ein Taktimpuls auf diesem Pin bewirkt, dass die Daten vom Schieberegister ins Ausgangsregister übernommen werden, sodass alle Ausgänge gleichzeitig aktualisiert werden.
-Das ist besonders relevant, da sonst unter Umständen alle Ausgänge von einer Änderung im letzten Schieberegister bedingst wären.
+Das ist besonders relevant, da sonst unter Umständen alle Ausgänge von einer Änderung im letzten Schieberegister betroffen wären.
 
 Arduino GND <-> Ground, Output Enable (OE)
 

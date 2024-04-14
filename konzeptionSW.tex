@@ -7,9 +7,6 @@
 \chapter{Konzeption - Software} \label{vorgehenSW}
 \chapterauthor{Val Richter}
 
-% @Note(Val): Die Reihenfolge ist gerade wahrscheinlich falsch herum für Kruse
-% Kruse fände es wahrscheinlich logischer mit der UI zu starten und dann PIDI-Format, MC & Kommunikation zu besprechen
-
 Wie in Kapitel \ref{Zielstellung} beschrieben, soll eine Desktop-Anwendung für die Nutzer:innen-Interaktion mit dem selbst-spielenden Klavier erstellt werden.
 Die Anwendung soll im Folgenden als \enquote{\ac{SAM}} bezeichnet werden.
 Die fundamentale Aufgabe der Anwendung liegt im Verwalten und Spielen von Musikstücken auf dem selbst-spielenden Klavier.
@@ -24,16 +21,7 @@ Der \ac{MC} erhält Daten zum abzuspielenden Musikstück von \ac{SAM} und schick
 \begin{figure}[htbp]
     \centering
     \begin{tikzpicture}[node distance=2cm, line width=0.25mm]
-        % Code for drawing a stick figure as taken from https://tex.stackexchange.com/a/441952
-        % \begin{tikzpicture}
-        % 	\thicklines
-        % 	\put(5,18){\circle{5}}
-        % 	\put(5,7){\line(0,1){8}}
-        % 	\put(5,7){\line(1,-2){5}}
-        % 	\put(5,7){\line(-1,-2){5}}
-        % 	\put(1,12){\line(1,0){8}}
-        % \end{tikzpicture}
-        \node (user) [rect] {User}; % @TODO(Val): draw Useer as stick figure
+        \node (user) [rect] {User};
         \node (ui) [rect, below of=user] {\ac{SAM}};
         \node (mc) [rect, right of=ui, xshift=1.5cm] {\ac{MC}};
         \node (hw) [rect, right of=mc, xshift=1.5cm] {Hardware};
@@ -47,7 +35,7 @@ Der \ac{MC} erhält Daten zum abzuspielenden Musikstück von \ac{SAM} und schick
 \end{figure}
 
 Da die Hardware-Komponente in vorherigen Kapiteln bereits behandelt wurde, soll hier nur die Architektur der Desktop-Anwendung (in Abschnitt \ref{vorgehenSW-UI}) und des \ac{MC}s (in Abschnitt \ref{vorgehenSW-MC}) erarbeitet werden.
-Dabei soll die Kommunikation zwischen diesen beiden Komponenten in Abschnitt \ref{vorgehenSW-SPPP} seperat betrachtet und spezifiziert werden.
+Dabei soll zuletzt noch die Kommunikation zwischen diesen beiden Komponenten in Abschnitt \ref{vorgehenSW-SPPP} betrachtet und spezifiziert werden.
 Ein Ziel der Kommunikations-Spezifikation ist eine leichte Anpassbarkeit der einzelnen Komponenten, solange sie sich weiterhin an das selbe Kommunikations-Protokoll halten.
 
 Weiterhin soll auch das Format, in dem Musikstücke auf dem \ac{MC} gespeichert werden, in Abschnitt \ref{vorgehenSW-PIDI} seperat entworfen werden.
@@ -55,14 +43,72 @@ Da der \ac{MC} eine möglichst hohe Geschwindigkeit für die Ansteuerung der Mot
 Auch muss das Format möglichst wenig Speicherplatz aufbrauchen, damit möglichst viele Daten auf einmal auf dem \ac{MC} gespeichert werden können.
 Je mehr Speicherplatz das Format nämlich benötigt, desto öfter muss die \ac{UI} Daten an den \ac{MC} schicken, was aufgrund relativ hoher Latenzen in der Kommunikation nicht wünschenswert ist.
 
-% @Note(Val): Check that this is still correct, since I wrote kind of different stuff in the UI section than what I say here
-Zuletzt soll außerdem noch die Anwendung \ac{SAM} spezifiziert werden.
-\ac{SAM} hat an sich drei klar separierbare Aufgaben.
-Zum einen muss \ac{SAM} Nutzer:innen-Eingaben verarbeiten und ein graphisches Interface rendern.
-Zum anderen muss \ac{SAM} wie bereits erwähnt auch Daten an den \ac{MC} schicken.
-Wie in Unterkapitel \ref{vorgehenSW-SPPP} aufgezeigt wird, muss \ac{SAM} außerdem auch Daten vom \ac{MC} empfangen können.
-Wie in \ref{Zielstellung} spezifiziert, sollen Nutzer:innen auch Musikstücke in bestimmten Dateiformaten an die Anwendung geben können, um diese danach auf dem selbst-spielenden Klavier abspielen zu können.
-Entsprechend ist das Importieren von Musikstücken die dritte Aufgabe von \ac{SAM}.
+
+\section{Desktop Anwendung} \label{vorgehenSW-UI}
+
+% @TODO(Val): Wiedergabegeschwindigkeit kommt nicht vor, aber wurde bei Anforderungen genannt
+% @TODO(Val): Dieses Unterkapitel erklärt größtenteils warum wir die Anforderungen haben und passt deswegen vielleicht besser in Kapitel 2 statt hierhin
+
+\ac{SAM} soll der Nutzer:in eine Schnittstelle zum Anspielen des Pianos bieten.
+Den in Tabelle \ref{table:anforderungen} genannten Anforderungen nach, soll es der Nutzer:in möglich sein Musikstücke aus einem Katalog auszuwählen und dem Katalog neue Stücke hinzuzufügen.
+Weiterhin soll die Wiedergabe über die \ac{UI} steuerbar sein.
+In diesem Kapitel soll diese Anforderungen an die Anwendung genauer spezifiziert werden.
+Zusätzlich soll ein Konzept für das \ac{UI} Design entwickelt werden.
+
+Aus Sicht der Nutzer:innen hat \ac{SAM} zwei Aufgaben:
+\begin{enumerate}
+    \item Musik-Verwaltung
+    \item Musik-Wiedergabe
+\end{enumerate}
+
+Die Musik-Verwaltung beinhaltet das Hinzufügen neuer Musikstücke und die Darstellung des Katalogs.
+Um auch die Nutzung eines großen Katalogs leicht zu ermöglichen, soll es auch eine Möglichkeit zum Suchen von Musikstücken nach Namen geben.
+Bei der Musik-Wiedergabe muss dagegen mit dem \ac{MC} und somit indirekt mit dem Piano kommuniziert werden.
+Auch sollen Kontrollmöglichkeiten bei der Wiedergabe zur Verfügung stehen.
+
+Der Haupt-Use-Case besteht hierbei im Suchen und nachfolgendem Abspielen eines Musikstücks, während das Hinzufügen neuer Musik zum sofortigen oder späteren Abspielen einen zweiten Use-Case abbildet.
+Diese Rangfolge der Use Cases sollte auch im Design der \ac{UI} wiedergespiegelt sein.
+Ein Ansatz dafür wäre die Teilung der \ac{UI} in zwei Seiten, wobei die erste, im Normalfall angezeigte Seite den Katalog darstellt, und die zweite Seite den Import von Musikstücken behandelt.
+Alternativ könnten beide Funktionalitäten auch auf einer einzelnen Seite untegebracht werden mit der Gefahr, die Nutzer:in damit zu überfordern.
+Die selbe Frage stellt sich ebenso für die Wiedergabe.
+Diese kann entweder auf der selben Seite mit unter gebracht werden oder auf einer seperaten Seite gebracht werden.
+
+Da die Anwendung möglichst intuitiv und leicht erlernbar sein soll, ist es bei diesen Fragen sinnvoll, ein ähnliches Design zu ähnlichen, bekannten Anwendungn zu verwenden.
+Hier sollen vor allem der \enquote{\ac{WMP}} und \enquote{Spotify} zum Vergleich genommen werden.
+Es ist davon auszugehen, dass die meisten Nutzer:innen mit mindestens einer der beiden Anwendungen vertraut sind.
+
+Sowohl \ac{WMP} als auch Spotify bieten die Möglichkeit zum Betrachten von Katalogen - sogenannten Playlists - an.
+Beide bieten auch die Möglichkeit an, mehere Playlists zu erstellen.
+Im Rahmen dieser Arbeit soll eine solche Funktionalität nicht angeboten werden.
+Stattdessen soll \ac{SAM} nur einen einzigen Katalog zur Verfügung stellen.
+\ac{WMP} und Spotify bieten außerdem beide die Möglichkeit zum Abspielen von Musik.
+
+Das Öffnen beider Anwendung liefert ein Startbildschirm, der u.a. auf die unterschiedlichen, vorhandenen Playlists verlinkt.
+Da \ac{SAM} nur eine Playlist hat, wäre dies unnötig und würde die Nutzung der Anwendung nur verlangsamen.
+Stattdessen bietet es sich hier an, den Katalog direkt zu zeigen.
+
+Beim Abspielen der Musik soll wie bei \ac{WMP} und Spotify auch eine Timeline des Musikstücks am unteren Fensterrand angezeigt werden.
+Dabei soll eine Navigation im Musikstück über Klicken auf der Timeline möglich sein.
+Die Kontroll-Elemente, die in Kapitel \ref{Zielstellung} als Anforderungen gestellt wurden, sollen wie in Spotify oberhalb der Leiste dargestellt werden und ähnliche Symbole verwenden.
+
+Anders als \ac{WMP} oder Spotify soll \ac{SAM} in der Lage sein, die Wiedergabegeschwindigkeit anzupassen.
+Dafür könnte entweder ein Slider verwendet werden, wie es auch bei der Konfiguration der Lautstärke üblich ist, oder über Buttons, die die Geschwindigkeit um eine feste Größe de- bzw. inkrementiert wird, wie es beispielsweise im populären Multi-Media-Spieler \enquote{VLC media player}\footnote{\url{https://www.videolan.org/vlc/}} gelöst ist.
+Da anzunehmen ist, dass Buttons leichter als ein Slider zu implementieren sind, wurde sich im Rahmen des Prototypen entschieden, die Wiedergabegeschwindigkeit über Buttons steuern zu lassen.
+
+Zuletzt ist nun noch das Hinzufügen von Musikstücken zu beachten.
+Da das Importieren neuer Musikstücke einen zweitrangigen Use-Case darstellt, wurde sich entschieden, diesen auf einer zweiten Seite umzusetzen.
+Auf der Startseite soll ein Button zum Importieren exisiteren.
+Der Button soll dann zur zweiten Seite führen, wo die zu importierende Datei ausgewählt werden kann, und für den Import umbenannt werden kann.
+
+Es soll der Nutzer:in generell die Möglichkeit gegeben werden, jedes Musikstück im Katalog zu jedem Zeitpunkt umzubenennen und auch wieder zu entfernen.
+Diese Änderungen sollten dabei durch Eingaben direkt beim dargestellten Musikstück möglich sein.
+Das verhilft laut dem \ac{UI} Design Pattern \enquote{Make it direct} eine intuitivere Nutzung zu gestalten.
+Beim Darstellen der Musikstücke sollte entsprechend der Name angezeigt werden, sowie eine Möglichkeit zum Abspielen, Anpassen des Namens und zum Löschen des Musikstücks.
+
+Zuletzt ist beim Import noch zu beachten, dass die Nutzer:in jederzeit den Import abbrechen können sollte.
+Da der Import die Nutzer:in auf eine neue Seite bringt, soll das Abbrechen über einen links-gerichteten Pfeil gekennzeichnet werden, welches ein gängiges Symbol zum Rückkehren auf die vorherige Seite darstellt.
+
+% @TODO(Val): Architektur des Codes und dann nur ganz wenig in umsetzungSW
 
 
 \section{Datenformat für Musikstücke} \label{vorgehenSW-PIDI}
@@ -563,69 +609,3 @@ Der \ac{MC} sollte keine weiteren \enquote{Request}-Nachrichten schicken, sobald
 Auf den ersten Blick mag das nach weiterer Arbeit klingen, diese Logik sollte allerdings zu Start des \ac{MC}s - bevor das erste Musikstück gespielt wurde - sowieso gelten.
 Entsprechend ist es kein weiterer Aufwand in der Ausführung oder Entwicklung des \ac{MC}s.
 
-
-\section{Desktop Anwendung} \label{vorgehenSW-UI}
-
-% @TODO(Val): Wiedergabegeschwindigkeit kommt nicht vor, aber wurde bei Anforderungen genannt
-% @TODO(Val): Dieses Unterkapitel erklärt größtenteils warum wir die Anforderungen haben und passt deswegen vielleicht besser in Kapitel 2 statt hierhin
-
-\ac{SAM} soll der Nutzer:in eine Schnittstelle zum Anspielen des Pianos bieten.
-Den in Tabelle \ref{table:anforderungen} genannten Anforderungen nach, soll es der Nutzer:in möglich sein Musikstücke aus einem Katalog auszuwählen und dem Katalog neue Stücke hinzuzufügen.
-Weiterhin soll die Wiedergabe über die \ac{UI} steuerbar sein.
-In diesem Kapitel soll diese Anforderungen an die Anwendung genauer spezifiziert werden.
-Zusätzlich soll ein Konzept für das \ac{UI} Design entwickelt werden.
-
-Aus Sicht der Nutzer:innen hat \ac{SAM} zwei Aufgaben:
-\begin{enumerate}
-    \item Musik-Verwaltung
-    \item Musik-Wiedergabe
-\end{enumerate}
-
-Die Musik-Verwaltung beinhaltet das Hinzufügen neuer Musikstücke und die Darstellung des Katalogs.
-Um auch die Nutzung eines großen Katalogs leicht zu ermöglichen, soll es auch eine Möglichkeit zum Suchen von Musikstücken nach Namen geben.
-Bei der Musik-Wiedergabe muss dagegen mit dem \ac{MC} und somit indirekt mit dem Piano kommuniziert werden.
-Auch sollen Kontrollmöglichkeiten bei der Wiedergabe zur Verfügung stehen.
-
-Der Haupt-Use-Case besteht hierbei im Suchen und nachfolgendem Abspielen eines Musikstücks, während das Hinzufügen neuer Musik zum sofortigen oder späteren Abspielen einen zweiten Use-Case abbildet.
-Diese Rangfolge der Use Cases sollte auch im Design der \ac{UI} wiedergespiegelt sein.
-Ein Ansatz dafür wäre die Teilung der \ac{UI} in zwei Seiten, wobei die erste, im Normalfall angezeigte Seite den Katalog darstellt, und die zweite Seite den Import von Musikstücken behandelt.
-Alternativ könnten beide Funktionalitäten auch auf einer einzelnen Seite untegebracht werden mit der Gefahr, die Nutzer:in damit zu überfordern.
-Die selbe Frage stellt sich ebenso für die Wiedergabe.
-Diese kann entweder auf der selben Seite mit unter gebracht werden oder auf einer seperaten Seite gebracht werden.
-
-Da die Anwendung möglichst intuitiv und leicht erlernbar sein soll, ist es bei diesen Fragen sinnvoll, ein ähnliches Design zu ähnlichen, bekannten Anwendungn zu verwenden.
-Hier sollen vor allem der \enquote{\ac{WMP}} und \enquote{Spotify} zum Vergleich genommen werden.
-Es ist davon auszugehen, dass die meisten Nutzer:innen mit mindestens einer der beiden Anwendungen vertraut sind.
-
-Sowohl \ac{WMP} als auch Spotify bieten die Möglichkeit zum Betrachten von Katalogen - sogenannten Playlists - an.
-Beide bieten auch die Möglichkeit an, mehere Playlists zu erstellen.
-Im Rahmen dieser Arbeit soll eine solche Funktionalität nicht angeboten werden.
-Stattdessen soll \ac{SAM} nur einen einzigen Katalog zur Verfügung stellen.
-\ac{WMP} und Spotify bieten außerdem beide die Möglichkeit zum Abspielen von Musik.
-
-Das Öffnen beider Anwendung liefert ein Startbildschirm, der u.a. auf die unterschiedlichen, vorhandenen Playlists verlinkt.
-Da \ac{SAM} nur eine Playlist hat, wäre dies unnötig und würde die Nutzung der Anwendung nur verlangsamen.
-Stattdessen bietet es sich hier an, den Katalog direkt zu zeigen.
-
-Beim Abspielen der Musik soll wie bei \ac{WMP} und Spotify auch eine Timeline des Musikstücks am unteren Fensterrand angezeigt werden.
-Dabei soll eine Navigation im Musikstück über Klicken auf der Timeline möglich sein.
-Die Kontroll-Elemente, die in Kapitel \ref{Zielstellung} als Anforderungen gestellt wurden, sollen wie in Spotify oberhalb der Leiste dargestellt werden und ähnliche Symbole verwenden.
-
-Anders als \ac{WMP} oder Spotify soll \ac{SAM} in der Lage sein, die Wiedergabegeschwindigkeit anzupassen.
-Dafür könnte entweder ein Slider verwendet werden, wie es auch bei der Konfiguration der Lautstärke üblich ist, oder über Buttons, die die Geschwindigkeit um eine feste Größe de- bzw. inkrementiert wird, wie es beispielsweise im populären Multi-Media-Spieler \enquote{VLC media player}\footnote{\url{https://www.videolan.org/vlc/}} gelöst ist.
-Da anzunehmen ist, dass Buttons leichter als ein Slider zu implementieren sind, wurde sich im Rahmen des Prototypen entschieden, die Wiedergabegeschwindigkeit über Buttons steuern zu lassen.
-
-Zuletzt ist nun noch das Hinzufügen von Musikstücken zu beachten.
-Da das Importieren neuer Musikstücke einen zweitrangigen Use-Case darstellt, wurde sich entschieden, diesen auf einer zweiten Seite umzusetzen.
-Auf der Startseite soll ein Button zum Importieren exisiteren.
-Der Button soll dann zur zweiten Seite führen, wo die zu importierende Datei ausgewählt werden kann, und für den Import umbenannt werden kann.
-
-Es soll der Nutzer:in generell die Möglichkeit gegeben werden, jedes Musikstück im Katalog zu jedem Zeitpunkt umzubenennen und auch wieder zu entfernen.
-Diese Änderungen sollten dabei durch Eingaben direkt beim dargestellten Musikstück möglich sein.
-Das verhilft laut dem \ac{UI} Design Pattern \enquote{Make it direct} eine intuitivere Nutzung zu gestalten.
-Beim Darstellen der Musikstücke sollte entsprechend der Name angezeigt werden, sowie eine Möglichkeit zum Abspielen, Anpassen des Namens und zum Löschen des Musikstücks.
-
-Zuletzt ist beim Import noch zu beachten, dass die Nutzer:in jederzeit den Import abbrechen können sollte.
-Da der Import die Nutzer:in auf eine neue Seite bringt, soll das Abbrechen über einen links-gerichteten Pfeil gekennzeichnet werden, welches ein gängiges Symbol zum Rückkehren auf die vorherige Seite darstellt.
-
-% @TODO(Val): Architektur des Codes und dann nur ganz wenig in umsetzungSW

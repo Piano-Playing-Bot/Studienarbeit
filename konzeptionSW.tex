@@ -162,28 +162,7 @@ Während Testphasen müssen somit nicht alle Tasten des Klaviers über Aktuatore
 Auch kann das \ac{PIDI}-Format dann in ähnlichen Projekten mit einer womöglich anderen Anzahl anspielbarer Tasten auf dem Klavier verwendet werden.
 
 Listing \ref{code:PidiCmd struct} zeigt die endgültige Datenstruktur, die für ein individuellen \lstinline{PidiCmd} gewählt wurde, in Form eines C-Bitfields.
-% @Note(Jay): Wäre es sinnvoll den Quelltext nach hier zu verschieben?
-Ein \lstinline{PidiCmd} stellt dabei das Anspielens eines Tons dar.
-Die Töne selbst wurden als ein Paar aus Oktave und Taste in der Oktave dargestellt, da die Anzahl Tasten in einer Oktave auf praktisch allen Klavieren gleich ist.
-Die nullte Oktave bezeichnet hierbei die mittlere Oktave des Pianos, während positive und negative Zahlen in Relation zur mittleren Oktave zu verstehen sind.
-Mit jeweils 4 Bits können alle 12 Tasten in einer Oktave und alle Oktaven, die auch auf großen Klavieren Platz finden, verwendet werden.
-
-Die \enquote{velocity} eines \lstinline{PidiCmd}s gibt die Anschlagsstärke an.
-Um Speicherplatz zu sparen und da genauere Präzision beim Anspielen sich bereits auf Hardware-Seiten als Schwierigkeit ergeben hat (siehe Kapitel \ref{konzeptionHW-ansteuerungskonzept}), wurde sich entschieden, nur 4 Bits für die \enquote{velocity} bereitzustellen.
-Zuletzt gibt es dann noch die \lstinline{dt} und \lstinline{len}, die respektiv jeweils die Zeit seit der zuletzt gespielten Note und die Spiellänge der Note darstellen.
-Während in \ac{MIDI} eine sehr hohe und dynamisch veränderbare Auflösung für die \enquote{delta time} verwendet wurde, ist \lstinline{dt} hier immer in Millisekunden enkodiert.
-Mit den dafür allokierten 12 Bits können $\frac{2^{12}}{1000} = 4,096$ Sekunden ohne Anspielen eines neuen Tons enkodiert werden.
-Da die Anspiellänge zusätzlich noch für jeden zurzeit gespielten Ton gespeichert werden muss, wurde entschieden genau 1 Byte dafür zu verwenden.
-Dies erlaubt eine leichte und speicher-effiziente Nutzung außerhalb der \lstinline{PidiCmd}-Datenstruktur.
-Da 8 Bits nur Spiellängen von bis zu $\frac{2^8}{1000} = 0,256$ Sekunden abspeichern können, wurde entschieden hier stattdessen eine Enkodierung in Centisekunden zu benutzen.
-Damit können bis zu $\frac{2^8}{1000} = 2,56$ Sekunden abgespeichert werden.
-
-Insgesamt benötigt ein \lstinline{PidiCmd} dann genau 4 Byte.
-Damit passt die Datenstruktur gut in CPU-Register, was eine schnellere Benutzung ermöglicht.
-Wenn davon ausgegangen wird, dass die meisten Töne mit einer Anspielstärke gespielt werden und ausklingen bevor sie mit einer anderen oder derselben Stärke wieder gespielt werden, dann benötigt \ac{MIDI} für jeden Ton mindestens 7 Bytes.
-Dabei werden 4 Bytes zum initialen Anspielen und 3 Bytes zum Ausklingen des Tons verwendet.
-\ac{PIDI} benötigt dagegen immer genau 4 Bytes für jeden Ton.
-Damit ist verbraucht \ac{PIDI}-Format mindestens $\frac{7}{4} = 1,75$-Mal weniger Speicher als das \ac{MIDI}-Format.
+Die vollständige Spezifikation des Formats lässt sich in Anhang \ref{appendix-pidi} finden.
 
 \begin{UnbrokenCodePage}[style=CStyle, caption={Definition eines \ac{PIDI}-Kommands}, label={code:PidiCmd struct}]
 typedef enum {
@@ -209,6 +188,28 @@ typedef struct PidiCmd {
     key         : 4;
 } PidiCmd;
 \end{UnbrokenCodePage}
+
+Ein \lstinline{PidiCmd} stellt dabei das Anspielens eines Tons dar.
+Die Töne selbst wurden als ein Paar aus Oktave und Taste in der Oktave dargestellt, da die Anzahl Tasten in einer Oktave auf praktisch allen Klavieren gleich ist.
+Die nullte Oktave bezeichnet hierbei die mittlere Oktave des Pianos, während positive und negative Zahlen in Relation zur mittleren Oktave zu verstehen sind.
+Mit jeweils 4 Bits können alle 12 Tasten in einer Oktave und alle Oktaven, die auch auf großen Klavieren Platz finden, verwendet werden.
+
+Die \enquote{velocity} eines \lstinline{PidiCmd}s gibt die Anschlagsstärke an.
+Um Speicherplatz zu sparen und da genauere Präzision beim Anspielen sich bereits auf Hardware-Seiten als Schwierigkeit ergeben hat (siehe Kapitel \ref{konzeptionHW-ansteuerungskonzept}), wurde sich entschieden, nur 4 Bits für die \enquote{velocity} bereitzustellen.
+Zuletzt gibt es dann noch die \lstinline{dt} und \lstinline{len}, die respektiv jeweils die Zeit seit der zuletzt gespielten Note und die Spiellänge der Note darstellen.
+Während in \ac{MIDI} eine sehr hohe und dynamisch veränderbare Auflösung für die \enquote{delta time} verwendet wurde, ist \lstinline{dt} hier immer in Millisekunden enkodiert.
+Mit den dafür allokierten 12 Bits können $\frac{2^{12}}{1000} = 4,096$ Sekunden ohne Anspielen eines neuen Tons enkodiert werden.
+Da die Anspiellänge zusätzlich noch für jeden zurzeit gespielten Ton gespeichert werden muss, wurde entschieden genau 1 Byte dafür zu verwenden.
+Dies erlaubt eine leichte und speicher-effiziente Nutzung außerhalb der \lstinline{PidiCmd}-Datenstruktur.
+Da 8 Bits nur Spiellängen von bis zu $\frac{2^8}{1000} = 0,256$ Sekunden abspeichern können, wurde entschieden hier stattdessen eine Enkodierung in Centisekunden zu benutzen.
+Damit können bis zu $\frac{2^8}{1000} = 2,56$ Sekunden abgespeichert werden.
+
+Insgesamt benötigt ein \lstinline{PidiCmd} dann genau 4 Byte.
+Damit passt die Datenstruktur gut in CPU-Register, was eine schnellere Benutzung ermöglicht.
+Wenn davon ausgegangen wird, dass die meisten Töne mit einer Anspielstärke gespielt werden und ausklingen bevor sie mit einer anderen oder derselben Stärke wieder gespielt werden, dann benötigt \ac{MIDI} für jeden Ton mindestens 7 Bytes.
+Dabei werden 4 Bytes zum initialen Anspielen und 3 Bytes zum Ausklingen des Tons verwendet.
+\ac{PIDI} benötigt dagegen immer genau 4 Bytes für jeden Ton.
+Damit ist verbraucht \ac{PIDI}-Format mindestens $\frac{7}{4} = 1,75$-Mal weniger Speicher als das \ac{MIDI}-Format.
 
 
 \section{Logik des Mikrocontrollers} \label{vorgehenSW-MC}
@@ -311,9 +312,6 @@ Ansosten würde nämlich die akkumulierte Zeit der Vergangenheit angepasst werde
 
 \section{Kommunikation} \label{vorgehenSW-SPPP}
 
-% @TODO(Val): Wiedergabegeschwindigkeit kommt nicht vor, aber wurde bei Anforderungen genannt
-% @TODO(Val): Dieses Unterkapitel erklärt größtenteils warum wir die Anforderungen haben und passt deswegen vielleicht besser in Kapitel 2 statt hierhin
-
 Den in Kapitel \ref{Zielstellung} gestellten Anforderungen nach, soll über \ac{SAM} das automatisch gespielte Musikstück dynamisch wählbar sein.
 Das bringt mit sich, dass \ac{SAM} Daten an den \ac{MC} senden können muss.
 Abgesehen von den zu spielenden Noten, muss \ac{SAM} dem \ac{MC} auch mitteilen können, ob angehalten, oder Lautstärke und Geschwindigkeit angepasst werden sollen.
@@ -400,6 +398,7 @@ Ein einzelnes Byte wäre zu unsicher, da jedes zufällig empfangene Byte eine $\
 
 Die meisten Nachrichten müssen jeweils nur eine einzelne Zahl übersenden.
 Tabelle \ref{table:SPPP-Messages} listet alle Nachrichtentypen mit ihren jeweils zu übertragenen Daten auf.
+Die vollständige Spezifikation des Protokolls findet sich in Anhang \ref{appendix-sppp}.
 
 \begin{table}[htbp]
     \centering
@@ -418,9 +417,6 @@ Tabelle \ref{table:SPPP-Messages} listet alle Nachrichtentypen mit ihren jeweils
     \caption{\ac{SPPP}-Nachrichten}
     \label{table:SPPP-Messages}
 \end{table}
-% @TODO(Val): Update code & Protocol-Specification to fit this description
-% @TODO(Val): Update magic bytes to be `SPP`
-% @TODO(Val): Put full Spec in Appendix
 
 \subsection{Fehlerbehandlung} \label{SPPP-Error-Handling}
 
@@ -570,6 +566,9 @@ Auf den ersten Blick mag das nach weiterer Arbeit klingen, diese Logik sollte al
 Entsprechend ist es kein weiterer Aufwand in der Ausführung oder Entwicklung des \ac{MC}s.
 
 \section{Desktop Anwendung} \label{vorgehenSW-UI}
+
+% @TODO(Val): Wiedergabegeschwindigkeit kommt nicht vor, aber wurde bei Anforderungen genannt
+% @TODO(Val): Dieses Unterkapitel erklärt größtenteils warum wir die Anforderungen haben und passt deswegen vielleicht besser in Kapitel 2 statt hierhin
 
 \ac{SAM} soll den Nutzer:innen eine Schnittstelle zum Anspielen des Pianos bieten.
 Den in Tabelle \ref{table:anforderungen} genannten Anforderungen nach, soll es der Nutzer:in möglich sein Musikstücke aus einem Katalog auszuwählen und dem Katalog neue Stücke hinzuzufügen.

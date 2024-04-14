@@ -12,9 +12,11 @@
 - Probleme, Schwierigkeiten, Änderungen während der Umsetzung
 
 Nachdem die Planungsphase abgeschlossen war, mussten die Überlegungen umgesetzt werden.
-Im Rahmen dieser Arbeit wurde ein Prototyp gebaut, welcher 8 Tasten anspielen kann.
-Zusätzlich wurde die Elektronik mit LEDs so erweitert, dass man das Drücken von 40 Tasten simulieren kann. % @Note(Val): Entweder hier oder an späterer Stelle erwähnen, dass es an sich trivial aber halt zeitaufwendig wäre, mehr Tasten anspielbar zu machen
-% @Note(Val): Ich würde hier vielleicht noch gar nicht erwähnen, dass nur 8 Tasten anspielbar sind, weil die ganze Umsetzung ja mit dem Ziel 88 Tasten anspielbar zu machen lief. Kostenschätzung, etc. sind deshalb ja auch höher. Vielleicht ist es besser hier zu sagen, dass das Ziel war, den Prototypen mit möglichst vielen spielbaren Tasten zu gestalten, aber nur 8 bis dato erledigt wurden
+Im Rahmen dieser Arbeit wurde ein Prototyp gebaut, mit dem Ziel möglichst viele der 88 Tasten anzuspielen.
+Aufgrund der begrenzten Zeit umfasst der in dieser Arbeit beschriebene Prototyp nur 8 spielbare Tasten,
+wäre allerdings ohne weitere Überlegungen auf alle restlichen erweiterbar.
+Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das Anspielen von 40 Tasten simulieren kann.
+
 
 \section{Materialien}
 \chapterauthor{Jakob Kautz}
@@ -32,9 +34,9 @@ Zusätzlich wurde die Elektronik mit LEDs so erweitert, dass man das Drücken vo
         \hline
         Arduino & 1 & Kommunikation \\
         \hline
-        Breadboard & 2 & Kleinstromschaltung \\
+        Breadboard & 2 & Erweiterung der Ausgänge \\
         \hline
-        Schaltplatine & 5 & Großstromschaltung\\ % @Note(Jay): Heißt das so?
+        Schaltplatine & 5 & Elektronik für die Aktuatoren\\
         \hline
         Schieberegister & 11 & Weitergabe Signal\\
         \hline
@@ -98,18 +100,23 @@ Tastendrücke die dazu gerechnet wurden, sind lediglich eine Versicherung.
 \subsection{Verbindung Tasten und Aktuatoren} \label{subsec:VerbindungTastenAktuatoren}
 \chapterauthor{Olivier Stenzel}
 
-Wie in Kapitel \ref{subsec:konzeptionhw-ansteuerungskonzept2} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
+Wie in Kapitel \ref{subsec:konzeptionhw-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
 Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt. \newline
-Dieses Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden. % @Note(Val): Beschreibst du nur was gemacht wurde? Dann gibt es keine Entscheidungen hier & dann ist das nicht wirklich Konzipierung, oder?
-Zusätzlich wird der Aufbau bezüglich Reibung und Akkuratheit beim Ansteuerns der Tasten weiter verbessert. % @Note(Val): "verbessert"? Es wurde doch noch gar nichts umgesetzt. Du meinst der Aufbau wird detailierter ausgearbeitet oder?
-% @Note(Val) Es heißt Akkuratesse statt Akkuratheit (https://www.duden.de/rechtschreibung/Akkuratesse) aber bessere Wörter wären vll Exaktheit oder Genauigket
+
+Dieses Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden.
+Zusätzlich wird der Aufbau im Verlauf des Kapitels bezüglich Reibung und Genauigkeit beim Ansteuerns der Tasten weiter verbessert.
 \newline
-Die Grundidee ist, eine Schnur, oder Ähnliches, mittels eines waagerechten Loches in der Taste, an dieser zu befestigen. % @Note(Val): Erst Problem beschreiben, dann Lösung nennen. Das Problem wurde davor angesprochen und sollte hier mindestens erwähnt oder gar erklärt werden
-Die Position an der Taste kann nicht frei gewählt werden. Es muss darauf geachtet werden,
-dass man das Loch beim Spielen nicht sieht. % @Note(Val): Warum ist es wichtig, dass es nicht gesehen wird? Klingt eher als wäre das ein optionaler Bonus
-Außerdem ist wichtig, dass das Loch möglichst am Ende der Taste angebracht wird, um einen größeren Hebeleffekt zu erzeugen,
-und dass das Tastenbrett unter der Taste an der Position gut durchzubohren ist.
-In Abbildung \ref{img:Tastenbohrung} sieht man mit Rot gekennzeichnet das gebohrte Loch, durch das ein Seil (in grün dargestellt) geführt wird.
+
+Die Grundidee ist, mittels einer Schnur, oder Ähnlichem die Tasten mit den Hubmagneten zu verbidnen.
+Diese sollen dann an der Schnur, und somit an der Taste ziehen, welche wiederrum den Hammer an die Saite schlagen lässt.
+
+Die Schnur wird mittels eines waagerechten Loches in der Taste, an dieser zu befestigen.
+Die Position an der Taste kann nicht frei gewählt werden.
+Es muss darauf geachtet werden, dass das Loch möglichst am Ende der Taste angebracht wird, um einen größeren Hebeleffekt zu erzeugen.
+Zusätzlich ist es wichtig, dass das Tastenbrett unter der Taste an der Position gut durchzubohren ist.
+Eine optische nicht notwendige Eigenschaft wäre, dass das Seil beim spielen nicht von oben gesehen wird.
+In Abbildung \ref{img:Tastenbohrung} sieht man, wie die Montage umgesetzt wurde.
+Mit rot ist das gebohrte Loch gekennzeichnet, durch das ein Seil (in grün dargestellt) geführt wird.
 
 \begin{figure}[htbp]
     \centering
@@ -119,9 +126,9 @@ In Abbildung \ref{img:Tastenbohrung} sieht man mit Rot gekennzeichnet das gebohr
 \end{figure}
 
 
-% @Note(Val): Der Satz ist mit den vielen Einschüben und Klammern schwer zu lesen. Lieber in 2 Sätze teilen und lesbarer machen
-Anschließend wird jede Schnur jeweils durch ein senkrechtes Loch (rot in Abbildung \ref{fig:klaviatur} gekennzeichnet) im Klaviaturbalken (bzw. Tastenbrett), % @Note(Val): Nur einen Begriff einheitlich verwenden, sonst verwirrt es nur
-worauf die Tasten liegen, in den Fußraum geführt.
+Anschließend wird jede Schnur einzelnd in den Fußraum geführt.
+Dafür werden senkrechte Löcher (rot in Abbildung \ref{fig:klaviatur}) in den Klaviaturbalken (bzw. Tastenbrett),
+worauf die Tasten liegen, gebohrt.
 
 \begin{figure}[htbp]
     \centering
@@ -148,15 +155,15 @@ Das Tastenbrett für 88 Tasten ist allerdings nur 140 cm breit, wodurch pro Tast
 Bildet man zwei Hubmagnetreihen übereinander, hat jede Tastenansteuerung 3,20 cm Platz.
 
 Durch die 7mm Abstand ist eine Wärmeabfuhr über die Luft in geringem Ausmaß möglich.
-Ob dies ausreicht, muss in späteren Tests (siehe Kapitel \ref{tests}) ermittelt werden.
-
 Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagneten verbunden.
 
-Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung würde allerdings auf Kosten der Stabilität und Funkionalität gehen. % @Note(Val): Inwieweit? Hier fehlt eine Erklärung
-Deshalb werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
+Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung, würde allerdings auf Kosten der Spielbarkeit (siehe Anforderung 1 in Kapitel \ref{sec:zielstellung-anforderungen}) gehen.
+Um also die Beinfreiheit der Pianist:in zu gewährleisten
+werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
 
 Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
-sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden (siehe Abb. \ref{fig:BefestigungHubmagnete}). % @Note(Val): Die Abbildung zeigt mir nicht, wie die Platte mit dem Klavier verschraubt wird
+sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden können(siehe Abb. \ref{fig:BefestigungHubmagnete}).
+In diesem Prototyp wird die Verschraubung an das Klavier nicht genutzt, um an Flexibilität zu gewinnen.
 
 \begin{figure}[htbp]
     \centering
@@ -173,59 +180,58 @@ hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht 
 In den folgenden Abbildungen ist die seitliche Ansicht des Klaviers gezeichnet.
 Dabei repräsentieren der schwarze bzw. weiße Block jeweils eine schwarze bzw. weiße Taste.
 Der grüne und pinke Strich stehen für die Seile, die den Hubmagneten mit dem Loch in der Taste verbinden.
-Unten links sind die zwei übereinanderliegenden Solenoid-Reihen in blau abgebildet.
-Der schwarze Strich repräsentiert den Stab im Hubmagneten. % @Note(Val): Die Farbe vom Solenoid kannst du dir fast sparen, wenn du die Grafik so klein abbildest. Das blau kann ich nur mit viel reinzoomen sehen
+Unten links sind die zwei übereinanderliegenden Solenoid-Reihen abgebildet.
+Der schwarze Strich repräsentiert den Stab im Hubmagneten.
 \newline
-Abbildung \ref{img:Umlenkung_locker} zeigt den intuitiven Aufbau mit ausgeschaltetem Solenoid und entsprechend entspanntem Seil und.
-Abbildung \ref{img:Umlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschied, dass der Solenoid hier angezogen ist.
+Abbildung \ref{img:kUmlenkung_locker} zeigt den intuitiven Aufbau mit ausgeschaltetem Solenoid und entsprechend entspanntem Seil und.
+Abbildung \ref{img:kUmlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschied, dass der Solenoid hier angezogen ist.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=6cm, height=8cm]{img/Umlenkung_locker}
     \caption{Taste locker ohne Umlenkung}
-    \label{img:Umlenkung_locker}
+    \label{img:kUmlenkung_locker}
 \end{figure}
 
-% @Note(Val): Es wäre besser, wenn sich die beiden Bilder mehr unterscheiden würden. Falls das erste Bild stärker zeigen könnte, dass die Seile locker sind oder es eine Kennzeichnung bei den Seilen gibt, wäre das gut. Alternativ könnten auch die Tasten runtergedrückt sein, um anzuzeigen, dass diese damit betätigt werden
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=6cm, height=8cm]{img/Umlenkung_gezogen}
     \caption{Taste gezogen ohne Umlenkung}
-    \label{img:Umlenkung_gezogen}
+    \label{img:kUmlenkung_gezogen}
 \end{figure}
-
-% @Note(Val): Warum gibt es hier einen forcierten Seitenumbruch? Braucht es das?
-\newpage
 
 Mit diesem intuitiven Aufbau funktioniert das Betätigen der Tasten nicht, da diese nicht weit genug heruntergezogen werden.
 Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben, müssen Umlenkungen eingebaut werden.
 Mittels dieser Umlenkung, die mit einem PVC-Rohr umgesetzt werden kann, werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
 Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd 1 cm erhöht, was dem Hub des Magneten entspricht..
 
-% @Note(Val): Wenn die Umlenkung weiter unten im Bild wäre, wären die unterschiedlichen Linien leichter zu sehen
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=6cm, height=8cm]{img/mitUmlenkung_locker}
     \caption{Taste mit Umlenkung}
+    \label{img:mitumlenkung_locker}
 \end{figure}
 
 
-% @Note(Val): Entweder machst du das hier als Bullet-Points or mit vollständigen Sätzen. Aber so ist das ein bisschen merkwürdig
+\newpage
 Dies kann auch mathematisch bewiesen werden:
-\newline geg.: % @Note(Val): "gegeben" aber ohne "gesucht" und ohne Demarkierung wann etwas nicht mehr gegeben ist... können wir das "geg." einfach streichen?
-\newline Strecke bis zur ersten Reihe Hubmagnete h1 = 17 cm % @Note(Val): Strecke von wo?
-\newline Strecke bis zur zweiten Reihe Hubmagnete h2 = 27 cm
-\newline Strecke bis zu den schwarzen Tasten t1 = 12 cm
-\newline Strecke bis zu den weißen Tasten t2 = 18 cm
-\newline Seil zur schwarzen Taste im entspannten Zustand $ht1_{entspannt}$ % @Note(Val): Du meinst Seillänge? Ist die Seillänge nicht konstant? Warum berechnen wir die?
-\newline Seil zu den weißen Tasten im entspannten Zustand $ht2_{entspannt}$
-\newline $ht1_{entspannt}$ = $\sqrt {h1^{2} + t1^{2}}$ = 20.81 cm
-\newline $ht2_{entspannt}$ = $\sqrt {h2^{2} + t2^{2}}$ = 32.45 cm
-\newline $ht1_{gespannt}$ = $\sqrt {(h1 + 1) ^{2} + t1^{2}}$ = 21.63 cm
-\newline $ht2_{gespannt}$ = $\sqrt {(h2 + 1)^{2} + t2^{2}}$ = 33.29 cm
+\newline geg.:
+\newline Distanz zwischen dem Tastenbrett und der unteren Reihe Hubmagnete h = 27 cm
+\newline Distanz zwischen der unteren Frontplatte und dem zum Loch im Tastenbrett t = 18 cm
 
-Die Differenz zwischen $ht1_{gespannt}$ und $ht1_{entspannt}$ (bzw. ht2) beschreibt die Tiefe, die eine Taste gedrückt werden kann.
-\newline Diese beträgt also ohne Optimierung nur 0.82 cm, bzw. 0.84 cm. % @Note(Val): "ohne Optimierung" - was für Optimierungen wären hier denn überhaupt möglich? Ist die Verwendung einer Umlenkun nicht schon eine Optimierung?
+Gesucht ist die Differenz der Längen zwischen dem Tastenbrett und dem Hubmagneten, wenn die Tasten (nicht-)gedrückt sind.
+Diese ist in Zeichnung \nameref{img:kUmlenkung_locker} und \nameref{img:kUmlenkung_gezogen} rot gekennzeichnet.
+
+\newline $ht_{entspannt}$ beschreibt die Seillänge zum Tastenbrett im entspannten Zustand
+
+\newline $ht_{entspannt}$ = $\sqrt {h^{2} + t^{2}}$ = 32.45 cm
+\newline $ht_{gespannt}$ = $\sqrt {(h + 1)^{2} + t^{2}}$ = 33.29 cm
+
+
+Die Differenz zwischen $ht1_{gespannt}$ und $ht1_{entspannt}$ (bzw. ht2) beschreibt die Tiefe,
+die eine Taste gedrückt werden kann, wenn der Hub des Magnetens 1 cm beträgt.
+\newline Diese beträgt also ohne Umlenkung nur 0.84 cm.
+Mit der Umlenkung (siehe \nameref{img:mitumlenkung_locker})
 
 Um also die Intensität des Tastendrucks besser steuern zu können und um die Haltbarkeit des Materials zu verlängern,
 sollte die Reibung am Seil möglichst gering gehalten werden.
@@ -251,7 +257,6 @@ Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürt werden, w
 Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein unelastisches Seil zu verwenden.
 Um häufiges Nachspannen oder Austauschen des Seils entgegenzuwirken, sollte dies so dehnungsresistent wie möglich sein.
 
-% @Note(Val): Ab hier wird in der Vergangenheit gesprochen. Ich nehme an, dass das hier aber ok ist, da davon gesprochen wird, was umgesetzt und getestet wurde.
 \paragraph{Nähgarn}
 
 Als Erstes wurde Nähgarn, welches zur Hand war, getestet.
@@ -267,8 +272,7 @@ Beim Ziehen des Magnetens wurde erst die lockere Schlaufe an der Taste gestreckt
 
 \paragraph{Angelschnur}
 
-% @Note(Val) "Aus Erfahrungen [...] konnte eine Schnur gefunden werden" klingt sehr falsch
-Aus Erfahrungen aus dem Angelbereich konnte schnell eine geeignetere Schnur gefunden werden.
+Mit einer kurzen Auseinandersetzung mit dem Angelzubehör konnte schnell eine geeignetere Schnur gefunden werden.
 Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
 Mit einem Durchmesser von 1.6 mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7 kg standhalten.
 Nach ausgiebigem Testen ist eindeutig, dass die Angelschnur die Anforderungen erfüllt.
@@ -289,10 +293,9 @@ Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu d
 
 \subsubsection{Gummi-Stopper}
 
-Die nächste Idee war das Limitieren des Schlags durch Gummiringe (Dichtungsringe) % @Note(Val): Ein Wort verwenden, oder in einen Satz einbringen (z.B. "Dichtungsringe aus Gummi" oder so)
+Die nächste Idee war das Limitieren des Schlags durch Dichtungsringe aus Gummi
 zwischen Anker und dem äußeren Gehäuse.
 Da für die Befestigung keine zufriedenstellende Lösung gefunden wurde, wurde auch diese Idee verworfen.
-zurück schellen zu hoch, als dass wir die Klangdämpfung umsetzen würden. % @Note(Val): Das ist kein richtiger Satz und ich habe keine Ahnung was du damit aussagen wolltest. Satz streichen oder verbessern
 
 \subsubsection{Schaumstoff}
 

@@ -33,6 +33,7 @@ Allerdings ist die Anwendung funktional und kann Musikstücke aus einem Katalog 
 \section{Tests \& Messungen} \label{ergebnisse-tests}
 \chapterauthor{Olivier Stenzel, Val Richter}
 
+% @TODO(Val): Anmerken, dass Testen auf Korrektheit informell gemacht wurde
 Mit der Fertigstellung des Prototypen, soll dieser nun getestet werden.
 Dabei sind die Messungen in zwei Teile geteilt.
 Zuerst werden Messungen der Hardware beschrieben (siehe Abschnitt \ref{tests-hw}).
@@ -152,6 +153,7 @@ if (t <= DELTA) {
 Tabelle \ref{table:sw-tests} listet die unterschiedlichen Messungen, die an der Software durchgeführt wurden.
 Die Bedeutung dieser Messergebnisse wird im Folgenden beleuchtet.
 
+% @TODO(Val): Collect these test values lol
 \begin{table}[htbp]
 	\centering
 	\begin{tabular}{|l|p{10cm}|l|}
@@ -174,42 +176,70 @@ Die Bedeutung dieser Messergebnisse wird im Folgenden beleuchtet.
 \section{Limitationen \& Erweiterungsmöglichkeiten} \label{ergebnisse-limitationen}
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
 
-% @TODO(Val): Überarbeiten, jetzt da die Limitationen hier im Ergebnisse Kapitel vorkommen
+Aufgrund limitierter Zeit konnte der hier erstellte Prototyp nicht vollständig umgesetzt werden.
+Aus den selben Gründen wurden auch bei den gestellen Anforderungen und der Konzeption des Projekts mehrere potenzielle Features ausgelassen.
+Auch während der Implementierung sind mehrere Probleme und Unzulänglichkeiten aufgetreten, die wegen der zeitlichen Begrenzung nicht mehr verbessert werden konnten.
+Zum Teil wurden diese Limitationen der Konzeption und prototypischen Umsetzung bereits erwähnt.
+Der Vollständigkeit halber sollen die größten Limitationen dieser Arbeit hier nochmal gelistet und kurz beschrieben werden.
 
-Im Laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten- Gründen nicht weiter
-behandelt wurden.
-\paragraph{Anzahl der Aktuatoren}
-Wie bereits erklärt, wurden insgesamt 88 Aktuatoren verbaut, womit jede Taste angespielt werden kann. Trotz der Anzahl an
-Hubmagneten, werden maximal 10 Tasten glechzeitig angespielt. Dies liegt an der Stromversorgung. Ein Hubmagnet benötigt
-eine Stromversorgung von etwa 0.4 Ampere, für 10 Aktuatoren sind das also 4 Ampere. Das Netzteil welches wir verwenden, ist auf
-6(?) Ampere ausgelegt, wobei wir mit einem Netzteil getestet haben, welches 2,8 Ampere unterstützt. Es gibt Netzteile die
-einen höheren Stromföuss ermöglichen, allerdings sind diese um weiten teurer als das Netzteil, für welches wir uns entschieden haben.
-Es wäre auch möglich, ein zweites Netzteil parallel zu Schalten, wodurch die Kosten nicht dramatisch gestiegen wären.
-Wir haben hier allerdings keinen Mehrwert mehr gesehen. Die Logik und Ansteuerung des Klaviers bleibt die gleiche, weswegen
-wir bei einem Netzteil mit einem maximalen Stromfluss von 6 Ampere (und 24V Leistung) verblieben sind.
+Im Laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten-Gründen nicht weiter behandelt wurden.
+
+\paragraph{Anzahl Aktuatoren:}
+Während insgesamt 88 Aktuatoren für alle Klaviertasten bestellt wurden, hat die Zeit nur gereicht, um insgesamt 8 Hubmagnete mit der Schaltung zu verbinden.
+Für Testzwecke wurden allerdings bereits 40 von 88 LEDs mit der Schaltung verbunden.
+Das Hinzufügen der letzten 80 Aktuatoren ist trivial aber natürlich recht zeitaufwendig.
+
+\paragraph{Maximum gleichzeitig spielender Tasten}
+Die in dieser Arbeit verwendeten Hubmagnete benötigen jeweils etwa 0,4 Ampere.
+Das im Prototypen genutzte Netzteil ist auf 6 Ampere ausgelegt.
+Damit wäre es in diesem Aufbau möglich bis zu 15 Aktuatoren gleichzeitig anzusteuern.
+Da der Hauptanwendungsfall beim Spielen von Musik besteht, die für einzelne Pianos komponiert wurde, welche seltens mehr als 10 Tasten gleichzeitig bespielen müssen, sollte diese Limitation nicht oft in der Praxis relevant werden.
+Nichtsdestotrotz musste diese Limitation in der Software des \ac{MC}s umgesetzt werden (siehe Abschnitt \ref{vorgehenSW-MC}), um nicht zu viel Strom vom Netzteil zu ziehen.
 
 \paragraph{Pedalansteuerung}
-Ein Klavier hat normalerweise zwei oder drei Pedale, welche die Dynamik und den Klang des Klaviers beeinflussen.
-Diese sind schwerer anzuspielen als die Tasten und benötigen somit Leistungsfähigere Aktuatoren als wir für die Tasten nutzen.
-Es gab eine Überlegung diese Aktuatoren zu besorgen, da die Pedale klangtechnisch Mehrwert bringen.
-Außerdem hätten wir uns noch Gedanken bezüglich der Schaltug und des Signals machen können.
-Einerseits hätte ein weiteres Schieberegister genutzt werden können, wobei das Signal angepasst wird das die letzten 6 Ausgänge nie ein Signal bekommen.
-ANdererseits hätten die Pedale mit weiteren \ac{PWM} Ports des Arduinos verbunden werden können und die Signale unabhängig von den
-Schieberegistern erhalten können.
-Im Prinzip wäre die Idee hier allerdings wieder dieselbe wie beim Rest des Projektes gewesen,
-weswegen wir Kosten an den Aktuatoren und der extra Stromversorgung für die Pedale gespart haben und diese nicht ansteuern.
+Ein Klavier hat im Regelfall zwei bis drei Pedale, welche die Dynamik und den Klang des Klaviers beeinflussen.
+Trotz des klangtechnischen Mehrwehrts, den Pedale bringen, wurden sie hier ignoriert.
+Um Pedale zusätzlich anzusprechen müssten einige Teile des Konzepts erweitert werden.
+So bräuchte es mindestens zwei weitere \ac{PWM}-Ausgänge, die über ein zusätzliches Schieberegister oder weiter \ac{PWM}-Ports des Arduinos zu verbinden wären.
+Weiterhin müssten leistungsfähigere Aktuatoren als die hier verwendeten Hubmagnete zum Anspielen der Pedale benutzt werden, da die Pedale schwerer als die Tasten des Klaviers sind.
+Eine Methodik zum Anspielen der Pedale müssten ebenfalls noch überlegt werden.
+Zuletzt müsste auch die Software dafür erweitert werden.
+Hier müsste entweder ein Algorithmus entwickelt werden, um anhand des \ac{PIDI}-Formats zu erkennen, wann das Pedal wie stark gedrückt werden soll, oder das \ac{PIDI}-Format müsste um Pedal-Informationen erweitert werden.
 
 \paragraph{Wärmeabfuhr}
-Da die Hitzeentwicklung der Hubmagnete mit dem Dauer der Nutzung stark ansteigt, ist die Holzplatte bezogen auf die Wärmeabfuhr nicht geeignet.
+Da die Hitzeentwicklung der Hubmagnete mit der Dauer der Nutzung stark ansteigt, ist die Holzplatte bezogen auf die Wärmeabfuhr nicht geeignet.
 Besser würde sich hier eine Metallplatte anbieten, auf der die Aktuatoren verschraubt werden.
+Aus Kostengründen wurde das beim Prototypen hier noch nicht umgesetzt.
 
+\paragraph{Eingabedateien}
+Die Desktop-Anwendung \ac{SAM} unterstüzt nur den Import von \ac{MIDI}-Dateien.
+Die Untertützung weiterer Formate wäre hier wünschenswert.
+Speziell das Hinzufügen von Dateien, die grundlegend andere Informationen speichern, wie beispielsweise Bild-Dateien von Notensheets oder generelle Audio-Dateien, wären hier von besonderem Interesse.
+Die Forschungsfelder \enquote{Optical Music Recognition} und \enquote{Musical Note Recognition} bieten hier respektiv Einblicke, wie Noten-Informationen aus solchen Formaten gewonnen werden könnten.
 
-% @TODO(Val): Müssen noch ausformuliert werden:
-Software Limitationen: \newline
-- nur MIDI, kein Image→/Ton→PIDI \newline
-- UI Design ist verbesserungsfähig \newline
-- SPPP garantiert keine Datenkonsistenz \newline
-- SPPP ist nicht auf mehrere Nutzer:innen ausgelegt \newline
-- Mögliche Fehler in SPPP (siehe Github issue) \newline
-- siehe Github issues \newline
-- Es wurde nicht getestet, ob Flash-Speicher (der oftmals ausreichend groß ist) zum Speichern eines gesamten Songs ausgereicht hätte und welche Performanz-Probleme das mit sich gebracht hätte. Dann wäre Streaming unnötig. Wurde aber nicht getestet, ob das überhaupt eine viable Alternative wäre \newline
+\paragraph{Vollständige \ac{MIDI} Unterstützung}
+Sogar das \ac{MIDI}-Format selbst wurde für den Prototypen nicht vollständig unterstützt.
+Bestimmte \ac{MIDI}-Dateien, die eine alternative Enkodierung der Zeit verwenden, können beispielsweise nicht korrekt geparst werden.
+Auch bei einigen anderen Dateien, wurde ein fehlerhaftes Parsing festgestellt.
+Aufgrund zeitlicher Begrenzungen, konnte nicht untersucht werden, woher diese Fehler kommen.
+
+\paragraph{\ac{UI} Design}
+Das Design der \ac{UI} ist nicht besonders ansprechend.
+Während in der Konzeption mehrere Darstellungsmöglichkeiten des Musik-Katalogs bedacht wurden, wurde in der Implementierung nur eine sehr unschöne Version umgesetzt (siehe Abbildung \ref{???}). % @TODO(Val): Referenz auf Screenshot der UI, wahrscheinlich bei umsetzungSW-UI
+
+\paragraph{Musikverwaltung}
+\ac{SAM} erlaubt zwar das Hinzufügen von Musikstücken mit selbstgewähltem Namen, das spätere Umbenennen oder Löschen der Musikstücke fehlt allerdings.
+Auch bietet das System der Musikverwaltung zurzeit nur einen einzelnen Katalog an.
+Es wäre denkbar und womöglich sinnvoll, der Nutzer:in die Erstellung und Verwaltung von Alben zu erlauben, ähnlich wie es bei bekannten Musikplayern (z.B. \ac{WMP} und Spotify) auch möglich ist.
+Mit der Existenz von Alben würde auch das Abspielen eines gesamten Albums und der Kontrolle über zufällige und wiederholte Wiedergabe des Albums ein attraktives Feature sein.
+
+\paragraph{Fehlende Fehlermeldungen}
+\ac{SAM} hat kein System, um Fehlermeldungen anzuzeigen.
+Stattdessen wird bei unerwarteten Zuständen die Anwendung gewaltsam abgestürzt.
+
+\paragraph{Datenkonsistenz von \ac{SPPP}-Nachrichten}
+Das \ac{SPPP}-Protokoll hat keine eingebauten Mechanismen zum Sicherstellen der Datenkonsistenz.
+Es muss entsprechend darauf vertraut werden, dass das Übertragungsmedium die Nachrichten vollständig und korrekt überträgt.
+Die Nutung von Parity Bits oder Ähnlichem würde die Datenkonsistenz stärker versichern.
+
+% @TODO(Val): Bei Limitationen müssen auf jeden Fall Sicherheitsrisiken, etc. der Hardware noch erwähnt werden

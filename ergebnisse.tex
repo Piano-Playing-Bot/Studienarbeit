@@ -40,7 +40,7 @@ Deren Ergebnisse haben teilweise Auswirkungen auf die Software, um eine korrekte
 Daraufhin werden Messungen der Software in Abschnitt \ref{tests-sw} dargestellt.
 
 \subsection{Hardware-Tests} \label{tests-hw}
-\chapterauthor{Olivier Stenzel, Val Richter}
+\chapterauthor{Olivier Stenzel, Val Richter, Jakob Kautz}
 
 Tabelle \ref{table:hw-tests} listet die unterschiedlichen Messungen auf, die an der Hardware durchgeführt wurden.
 In den folgenden Abschnitten wird der Ablauf, die Bedeutung und das Ergebnis jeder Messung ausführlich beleuchtet.
@@ -142,9 +142,28 @@ if (t <= DELTA) {
 
 \subsubsection{HW-T3: Min. Genauigkeit:}
 
-% @TODO(Val): muss noch geschrieben werden
+\paragraph{Erklärung:}
+Der Zweck dieses Tests besteht darin sicherzustellen, dass der Tastenanschlag des selbstspielenden Klaviers zum richtigen
+Zeitpunkt und in der korrekten Reihenfolge erfolgt. Dies gewährleistet die Genauigkeit und Zuverlässigkeit des Klaviers
+bei der Wiedergabe von Musikstücken.
 
+\paragraph{Ablauf:}
+\begin{enumerate}
+	\item Es wird eine einfache Folge von Signalen erstellt, die repräsentativ für eine musikalische Passage sind.
+	\item Das selbstspielende Klavier wird mit den erstellten Signalen versorgt, und die Wiedergabe wird mittels einer Videoaufnahme dokumentiert.
+	\item Der Test wird mehrmals durchgeführt, um die Konsistenz der Ergebnisse sicherzustellen.
+	\item Während der Videoaufnahme wird eine Uhr verwendet, um den Zeitpunkt jedes gespielten Tons zu markieren.
+	\item Nach Abschluss des Tests wird das aufgezeichnete Video analysiert, um festzustellen, ob jeder Ton zur erwarteten Zeit gespielt wurde.
+	\item Es werden Abweichungen zwischen den erwarteten und tatsächlichen Spielzeiten dokumentiert und bewertet.
+\end{enumerate}
 
+\paragraph{Ergebnis:}
+Da der Test nicht durchgeführt wurde, werden hier lediglich die Erfolgskriterien aufgezählt:
+\begin{enumerate}
+	\item Jeder Ton wird zum erwarteten Zeitpunkt gespielt, innerhalb einer akzeptablen Toleranzschwelle von ???ms
+	\item Die Reihenfolge der gespielten Töne entspricht exakt der vorgegebenen Signalabfolge.
+	\item Die Abweichungen zwischen den erwarteten und tatsächlichen Spielzeiten liegen innerhalb akzeptabler Grenzwerte % TODO(Jay): def this
+\end{enumerate}
 
 \subsection{Software-Tests} \label{tests-sw}
 \chapterauthor{Val Richter}
@@ -174,7 +193,7 @@ Die Bedeutung dieser Messergebnisse wird im Folgenden beleuchtet.
 
 
 \section{Limitationen \& Erweiterungsmöglichkeiten} \label{ergebnisse-limitationen}
-\chapterauthor{Val Richter}
+\chapterauthor{Val Richter, Jakob Kautz}
 
 Aufgrund limitierter Zeit konnte der hier erstellte Prototyp nicht vollständig umgesetzt werden.
 Aus den selben Gründen wurden auch bei den gestellen Anforderungen und der Konzeption des Projekts mehrere potenzielle Features ausgelassen.

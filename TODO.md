@@ -1,0 +1,4 @@
+- Use "theadstart" und "theadcol" in all tables for better, unified style
+- add images in appendix (jay has images)
+- add youtube link to demo video in appendix
+- update all "ref{???}" throughout the text

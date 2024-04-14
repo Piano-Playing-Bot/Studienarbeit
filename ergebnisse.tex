@@ -28,30 +28,31 @@ Die Anwendung \ac{SAM} leidet ebenso an Defekten, vor allem im Bereich des \ac{U
 Allerdings ist die Anwendung funktional und kann Musikstücke aus einem Katalog - der von Nutzer:innen mit \ac{MIDI}-Dateien erweitert werden kann - zum \ac{MC} schicken und abspielen lassen.
 
 
-% @Decide(Val): Sollen Messungen hier oder bei den Tests hin? Dann sollte es vllt aber eher "Tests & Messungen" heißen
-- Messungen: (eher bei Tests?) \newline
-	- Kommunikationsgeschwindigkeit \newline
-	- FPS beim Arduino \newline
-	- FPS bei UI \newline
-	- FPS bei Comm-Thread der UI \newline
-	- Speicherverbrauch der UI \newline
-	- Code-Komplexität (ist das interessant?) \newline
-	- Lines of Code (i guess?) \newline
 
 
+\section{Tests \& Messungen} \label{ergebnisse-tests}
+\chapterauthor{Olivier Stenzel, Val Richter}
 
-\section{Tests} \label{ergebnisse-tests}
-\chapterauthor{Olivier Stenzel}
+Mit der Fertigstellung des Prototypen, soll dieser nun getestet werden.
+Tabelle \ref{table:tests} listet die unterschiedlichen Tests auf, die durchgeführt wurden.
+In den folgenden Abschnitten wird der Ablauf, die Bedeutung und das Ergebnis jedes Tests ausführlich beleuchtet.
+Abschließend werden in Sektion \ref{tests-messungen} noch mehrere Messergebnisse des Prototypens vorgestellt.
 
-% @Note(Val): Der zweite Satz hat nichts mit dem ersten zu tun, auch wenn es so aussieht als würden sie es tun.
-% Wenn ich das richtig verstehe, sagst du, dass wir wir die maximale Geschwindigkeit bestimmen müssen, um die Software nicht schneller werden zu lassen.
-% Aber wenn die Software zu schnell ist, ist das ja gar kein Problem.
-% Es gibt der Software nur das Wissen, dass sie langsamer sein darf.
-% Stattdessen ist das Wissen über die Maximalgeschwindigkeit in sich selbst einfach interessant, da es zeigt wie gut unser kosten-effizienter Prototyp ist
-% @Note(Val): In kurz: Diese Einleitung muss neu geschrieben werden
-Um eine Überbelastung der Komponenten und eine korrekte Funktionalität zu gewährleisten, müssen Software-seitig Begrenzungen eingeführt werden.
-Um zum Beispiel die maximale Geschwindigkeit bestimmen zu können, mit der ein Stück gespielt werden kann, muss die maximale Frequenz eines physischen Tastendrucks berüclsichtigt werden.
-Es wurden folgende Tests durchgeführt:
+Wie in einigen Tests ersichtlich wird, ist für eine korrekte Funktionalität der Hardware die Einführung einer Software-seitigen Begrenzungen notwendig.
+Anpassungen der Software, die aufgrund von Testergebnissen durchgeführt wurden, werden bei den jeweiligen Tests ebenfalls spezifiziert.
+
+% @Note(Val): Add Softwre-Tests
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{|c|c|}
+		\theadstart{ID} & \theadcol{Name} \\ \hline
+		T1 & Max. Frequenz eines Tastendrucks \\ \hline
+		T2 & Min. Lautstärke \\ \hline
+		T3 & Min. Genauigkeit \\ \hline
+	\end{tabular}
+	\caption{Testungen}
+	\label{table:tests}
+\end{table}
 
 \subsubsection{T1 Max. Frequenz eines Tastendrucks:}
 
@@ -86,13 +87,23 @@ Dieses Ergebnis fließt in die Lautstärkeregelung der Software ein.
 % @TODO(Val): Hier sollte vermutlich die Lösung im Code kurz erklärt werden
 
 
-\paragraph{T3 Min. Akkuratheit:}
+\subsubsection{T3 Min. Genauigkeit:}
 
 % @TODO(Val): muss noch geschrieben werden
 
 
 
+\subsection{Messergebnisse} \label{tests-messungen}
 
+% @TODO(Val): Füg auch Hardware-Messungen hinzu
+Software-Messungen: \newline
+- Kommunikationsgeschwindigkeit \newline
+- FPS beim Arduino \newline
+- FPS bei UI \newline
+- FPS bei Comm-Thread der UI \newline
+- Speicherverbrauch der UI \newline
+- Code-Komplexität (ist das interessant?) \newline
+- Lines of Code (i guess?) \newline
 
 
 

@@ -342,7 +342,7 @@ Während der \enquote{PING} von anderen Ports ignoriert wird, kann der \ac{MC} m
 Somit kann \ac{SAM} jederzeit die Verfügbarkeit des \ac{MC}s und dessen Port prüfen.
 
 Mögliche Übertragungsmedien für die Kommunikation lassen sich in die Kategorien \enquote{Kabel} und \enquote{Kabellos} einteilen.
-Kabellose Medien wie WLAN oder Bluetooth benötigen bei dem in Kapitel \ref{???} gewählten \ac{MC} ein weiteres Modul.
+Kabellose Medien wie WLAN oder Bluetooth benötigen bei dem in Kapitel \ref{Ansteuerung} gewählten \ac{MC} ein weiteres Modul.
 Das würde die Kosten weiter erhöhen und damit entgegen dem Ziel einer möglichst preisgünstigen Entwicklung sprechen.
 Nichtsdestotrotz sollte die Kommunikation erweiterbar konzipiert werden, um auch leicht kabellos umgesetzt werden zu können.
 Da es im gewählten \ac{MC} jedoch schon eingebaut ist und damit die preisgünstigste Möglichkeit darstellt, soll hier eine Verbindung über ein USB-Kabel zwischen \ac{MC} und \ac{SAM} angenommen werden.
@@ -386,13 +386,13 @@ Dabei muss das \ac{SPPP} die folgenden Anforderungen erfüllen, welche basierend
 \end{enumerate}
 
 Aus den Anforderungen wird klar, dass es unterschiedliche Arten an Nachrichten gibt, die vom Protokoll unterstützt werden müssen.
-Eine entsprechend simpler Aufbau von \ac{SPPP} Nachrichten besteht aus einer ID, die den Typ der Nachricht identifiziert, und einem Datensatz, der je nach Nachrichten-Typ unterschiedlich spezifiziert ist.
+Ein entsprechend simpler Aufbau von \ac{SPPP} Nachrichten besteht aus einer ID, die den Typ der Nachricht identifiziert, und einem Datensatz, der je nach Nachrichten-Typ unterschiedlich spezifiziert ist.
 Damit lässt sich das Protokoll auch leicht erweitern, da neue Nachrichten-Typen einfach hinzugefügt werden können.
 Es empfiehlt sich außerdem jede Nachricht mit bestimmten \enquote{Magic Bytes} zu starten, um keine arbiträren Datenströme als Nachrichten zu interpretieren.
 
-Um die Latenz der Nachrichten unabhängig technisch Gegebenheiten gering zu halten, empfiehlt es sich, die Anzahl zu übertragener Bytes möglichst gering zu halten.
+Um die Latenz der Nachrichten unabhängig technischer Gegebenheiten gering zu halten, empfiehlt es sich, die Anzahl zu übertragener Bytes möglichst gering zu halten.
 Entsprechend wurde entschieden, die IDs der Nachrichten-Typen auf jeweils ein einzelnes Byte zu reduzieren.
-Zur leichteren Identifizierung werden Nachrichten-IDs nur ASCII-enkodierte Buchstaben verwendet.
+Zur leichteren Identifizierung werden in Nachrichten-IDs nur ASCII-enkodierte Buchstaben verwendet.
 Weiterhin wird hier die Konvention eingeführt, dass Großbuchstaben eine Nachricht von \ac{SAM} und Kleinbuchstaben eine Nachricht des \ac{MC}s spezifzieren.
 
 Die Magic Bytes des Protokolls werden als die 3-Byte Sequenz \enquote{SPP} definiert.
@@ -436,13 +436,13 @@ Es gibt hierbei grundsätzlich drei Arten an potenziellen Fehlern:
 
 Die erste Art an Fehlern soll hier erstmal ignoriert werden, da sie dank der von USB und \ac{UART} versicherten Datenkonsitenz ein relativ geringes Eintrittsrisiko darstellt.
 Nichtsdestotrotz ist dies eine mögliche Fehlerquelle, die in Erweiterungen an diese Arbeit ausgebessert werden sollte. % @TODO(Val): Bei Limitationen erwähnen
-Eine mögliche Sicherstellung der Datenkonsistenz würde beispielsweise über das Mitsenden eines Kontroll-Bytes.
+Eine mögliche Sicherstellung der Datenkonsistenz würde beispielsweise über das Mitsenden eines Kontroll-Bytes funktionieren.
 
 Der zweite Fehler kann sowohl durch Fehler in der Übertragung, als auch durch ein Fehler bei der Software des Empfängers entstehen.
 Eine einfache Lösung dieses Problems, lässt den Empfänger eine Empfangsbestätigung zurücksenden.
 Das selbe Prinzip wird bei der oben erwänten \enquote{Ping} und \enquote{Pong}-Nachricht verwendet.
 Ein mögliches Problem beim Senden einer Empfangsbestätigung ist die Ungewissheit, ob die Empfangsbestätigung selbst empfangen wurde.
-Dann müsste nämlich eine Empfangsbestätigung für die Empfangsbestätigung gesendet würde, welche ebenfalls wieder als empfangen bestätigt werden müsste, bis nur noch Empfangsbestätigungen hin und her geschickt würden.
+Dann müsste nämlich eine Empfangsbestätigung für die Empfangsbestätigung gesendet werden, welche ebenfalls wieder als empfangen bestätigt werden müsste, bis nur noch Empfangsbestätigungen hin und her geschickt werden.
 
 Es stellt sich jedoch heraus, dass das hier kein Problem ist.
 Sollte eine Empfangsbestätigung nicht empfangen werden, muss der Sender die selbe Nachricht nochmal senden.
@@ -450,13 +450,14 @@ Solange das zweimalig Erhalten der selben Nachricht genau die selben Auswirkunge
 Wenn die in Tabelle \ref{table:SPPP-Messages} gelisteten Nachrichtentypen betrachtet werden, fällt außerdem auf, dass nur die Nachrichten, die von \ac{SAM} gesendet werden, eine Empfangsbestätigung benötigen.
 Diese Bestätigung soll über die \enquote{Success}-Nachricht gegeben werden, welche entsprechend nur vom \ac{MC} geschickt werden muss.
 
-Ein weiteres Problem, das mit Empfangsbestätigungen auftreten kann, ist das Zurordnen der Nachricht, die nun als empfangen bestätigt wurde.
+Ein weiteres Problem, das mit Empfangsbestätigungen auftreten kann, ist das Zuordnen der Nachricht, die nun als empfangen bestätigt wurde.
 Sollte \ac{SAM} beispielsweise zwei Nachrichten direkt nacheinander schicken und dann nur eine einzelne \enquote{Success}-Nachricht zurück erhalten, ist unklar welche der beiden Nachrichten nun angekommen ist und welche nicht.
 Dies kann gelöst werden, indem jeder Nachricht eine einzigartige Nummer zugeordnet wird und die \enquote{Success}-Nachricht diese Nummer referenziert.
 
-Alternativ kann auch einfach spezifziert werden, dass eine neue Nachricht nur gesendet werden darf, wenn eine \enquote{Success}-Nachricht erhalten wurde oder eine gewisse Zeit vergangen ist.
+Alternativ kann auch spezifziert werden, dass eine neue Nachricht nur gesendet werden darf, wenn eine \enquote{Success}-Nachricht erhalten wurde oder eine gewisse Zeit vergangen ist.
 Diese Zeit wird auch als \enquote{Timeout} benannt. % @TODO(Val): Mention other protocols (like HTTP, Websockets, etc.) using timeouts like this too
-Die zweite Methode bringt mit sich, dass das \ac{SPPP} Protokoll synchron wird und mag deshalb weniger flexibel als die asynchrone, erste Lösungsvariante erscheinen.
+% @Note(Jay): Zu den anderen Protokollen, ist es wichtig zu erwähnen dass die das auch Nutzen?
+Die zweite Methode bringt mit sich, dass das \ac{SPPP} Protokoll synchron wird und deshalb weniger flexibel als die asynchrone, erste Lösungsvariante erscheinen mag.
 Allerdings erleichtert die Synchronisierung des Protokolls auch den Umgang mit dem 3. Fehler, wie nachher gezeigt wird.
 Entsprechend wird sich für diese Lösungsmöglichkeit entschieden.
 
@@ -468,7 +469,7 @@ Da die \enquote{Ping}-Nachricht im Regelfall sowieso die zuerst gesendete Nachri
 Damit ist die \enquote{Ping}-Nachricht nun notwendigerweise die zuerst gesendete Nachricht in diesem Protokoll.
 
 Es bleibt nun noch der 3. Fehler zu behandeln.
-Wenn ein Teil der gesendeten Nachricht ausfällt, gibt es zwei Möglichkeiten.
+Wenn ein Teil der gesendeten Nachricht ausfällt, gibt es zwei Möglichkeiten:
 Entweder werden weitere Bytes empfangen, sodass eine scheinbar vollständige, wenn auch inkorrekte Nachricht erhalten wird.
 Das ist im Endeffekt wieder das 1. Problem und wird ebenso im Rahmen dieser Arbeit ignoriert.
 Weitere Versionen des Protokolls sollten diese Quellen möglicher Dateninkonsistenz jedoch behandeln.
@@ -489,8 +490,8 @@ Wie in Kapitel \ref{vorgehenSW-MC} beschrieben, verwendet der \ac{MC} das selbst
 Entsprechend ist es sinnvoll, diese Daten direkt im gleichen Format an den \ac{MC} zu schicken.
 
 Da der Speicherplatz des \ac{MC}s jedoch vergleichsweise stark begrenzt ist, können viele Songs nicht komplett gespeichert werden.
-Auch wenn diese Limitation mit Erweiterungen der Hardware gelöst werden könnten, würden diese die Kosten weiter ansteigen.
-Um den Ziel der Arbeit gerecht zu werden, darf ein großer Speicherplatz nicht vorausgesetzt werden.
+Auch wenn diese Limitation mit Erweiterungen der Hardware gelöst werden könnten, würden diese die Kosten weiter heben.
+Um dem Ziel der Arbeit gerecht zu werden, darf kein großer Speicherplatz vorausgesetzt werden.
 Wenn also nicht davon auszugehen ist, dass das gesamte Musikstück auf einmal auf dem \ac{MC} gespeichert werden kann, müssen die Musikdaten in Teilen nach einander geschickt werden.
 In anderen Worten: es ist ein Streaming der Musikdaten notwendig.
 
@@ -502,13 +503,13 @@ Ein Buffer hält die derzeit zu spielenden \lstinline|PidiCmd|s, während der zw
 Sobald der erste Buffer fertig gespielt wurde, können die beiden Buffer effizient mit einem Tausch ihrer Pointer gewechselt werden.
 
 Das Problem des Bufferings kann dann nur noch vorkommen, wenn der erste Buffer fertig gespielt wurde, bevor der nächste Buffer aufgefüllt werden konnte.
-Eine einfache Verbesserung dieser Strategie ist die Nutzung von mehr Buffern als nur zwei.
-Wenn drei Buffer genutzt werden, zum Beispiel, müssen zwei Buffer durchgespielt werden, bevor der nächste Buffer aufgefüllt werden muss.
+Eine einfache Verbesserung dieser Strategie ist die Nutzung von mehr als nur zwei Buffern.
+Wenn zum Beispiel drei Buffer genutzt werden, müssen zwei Buffer durchgespielt werden, bevor der nächste Buffer aufgefüllt werden muss.
 Auch können die Buffer bereits getauscht werden, bevor die Nachricht fertig gelesen wurde, solange zumindest ein \lstinline|PidiCmd| bereits gelesen wurde.
 
 Die nächste Schwierigkeit kommt daher, dass \ac{SAM} wissen muss, wann der nächste Teil des Musikstücks benötigt wird.
 \ac{SAM} könnte versuchen selbst die vergangene Zeit zu zählen und die selben Berechnung wie der \ac{MC} machen, um zu wissen, wieweit der \ac{MC} bis jetzt gespielt hat.
-Falls hierbei jedoch ein Fehler auftritt, würde die Musikdaten zum falschen Zeitpunkt gesendet werden.
+Falls hierbei jedoch ein Fehler auftritt, würden die Musikdaten zum falschen Zeitpunkt gesendet werden.
 Abgesehen davon wäre dies auch ein relativ großer Entwicklungsaufwand.
 Einfacher ist es, wenn der \ac{MC} eine bestimmte Nachricht schickt, um den nächsten Teil des Musikstücks anzufordern.
 In Tabelle \ref{table:SPPP-Messages} ist diese Nachricht als \enquote{Request}-Nachricht spezifiziert.
@@ -517,10 +518,10 @@ Die \enquote{Request}-Nachricht ist die einzige Nachricht, die der \ac{MC} schic
 Trotzdem muss \ac{SAM} hier nicht mit einer Empfangsbestätigung antworten, da sie sowieso mit einer Nachricht antwortet.
 Nur ist die Antwort von \ac{SAM} eine \enquote{Music}-Nachricht stattdessen.
 
-Die \enquote{Request}-Nachricht enthält wie in Tabelle \ref{table:SPPP-Messages} spezifiziert keine weiteren Daten.
+Die \enquote{Request}-Nachricht enthält, wie in Tabelle \ref{table:SPPP-Messages} spezifiziert, keine weiteren Daten.
 Das heißt, dass \ac{SAM} sich merken muss wie weit im Musikstück die letzte Nachricht fortgeschritten war.
 Ein alternativer Ansatz würde den \ac{MC} speichern lassen, wie viele \lstinline{PidiCmd}s bereits gespielt wurden und würde diesen Index in der \enquote{Request}-Nachricht an \ac{SAM} schicken.
-Beide Methoden nehmen sich nicht besonders viel, hier wurde sich jedoch für die erste Möglichkeit entschieden, da sie der Desktop-Anwendung mehr Flexibilität bietet und weniger Daten übertragen werden müssen.
+Beide Methoden geben sich nicht besonders viel, hier wurde sich jedoch für die erste Möglichkeit entschieden, da sie der Desktop-Anwendung mehr Flexibilität bietet und weniger Daten übertragen werden müssen.
 
 Die soweit beschriebene Strategie funktioniert zum Spielen vollständiger Stücke nacheinander.
 Nun soll die Anwendung aber auch die Möglichkeit bieten, während des Spielen eines Stückes zu einem anderen zu wechseln.
@@ -528,6 +529,7 @@ In diesem Fall muss dem \ac{MC} mitgeteilt werden, dass ein neues Stück anfäng
 
 Zusätzlich soll es den Nutzer:innen möglich sein, in einem zurzeit spielenden Stück zu einem anderem Zeitpunkt zu springen.
 In diesem Fall müssen die zurzeit aktiven Aktuatoren womöglich ebenfalls ausgeschaltet werden.
+% @Note(Jay): Es ist etwas unverständlich warum
 Jedoch ist es hier im Allgemeinen nicht der Fall, dass alle Aktuatoren ausgeschaltet werden sollten.
 Die Aktuatoren der Noten, die bis zu dem gewählten Zeitpunkt gespielt werden sollen, müssen nämlich angeschaltet werden.
 In Kapitel \ref{vorgehenSW-MC} wurde beschrieben, wie der \ac{MC} eine Liste bereits gespielter Noten für die selbe Problematik verwendet.
@@ -540,12 +542,12 @@ Wie in Listing \ref{code:Apply PIDICmds} auch, müssen die \lstinline|PlayedKey|
 Weiterhin muss auch die Stärke, mit der der Ton gespielt werden soll, gespeichert werden.
 Die \lstinline|PlayedKey|-Struktur besteht entsprechend aus einer Referenz auf den Ton, der Länge und Spielstärke.
 Wie im \ac{PIDI}-Format wird die anzuspielende Taste über Oktave und Note definiert.
-Da Oktave, Note, Anspielstärke im \ac{PIDI}-Format jeweils als 4-Bit Zahlen und die Länge als 8-Bit Zahl spezifziert wurde, benötigt eine \lstinline|PlayedKey|-Struktur 20 Bits.
+Da Oktave, Note und Anspielstärke im \ac{PIDI}-Format jeweils als 4-Bit Zahlen und die Länge als 8-Bit Zahl spezifziert wurde, benötigt eine \lstinline|PlayedKey|-Struktur 20 Bits.
 Das heißt auch, dass 3 Byte für die Struktur benötigt werden, wobei 4 Bits als Padding verwendet werden.
 
-Auf Seiten des \ac{MC}s ergibt es Sinn die Oktave und Note direkt in den Index für den zuständigen Aktuator zu transformieren, damit diese Berechnung nur einmal gemacht werden muss.
+Auf Seiten des \ac{MC}s ergibt es Sinn die Oktave und Note direkt in den Index für den zuständigen Aktuator zu transformieren, damit diese Berechnung nur einmal ausgeführt werden muss.
 Ein weiterer Unterschied zwischen der \lstinline|PlayedKey|s Liste in der \enquote{Music}-Nachricht und auf dem \ac{MC} ist in der Länge der Liste.
-Da der \ac{MC} nur eine bestimmte Anzahl gleizeitig spielender Tasten haben darf, ist die Länge dessen Liste beschränkt.
+Da der \ac{MC} nur eine bestimmte Anzahl gleichzeitig spielender Tasten haben darf, ist die Länge dessen Liste beschränkt.
 Da das \ac{SPPP} Protokoll ebenjene Feinheiten der Hardware abstrahieren soll, ist diese Limitierung in der \enquote{Music}-Nachricht nicht gegeben.
 Sollten in der Nachricht also mehr \lstinline|PlayedKey|s sein, als der \ac{MC} gleichzeitig spielen darf, muss der \ac{MC} das gleiche Verfahren zum Eliminieren einiger \lstinline|PlayedKey|s anwenden, dass er auch sonst verwendet (siehe Kapitel \ref{vorgehenSW-MC}).
 
@@ -563,8 +565,8 @@ Sollte \ac{SAM} stattdessen die eingehenden \enquote{Request}-Nachrichten einfac
 Dann würde der \ac{MC} endlos neue \enquote{Request}-Nachrichten schicken und somit unnötige Arbeit auf sich nehmen.
 Stattdessen wurde entschieden, am Ende des Musikstücks eine \enquote{Music}-Nachricht mit einer leeren Liste von \lstinline|PidiCmd|s zu schicken.
 Damit wid das \ac{SPPP} Protokoll nicht unnötig erweitert und der \ac{MC} muss nicht endlos neue Nachrichten schicken.
-Der \ac{MC} sollte dann keine weiteren \enquote{Request}-Nachrichten schicken, sobald beide Buffer von \lstinline|PidiCmd|s leer sind.
-Auf den ersten Blick mag das nach weiterer Arbeit klingen, diese Logik sollte zu Start des \ac{MC}s - bevor das erste Musikstück gespielt wurde - sowieso gelten.
+Der \ac{MC} sollte keine weiteren \enquote{Request}-Nachrichten schicken, sobald beide Buffer von \lstinline|PidiCmd|s leer sind.
+Auf den ersten Blick mag das nach weiterer Arbeit klingen, diese Logik sollte allerdings zu Start des \ac{MC}s - bevor das erste Musikstück gespielt wurde - sowieso gelten.
 Entsprechend ist es kein weiterer Aufwand in der Ausführung oder Entwicklung des \ac{MC}s.
 
 \section{Desktop Anwendung} \label{vorgehenSW-UI}
@@ -573,17 +575,17 @@ Entsprechend ist es kein weiterer Aufwand in der Ausführung oder Entwicklung de
 Den in Tabelle \ref{table:anforderungen} genannten Anforderungen nach, soll es der Nutzer:in möglich sein Musikstücke aus einem Katalog auszuwählen und dem Katalog neue Stücke hinzuzufügen.
 Weiterhin soll die Wiedergabe über die \ac{UI} steuerbar sein.
 In diesem Kapitel soll diese Anforderungen an die Anwendung genauer spezifiziert werden.
-Zusätzlich soll ein Konzept für das\ac{UI} Design entwickelt werden.
-Diese Planung ist dabei noch nicht direkt mit der Umsetzung oder der Architektur des Codes beschäftigt.
+Zusätzlich soll ein Konzept für das \ac{UI} Design entwickelt werden.
+Diese Planung beschäftigt sich dabei noch nicht direkt mit der Umsetzung oder der Architektur des Codes.
 
-Aus Sicht der Nutzer:innen hat \ac{SAM} zwei entsprechende Aufgaben:
+Aus Sicht der Nutzer:innen hat \ac{SAM} zwei Aufgaben:
 \begin{enumerate}
     \item Musik-Verwaltung
     \item Musik-Wiedergabe
 \end{enumerate}
 
-Die Musik-Verwaltung beinhaltet dabei das Hinzufügen neuer Musikstücke und die Darstellung des Katalogs.
-Um auch die Nutzung eines großen Katalogs leicht möglich zu machen, soll es auch eine Möglichkeit zum Suchen von Musikstücken nach Namen geben.
+Die Musik-Verwaltung beinhaltet das Hinzufügen neuer Musikstücke und die Darstellung des Katalogs.
+Um auch die Nutzung eines großen Katalogs leicht zu ermöglichen, soll es auch eine Möglichkeit zum Suchen von Musikstücken nach Namen geben.
 Bei der Musik-Wiedergabe muss dagegen mit dem \ac{MC} und somit indirekt mit dem Piano kommuniziert werden.
 Auch sollen Kontrollmöglichkeiten bei der Wiedergabe zur Verfügung stehen.
 
@@ -596,7 +598,7 @@ Diese kann entweder auf der selben Seite mit unter gebracht werden oder auf eine
 
 Da die Anwendung möglichst intuitiv und leicht erlernbar sein soll, ist es bei diesen Fragen sinnvoll, ein ähnliches Design zu ähnlichen, bekannten Anwendungn zu verwenden.
 Hier sollen vor allem der \enquote{\ac{WMP}} und \enquote{Spotify} zum Vergleich genommen werden.
-Es ist davon auszugehen, dass die meisten Nutzer:innen mit mindestens einer der beiden Anwendungen vertraut ist.
+Es ist davon auszugehen, dass die meisten Nutzer:innen mit mindestens einer der beiden Anwendungen vertraut sind.
 Selbst wenn nicht, sind beide Anwendungen bekannt genug, um vergleichbare Apps im Design inspiriert zu haben.
 
 Sowohl \ac{WMP} als auch Spotify bieten die Möglichkeit zum Betrachten von Katalogen - sogenannten Playlists - an.
@@ -627,6 +629,7 @@ Es ist hier jedoch nicht offensichtlich, wie unterschiedliche Bilder für die Mu
 Während der Entwicklung sollten falls möglich mehrere Versionen agil ausprobiert werden, um die sinnvollste Darstellung für \ac{SAM} zu finden.
 
 % @Question(Val): Bilder von WMP und Spotify einfügen?
+% @Note(Jay): Brauchen wir find ich nicht, aber ein Bild von der UI wär glaub ich sinnvoll
 
 Wie die Wiedergabe gestaltet werden sollte ist dagegen um eindeutiger.
 Sowohl \ac{WMP} als auch Spotify stellen eine Timeline des Musikstücks als einen mit der Zeit ausfüllenden Balkens dar.
@@ -654,8 +657,9 @@ Entweder gibt es einen Button, der ein Pop-Up im Stile eines Dateiverwaltungssys
 Ein etwas jüngerer und moderner Weg ist über Drag-n-Drop, wobei die Datei aus dem File Explorer in die Anwendung geschoben wird.
 Beide Methoden benötigen keine seperaten Seiten, die Drag-n-Drop Methode mag ohne Anweisung aber nicht offensichtlich sein.
 Ob eine solche Aweisung gut lesbar auf der selben Startseite eingebracht werden kann, ist fragwüdig.
-
-Sollte die Nutzer:in nach dem Import Konfigurationen vornehmen können, ist es sinnvoll eine neue Seite dafür aufzumachen.
+% @Note(Jay): Du wechselst oft zwischen Nutzer:in und Nutzer:innen, können wir das vereinheitlichen?
+% @TODO(Jay): Gesamt überall einheitlich gendern
+Sollte die Nutzer:in nach dem Import Konfigurationen vornehmen können, ist es sinnvoll eine neue Seite dafür zu erstellen.
 In zukünftigen Erweiterungen der Anwendung, könnten womöglich zuätzliche Informationen abgefragt oder aus der Datei extrahiert und von der Nutzer:in kontrolliert werden.
 Für diese Arbeit soll \ac{SAM} aber wie erwähnt nur die Namen der Musikstücke speichern. Dieser Name könnte sowohl vom Dateinamen übernommen werden oder falls möglich aus Metadaten, die in der Datei gespeichert sind, extrahiert werden.
 Weiterhin wäre es hier wünschenswert, wenn die Nutzer:in den automatisch extrahierten Namen nach Belieben ändern kann.
@@ -677,3 +681,5 @@ Ansonsten ist ein Button mit dem Text \enquote{Abbrechen} auch intuitiv verstän
 % @Note(Val): Dieses Kapitel nennt eigentlich nur unterschiedliche Möglichkeiten. Wirkliche Entscheidungen habe ich hier nicht getroffen -> sollte wahrscheinlich geändert werden.
 
 % @Note(Val): Mockups unterschiedlicher Design Möglichkeiten wären schön
+
+% @Note(Jay): Ich fänds schon sinnvoll wenn du immer sagst wofür du dich entschieden hast. Ich weiß nicht ob wir Mockups verschiedener Möglichkeiten zwingend brauchen, aber zumindest von dem finalen Resultat sollten wir eins haben.

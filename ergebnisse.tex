@@ -93,24 +93,42 @@ Ein alternativer Ansatz würde in diesen Fällen das Verschmelzen der Töne in K
 Das würde jedoch eine etwas kompliziertere Lösung mit sich bringen und es da diese Fälle in der Praxis eher unwahrscheinlich sind, wurde Einfachheit hier vorgezogen.
 
 Eine größere Limitation dieser Lösung liegt dagegen darin, dass zurzeit nur die nächste \lstinline|PidiCmd|s im derzeit zu spielenden Buffer betrachtet werden.
-Der zweite Buffer von \lstinline|PidiCmd|s, der beim Lesen neuer \ac{Music}-Nachrichten befüllt wird, wird zurzeit ignoriert.
+Der zweite Buffer von \lstinline|PidiCmd|s, der beim Lesen neuer \enquote{Music}-Nachrichten befüllt wird, wird bei dieser Prüfung zurzeit ignoriert.
 Das bedeutet, dass die derzeitige Umsetzung des Ansatzes nicht vollständig korrekt ist, da das nächste Anschlagen eines Tons im nächsten Buffer liegen könnte.
 Allerdings wurde hier wieder die Einfachheit der Implementierung als wichtiger gesehen, da diese Fälle in den praktischen, getesteten Musikstücken nicht oder nur sehr selten aufgetreten sind.
 
 
-\subsubsection{T2: Min. Lautstärke:}
+\subsubsection{T2: Min. Lautstärke}
 
-Erklärung: Um den am leisesten spielbaren Ton zu ermitteln, muss die minimale Spannung ermittelt werden, mit der eine Taste betätigt werden kann.
-Wie in Kapitel \enquote{\nameref{subsec:aktuator}} erklärt, benötigt ein Hubmagnet eine entsprechende Ansprechspannung, um den Anker zu bewegen.
+\paragraph{Erklärung:}
+Um den leisesten spielbaren Ton zu ermitteln, muss die minimale Spannung ermittelt werden, mit der eine Taste betätigt werden kann.
+Wie in Kapitel \enquote{\nameref{subsec:aktuator}} erklärt, benötigt ein Hubmagnet eine entsprechende Minimalspannung, um den Anker zu bewegen.
 Da diese Spannung im Datenblatt des Hubmagneten nicht ersichtlich ist und das Tastengewicht sowieso mit einbezogen werden muss, muss diese Mindestspannung beim Klavier experimentell ermittelt werden.
 
-Ablauf: Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt (siehe Kapitel \enquote{\nameref{vorgehenSW-MC}}) schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
+\paragraph{Ablauf:}
+Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt, schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
 Dies wird an allen (mit Fokus auf den tieferen) Tasten durchgeführt, da sich die einzelnen Tasten in ihrem Ansprechverhalten teils deutlich unterscheiden. % @Note(Val): Erneut - warum wird erst jetzt erwähnt, dass sich die Tasten so stark unterscheiden? Wäre das bei der Konzeption oder dem Anbringen der Aktuatoren an das Piano nicht interessant zu wissen?
-Anschließend wird der Größte der einzelnen Minima in den Code mit aufgenommen.
+Anschließend wird wieder das Größte der einzelnen Minima in den Code mit aufgenommen.
 
-Ergebnis: Das leisteste Anspielen der Tasten ist mit einer Spannung von 17,3V möglich.
-Dieses Ergebnis fließt in die Lautstärkeregelung der Software ein.
-% @TODO(Val): Hier sollte vermutlich die Lösung im Code kurz erklärt werden
+\paragraph{Ergebnis:}
+Das leisteste Anspielen der Tasten ist mit einer Spannung von 17,3V möglich.
+Als \ac{PWM}-Wert ist dies eine 210 von 256 möglichen Werten.
+Der \ac{MC} hat beim Bespielen von Noten eine Anspielstärke als 4-Bit Zahl gegeben (siehe Listing \ref{code:PidiCmd struct}).
+Um die Anschlagestärke auf die richtige Skalierung zu bringen kann eine lineare Interpolation verwendet werden.
+Listing \ref{code:scaled volume} zeigt, wie das in Code aussehen könnte.
+Dabei werden im Listing auch der Lautstärke-Faktor beachtet und Anschlagsstärken von 0 korrekt auf 0 gesetzt.
+
+\begin{UnbrokenCodePage}[style=CStyle, caption={Skalierung der Lautstärke bei der Ausgabe}, label={code:scaled volume}]
+unsigned char velocity; // is assumed to be given as a number between 0 and 15
+float volume_factor;    // is assumed to be given as a positive 32-bit float
+float t = volume_factor * velocity / 16.0f;
+if (t <= 0.00001f) {
+	set(0); // Sets the specified key to recive a PWM value of 0
+} else {
+	if (t > 1.0f) t = 1.0f;
+	set(210 + t*(255 - 210));
+}
+\end{UnbrokenCodePage}
 
 
 \subsubsection{T3: Min. Genauigkeit:}

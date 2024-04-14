@@ -9,8 +9,6 @@
 
 \chapter{Konzeption - Hardware}\label{konzeptionHW}~\nocite{*}
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
-% TODO(Jay): check einheitlichkeit Zeit
-% TODO(Jay): Hubmagnet erst nach Unterkapitel Aktuatoren verwenden
 % @Note(Val): Abschnitt fängt im Präteritum an und geht dann mit Präsenz weiter
 % Glaube, dass Präsenz leichter lesbar ist, aber muss halt einfach einheitlich sei
 % @Note(Val): Der ganze Abschnitt argumentiert falsch herum.
@@ -82,7 +80,6 @@ Nun stellt sich also noch die Frage, wie genau die Aktuatoren mit den Tasten des
 
 Eine Möglichkeit besteht darin, die Aktuatoren oben über den Tasten anzubringen, entweder in Form einer nachgebildeten
 \enquote{Klavierhand} mit zehn \enquote{Fingern} oder in Form einer Schiene mit 88 Aktuatoren auf den Tasten.
-%TODO(Jay): Bilder was ich meine
 Beide Lösungen bringen allerdings das Problem mit sich, dass sie gegen die in \ref{sec:zielstellung-anforderungen} definierte Anforderung
 der Flexibilität verstoßen, nämlich dass das Klavier sowohl automatisch als auch manuell bespielbar sein soll.\newline
 Außerdem würde die Klavierhand-Option - die dem tatsächlichen Klavierspiel ähnlich sieht -
@@ -116,7 +113,6 @@ Dieser Punkt ist besonders wichtig, wenn der \enquote{Piano Player} mit untersch
 % @Question(Jay): Ist es offensichtlich dass das daran liegt dass wir dann auch leiser spielen können oder soll ich das noch erwähnen?
 Dies führt dazu, dass die Aktuatoren soweit hinten wie möglich angebracht werden müssen. % @Note(Jay) weil größter Hebel ist offensichtlich, oder?
 \newline
-% @TODO(Jay): BILD
 Hier tritt das Problem auf:
 Der Holraum, der sich im hinteren Teil des ausgewählten Klaviers befindet, ist nicht durchgängig. Daher ist es
 erforderlich, Löcher einzubauen. Diese müssen räumlich so platziert werden, dass sie keine wichtigen Teile der Klaviermechanik
@@ -177,10 +173,7 @@ wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen 
 
 \paragraph{Rasperry Pi}
 Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert.
-Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu IoT-Geräten. % @Question(Val): Sollte IoT ins Abkürzungsverzeichnis?
-% @Note(Val): "Im Gegensaz zum Arduino verfügt er über einen Prozessor" - falsch? der Arduino hat offensichtlich auch einen Prozessor...
-% @Cleanup(Val): Originaler Satz hier: (angepasst für Abgabe an Kruse für Email)
-% Im Gegensatz zum Arduino verfügt er über einen Prozessor und ist besonders für komplexe und rechenlastige Projekte geeignet.
+Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu IoT-Geräten.
 Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet.
 \begin{figure}[htbp]
 	\centering
@@ -191,10 +184,10 @@ Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projek
 \newline
 
 %Vergleich
-% @Note(Val): Das war der originale Satz, aber der klang sehr komisch...: "Die Entscheidung für den verwendeten \ac{MC} traf auf den Arduino."
 Es wurde sich letztendlich für den Arduino entschieden.
 Der Rasperry Pi stand vor allem aufgrund seiner höhere Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
-Allerdings ist er aufgrund seines Betriebssystems und einer erhöhten Latenz nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt. % @Note(Val): Worauf bezieht sich die Latenz hier genau?
+Allerdings ist er aufgrund seines Betriebssystems nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt.
+% @Note(Jay): Vllt noch genauer
 Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
 Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, welche eine präzise Ansteuerung von Aktuatoren benötigt. % @Note(Val): Simpel != Präzise. Nur weil der Arduino eine simple Hardware-Interaktion hat, heißt es nicht, dass er die Hardware präzise ansteueren könnte
 Zudem sollte die Ansteuerungslogik nicht besonders komplex sein, weshalb ein Arduino genug Rechenleistung aufweisen können sollte.
@@ -202,11 +195,10 @@ Zudem sollte die Ansteuerungslogik nicht besonders komplex sein, weshalb ein Ard
 Für das Projekt wird spezifisch ein Arduino R3\footnote{Der Arduino R3 wird auch als \enquote{Mega 2563} bezeichnet.} verwendet.
 Bei der Auswahl des spezifischen Arduinos wurden der Arduino Uno, Nano und R3 betrachtet.
 Im Prinzip wäre jedes der genannten Modelle für die Anwendung möglich, allerdings verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
-gegenüber der 32KB vom Arduino Uno und den 16KB des Arduino Nanos).
+gegenüber der 32KB vom Arduino Uno und den 16KB des Arduino Nanos). Der gewählte Arduino verfügt auch über einen CPU-Kern.
 Der Arduino Uno verfügt zwar über mehr Ports, allerdings bringt dies keinen Mehrwert, da die Anzahl der benötigten Ausgänge auch bei einem Arduino Uno nicht erreicht werden
 (siehe Kapitel \ref{output}).
 Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM} Pins, die im Rahmen des Projekts genutzt werden können.
-% @TODO(Jay): Add das Arduino CPU-Kern hat
 
 \subsection{Pulsweitenmodulation}\label{PWM}
 \chapterauthor{Jakob Kautz}
@@ -235,9 +227,7 @@ Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung un
 Dabei wird der Anteil der Zeit geändert, für den das Signal eingeschaltet ist relativ zur Zeit, in der das Signal ausgeschaltet ist.
 Um unterschiedliche, analoge Werte zu erhalten, wird die Pulsweite moduliert.
 Wenn dieses Ein-Aus-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit der LED steuert.
-% @Note(Val): was ist "Vcc" hier? Diese Abkürzung wurde vorher nicht erklärt
 
-% @Note(Val): Hier wechselst du von Ein, Aus zu HIGH, LOW. Einheitliche Benennung wäre hier sinnvoller
 Auf den Arduino bezogen sieht die Umsetzung eines \ac{PWM} Signals wie folgt aus:
 Ein Taktsignal gelangt in die entsprechende Clock.
 Die Clock stellt den entsprechenden \ac{PWM}-Modus ein.
@@ -304,12 +294,7 @@ Dieses hat folgenden Aufbau:
 \end{minipage}
 \end{figure}
 
-% @Note(Val): Kommt hier noch was oder soll das weg?
-Vorteile des Schieberegisters:\newline
-Nachteile des Schieberegisters:
-
 \subsubsection{Aktuator-Matrix}
-% @TODO(Jay): Picture Matrix and use muster to explain it for magnets
 Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
 In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
 $$
@@ -343,69 +328,64 @@ gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert we
 %ohne Multiplexer
 \paragraph{Matrix ohne Multiplexer}
 
-Bei einer LED-Matrix ohne Multiplexer werden die LEDs direkt über die GPIO-Pins (General Purpose Input/Output) des % @Note(Val): Warum GPIO nicht mit in die Abkürzungen nehmen und dann \ac{GPIO}-Pins schreiben?
+Bei einer LED-Matrix ohne Multiplexer werden die LEDs direkt über die \ac{GPIO}-Pins des
 \ac{MC}s angesteuert. Jede LED ist einzeln mit einem Pin des \ac{MC}s verbunden. Um die LEDs anzusteuern,
 muss der \ac{MC} jeden Pin einzeln aktivieren oder deaktivieren, um die entsprechende LED ein- oder auszuschalten.
 Hierbei werden viele Pins benötigt, um die gesamte Matrix anzusteuern, was besonders bei größeren Matrizen unpraktisch
 sein kann. Für dieses Projekt, wird wie oben aufgeführt, eine 8x8-Matrix benötigt. Es werden also 16 PWM-Fähige Pins
-benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über ???? von diesen Pins.
+benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über 6 von diesen Pins.
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=0.75\textwidth]{img/LEDMatrixSchaltung}
+	\includegraphics[width=0.6\textwidth]{img/LEDMatrixSchaltung}
 	\caption{Matrix ohne Multiplexer Schematisch}
 	\label{fig:Matrix}
 \end{figure}
-\newpage
+% @Note(Jay): Welches der Bilder?
+%Um die Komplexität darzustellen, eine Aktuator-Matrix ohne Multiplexer würde für neun Aktuatoren wie folgt aussehen:
+%\begin{figure}[htbp]
+%	\centering
+%	\includegraphics[width=0.9\textwidth]{img/AktMatrix}
+%	\caption{Aktuator-Matrix ohne Multiplexer}
+%	\label{fig:AktMatrix}
+%\end{figure}
 %mit Multiplexer
 %Was ist ein Multiplexer, warum hilft er bei Martix wie sieht allg Schaltung aus?
 \paragraph{Matrix mit Multiplexer}
-
 Ein Multiplexer (bzw. ein Demultiplexer) ermöglicht das kombinieren mehrerer Signale zu einem bzw. dem Trennen eines einzelnen Signals zu mehreren, unterschiedlichen Signalen.
-Bei einer LED-Matrix kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit einem GPIO-Pin des \ac{MC}s elimniert werden.
+Bei einer LED-Matrix erfolgt das Prinzip durch die Verwendung von Schieberegistern und Transistoren.
+Somit kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit einem GPIO-Pin des \ac{MC}s elimniert werden.
 Entsprechend werden weniger Pins benötigt, um die Matrix anzusteuern.
-Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und möglichen Latenzen einher. % @Note(Val): Sind die Latenzen nur "möglich"? Müsste es nicht entweder klar Latenzen erhöhen oder nicht?
-\newline
-Um die Komplexität darzustellen, eine Aktuator-Matrix ohne Multiplexer würde für neun Aktuatoren wie folgt aussehen:
+Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und Latenzen durch die Schieberegister einher. % @Note(Val): Sind die Latenzen nur "möglich"? Müsste es nicht entweder klar Latenzen erhöhen oder nicht?
+Wobei die Latenzen der Schieberegister in diesem Projekt vernachlässigt werden können.
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=0.9\textwidth]{img/AktMatrix}
-	\caption{Aktuator-Matrix ohne Multiplexer}
-	\label{fig:AktMatrix}
+	\includegraphics[width=0.75\textwidth]{img/matrixMuxSchaltung}
+	\caption{Aktuator-Matrix mit Multiplexing}
+	\label{fig:AktMatrixMux}
 \end{figure}
 
 \subsubsection{Entscheidungsfindung}
-
-% @Note(Val): Die Aktuatoren wurden bereits entschieden und da es hier teilweise um deren spezifischen Eigenschaften geht (z.B. wie viel Strom sie brauchen) ist es vllt besser von Hubmagneten zu sprechen. Aktuatoren im Allgemeinen benötigen ja nicht unbedingt mehr Strom als LEDs z.B.
-Nach weiterer Evaluation der Matrix schien es aus mehreren Gründen schwer möglich, das Prinzip von LEDs auf Aktuatoren
-zu übertragen, weswegen die Entscheidung auf die Verwendung von Schieberegistern fiel. \newline
-Eine LED-Matrix wird, wie bereits erklärt,
-typischerweise durch \ac{PWM} angesteuert, um den Eindruck zu erwecken, dass alle
-LEDs gleichzeitig leuchten, obwohl sie tatsächlich nacheinander aktiviert werden. Dieses Prinzip funktioniert gut für LEDs,
-da sie einen langsamen Reaktionsmechanismus haben und das menschliche Auge träge ist.
-Beim präzisen Ansteuern von Aktuatoren bringt dieses Prinzip jedoch einige Probleme mit sich:
-
-\begin{enumerate}
-	\item Stromversorgung und Energieeffizienz: LED-Matrizen werden oft mit einer relativ niedrigen Leistung betrieben. Aktuatoren benötigen dagegen eine höhere Stromversorgung,
-	um eine ausreichende Leistung für den Betrieb zu gewährleisten. Die Schaltung, die für eine LED-Matrix optimiert ist,
-	könnte möglicherweise nicht die erforderliche Leistung für die Aktuatoren liefern. % @Note(Val): "möglicherweise"? Das klingt als Wissen wir es nicht. Aber wenn wir es nicht wissen, könnte es ja auch besser sein. Und warum wissen wir es nicht? Muss man das unbedingt testen oder was?
-	\item Interferenz und ungenaue Steuerung durch die Matrixstruktur: Bei der Verwendung einer Aktuatoren-Matrix über \ac{PWM}
-	könnte es zu Interferenzen kommen, die die Präzision der Steuerung beeinträchtigen. Da die \ac{PWM}-Signale zeilenweise
+Letztendlich fiel die Entscheidung auf die Verwendung von Schieberegistern. Dies liegt an mehreren Gründen:
+\begin{enumerate} % @Note(Jay): Ersten Punkt sinnvoller schreiben pls der doppelt sich und ist nicht so kohärent
+	\item Interferenz und ungenaue Steuerung durch die Matrixstruktur:  Eine LED-Matrix wird, wie bereits erklärt,
+	typischerweise durch \ac{PWM} angesteuert, um den Eindruck zu erwecken, dass alle
+	LEDs gleichzeitig leuchten, obwohl sie tatsächlich nacheinander aktiviert werden. Dieses Prinzip funktioniert gut für LEDs,
+	da sie einen langsamen Reaktionsmechanismus haben und das menschliche Auge träge ist, bei Aktuatoren, welche möglichst dynamisch und Präzise angespielt werden sollen, ist dieses Prinzip nicht gewinnbringend.
+	Bei der Verwendung einer Aktuatoren-Matrix über \ac{PWM}
+	kann es zu Interferenzen kommen, die die Präzision der Steuerung beeinträchtigen. Da die \ac{PWM}-Signale zeilenweise
 	multiplexiert werden, kann es vorkommen, dass die \ac{PWM}-Signale nicht mit der benötigten Stärke für jeden Aktuator geliefert
 	werden. Das liegt daran, dass verschiedene Aktuatoren in derselben Zeile unterschiedliche \ac{PWM}-Signale benötigen können,
-	was zu ungenauer Steuerung führen kann. Dies kann zu Kompromissen bei der Präzision und Leistung der Aktuatoren führen. % @Note(Val): Verstehe ich nicht. Jede LED auf der Matrix kann doch unabhängig der anderen angesteuert werden und andere Signale erhalten. Sonst wäre das ja eh nicht nutzbar für uns.
+	was zu ungenauer Steuerung führt. Dies kann zu Kompromissen bei der Präzision und Leistung der Aktuatoren führen. % @Note(Val): Verstehe ich nicht. Jede LED auf der Matrix kann doch unabhängig der anderen angesteuert werden und andere Signale erhalten. Sonst wäre das ja eh nicht nutzbar für uns.
 	% @Note(Val): Wieder viele Konjunktive. Entweder es ist ein Problem oder nicht.
-	\item Feedback und Regelung: Präzise Aktuatoren erfordern oft ein Feedbacksystem, um ihre Position oder andere Parameter
-	zu überwachen und gegebenenfalls anzupassen. Das Zeilenmultiplexing via \ac{PWM} bietet jedoch keinen einfachen Weg, um ein
-	solches Feedback zu integrieren, was die Regelung der Aktuatoren erschweren könnte. % @Note(Val): Vorhin wurde doch nur beim Servo-Motor gesagt, dass es ein Feedback-Mechanismus hat. Aber wir verwenden ja Hubmagnete, die vermutlich dann kein Feedback brauchen. Deswegen hier genauer sein als "Aktuator"
+	% @Note(Jay): Die LED-Matrix basiert auf trägheit des menschlichen Auges, weswegen dass da kein Problem ist. Bei uns würde das spielen halt trotzdem klappen, aber unsere Präzision für Akkuratheit wär eingeschrenkt.
 	\item Komplexität der Schaltung bei selbstgebauter Aktuator-Matrix: Die Implementierung einer Aktuator-Matrix über eine
 	LED-Matrix hinaus wäre technisch anspruchsvoller und erfordert eine komplexere Schaltung. Im Gegensatz dazu ist die
-	Verwendung von Schieberegistern eine einfachere (und bewährte) Methode zur Ansteuerung der Aktuatoren. Der Einsatz von % @Note(Val): inwieweit sind Schieberegister hierfür bewährt?
-	Schieberegistern vereinfacht die Schaltung und erleichtert die Steuerung der Aktuatoren, was insgesamt zu einer
-	zuverlässigeren und Lösung führt. % @Note(Val): Du wiederholst dich 2-3 mal, wenn du sagst dass Schieberegister einfacher sind, erklärst aber nicht warum die Matrix eine komplexere Schaltung benötigt
-	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix eine Vielzahl an Pins, welche der \ac{MC} % @Note(Val): Dieser letzte Punkt ist valide aber können wir mMn auch auslassen, wenn wir genug andere Punkte haben
+	Verwendung von Schieberegistern eine einfachere Methode zur Ansteuerung der Aktuatoren.
+	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix ohne Multiplexer eine Vielzahl an Pins, welche der \ac{MC} % @Note(Val): Dieser letzte Punkt ist valide aber können wir mMn auch auslassen, wenn wir genug andere Punkte haben
 	nicht liefert. Da die Matrix verwendet werden sollte um eben dieses Problem zu lösen, schien es nicht sinnvoll
 	das Prinzip einzusetzen. % @Note(Val): Aber mit Multiplexer braucht es doch nicht mehr so viele Pins, oder? Vielleicht konkret berechnen wie viele Pins dann benötigt wären und sagen, dass es immer noch mehr Pins sind als beim Schieberegister?
+	% TODO(Jay): mit würden wir 3 Schieberegister brauchen - entweder schieben, oder bräuchten 9 Ausgänge und wenn wir schieben können wir direkt die andere Variante nutzen weils dann für SW einfacher ist
 	\item Ressourcen: Desweiteren basiert die Entscheidung auf unzureichenden Ressourcen für die Matrix. Im Internet gab es
 	keine ausreichenden Anleitungen/Ressourcen, die die Implementierung einer LED-Matrix mit Aktuatoren ausreichend
 	unterstützen würden. Zusätzlich dazu lieferten die Simulationen via Tinkercad\footnote{Tinkercad: https://www.tinkercad.com} keine befriedigenden Ergebnisse
@@ -413,11 +393,6 @@ Beim präzisen Ansteuern von Aktuatoren bringt dieses Prinzip jedoch einige Prob
 	Im Gegensatz dazu sind Schieberegister gut dokumentiert und es gibt ausreichende Ressourcen, um ihre
 	Verwendung für die Ansteuerung von Aktuatoren zu verstehen und umzusetzen.
 \end{enumerate}
-
-Die Kombination dieser Faktoren führte zu der Entscheidung, Schieberegister anstelle einer Matrix für die präzise Steuerung der Aktuatoren zu verwenden. % @Note(Val): Wurde davor schon gesagt. Der Satz kann eig weg, können wir aber auch lassen, falls du es so besser zu lesen findest
-
-
-% @TODO(Jay): Welchen Hubmagneten verwenden wir genau und wie viel Kraft hat dieser
 
 \subsection{Transistor}
 \chapterauthor{Jakob Kautz}
@@ -469,8 +444,8 @@ oder einen Mechanismus zu steuern. \newline % @TODO(Val): Quelle für Aktuator-D
 Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
 \begin{enumerate}
 	\item Linearmotor % @Note(Jay): Ich glaub es wär smart hier Elektromotor zu sagen und dann zu unterteilen
-	\item Servomotor
-	\item Hubmagnet
+	\item Servomotor % TODO(Jay): Lin. Servomotor
+	\item Hubmagnet % TODO(Jay): Welcher genau und wie viel Kraft
 \end{enumerate}
 
 % @TODO(Val): Quelle für jede Definition der 3 Aktuator-Typen
@@ -500,13 +475,6 @@ Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus
 Bewegung, die durch das Getriebe in eine Bewegung umgewandelt wird. Der
 Feedback-Mechanismus, oft ein Potentiometer oder ein Encoder, misst die genaue Position des Motors und gibt diese
 Informationen an die Steuerung zurück.\newline % @Note(Val): Verstehe nicht inwieweit der Feedback-Mechanismus sinnvoll ist
-% @Note(Val): Warum ist das Bild hier zuerst aber ansonsten immer erst nach den physikalischen Grundlgen?
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=5cm]{img/Servomotor}
-	\caption{Servomotor}
-	\label{fig:Servomotor}
-\end{figure}
 
 Physikalische Grundlagen:
 \begin{itemize}
@@ -518,6 +486,12 @@ Physikalische Grundlagen:
 	\item Der Feedback-Mechanismus misst die Position des Motors durch Erfassung von Änderungen des magnetischen Feldes oder der
 	Winkelposition des Rotors und ermöglicht so eine präzise Steuerung.
 \end{itemize}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Servomotor}
+	\caption{Servomotor}
+	\label{fig:Servomotor}
+\end{figure}
 
 \paragraph{Hubmagnet}
 Ein Hubmagnet (auch Solenoid genannt) ist ein Aktuator, der eine lineare Bewegung durch das Anlegen eines elektrischen
@@ -560,17 +534,17 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 	eine Umlenkung stattfinden müssen, da die erzeugte Bewegung eine Rotation im Gegensatz zu einer linearen Bewegung
 	ist. Zwar gibt es auch lineare Servomotoren, welche allerdings ebenfalls aufgrund ihrer Bewegungsbeschränkung nicht
 	weiter betrachtet wurden. % @Note(Val): Warum erwähnt ihr die rotierende Bewegung dann überhaupt als Nachteil. Und warum werden vorher bei der Erklärung nicht die linearen Servomotoren erklärt?
+	% TODO(Jay): fix this with lin. Motor cuz i actually didn't think about that.
 	Zusätzlich verweilen Servomotoren nach ihrer Ansteuerung an der Position, an der
 	sie bei Ende der Stromversorgung waren. Für das Klavier werden Aktuatoren benötigt, welche wieder auf die vorherige
 	Position zurückschalten, die Klaviertaste also in dem Sinne wieder \enquote{loslassen} können.
 	\item Linear-Motor: Auch hier kam das Problem auf, dass die Motoren nicht automatisch wieder an ihre vorherige
-	Position zurückschalten, wenn der Stromfluss stoppt. % @Question(Val): Das Problem könnte mit einem gegenteiligen Stromfluss gelöst werden, oder? Weiß aber nicht ob das die Schaltung unbedingt verkomplizieren würde. Wenn das überhaupt nicht möglich wäre, wären Servo- & Linear-Motoren ja gar nicht nutzbar und dann wäre die Einleitung für diesen Abschnitt falsch
+	Position zurückschalten, wenn der Stromfluss stoppt.
+	% @Question(Val): Das Problem könnte mit einem gegenteiligen Stromfluss gelöst werden, oder? Weiß aber nicht ob das die Schaltung unbedingt verkomplizieren würde. Wenn das überhaupt nicht möglich wäre, wären Servo- & Linear-Motoren ja gar nicht nutzbar und dann wäre die Einleitung für diesen Abschnitt falsch
+	% @Note(Jay): Ja, es geht eher darum dass es unnötiger Aufwand wäre das abzufragen wenn Solenoids es automatisch machen
 	\item Hubmagnete: Hubmagnete sind schneller als die anderen beiden Aktuatoren, was insbesondere bei schnellem
 	Tastendrücken sinnvoll ist. Außerdem schalten Sie, wenn die Stromversorgung abbricht, wieder auf ihre vorherige
-	Position zurück. Der Nachteil ist, dass Sie allgemein weniger Kraft aufbringen als Servo- und Linearmotoren.
-	Da das Anziehen der Tasten allerdings nicht genug Kraft braucht um über diese Schwelle hinauszugehen, führte dies lediglich dazu, dass Kostenintensivere Solenoids bestellt werden müssen.
-			% @Note(Val): Der letzte Satz hier ist komisch & wahrscheinlich falsch (was genau bedeutet "genug" hier z.B.)
-			% @Note(Val): Der Nachteil ist doch gar nicht, dass sie weniger Kraft aufbringen, wenn es auch Solenoids gibt, die diese Kraft aufbringen, oder? Der Nachteil ist eher, dass die Solenoids, die solche Kraft aufbringen, mehr kosten, oder?
+	Position zurück.
 \end{enumerate}
 
 

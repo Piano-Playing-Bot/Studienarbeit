@@ -1,0 +1,218 @@
+% !TEX root =  master.tex
+\chapter{Anhang: Format-Spezifikationen} \label{appendix-demo}
+
+Hier werden die vollständigen Spezifikationen aller Formate und Protokolle geführt, die in dieser Arbeit erstellt wurden.
+Die Spezifikationen sind jeweils in Englisch geführt.
+
+Abschnitt \ref{appendix-pidi} beinhaltet das \ac{PIDI}-Format.
+In Abschnitt \ref{appendix-pdil} wird dann das \ac{PDIL}-Format spezifziert.
+Zuletzt findet sich in Abschnitt \ref{appendix-sppp} das \ac{SPPP}-Protokoll.
+
+\section{\ac{PIDI}-Format} \label{appendix-pidi}
+
+This section specifies the format of PIDI-files.
+PIDI serves as a memory-efficient and simple-to-use format for storing all data required to play a song automatically on a piano.
+
+PIDI stands for \enquote{\textbf{Pi}ano \textbf{D}igital \textbf{I}nterface}.
+
+A PIDI file follows the following format:
+
+\begin{verbatim}
+<Magic Bytes: 4 bytes> <Commands Count: 4 bytes> <Commands>
+\end{verbatim}
+
+Unless otherwise specified, small-endian encoding is used.
+
+\begin{enumerate}
+	\item \textbf{Magic Bytes:} The format's Magic bytes are: \enquote{PIDI}. It is always written in big-endian format.
+	\item \textbf{Commands Count:} The amount of commands is given as an unsigned 32-bit number. It should follow exactly as many commands as given here.
+	\item \textbf{Commands:} All commands are written here one after another. The amount of commands is given in Commands Count. A single command's format is given below.
+\end{enumerate}
+
+Every command is encoded as a 32-bit number. The following shows the bit field that makes up these 32 bits:
+
+\begin{verbatim}
+delta time : 12 bits
+velocity   : 4  bits
+length     : 8  bits
+octave     : 4  bits
+key        : 4  bits
+\end{verbatim}
+
+\begin{enumerate}
+	\item \textbf{delta time:} The delta time specifies the amount of milliseconds since the last command that the command should be applied at. This parameter implies that the commands are ordered by the time at which they should be played.
+	\item \textbf{velocity:} The velocity specifies the strength with which to play the note. Strength of playing a note is directly correlated with the volume of the played note.
+	\item \textbf{len:} The length specifies the amount of centiseconds for which the command should be active. A centisecond is 10 milliseconds.
+	\item \textbf{octave:} The octave gives the octave offset of the musical note that this chunk refers to. The key and octave together specify a specific key on a piano. The octave should be interpreted as a signed 4-bit integer using two's complement. 0 refers to the middle octave on a piano. Negative numbers refer to octaves below the middle one, while positive numbers refer to higher octaves.
+	\item \textbf{key:} The key gives the specific musical note that is referred to in this command. The key and octave together specify a specific key on a piano. The following keys are encoded as follows:
+	\begin{verbatim}
+C  = 0
+C# = 1
+D  = 2
+D# = 3
+E  = 4
+F  = 5
+F# = 6
+G  = 7
+G# = 8
+A  = 9
+A# = 10
+B  = 11
+	\end{verbatim}
+\end{enumerate}
+
+
+\section{\ac{PDIL}-Format} \label{appendix-pdil}
+
+This section specifies the format of PDIL-files.
+
+The idea behind PDIL files is to provide a way to permamently store a collection of PIDI files. The Desktop Application uses this library to provide an overview of the available songs.
+
+PDIL stands for \enquote{\textbf{P}iano \textbf{D}igital \textbf{I}nterface \textbf{L}ibrary}.
+
+A PDIL file follows the following format:
+
+\begin{verbatim}
+<Magic Bytes: 4 bytes> <Amount: 4 bytes> <Song-Infos>
+\end{verbatim}
+
+Unless otherwise specified, small-endian encoding is used.
+
+\begin{enumerate}
+	\item \textbf{Magic Bytes:} The format's Magic bytes are: \enquote{PDIL}. It is always written in big-endian format. It stands for \enquote{Piano Digital Interface Library}.
+	\item \textbf{Amount:} The amount of song infos is given as an unsigned 32-bit number. There are exactly as many song infos as given here.
+	\item \textbf{Song }Infos: All song infos are written here one after another. The amount of song infos is given in Amount. A single song info's format is given below.
+\end{enumerate}
+
+Every Song Info follows the following format:
+
+\begin{verbatim}
+<Name Length: 4 bytes> <Song Length: 8 bytes> <Name>
+\end{verbatim}
+
+\begin{enumerate}
+    \item \textbf{Name Length:} The Length of the song's name. This specifies the amount of bytes that Name takes up.
+    \item \textbf{Song Length:} The length of the given song in milliseconds. This number can also be calculated dynamically from a PIDI file if required.
+    \item \textbf{Name:} The filename of the PIDI file, that contains the data for the given song. It should be provided as a relative path from the folder that this PDIL file is in.
+\end{enumerate}
+
+
+\section{\ac{SPPP}-Protocoll} \label{appendix-sppp}
+
+This section outlines the protocol used for the communication between the UI and the microcontroller (MC), that plays the music. The UI and MC are also referred to as nodes in this specifcation.
+
+SPPP stands for \enquote{\textbf{S}elf-\textbf{P}laying-\textbf{P}iano Protocol}
+
+Any message between the server and client has the following format:
+
+\begin{verbatim}
+<Magic Bytes: 3 bytes> <Message-Type: 1 byte> [<Payload: n bytes>]
+\end{verbatim}
+
+Unless otherwise specified, small-endian encoding is used.
+
+\begin{enumerate}
+    \item \textbf{Magic Bytes:} The protocol's Magic bytes are: \enquote{SPP}. It is always written in big-endian format. It stands for \enquote{Self-Playing-Piano}.
+    \item \textbf{Message-Type:} The different types of messages that exist, are listed below under Payload. Each message type has its own 1 character signature, by which it is defined. Should a node not recognize the provided message type, it should ignore all following bytes until it reads the Magic Bytes again. Version upgrades should easily stay backward-compatible that way. The protocol uses the convention to use ASCII-encoded characters for the Message Type's identifier. Uppercase characters are used for messages sent by the UI and lowercase characters for messages sent by the MC.
+    \item \textbf{Payload:} How to interpret the payload depends on the Message-Type. The payload's format for each specified message type is given below. The title of each section provides the message's human-readable name and its 1-byte identifier.
+\end{enumerate}
+
+\paragraph{Ping: \enquote{P}}
+
+The Ping message type exists to check whether the MC is available. It can also be used by the UI to initially identify the port, on which the MC is connected.
+
+The initial message sent from the UI to the MC must be a Ping message.
+
+There is no payload in this message.
+
+\paragraph{Pong: \enquote{p}}
+
+This message should only be sent by the MC as a reply to the Ping message.
+
+The payload should be an unsigned 16-bit number representing the maximum amount of PidiCmds that may be sent in a Music or New-Music message.
+
+\paragraph{Success: \enquote{s}}
+
+The Successs message is only sent by the MC as a response to the UI. It indicates successfully receiving and executing the UI's last message.
+
+The UI should wait until receiving a Success message before sending the next message. When no Success message is received by the UI before the timeout is reached, the same message must be sent again.
+
+There is no payload in this message.
+
+\paragraph{Continue: \enquote{C}}
+
+The Continue message is sent by the UI to pause or continue playing the song.
+
+The payload should consist of a single byte. When the byte is 0, the song should be paused and continued otherwise.
+
+The MC must respond with a Success message.
+
+\paragraph{Volume: \enquote{V}}
+
+The Volume message is sent by the UI to set the factor by which the MC multiplies each note's velocity and thus its loudness.
+
+The payload should consist of a single 32-bit IEEE-754 floating point number.
+
+The MC must respond with a Success message.
+
+\paragraph{Speed: \enquote{S}}
+
+The Speed message is sent by the UI to set the factor by which the MC's timer is multiplied.
+
+The payload should consist of a single 32-bit IEEE-754 floating point number.
+
+The MC must respond with a Success message.
+
+\paragraph{New-Music: \enquote{N}}
+
+The New-Music message is meant for initiating the start of a song. It can be sent at any time by the UI.
+
+Subsequent chunks of the song should be sent via the Music message instead, however.
+
+The payload should be encoded as follows:
+
+\begin{verbatim}
+<PlayedKeys-Count: 1 byte> [<PlayedKey: 3 bytes>]+  <Commands-Count: 2 bytes> [<Command: 4 bytes>]+
+\end{verbatim}
+
+There should be exactly as many PlayedKeys as provided in PlayedKeys-Count and as many Commands as provided in the Commands-Count.
+
+Each PlayedKey is encoded as follows:
+
+\begin{verbatim}
+len:       8 bits
+octave:    4 bits (signed)
+key:       4 bits
+velocity:  4 bits
+<padding>: 4 bits
+\end{verbatim}
+
+where all its parameters have the same meaning as in the PIDI Format.
+
+New songs should be started as soon as the entire message was successfully received.
+
+The MC has to respond with a Success message.
+
+\paragraph{Music: \enquote{M}}
+
+The Music message exists for sending a list of commands for playing a Song to the MC. The Commands are given in the same format as in PIDI files. Instead of sending the potentially very big PIDI file all at once, it is sent in chunks, thus effectively implementing a method of streaming the music.
+
+A Music message may only be sent as a response to a Request message.
+
+The payload should be encoded as follows:
+
+\begin{verbatim}
+<Commands-Count: 2 bytes> [<Command: 4 bytes>]+
+\end{verbatim}
+
+There should be exactly as many Commands as provided in the Commands-Count.
+
+Upon receiving the message, the MC must respond with a Success message.
+
+\paragraph{Request: \enquote{r}}
+
+The Request message is used to tell the UI, that the MC is ready to receive the next chunk of the song.
+
+There is no payload in this message.
+
+The UI has to respond with a Music message. If the song is over, the Commands-Count in the Music message should be set to 0.

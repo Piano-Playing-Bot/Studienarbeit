@@ -5,20 +5,31 @@
 \nocite{*}
 
 Nachdem sowohl Hardware als auch Software konzipiert und zu großen Teilen umgestzt wurden, soll nun der entstandene Prototyp abgeschlossen werden.
-Dafür wird zuerst in Abschnitt \ref{ergebnisse-prototyp} ein Überblick über den gesamten Prototypen gegeben.
+Dafür wird zunächst ein Kurzüberblick über den gesamten Prototypen gegeben.
 In Abschnitt \ref{ergebnisse-tests} werden dann mehrere Tests und Messungen am Prototypen ausgeführt.
 Die Ergebnisse der Testungen zeigen einerseits die Fähigkeiten und Limitationen des Prototypen auf, können zu Teilen aber auch verwendet werden, um bestehende Probleme der Umsetzung zu lösen.
 Zuletzt wird in Abschnitt \ref{ergebnisse-limitationen} noch ein Überblick darüber gegeben, was beim Prototypen noch fehlt, um ihn zu einem vollständigen Produkt zu bringen. % @Note(Val): Der Satz klingt komisch, bitte überarbeiten
 Hier werden nicht nur Limitationen der Umsetzung, sondern auch der Konzeption betrachtet, welche in Fortführungen oder Replikationen dieser Arbeit beachtet werden sollten.
 
+% @TODO(Val): Die Beschreibung des Prototypen fühlt sich gerade noch sehr unzureichend an. Weiß aber auch nicht was man da alles schreiben kann, ohne sich zu sehr zu wiederholen.
+
+% @Note(Val): Ist dieser Abschnitt überhaupt relevant?
+Obwohl Software und Hardware getrennt von einander entwickelt wurden, war es aufgrund einer klar definierter Schnittstelle einfach, die beiden zusammen zu führen.
+Nichtsdestotrotz gab es bei der Zusammenführung einige Probleme, die in einem letzten Schritt der Implementierung ausgemerzt wurden.
+Speziell hat sich das Testen der Software des \ac{MC}s ohne verfügbare Hardware als schwierig erwiesen.
+Diese Tests mussten entsprechend in diesem letzten Schritt durchgeführt werden und alle dabei auftretenden Fehler mussten gefunden und beseitigt werden.
+Der in Kapitel \ref{umsetzungSW-Kommunikation-MC} vorgestellte Ansatz und Pseudocode war dabei richtig, jedoch gab es mehrere kleinere Bugs in den Details.
+Der in Anhang \ref{???} beigefügte Quellcode hat beim Testen mit der prototyp-haften Hardware keine Probleme mehr aufgezeigt.
+
+Der Prototyp besteht aus der Hardware, die von einer Desktop-Anwendung aus gesteuert werden kann, um Klaviertasten des Pianos anzuspielen.
+Aufgrund zeitlicher Limitationen war es nicht möglich, das gesamte Piano bespielbar zu gestalten.
+Nichtsdestotrotz ist der Prototyp mit diesem Ziel entwickelt worden und ist somit leicht erweiterbar, um das gesamte Klavier anzusteuern.
+Die Anwendung \ac{SAM} leidet ebenso an Defekten, vor allem im Bereich des \ac{UI} Designs und der Usability.
+Allerdings ist die Anwendung funktional und kann Musikstücke aus einem Katalog - der von Nutzer:innen mit \ac{MIDI}-Dateien erweitert werden kann - zum \ac{MC} schicken und abspielen lassen.
 
 
-\section{Prototyp} \label{ergebnisse-prototyp}
-
-% @TODO(Val): Prototyp vollständig beschreiben, also auch Hardware
-- Was wurde umgesetzt \newline
-- UX und UI Design (kurz) \newline
-- Messungen: \newline
+% @Decide(Val): Sollen Messungen hier oder bei den Tests hin? Dann sollte es vllt aber eher "Tests & Messungen" heißen
+- Messungen: (eher bei Tests?) \newline
 	- Kommunikationsgeschwindigkeit \newline
 	- FPS beim Arduino \newline
 	- FPS bei UI \newline
@@ -26,14 +37,6 @@ Hier werden nicht nur Limitationen der Umsetzung, sondern auch der Konzeption be
 	- Speicherverbrauch der UI \newline
 	- Code-Komplexität (ist das interessant?) \newline
 	- Lines of Code (i guess?) \newline
-- Limitationen \newline
-	- nur MIDI, kein Image→/Ton→PIDI \newline
-	- UI Design ist verbesserungsfähig \newline
-	- SPPP garantiert keine Datenkonsistenz \newline
-	- SPPP ist nicht auf mehrere Nutzer:innen ausgelegt \newline
-	- Mögliche Fehler in SPPP (siehe Github issue) \newline
-	- siehe Github issues \newline
-	- Es wurde nicht getestet, ob Flash-Speicher (der oftmals ausreichend groß ist) zum Speichern eines gesamten Songs ausgereicht hätte und welche Performanz-Probleme das mit sich gebracht hätte. Dann wäre Streaming unnötig. Wurde aber nicht getestet, ob das überhaupt eine viable Alternative wäre \newline
 
 
 
@@ -85,7 +88,7 @@ Dieses Ergebnis fließt in die Lautstärkeregelung der Software ein.
 
 \paragraph{T3 Min. Akkuratheit:}
 
-
+% @TODO(Val): muss noch geschrieben werden
 
 
 
@@ -97,6 +100,8 @@ Dieses Ergebnis fließt in die Lautstärkeregelung der Software ein.
 
 \section{Limitationen \& Erweiterungsmöglichkeiten} \label{ergebnisse-limitationen}
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
+
+% @TODO(Val): Überarbeiten, jetzt da die Limitationen hier im Ergebnisse Kapitel vorkommen
 
 Im Laufe der Konzeption traten mehrere Herausforderungen auf, welche aus Zeit- und Konsten- Gründen nicht weiter
 behandelt wurden.
@@ -124,3 +129,14 @@ weswegen wir Kosten an den Aktuatoren und der extra Stromversorgung für die Ped
 \paragraph{Wärmeabfuhr}
 Da die Hitzeentwicklung der Hubmagnete mit dem Dauer der Nutzung stark ansteigt, ist die Holzplatte bezogen auf die Wärmeabfuhr nicht geeignet.
 Besser würde sich hier eine Metallplatte anbieten, auf der die Aktuatoren verschraubt werden.
+
+
+% @TODO(Val): Müssen noch ausformuliert werden:
+Software Limitationen: \newline
+- nur MIDI, kein Image→/Ton→PIDI \newline
+- UI Design ist verbesserungsfähig \newline
+- SPPP garantiert keine Datenkonsistenz \newline
+- SPPP ist nicht auf mehrere Nutzer:innen ausgelegt \newline
+- Mögliche Fehler in SPPP (siehe Github issue) \newline
+- siehe Github issues \newline
+- Es wurde nicht getestet, ob Flash-Speicher (der oftmals ausreichend groß ist) zum Speichern eines gesamten Songs ausgereicht hätte und welche Performanz-Probleme das mit sich gebracht hätte. Dann wäre Streaming unnötig. Wurde aber nicht getestet, ob das überhaupt eine viable Alternative wäre \newline

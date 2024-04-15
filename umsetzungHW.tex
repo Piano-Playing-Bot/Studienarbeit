@@ -10,16 +10,23 @@
 
 % - Probleme, Schwierigkeiten, Änderungen während der Umsetzung
 
-Nachdem die Planungsphase abgeschlossen war, mussten die Überlegungen umgesetzt werden.
+Nachdem die Planungsphase abgeschlossen wurde, mussten die Überlegungen umgesetzt werden.
 Im Rahmen dieser Arbeit wurde ein Prototyp gebaut, mit dem Ziel möglichst viele der 88 Tasten anzuspielen.
 Aufgrund der begrenzten Zeit umfasst der in dieser Arbeit beschriebene Prototyp nur 8 spielbare Tasten,
 wäre allerdings ohne weitere Überlegungen auf alle restlichen erweiterbar.
-Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das Anspielen von 40 Tasten simulieren kann.
+Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das Anspielen von 40 Tasten simuliert werden kann.
 
 
 \section{Materialien}
 \chapterauthor{Jakob Kautz}
-\subsection{Liste der Bauteile}
+
+Die Bauteile, die für die Umsetzung des spezifizierten Schaltplans benötigt und besorgt wurden, sind in Tabelle \ref{table:Bauteile} aufgelistet. \newline
+Aufgrund der relativ hohen Kosten für eine Studienarbeit, wurde bei einer der betreuenden Firmen angefragt, ob diese die Kosten für das Projekt übernehmen würde.
+Damit dies möglich war, wurde ein Kostenvoranschlag gestellt, in welchem die benötigten Materialien mit den geschätzten Kosten aufgeführt wurden. \newline
+Dieser Kostenvoranschlag ist in Tabelle \ref{table:kosten} wiedergegeben.
+
+
+
 \begin{table}[htbp]
     \centering
     \begin{tabular}{|m{3.8cm}|m{1.7cm}|m{8cm}|}
@@ -53,14 +60,9 @@ Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das A
         Angelschnur (1m) & 88 & Verbindung Hubmagnet und Taste \\
         \hline
     \end{tabular}
-    \caption{Bauteile Übersicht}
+    \caption{Übersicht der Bauteile}
     \label{table:Bauteile}
 \end{table}
-
-\subsection{Kostenübernahme}
-Die vorher spezifizierte Hardware für den Schaltplan musste für die Erstellung des Prototypen offensichtlich besorgt werden.
-Aufgrund der relativ hohen Kosten für eine Studienarbeit, wurde bei einer der betreuenden Firmen angefragt, ob diese die Kosten für das Projekt übernehmen würde.
-Damit dies möglich war, wurde ein Kostenvoranschlag gestellt, in welchem die benötigten Materialien mit den geschätzten Kosten aufgeführt wurden.
 
 \begin{table}[htbp]
     \centering
@@ -99,48 +101,45 @@ Damit dies möglich war, wurde ein Kostenvoranschlag gestellt, in welchem die be
     \label{table:kosten}
 \end{table}
 
-Der Kostenanschlag erwies sich im Laufe des Projektes als (teils) unrealistisch. Dies lag insbesondere an der Anforderung
-der Firma. Die Schätzung der Kosten basierte auf Anbietern, bei welchen die Materialien möglichst günstig zu kaufen sind.
-Durch Firmenreglungen mussten diese allerdings alle bei Conrad oder Reichelt
-gekauft werden. Diese Anbieter verkaufen die Materialien für sehr viel mehr Geld.
-Hierbei ist allerdings zu erwähnen, dass die Kostenschätzung passend gewesen wäre, wenn die Anbieter frei wählbar wären.
+Der Kostenanschlag erwies sich im Laufe des Projektes als (teils) unrealistisch. Dies lag insbesondere an einer Anforderung der Firma.
+Die Schätzung der Kosten basierte auf Anbietern, bei welchen die Materialien möglichst günstig zu kaufen sind.
+Aufgrund von Firmenregelungen mussten diese allerdings alle bei Conrad\footnote{\url{https://www.conrad.de/}} oder Reichelt\footnote{\url{https://www.reichelt.de/}} gekauft werden.
+Diese Anbieter verkaufen die Materialien für sehr viel mehr Geld.
+Die Kostenschätzung wäre also passend gewesen, wenn die Anbieter frei wählbar gewesen wären.
+
 
 \section{Prototypenbau} \label{Prototyp}
 \chapterauthor{Olivier Stenzel}
-Ursprünglich sollte der Aufbau des in Kapitel \ref{subsec:schaltplan} spezifizierten Schaltplans via Steckbrettern und
-Jumperkabeln umgesetzt werden.
-Zu Beginn wurde dies auch so umgesetzt. Das Problem welches dadurch entstand, war, dass die gewählten Platinen den
-benötigten Stromfluss nicht aushalten.\newline
-Jeder Aktuator - also jede gedrückte Taste - zieht einen Strom von 0.7A. Um das Projekt möglichst sinnvoll umzusetzen,
-sollte der Aufbau mindestens 10 Tasten gleichzeitig drücken können, was bedeutet, dass der Aufbau mindestens 7.0A
-Stromfluss problemlos ausstehen muss.
+
+Ursprünglich sollte der Aufbau des in Kapitel \ref{subsec:schaltplan} spezifizierten Schaltplans mit Steckbrettern und Jumperkabeln umgesetzt werden.
+Während der Umsetzung ist allerdings aufgefallen, dass die gewählten Platinen den benötigten Stromfluss nicht aushalten. \newline
+Jeder aktivierter Aktuator - also jede gespielte Taste - zieht einen Strom von 0.7A.
+Wie in Anforderung A6 spezifiziert, sollen mindestens 10 Tasten gleichzeitig gespielt werden können, was bedeutet, dass der Aufbau mindestens 7.0A Stromfluss problemlos ausstehen muss.
 
 Aus diesem Grund wurde die gesamte Schaltung, die nach dem Schieberegister kommt, auf einer Lochrasterplatine fest gelötet.
 Hierfür wurde ein 3mm starker Draht für die Stromversorgung verwendet. \newline
-Es wurde bei den Kabeln und Steckplatinen damit gerechnet, dass maximal 20 Aktuatoren Gleichzeitig gespielt werden.
-Da ein Großteil der Stücke für eine:n einzelne:n Pianist:in geschrieben wurde, kann davon ausgegangen werden, dass
-generell nicht mehr als 10 Tasten Gleichzeitog gespielt werden müssen - tendenziell weniger. Die restlichen 10
+Es wurde bei den Kabeln und Steckplatinen damit gerechnet, dass maximal 20 Aktuatoren gleichzeitig gespielt werden.
+Da ein Großteil der Stücke für einzelne Pianist:innen geschrieben wurde, kann davon ausgegangen werden, dass
+generell nicht mehr als 10 Tasten gleichzeitig gespielt werden müssen - tendenziell weniger. Die restlichen 10
 Tastendrücke die dazu gerechnet wurden, sind lediglich eine Versicherung.
 
 \subsection{Verbindung Tasten und Aktuatoren} \label{subsec:VerbindungTastenAktuatoren}
-\chapterauthor{Olivier Stenzel}
 
-Wie in Kapitel \ref{subsec:konzeptionhw-ansteuerungskonzept} beschrieben wurde sich für ein Ziehen der Tasten entschieden.
-Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt. \newline
+Wie in Kapitel \ref{subsec:konzeptionhw-ansteuerungskonzept} beschrieben, wurde sich für ein Ziehen der Tasten entschieden.
+Dieses Ziehen wird technisch mittels Hubmagneten umgesetzt.
 
-Dieses Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt werden.
-Zusätzlich wird der Aufbau im Verlauf des Kapitels bezüglich Reibung und Genauigkeit beim Ansteuerns der Tasten weiter verbessert.
-\newline
+Dieses Kapitel beschreibt wie und wo die Hubmagnete am Klavier und den Tasten befestigt wurden.
+Zusätzlich wird der Aufbau im Verlauf des Kapitels bezüglich Reibung und Genauigkeit beim Ansteuern der Tasten weiter verbessert.
 
 Die Grundidee ist, mittels einer Schnur, oder Ähnlichem die Tasten mit den Hubmagneten zu verbidnen.
 Diese sollen dann an der Schnur, und somit an der Taste ziehen, welche wiederrum den Hammer an die Saite schlagen lässt.
 
-Die Schnur wird mittels eines waagerechten Loches in der Taste, an dieser zu befestigen.
+Die Schnur wird mittels eines waagerechten Loches in der Taste an dieser befestigt.
 Die Position an der Taste kann nicht frei gewählt werden.
-Es muss darauf geachtet werden, dass das Loch möglichst am Ende der Taste angebracht wird, um einen größeren Hebeleffekt zu erzeugen.
+Es muss nämlich darauf geachtet werden, dass das Loch möglichst am Ende der Taste angebracht wird, um einen größeren Hebeleffekt zu erzeugen.
 Zusätzlich ist es wichtig, dass das Tastenbrett unter der Taste an der Position gut durchzubohren ist.
-Eine optische nicht notwendige Eigenschaft wäre, dass das Seil beim spielen nicht von oben gesehen wird.
-In Abbildung \ref{img:Tastenbohrung} sieht man, wie die Montage umgesetzt wurde.
+Eine ästhetische und nicht notwendige Anforderung wäre, dass das Seil beim spielen nicht von oben gesehen wird.
+In Abbildung \ref{img:Tastenbohrung} wird gezeigt, wie die Montage umgesetzt wurde.
 Mit rot ist das gebohrte Loch gekennzeichnet, durch das ein Seil (in grün dargestellt) geführt wird.
 
 \begin{figure}[htbp]
@@ -151,8 +150,8 @@ Mit rot ist das gebohrte Loch gekennzeichnet, durch das ein Seil (in grün darge
 \end{figure}
 
 
-Anschließend wird jede Schnur einzelnd in den Fußraum geführt.
-Dafür werden senkrechte Löcher (rot in Abbildung \ref{fig:klaviatur}) in den Klaviaturbalken (bzw. Tastenbrett),
+Anschließend wird jede Schnur einzeln in den Fußraum geführt.
+Dafür werden senkrechte Löcher (rot in Abbildung \ref{fig:klaviatur}) in den Klaviaturbalken (bzw. das Tastenbrett),
 worauf die Tasten liegen, gebohrt.
 
 \begin{figure}[htbp]
@@ -175,9 +174,9 @@ Hierfür müssen folgende Aspekte berücksichtigt werden:
     \item Modularität
 \end{enumerate}
 
-Ein Hubmagnet hat die Maße 2,5 cm x 6 cm.
-Das Tastenbrett für 88 Tasten ist allerdings nur 140 cm breit, wodurch pro Tastenansteuerung nur ca. 1,6 cm zur Verfügung stehen.
-Bildet man zwei Hubmagnetreihen übereinander, hat jede Tastenansteuerung 3,20 cm Platz.
+Ein Hubmagnet hat die Maße 2,5cm x 6cm.
+Das Tastenbrett für 88 Tasten ist allerdings nur 140cm breit, wodurch pro Tastenansteuerung nur ca. 1,6cm zur Verfügung stehen.
+Wenn zwei Hubmagnetreihen übereinander gebildet werden, hat jede Tastenansteuerung 3,20cm Platz.
 
 Durch die 7mm Abstand ist eine Wärmeabfuhr über die Luft in geringem Ausmaß möglich.
 Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagneten verbunden.
@@ -187,7 +186,7 @@ Um also die Beinfreiheit der Pianist:in zu gewährleisten
 werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
 
 Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
-sondern auf zwei Pressspanplatten (ca. 70 cm x 25 cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden können(siehe Abb. \ref{fig:BefestigungHubmagnete}).
+sondern auf zwei Pressspanplatten (ca. 70cm x 25cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden können(siehe Abb. \ref{fig:BefestigungHubmagnete}).
 In diesem Prototyp wird die Verschraubung an das Klavier nicht genutzt, um an Flexibilität zu gewinnen.
 
 \begin{figure}[htbp]
@@ -228,7 +227,7 @@ Abbildung \ref{img:kUmlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschi
 Mit diesem intuitiven Aufbau funktioniert das Betätigen der Tasten nicht, da diese nicht weit genug heruntergezogen werden.
 Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben, müssen Umlenkungen eingebaut werden.
 Mittels dieser Umlenkung, die mit einem PVC-Rohr umgesetzt werden kann, werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
-Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd 1 cm erhöht, was dem Hub des Magneten entspricht..
+Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd 1cm erhöht, was dem Hub des Magneten entspricht..
 
 \begin{figure}[htbp]
     \centering
@@ -241,19 +240,19 @@ Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd
 \newpage
 Dies kann auch mathematisch bewiesen werden:
 \newline geg.:
-\newline Distanz zwischen dem Tastenbrett und der unteren Reihe Hubmagnete h = 27 cm
-\newline Distanz zwischen der unteren Frontplatte und dem zum Loch im Tastenbrett t = 18 cm
+\newline Distanz zwischen dem Tastenbrett und der unteren Reihe Hubmagnete h = 27cm
+\newline Distanz zwischen der unteren Frontplatte und dem zum Loch im Tastenbrett t = 18cm
 
 Gesucht ist die Differenz der Längen zwischen dem Tastenbrett und dem Hubmagneten, wenn die Tasten (nicht-)gedrückt sind.
 Diese ist in Zeichnung \nameref{img:kUmlenkung_locker} und \nameref{img:kUmlenkung_gezogen} rot gekennzeichnet.
 \newline $ht_{entspannt}$ beschreibt die Seillänge zum Tastenbrett im entspannten Zustand
-\newline $ht_{entspannt}$ = $\sqrt {h^{2} + t^{2}}$ = 32.45 cm
-\newline $ht_{gespannt}$ = $\sqrt {(h + 1)^{2} + t^{2}}$ = 33.29 cm
+\newline $ht_{entspannt}$ = $\sqrt {h^{2} + t^{2}}$ = 32.45cm
+\newline $ht_{gespannt}$ = $\sqrt {(h + 1)^{2} + t^{2}}$ = 33.29cm
 
 
 Die Differenz zwischen $ht1_{gespannt}$ und $ht1_{entspannt}$ (bzw. ht2) beschreibt die Tiefe,
-die eine Taste gedrückt werden kann, wenn der Hub des Magnetens 1 cm beträgt.
-\newline Diese beträgt also ohne Umlenkung nur 0.84 cm.
+die eine Taste gedrückt werden kann, wenn der Hub des Magnetens 1cm beträgt.
+\newline Diese beträgt also ohne Umlenkung nur 0.84cm.
 Mit der Umlenkung (siehe \nameref{img:mitumlenkung_locker})
 
 Um also die Intensität des Tastendrucks besser steuern zu können und um die Haltbarkeit des Materials zu verlängern,
@@ -302,8 +301,6 @@ Nach ausgiebigem Testen ist eindeutig, dass die Angelschnur die Anforderungen er
 Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein Leichtes.
 
 \subsection{Klangdämpfung der Aktuatoren}
-
-\chapterauthor{Olivier Stenzel}
 
 Die Hubmagnete machen beim Anschlagen laute \enquote{Klack} Geräusche, welche von der Melodie des Klaviers ablenken.
 Genauer handelt es sich um den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.

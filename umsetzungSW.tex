@@ -7,15 +7,19 @@
 \chapter{Umsetzung - Software} \label{umsetzungSW}
 \chapterauthor{Val Richter}
 
-% @TODO(Val): Einleitungssatz hier schreiben
+Nachdem alle Software-Komponenten spezifiziert waren, mussten diese umgesetzt werden.
+Die Entwicklung der Software lief größtenteils parallel zur Umsetzung des \enquote{Piano Player}s.
+Gegen Ende der Entwicklungsphase, als genug Teile der Schaltung standen, wurden die Ausgaben des \ac{MC}s beim Spielen von Musikstücken über LEDs getestet.
+In dieser Phase wurden viele Fehler gefunden und behoben, als müsste die Wichtigkeit von Tests nochmal unterstreicht werden.
 
+Bevor auf die Umsetzung der Komponenten speziell eingegangen wird, soll hier kurz die Wahl der Programmiersprache der Implementierung motiviert werden. \newline
 Es wurde sich entschieden, die gesamte Implementierung der Software in der Programmiersprache C\footnote{Streng genommen ist hier der ISO-Standard C99 gemeint \cite*[siehe ][]{iso.c99}. Der Einfachheit halber wird in dieser Arbeit jedoch nur von \enquote{C} gesprochen.} zu erstellen.
 Da der \ac{MC} vergleichsweise nur sehr begrenzten Speicherplatz zur Verfügung hat, ist die manuelle Speicherverwaltung von C hier sehr wünschenswert.
 Weiterhin ist die Sprache sehr simpel und elegant und erzwingt keinen Programmierstil, wie funktionale oder Objekt-orienterte Sprachen es oft tun.
 
 Zuletzt erleichtert die Verwendung von C die direkte Nutzung der Windows-API, da die Verwendung eines \ac{FFI}s ausbleibt.
 Das hat sich vor allem bei der Entwicklung der Kommunikation (siehe Abschnitt \ref{umsetzungSW-Kommunikation}) als sinnvoll erwiesen.
-Zuletzt ist auch noch amzumerken, dass ein substantiver Beweggrund für die Wahl von C in der hohen Erfahrung der Entwicklerin mit der Sprache lag. % @Note(Val): Sollte ich mich in der 3. Person so selbst benennen?
+Zuletzt ist auch noch amzumerken, dass ein substantiver Beweggrund für die Wahl von C in der hohen Erfahrung der Entwicklerin mit der Sprache lag.
 
 Folgend sollen besonders interessante Teile der Entwicklung noch genauer betrachtet werden.
 Abschnitt \ref{umsetzungSW-UI} geht dabei auf die Entwicklung von \ac{SAM} ein, während Abschnitt \ref{umsetzungSW-Kommunikation} Schwierigkeiten bei der Umsetzung der Kommunikation und Abschnitt \ref{umsetzungSW-MC} Herausforderungen bei der Programmierung des \ac{MC}s beschreibt.

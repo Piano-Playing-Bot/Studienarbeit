@@ -212,10 +212,10 @@ Für Testzwecke wurden allerdings bereits 40 von 88 LEDs mit der Schaltung verbu
 Das Hinzufügen der letzten 80 Aktuatoren ist trivial aber natürlich recht zeitaufwendig.
 
 \paragraph{Maximum gleichzeitig spielender Tasten}
-Die in dieser Arbeit verwendeten Hubmagnete benötigen jeweils etwa 0,4 Ampere.
+Die in dieser Arbeit verwendeten Hubmagnete benötigen jeweils etwa 0.7 Ampere.
 Das im Prototypen genutzte Netzteil ist auf 6 Ampere ausgelegt.
-Damit wäre es in diesem Aufbau möglich bis zu 15 Aktuatoren gleichzeitig anzusteuern.
-Da der Hauptanwendungsfall beim Spielen von Musik besteht, die für einzelne Pianos komponiert wurde, welche seltens mehr als 10 Tasten gleichzeitig bespielen müssen, sollte diese Limitation nicht oft in der Praxis relevant werden.
+Damit wäre es in diesem Aufbau möglich bis zu 8 Aktuatoren gleichzeitig anzusteuern.
+Da der Hauptanwendungsfall beim Spielen von Musik besteht, die für einzelne Pianos komponiert wurde, welche seltens mehr als 8 Tasten gleichzeitig bespielen müssen, sollte diese Limitation nicht oft in der Praxis relevant werden.
 Nichtsdestotrotz musste diese Limitation in der Software des \ac{MC}s umgesetzt werden (siehe Abschnitt \ref{vorgehenSW-MC}), um nicht zu viel Strom vom Netzteil zu ziehen.
 
 \paragraph{Pedalansteuerung}
@@ -232,6 +232,17 @@ Hier müsste entweder ein Algorithmus entwickelt werden, um anhand des \ac{PIDI}
 Da die Hitzeentwicklung der Hubmagnete mit der Dauer der Nutzung stark ansteigt, ist die Holzplatte bezogen auf die Wärmeabfuhr nicht geeignet.
 Besser würde sich hier eine Metallplatte anbieten, auf der die Aktuatoren verschraubt werden.
 Aus Kostengründen wurde das beim Prototypen hier noch nicht umgesetzt.
+
+\paragraph{Sicherheitskonzept}
+Es besteht bei der Konzeption deer Hardware kein Sicherheitskonzept. Die Wärmeabfuhr wurde für den Bereich Temperaturkontrolle
+bereits genannt. Dazu kommt, dass auch Bauteile wie die MOSFETS bei dauerhafter Nutzung erhitzen werden. Es wäre eine Möglichkeit,
+die Bauteile mit Kühlkörpern zu versehen um den Temperaturanstieg zu vermeiden.\newline
+Es besteht außerdem keine Konzeption von Gehäusen um die Hardware zu schützen. Somit kann diese beschädigt werden. Außerdem
+sind auch die Stromverbindungen zu dem externen Stromanschluss von 24V frei zugänglich. Hier sollten Gehäuse entworfen werden,
+die die Schaltung schützen und es sollte ein Konzept zur Isolation entworfen werden.\newline
+Auch der Stromschutz ist nicht gegeben, da technisch gesehen jedes Netzteil, egal mit welcher Stromstärke, angeschlossen
+werden könnte und es keine Mechanismen gibt um den Überstrom zu behandeln. Hier sollten Sicherungen oder Leistungsschalter
+eingebaut werden, um die Brandgefahr zu verringern.
 
 \paragraph{Eingabedateien}
 Die Desktop-Anwendung \ac{SAM} unterstüzt nur den Import von \ac{MIDI}-Dateien.

@@ -280,7 +280,7 @@ Dieses hat folgenden Aufbau:
 \begin{minipage}{0.4\textwidth}
 		\includegraphics [width=1\textwidth] {img/Schieberegister}
 		% @TODO(Val): Bildquelle
-		\caption{Schematik Schieberegister}
+		\caption{Schematik Schieberegisterﬁ[\cite*[siehe ][]{DatasheetSchieberegister74HC595}]}
 		\label{img:Shift}
 \end{minipage}
 \begin{minipage}{0.6\textwidth}
@@ -298,7 +298,7 @@ Dieses hat folgenden Aufbau:
 \end{minipage}
 \end{figure}
 Ein Nachteil des Schieberegisters besteht darin, dass Latenzen auftreten.
-\subsubsection{Aktuator-Matrix} %TODO(Jay): Quelle
+\subsubsection{Aktuator-Matrix[\cite*[siehe ][]{LEDMatrix}]}
 Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
 In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
 $$
@@ -339,7 +339,7 @@ Hierbei werden viele Pins benötigt, um die gesamte Matrix anzusteuern, was beso
 sein kann. Für dieses Projekt wird, wie oben aufgeführt, eine 8x8-Matrix benötigt. Es werden also 16 PWM-Fähige Pins
 benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über 6 von diesen Pins.
 
-\begin{figure}[htbp] %TODO(Jay): Quelle
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.6\textwidth]{img/LEDMatrixSchaltung}
 	\caption{Matrix ohne Multiplexing Schematisch}
@@ -355,6 +355,7 @@ benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über 6 von diese
 % \end{figure}
 % @TODO(Val): Das erste Bild ist zu klein, um erkenntlich zu sein und das zweite Bild ist überhaupt nicht verständlich (wo ist da zum Beispiel die Matrix)
 % @TODO(Val): Bildquelle
+% @Note(Jay): Schaltung ist selbst erstellt also brauchen wir keine Quelle, oder?
 
 %mit Multiplexer
 %Was ist ein Multiplexer, warum hilft er bei Martix wie sieht allg Schaltung aus?
@@ -365,11 +366,10 @@ Somit kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit ei
 Entsprechend werden weniger Pins benötigt, um die Matrix anzusteuern.
 Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und Latenzen durch die Schieberegister einher. % @Note(Val): Sind die Latenzen nur "möglich"? Müsste es nicht entweder klar Latenzen erhöhen oder nicht?
 Wobei die Latenzen der Schieberegister in diesem Projekt vernachlässigt werden können.
-\begin{figure}[htbp] %TODO(Jay): Quelle
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.75\textwidth]{img/matrixMuxSchaltung}
-	\caption{Aktuator-Matrix mit Multiplexing}
-	% @TODO(Val): Bildquelle
+	\caption{Aktuator-Matrix mit Multiplexing[\cite*[][]{LEDMatrix}]}
 	% @TODO(Val): Im Bild steht LED-Matrix, deswegen ist es komisch in der Bildüberschrift dann "Aktuator-Matrix" zu schreiben
 	\label{fig:AktMatrixMux}
 \end{figure}

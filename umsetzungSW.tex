@@ -7,15 +7,19 @@
 \chapter{Umsetzung - Software} \label{umsetzungSW}
 \chapterauthor{Val Richter}
 
-% @TODO(Val): Einleitungssatz hier schreiben
+Nachdem alle Software-Komponenten spezifiziert waren, mussten diese umgesetzt werden.
+Die Entwicklung der Software lief größtenteils parallel zur Umsetzung des \enquote{Piano Player}s.
+Gegen Ende der Entwicklungsphase, als genug Teile der Schaltung standen, wurden die Ausgaben des \ac{MC}s beim Spielen von Musikstücken über LEDs getestet.
+In dieser Phase wurden viele Fehler gefunden und behoben, als müsste die Wichtigkeit von Tests nochmal unterstreicht werden.
 
+Bevor auf die Umsetzung der Komponenten speziell eingegangen wird, soll hier kurz die Wahl der Programmiersprache der Implementierung motiviert werden. \newline
 Es wurde sich entschieden, die gesamte Implementierung der Software in der Programmiersprache C\footnote{Streng genommen ist hier der ISO-Standard C99 gemeint \cite*[siehe ][]{iso.c99}. Der Einfachheit halber wird in dieser Arbeit jedoch nur von \enquote{C} gesprochen.} zu erstellen.
 Da der \ac{MC} vergleichsweise nur sehr begrenzten Speicherplatz zur Verfügung hat, ist die manuelle Speicherverwaltung von C hier sehr wünschenswert.
 Weiterhin ist die Sprache sehr simpel und elegant und erzwingt keinen Programmierstil, wie funktionale oder Objekt-orienterte Sprachen es oft tun.
 
 Zuletzt erleichtert die Verwendung von C die direkte Nutzung der Windows-API, da die Verwendung eines \ac{FFI}s ausbleibt.
 Das hat sich vor allem bei der Entwicklung der Kommunikation (siehe Abschnitt \ref{umsetzungSW-Kommunikation}) als sinnvoll erwiesen.
-Zuletzt ist auch noch amzumerken, dass ein substantiver Beweggrund für die Wahl von C in der hohen Erfahrung der Entwicklerin mit der Sprache lag. % @Note(Val): Sollte ich mich in der 3. Person so selbst benennen?
+Zuletzt ist auch noch amzumerken, dass ein substantiver Beweggrund für die Wahl von C in der hohen Erfahrung der Entwicklerin mit der Sprache lag.
 
 Folgend sollen besonders interessante Teile der Entwicklung noch genauer betrachtet werden.
 Abschnitt \ref{umsetzungSW-UI} geht dabei auf die Entwicklung von \ac{SAM} ein, während Abschnitt \ref{umsetzungSW-Kommunikation} Schwierigkeiten bei der Umsetzung der Kommunikation und Abschnitt \ref{umsetzungSW-MC} Herausforderungen bei der Programmierung des \ac{MC}s beschreibt.
@@ -23,18 +27,59 @@ Abschnitt \ref{umsetzungSW-UI} geht dabei auf die Entwicklung von \ac{SAM} ein, 
 
 \section{Desktop Anwendung} \label{umsetzungSW-UI}
 
-% @TODO(Val): Umgang bei Midi-Dateien mit nicht-Piano Instrumenten erklären (vllt gehört das auch eher in die Konzeption)
+Die Umsetzung der Anwendung \ac{SAM} wurde anhand der in Kapitel \ref{vorgehenSW-UI-code} ausgearbeiteten Architektur erledigt.
+Die Anwendung konnte aufgrund der begrenzten Zeit leider nicht vollständig umgesetzt werden, ist für die beiden Haupt-Use-Cases aber funktionsfähig. \newline
+Das heißt, dass neue Musikstücke zum Katalog hinzugefügt werden können und alle Musikstücke im Katalog wiedergegeben werden können.
+Auch die Umsetzung der Kontroll-Elemente zum Pausieren/Fortfahren der Musik und der Anpassung der Lautstärke und Wiedergabegeschwindigkeit wurden implementiert und getestet.
+Zuletzt wurde sogar die Navigation im Musikstück umgesetzt.
 
-% @TODO(Val): Musikverwaltung über PDIL Format speichern (verweise auf appendix-pdil)
+Somit wurden alle Anforderungen an die Anwendung mit mittlerer oder hoher Priorität umgesetzt (Anforderungen A9-A12 in Tabelle \ref{table:anforderungen}).
+Nur die Anforderung A13 wurde nich umgesetzt, das heißt, dass Musikstücke im Katalog zurzeit nicht umbenannt oder entfernt werden können.
 
-% @TODO(Val): Was wurde alles nicht umgesetzt?
-% - umbenennen/löschen von Musikstücken
-% - Import von PIDI Dateien
-% - Import von anderen Dateitypen
-% - vollständiger MIDI support
+Weiterhin gibt es bei den erfüllten Anforderungen zu Teilen Limitationen, die hier kurz benannt werden sollen.
 
-% @TODO(Val): Umgang mit Parallelisierung erklären
+Die \ac{MIDI}-Integration, Anforderung A12, scheint noch einige Fehler aufzuweisen, auch wenn es bei den meiste getetesten \ac{MIDI}-Dateien die erwarteten \ac{PIDI}-Dateien ausgibt.
+Zum Testen der Integration, wurde ein Skript geschrieben, dass aus einer \ac{PIDI}-Datei wieder eine \ac{MIDI}-Datei erstellt.
+Da viele Metadaten absichtlich bei der Transformation ins \ac{PIDI}-Format verloren gehen, kann die neue \ac{MIDI}-Datei nicht einfach mit der alten \ac{MIDI}-Datei verglichen werden.
+Stattdessen werden bei dem Test beide Dateien abgespielt, um zu hören, ob es Unterschiede in den Dateien gibt.
+Diese Methode findet subtile Fehler zwar nicht zuverlässig, das ist aber kein größeres Problem, da subtile Fehler auch die Qualität beim Spielen über den \enquote{Piano Player} nur gering mindern.
 
+Bei der \ac{MIDI}-Integration wurde weiterhin eine Entscheidung getroffen, die den endgültigen Klang stark beeinflusst und weder unbedingt korrekt noch falsch ist. \newline
+\ac{MIDI}-Dateien können mehrere Instrumente in einem Stück haben, wobei keins der Instrumente ein Klavier sein muss. \newline
+Da es den geringsten Aufwand mit sich brachte und sinnvoll schien, wurde sich bei der Entwicklung entschieden, alle Instrumente zusammen zu nehmen und auf dem Klavier spielen zu lassen, unabhängig davon, ob es originell von einem Klavier gespielt wurde.
+Wenn aus einem Orchester-Stück nur der Teil des Pianos vom \enquote{Piano Player} gespielt werden sollte, ist das hier nicht möglich. \newline
+Eine mögliche Verbesserung würde hier den Nutzer:innen mehrere Möglichkeiten anbieten, um nur bestimmte oder alle Instrumente aus der \ac{MIDI}-Datei zu übernehmen.
+
+Außerdem ist noch zu erwähnen, dass das \ac{UI}-Design des Prototypen nicht besonders ansprechend ist.
+Die Abbildungen \ref{img:ui-start}, \ref{img:ui-dnd}, \ref{img:ui-rename}, \ref{img:ui-play} zeigen das derzeitige Aussehen von \ac{SAM}.
+
+\begin{figure}[htbp]
+	\centering
+	% @TODO(Val): Add screenshot
+	\caption{Screenshot der Startseite in \ac{SAM}}
+	\label{img:ui-start}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	% @TODO(Val): Add screenshot
+	\caption{Screenshot der Import-Seite in \ac{SAM}}
+	\label{img:ui-dnd}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	% @TODO(Val): Add screenshot
+	\caption{Screenshot der Umbenennung beim Import in \ac{SAM}}
+	\label{img:ui-rename}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	% @TODO(Val): Add screenshot
+	\caption{Screenshot der Wiedergabe in \ac{SAM}}
+	\label{img:ui-play}
+\end{figure}
 
 \section{Kommunikation} \label{umsetzungSW-Kommunikation}
 
@@ -80,26 +125,20 @@ Bei Nachrichten einer fixen Länge kann gewartet werden, bis alle Bytes der Nach
 Bei der \enquote{Music}- und \enquote{New-Music}-Nachricht dagegen, kann aufgrund geringen Speicherplatzes nicht unbedingt gewartet werden, bis die gesamte Nachricht eingetroffen ist.
 Eine alternative Lösung muss entsprechend \enquote{greedy} sein und die empfangenen Bytes der \lstinline|PidiCmd|s und \lstinline|PlayedKey|s direkt auslesen und in die zur Verfügung stehenden Buffer für die nächsten zu spielenden Noten einsortieren.
 Um dies umzusetzen, muss der derzeitige Zustand gespeichert werden, damit sich nach jeder Iteration gemerkt wird, ob die nächsten Bytes einen \lstinline|PidiCmd|, einen \lstinline|PlayedKey|, den Start einer neuen Nachricht oder etwas anderes darstellt.
-Alles in allem sieht die Logik für den Arduino dann dem in Listing \ref{code:Comm-MC} dargestellten Pseudocode sehr ähnlich. % @Note(Val): Sollte das Listing überhaupt hierhin? Vielleicht passt es besser in den Anhang oder vielleicht sollten wir es komplett streichen
-
-\begin{UnbrokenCodePage}[style=CStyle, caption={Kommunikation beim \ac{MC}}, label={code:Comm-MC}]
-// @TODO(Val): Vereinfachter Pseudocode des Arduino-Skripts hier
-\end{UnbrokenCodePage}
 
 
 \subsection{Kommunikation auf der Desktop Anwendung} \label{umsetzungSW-Kommunikation-UI}
-% @Note(Val): Documentaion of COM-Ports: https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/configuration-of-com-ports
 
 Es gibt keine standardisierte, Betribssystem-übergreifende API zum Empfangen und Senden von Daten über das \ac{UART} Protokoll.
 Da \ac{SAM} den Anforderungen nach nur auf Windows laufen muss, wird hier auf die Windows-spezifische API dafür zurückgegriffen.
 Um dies stattdessen cross-platform zu entwickeln, müsste eine eigene Abstraktion über die Platform-spezifischen APIs für die \ac{UART} Kommunikation gefunden werden.
 Fortführungen dieser Arbeit sollten den Aufwand dieser Erweiterung prüfung und ggf. umsetzen.
 
-Auf Windows müssen COM Ports für die Kommunikation verwendet werden.
-COM Ports sind serielle Ports auf Windows, die Daten über das \ac{UART} Protokoll empfangen und senden können.
-Zum Lesen oder Schreiben werden diese Ports als Dateien betrachtet und die Funktionen \enquote{ReadFile} und \enquote{WriteFile} verwendet.
-Alternativ bietet Windows auch asynchrone Versionen der Funktionen an, die den laufenden Thread nicht bis Abschluss der \ac{I/O}-Operation blockieren.
-Weitere Möglichkeiten zum Lesen, wie zum Beispiel eine Methode fürs Polling von Dateien, gibt es nicht. % @TODO(Val): Quelle
+Auf Windows werden sogenannte COM Ports für die serielle Kommunikation über das \ac{UART} Protokoll verwendet \cite[vgl.][]{mar.ConfigurationCOMPorts.22}.
+Zum Lesen oder Schreiben werden diese Ports als Dateien betrachtet und die Funktionen \enquote{ReadFile} und \enquote{WriteFile} verwendet \cites[vgl.][Kapitel 4]{den.SerialCommunications.10}[][S. 3]{bay.WindowsSerialPort.08}.
+Alternativ bietet Windows auch asynchrone Versionen der Funktionen an, die den laufenden Thread nicht bis Abschluss der \ac{I/O}-Operation blockieren \cite[vgl.][Kapitel 4]{den.SerialCommunications.10}. \newline
+Das Lesen von COM Ports kann entweder in einer Endlosschleife wiederholt werden, um alle eingehenden Bytes zu erhalten, oder es kann ein sogenannter \enquote{\ac{I/O} Completion Port} verwendet werden, um über das Eintreffen von Bytes von Windows informiert zu werden \cite[vgl.][]{ash.CompletionPortsWin32.22}.
+Da diese Funktionalität erst sehr spät in die Entwicklung gefunden wurde, wurde sie weder verwendet noch getestet.
 
 Die naive Implementierung des Lesens von \ac{SPPP}-Nachrichten bringt mit hier ebenfalls Probleme mit sich.
 Aufruf zum Lesen von $n$ Bytes blockt bis $n$ Bytes gelesen wurden oder bricht mit einer Fehlermeldung ab.
@@ -122,7 +161,7 @@ Da nur dieser Thread den Ring-Buffer befüllt und der restliche Code nur aus dem
 Aufgrund des geringeren Entwicklungsaufwands wurde sich für die Nutzung der blockierenden Version entschieden.
 
 Bei der naiven Implemenierung des Schreibens ist ebenfalls ein vorher unerwartetes Problem aufgetreten.
-Beim Schreiben kurzer Nachrichten hat ein einfacher Aufruf der \enquote{WriteFile} Funktion mi der enkodierten Nachricht ausgreicht.
+Beim Schreiben kurzer Nachrichten hat ein einfacher Aufruf der \enquote{WriteFile} Funktion mit der enkodierten Nachricht ausgreicht.
 Beim Senden längerer Nachrichten - speziell bei \enquote{Music} und \enquote{New-Music} Nachrichten - wurden dagegen nicht alle Bytes vom Arduino empfangen.
 Es gibt mehrere Stellen, an denen der Fehler auftreten könnte.
 Es könnte sein, dass der \ac{MC} nicht schnell geng mit dem Lesen der einkommenden Bytes ist und deshalb einige Bytes überschreibt und überspringt.

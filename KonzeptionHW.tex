@@ -197,9 +197,11 @@ Der Arduino UNO R3 verfügt zwar über mehr Ports, allerdings bringt dies keinen
 (siehe Kapitel \ref{output}).
 Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM}-Pins, die im Rahmen des Projekts genutzt werden können.
 
+
 \subsection{Pulsweitenmodulation}\label{PWM}
 \chapterauthor{Jakob Kautz}
-Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert.
+
+Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der \acf{PWM} erläutert.
 Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. benötigt.
 In diesen Fällen muss die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
 Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt.
@@ -213,32 +215,33 @@ Bei den \ac{PWM}-Ausgängen wird die Pulsweite - die Dauer der Einschaltzeit - d
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=13cm, height=8cm] {img/pulsweite}
-	% @Note(Val): Quelle des Bilds fehlt hier noch
+	% @TODO(Val): Quelle des Bilds fehlt hier noch
 	\caption{Pulsweitenmodulation}
 	\label{fig:pulsweite}
 \end{figure}
 
 Spezifischer ausgedrück passiert folgendes:
-Eine digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das zwischen Ein und Aus umgeschaltet wird - zu erzeugen.
-Dieses Ein-Aus-Muster kann Spannungen zwischen der vollen Versorgungsspannung und 0V simulieren.
-Dabei wird der Anteil der Zeit geändert, für den das Signal eingeschaltet ist relativ zur Zeit, in der das Signal ausgeschaltet ist.
+Eine digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das zwischen HIGH und LOW umgeschaltet wird - zu erzeugen.
+Dieses HIGH-LOW-Muster kann Spannungen zwischen der vollen Versorgungsspannung und 0V simulieren.
+Dabei wird der Anteil der Zeit geändert, für den das Signal auf HIGH geschaltet ist, relativ zur Zeit, in der das Signal auf LOW geschaltet ist.
 Um unterschiedliche, analoge Werte zu erhalten, wird die Pulsweite moduliert.
-Wenn dieses Ein-Aus-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit der LED steuert.
+Wenn dieses HIGH-LOW-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit der LED steuert. % @TODO(Val): Vcc als Abkürzung erst ausschreiben
 
 Auf den Arduino bezogen sieht die Umsetzung eines \ac{PWM} Signals wie folgt aus:
 Ein Taktsignal gelangt in die entsprechende Clock.
 Die Clock stellt den entsprechenden \ac{PWM}-Modus ein.
 Dabei werden zwei wichtige Werte gesetzt:
 Der erste bestimmt, wann das Signal von HIGH auf LOW umschaltet, während der zweite bestimmt, wann es zurückkommt.
-Das Verhältnis zwischen HIGH und LOW wird als Tastverhältnis bezeichnet und bestimmt die Helligkeit der LED bzw. die Stärke, mit der der Hubmagnet anschlägt.
-Je länger die Ausgabe im HIGH-Zustand bleibt, desto schneller erfolgt der Tastenanschlag.
+Das Verhältnis zwischen HIGH und LOW wird als Tastverhältnis bezeichnet und bestimmt die Helligkeit der LED bzw. die Stärke, mit der der Aktuator anschlägt.
+Je länger die Ausgabe im HIGH-Zustand bleibt, desto schneller erfolgt entsprechend der Tastenanschlag.
 
-Neben dem Tastverhältnis, also dem Verhältnis der Einschaltzeit zur Periodendauer, welches oft in Prozent ausgedrückt wird, ist auch die Auflösung ein variierbarer Parameter.
+Neben dem Tastverhältnis, welches oft in Prozent ausgedrückt wird, ist auch die Auflösung ein variierbarer Parameter.
 Die Auflösung bezieht sich auf die Anzahl der möglichen diskreten Werte, die das Signal annehmen kann.
 
 
 \subsection{Vermehrung der Ausgänge}\label{output}
 \chapterauthor{Jakob Kautz}
+
 Da ein Klavier über 88 Tasten verfügt, müssen 88 Aktuatoren angesteuert werden. Der gewählte Arduino hat keine 88 \ac{PWM}-Ports, daher
 müssen die Signale über eine Erweiterung der Ausgänge an die Motoren weitergegeben werden. Dafür gibt es mehrere Möglichkeiten,
 wobei in dieser Arbeit 2 im Detail betrachtet werden:

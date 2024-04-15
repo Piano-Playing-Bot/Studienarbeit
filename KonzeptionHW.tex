@@ -14,10 +14,13 @@
 
 Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
 Die Grundfragen, welche bei der Konstruktion auftreten, betreffen die Methode des Anspielens der Klaviertasten, die
-Signalübertragung des \ac{MC}s, sowie die Konzeption der Schaltung.
+Signalübertragung des \ac{MC}s, sowie die Konzeption der Schaltung. \newline
+Um die Tasten des Klaviers via Hardware bedienen zu können, werden Aktuatoren - also Bauteile, welche elektrische
+Impulse/Signale in mechanische (o.ä.) Bewegungen umsetzen - benötigt um die erforderliche Bewegung der Tasten zu ermöglichen.
+Zusätzlich müssen die Informationen wann welcher Aktuator betätigt werden muss an diese weitergegeben werden.
+Dafür wird eine Schnittstelle zwischen Anwendung (Software) und den Aktuatoren genutzt. Für diese Schnittstelle werden
+in der Arbeit verschiedene \ac{MC}s betrachtet.\newline
 Folgende Anforderungen muss die Konzeption abdecken:
-
-
 \begin{enumerate}
 	\item \textbf{Ansteuerungskonzept:} Die Tasten müssen möglichst präzise und effizient von der Hardware angespielt werden können; dies beinhaltet Positionierung der Aktuatoren und die Verbindung zwischen Hardware und Klavier
 	\item \textbf{Auswahl der Aktuatoren:} Die Aktuatoren müssen eine präzise Steuerung der Tasten ermöglichen, ohne dass Genauigkeit und Geschwindigkeit des Anspielens der Tasten vernachlässigt wird
@@ -157,7 +160,7 @@ wobei für diese Arbeit nur ein Arduino und ein Rasperry Pi\footnote{Genau genom
 
 %Arduino Intro
 	\paragraph{Arduino[\cite*[siehe: ]{ArduinoRobotics}]}
-	Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen. % @Note(Val): Ist ein Arduino wirklich eine "Platform"? Das klingt irgendwie komisch...
+	Ein Arduino unterstützt die Entwicklung von elektronischen Prototypen.
 	Er besteht aus einem \ac{MC}-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten verbunden werden kann.
 	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können.
 	\begin{figure}[htbp]
@@ -186,7 +189,6 @@ Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projek
 Es wurde sich letztendlich für den Arduino entschieden.
 Der Rasperry Pi stand vor allem aufgrund seiner höheren Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
 Allerdings ist er aufgrund seines Betriebssystems nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt.
-% @Note(Jay): Vllt noch genauer
 Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
 Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine präzise Ansteuerung von Aktuatoren benötigen. % @Note(Val): Simpel != Präzise. Nur weil der Arduino eine simple Hardware-Interaktion hat, heißt es nicht, dass er die Hardware präzise ansteueren könnte
 Zudem sollte hier keine besonders komplexe Ansteuerungslogik benötigt werden, weshalb ein Arduino genug Rechenleistung aufweisen sollte.
@@ -218,7 +220,6 @@ Bei den \ac{PWM}-Ausgängen wird die Pulsweite - die Dauer der Einschaltzeit - d
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=8cm] {img/pulsweite}
-	% @Note(Val): Quelle des Bilds fehlt hier noch
 	\caption{Pulsweitenmodulation [siehe: \cite*[siehe ][]{PWM}]}
 	\label{fig:pulsweite}
 \end{figure}
@@ -254,21 +255,16 @@ wobei in dieser Arbeit 2 im Detail betrachtet werden:
 	\item Aktuator-Matrix
 \end{enumerate}
 
-% @Note(Jay): Wäre es smart zu erwähnen was es noch für Möglichkeiten gibt? Also Arduino Mega muss ich soweiso erwähnen, aber z.B
-% @Note(Jay): Shields verbinden oder mehrere Arduinos nutzen weil das haben wir ja kurz überlegt und dann relativ schnell verworfen
-
 \subsubsection{Schieberegister}
 Ein Schieberegister[siehe: \cite*[siehe ][]{Schieberegister}] ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
-% @TODO(Val): Schieberegister sind bekannt und müssen nicht so detailliert eklärt werden
-Ein Schieberegister ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
 Datenbits verwendet wird.\newline
-Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell in das Register eingegeben und dann
-sequenziell aus dem Register ausgegeben werden können.
-Dies geschieht durch die Verwendung von Taktimpulsen, die das Verschieben der Bits steuern.\newline
-Schieberegister bestehen aus einer Reihe von Flip-Flops.
-Ein Flip-Flop kann als ein einfacher Speicher betrachtet werden, der binäre Informationen speichert und je nach
-Eingangssignal den Zustand 1, 0, oder einen \enquote{Flip}-Zustand annimmt.
-Diese FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolge speichern und weitergeben können.
+%Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell in das Register eingegeben und dann
+%sequenziell aus dem Register ausgegeben werden können.
+%Dies geschieht durch die Verwendung von Taktimpulsen, die das Verschieben der Bits steuern.\newline
+%Schieberegister bestehen aus einer Reihe von Flip-Flops.
+%Ein Flip-Flop kann als ein einfacher Speicher betrachtet werden, der binäre Informationen speichert und je nach
+%Eingangssignal den Zustand 1, 0, oder einen \enquote{Flip}-Zustand annimmt.
+%Diese FlipFlops sind so verbunden, dass sie Daten in einer bestimmten Reihenfolge speichern und weitergeben können.
 
 Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des Arduinos agesteuert werden, umzusetzen,
 können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
@@ -297,7 +293,7 @@ Dieses hat folgenden Aufbau:
 \end{minipage}
 \end{figure}
 Ein Nachteil des Schieberegisters besteht darin, dass Latenzen auftreten.
-\subsubsection{Aktuator-Matrix[\cite*[siehe ][]{LEDMatrix}]}
+\subsubsection{Aktuator-Matrix\cite*[siehe ][]{LEDMatrix}}
 Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
 In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
 $$
@@ -321,10 +317,10 @@ entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
 Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM}-Signalen erscheint es den Betrachter:nnen, als ob alle LEDs
 gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
 
-\begin{figure}[htbp] %TODO(Jay): Quelle
+\begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.45\textwidth]{img/LED-Matrix}
-	\caption{Beispielhafte Darstellung einer LED-Matrix}
+	\caption{Beispielhafte Darstellung einer LED-Matrix \cite*[siehe ][]{LEDMatrixTreiberplatine}}
 	\label{img:LED-Matrix}
 \end{figure}
 
@@ -350,10 +346,11 @@ Die eigentliche Matrix-Schaltung ist auf den Breadboards zu sehen. Dort ist darg
 % @Note(Jay): Schaltung ist selbst erstellt also brauchen wir keine Quelle, oder?
 
 %mit Multiplexer
-%Was ist ein Multiplexer, warum hilft er bei Martix wie sieht allg Schaltung aus?
 \paragraph{Matrix mit Multiplexing}
 Ein Multiplexer (bzw. ein Demultiplexer) ermöglicht das Kombinieren mehrerer Signale zu einem bzw. dem Trennen eines einzelnen Signals zu mehreren, unterschiedlichen Signalen.
-Bei einer LED-Matrix erfolgt das Prinzip durch die Verwendung von Schieberegistern und Transistoren. % @TODO(Val): Sicher, dass das richtig ist?
+Bei einer LED-Matrix erfolgt das Prinzip durch die Verwendung von Schieberegistern und Transistoren.
+% @TODO(Val): Sicher, dass das richtig ist?
+% @Answer(Jay): Ja. Also es geht bestimmt auch anders, aber fürs selber bauen der Schaltung hab ich dazu vernünftige Quellen gefunden. Ich könnte sonst schreiben "kann über Schieberegister..."
 Somit kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit einem GPIO-Pin des \ac{MC}s elimniert werden.
 Entsprechend werden weniger Pins benötigt, um die Matrix anzusteuern.
 Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und Latenzen durch die Schieberegister einher. % @Note(Val): Sind die Latenzen nur "möglich"? Müsste es nicht entweder klar Latenzen erhöhen oder nicht?
@@ -439,7 +436,7 @@ Er besteht aus einem von Statoren erzeugten Magnetfeld und einem sich drehenden 
 Die in Abbildung \ref{fig:Elektromagnet} dargestellen Nummern markieren die folgenden Komponenten:
 
 \begin{enumerate}
-	\item Dauermagnet % @Question(Jay): Ab wann ist etwas direkt zitiert? Weil in der Quelle steht es so: Um einen Elektromotor bauen zu können, wird zunächst ein Dauermagnet (1) in einer bestimmten Bauform benötigt. Zwischen den Polen des Dauermagneten ist ein drehbares Eisenteil (2) gelagert, um das eine Spule aus isoliertem Kupferdraht (3) gewickelt ist.
+	\item Dauermagnet
 	\item Drehbares Eisenteil
 	\item Spule
 \end{enumerate}
@@ -661,7 +658,6 @@ Für insgesamt 4 Hubmagnete - wobei in dem Schema Motoren gewählt wurden, da da
 \end{figure}
 
 Die gesamte Schaltung mit allen 88 Hubmagneten wird wie folgt aussehen:
-% @TODO(Val): Wäre es nicht besser das Ergebnis erst am Ende des Unterkapitels zu zeigen?
 
 \begin{figure}[htbp]
 	\centering

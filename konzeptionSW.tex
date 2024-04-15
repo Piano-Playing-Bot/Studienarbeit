@@ -611,16 +611,24 @@ Eine Endlosschleife dagegen erzeugt keinen Codepath, da sie nicht terminiert.
 Solche Konstrukte werden stattdessen als \enquote{Codecycle} bezeichnet \cite[vgl.][]{fle.TaxonomyComputationShapes.23}.
 Nachdem die Definitionen nun geklärt wurden, kann die Analyse für die Architektur beginnen.
 
+Eine Anwendung kann dabei durchaus aus mehreren Codecyclen bestehen.
+Zwei Codecycle sind in der Regel relativ unabhängig und sollten zumindest nicht seriell abhängig von einander sein \cite[vgl.][]{fle.TaxonomyComputationShapes.23}.
+Es empfiehlt sich oft zwei Codecycle in seperaten Threads oder Prozessen ausführen zu lassen, dies ist aber nicht notwendig.
+Die Konzeption des \ac{MC}s sieht beispielsweise zwei Codecycles vor - einen zum Lesen und Schreiben von \ac{SPPP}-Nachrichten und einen zum Wiedergeben der zurzeit laufenden Musik - die nach einander ausgeführt werden (siehe Abschnitt \ref{vorgehenSW-MC}). \newline
+Da \ac{SAM} auf modernen Desktops laufen soll, die in der Regel über mehrere Kerne verfügen und von Parallelisierung eher profitieren, sollen unterschiedliche Codecycles hier immer in seperaten Threads ausgeführt werden.
+
 Nach vermutlich notwendigen Initialisierungen, muss die Anwendung beim Starten in einen Codecycle zum Darstellen der \ac{UI} übergehen.
 Dieser Codecycle soll fortgehend auch der \enquote{UI-Codecycle} genannt werden, da er sich um das Rendern der \ac{UI} kümmert.
 
 Zu Beginn der Anwendung soll der vorhandene Musikkatalog angezeigt werden.
 Da der Katalog permament gespeichert werden soll, muss er in einer oder mehreren Dateien gespeichert werden.
 Der Katalog besteht aus einer Liste von Musikstücken.
-Jedes Musikstück besteht dabei aus einem Namen sowie den Daten, die zum Abspielen des Stücks benötigt werden (siehe Abschnitt \ref{vorgehenSW-PIDI}). \newline
+Jedes Musikstück besteht dabei aus einem Namen sowie der Liste von \lstinline|PidiCmd|s, die zum Abspielen des Stücks benötigt werden (siehe Abschnitt \ref{vorgehenSW-PIDI}). \newline
 Zum Darstellen des Katalogs werden dabei nur die Namen der Musikstücke benötigt.
 Die weiteren Daten werden erst beim Abspielen der Musik gebraucht.
-Entsprechend ist es sinnvoll, die Namen der Musikstücke in einer seperaten Liste (und der Einfachheit halber somit auch einer eigenen Datei) zu speichern.
+Entsprechend ist es sinnvoll, die Namen der Musikstücke in einer seperaten Liste (und der Einfachheit halber somit auch einer eigenen Datei) zu speichern. \newline
+Dieses Format des Katalogs ist in Anhang \ref{appendix-pdil} genauer spezifiziert.
+Hier soll darauf aber nicht eingegangen werden, da es nicht weiter interessant ist.
 
 Um die Startseite der \ac{UI} anzeigen zu können, muss zuerst also zuerst der Katalog vom Dateisystem ausgelesen werden.
 Es gibt nun zwei Möglichkeiten zur Anordnung dieses Codepaths zum Auslesen des Katalogs:
@@ -654,8 +662,7 @@ Die Suche dagegen soll nicht parallel geschaltet werden.
 Für das Hinzufügen eines Musikstücks soll, wie in Abschnitt \ref{vorgehenSW-UI-design} erwähnt, eine zweite Seite dargestellt werden.
 Dies benötigt entsprechend eine weitere Fallunterscheidung beim UI-Codecycle.
 Nachdem die Nutzer:innen eine Datei zum Hinzufügen gewählt haben, muss diese zum Katalog hinzugefügt werden.
-Wie in Abschnitt \ref{vorgehenSW-PIDI} aufgezeigt wird, soll ein eigenes Format zum Abspielen von Musikstücken verwendet werden.
-Entsprechend muss es eine Transformation der eingegebenen Daten zum hier verwendeten Format geben.
+Da zum Abspielen der Musikstücke das \ac{PIDI}-Format verwendet wird (siehe Abschnitt \ref{vorgehenSW-PIDI}), muss es eine Transformation der eingegebenen Daten zum hier verwendeten Format geben.
 Je nach Länge des Musikstücks, muss davon ausgegangen werden, dass diese Transformation relativ lange brauchen kann.
 Es ist entsprechend sinnvoll, diese Transformation zu machen, bevor das Musikstück in den Katalog eingefügt wird.
 Dann kann ein Musikstück aus dem Katalog jederzeit sofort wiedergegeben werden.
@@ -670,7 +677,53 @@ Stattdessen sollte das im UI-Codecycle getan werden, nachdem die Nutzer:innen de
 Andernfalls sollte das Ergebnis des Codepaths vom UI-Codecycle wieder verworfen werden.
 
 Zuletzt gilt es noch die 5. Interaktion der Nutzer:innen zu betrachten: Die Wiedergabe eines Musikstücks. \newline
+Wie in Abschnitt \ref{vorgehenSW-SPPP} spezifiziert, wird das \ac{SPPP}-Protokoll verwendet, um die Musikdaten an den \ac{MC} zu schicken.
+Da ein Musikstück nicht komplett auf einmal zum \ac{MC} geschickt werden kann, wird eine dauerhafte Kommunikation benötigt.
+Es muss regelmäßig überprüft werden, ob Nachrichten vom \ac{MC} eingetroffen sind.
+Auch müssen zu sendene Nachrichten womöglich warten, bis eine \enquote{Success}-Nachricht vom \ac{MC} empfangen wurde.
+Diese Aufgaben sind unabhängig der Darstellung der \ac{UI} auszuführen und stellen deshalb einen eigenen Codecycle dar.
 
+Es gibt zwar Abhängigkeiten zwischen diesen beiden Codecycles, allerdings sind diese nicht seriell, da die \ac{UI} nicht auf das Ergebnis der Kommuniktion mit dem \ac{MC} warten soll, bevor der nächste Frame gezeichnet werden soll. \newline
+Die Abhängigkeiten, die existeren, bestehen in der Kontrolle der Wiedergabe.
+So sollen die Nutzer:innen in der Lage sein, die Wiedergabe zu pausieren und fortzufahren, die Lautstärke und Wiedergabegeschwindigkeit anzupassen, zu einem anderen Zeitpunkt im spielenden Musikstück zu springen und ein anderes Musikstück zu starten. \newline
+All diese Wünsche der Nutzer:innen müssen vom UI-Codecycle an den Wiedergabe-Codecycle weitergegeben werden.
 
+Es soll nun betrachtet werden, wie der Wiedergabe-Codecycle genau aussehen sollte. \newline
+Zu Beginn ist noch nicht klar, an welchem Port der \ac{MC} zu finden ist.
+Solange dieser Port also unbekannt ist, sollte jeder verfügbare Port eine \enquote{Ping}-Nachricht zugesendet bekommen.
+Falls ein Port mit einer \enquote{Pong}-Nachricht antwortet, wurde der \ac{MC} gefunden.
+Sollten zu einem späteren Zeitpunkt keine Antworten über den Port mehr erhalten werden, sollte davon ausgegangen werden, dass der \ac{MC} nicht mehr verbunden ist und womöglich an einem anderen Port angeschlossen wird.
+Entsprechend soll in diesem Fall zum Suchen des Ports zurückgekehrt werden.
 
-% @TODO(Val): SADT Diaram am Ende zeigen
+Wenn der Port gefunden wurde, müssen zwei Sachen im Wiedergabe-Codecycle passieren:
+\begin{enumerate}
+    \item Lesen von potenziell eingegangenen Nachrichten
+    \item Potenzielles Schreiben ausstehender Nachrichten
+\end{enumerate}
+
+Beim Lesen von Nachrichten gibt es vier Möglichkeiten, was gelsen werden kann:
+\begin{enumerate}
+    \item Keine Nachricht ist eingetroffen
+    \item \enquote{Pong}-Nachricht
+    \item \enquote{Success}-Nachricht
+    \item \enquote{Request}-Nachricht
+\end{enumerate}
+
+Bei Fall 2 und 3 kann die zuletzt gesendete Nachricht als empfangen vermerkt werden, damit die nächste Nachricht verschickt werden kann.
+Bei Fall 4 dagegen müssen die nächsten \lstinline|PidiCmd|s des Musikstücks versandt werden.
+Allerdings muss hier darauf geachtet werden, dass die Nachricht nicht sofort geschickt werden darf, wenn eine andere Nachricht noch auf ihre Empfangsbestätigung wartet.
+Es wird also eine Warteschlange zum Senden von Nachrichten benötigt, in die auch die Antwort auf die \enquote{Request}-Nachricht einsortiert werden kann.
+
+Zum Schreiben ausstehender Nachrichten muss einfach das erste Element dieser Warteschlange genommen un abgeschickt werden.
+Es muss auch vermerkt werden, dass die Nachricht gerade verschickt ist, damit keine weiteren Nachrichten versandt werden, bis eine Empfangsbestätigung eingegangen ist.
+
+Es steht nun nur noch offen, wie die Eingaben der Nutzer:innen zum Senden einer Nachricht beihelfen.
+Der UI-Codecycle verarbeitet die Nutzer-Eingaben und muss dem Wiedergabe-Codecycle mitteilen, dass eine neue Nachricht zu senden ist.
+Dafür muss diese neue Nachricht ans Ende der Warteschlange eingefügt werden.
+
+Zuletzt kann die Verbindung der beiden Codecycle auch noch erweitert werden.
+So ist es beispielsweise sinnvoll anzuzeigen, ob eine Verbindung zum \ac{MC} gefunden wurde.
+Auch kann der Fortschritt auf der Wiedergabeleiste relativ genau angegeben werden.
+Auch kann dem UI-Codecycle über z.B. geteilte Variablen mitgeteilt werden, wann eine Nachricht erfolgreich vom \ac{MC} empfangen wurde, um die \ac{UI} mit dem Stand des \ac{MC}s synchron zu halten.
+
+% @TODO(Val): SADT Diagramme einfügen

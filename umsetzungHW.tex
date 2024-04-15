@@ -26,7 +26,7 @@ Zusätzlich wurde die Elektronik mit weiteren 32 LEDs so erweitert, sodass das A
         \hline
         \textbf{Bauteil} &  \textbf{Anzahl} & \textbf{Begründung}  \\
         \hline
-        Hubmagnete & 88 & jede Taste braucht einen Hubmagneten um angespielt zu werden \\ % @Note(Val): Erwähnen, dass nur 8 der Hubmagnete benötigt wurden
+        Hubmagnete & 88 & jede Taste braucht einen Hubmagneten um angespielt zu werden (Für den Prototypen werden nur 8 verwendet)
         \hline
         Stromversorgung & 1 & Externe Stromversorgung für die Aktuatoren, da diese mehr als die 5V Vcc des Arduinos brauchen \\
         \hline
@@ -114,8 +114,6 @@ benötigten Stromfluss nicht aushalten.\newline
 Jeder Aktuator - also jede gedrückte Taste - zieht einen Strom von 0.7A. Um das Projekt möglichst sinnvoll umzusetzen,
 sollte der Aufbau mindestens 10 Tasten gleichzeitig drücken können, was bedeutet, dass der Aufbau mindestens 7.0A
 Stromfluss problemlos ausstehen muss.
-% @TODO(Jay): Wie viel halten Platinen aus? Warum konnten wir ein paar Jumper-Kabel nutzen? Wann brauchten wir die dickeren? Tabelle für welche Kabeldicke für welchen Stromfluss
-% @Note(Val): Wann haben wir entschieden, dass min. 10 Tasten gleichzeitig spielbar sein sollen? Wenn wir das als Anforderung haben wollen, muss das im Anforderungs-Kapitel auch erwähnt werden
 
 Aus diesem Grund wurde die gesamte Schaltung, die nach dem Schieberegister kommt, auf einer Lochrasterplatine fest gelötet.
 Hierfür wurde ein 3mm starker Draht für die Stromversorgung verwendet. \newline
@@ -123,7 +121,6 @@ Es wurde bei den Kabeln und Steckplatinen damit gerechnet, dass maximal 20 Aktua
 Da ein Großteil der Stücke für eine:n einzelne:n Pianist:in geschrieben wurde, kann davon ausgegangen werden, dass
 generell nicht mehr als 10 Tasten Gleichzeitog gespielt werden müssen - tendenziell weniger. Die restlichen 10
 Tastendrücke die dazu gerechnet wurden, sind lediglich eine Versicherung.
-% @Note(Jay): Ich muss wirklich mal die Rechnung durchgehen wie viele wir maximal ansteuern können ohne etwas abzubrennen ich glaub es könnten mehr als 20 sein.
 
 \subsection{Verbindung Tasten und Aktuatoren} \label{subsec:VerbindungTastenAktuatoren}
 \chapterauthor{Olivier Stenzel}
@@ -362,9 +359,32 @@ Gespannt werden die Seile durch eine Schrauben-Mutter Konstruktion (siehe Abschn
 Der Prototyp des selbstspielenden Klaviers zeigt erfolgreiche Ergebnisse in mehreren Bereichen. Die Implementierung von
 8 Tasten funktioniert zuverlässig, wodurch das Klavier in der Lage ist, Töne korrekt wiederzugeben. Seitens der
 fertig gelöteten Schaltung könnten 40 Tasten angespielt werden, allerdings haben die Tests sich auf 8 beschränkt.
-Alle in Kapitel \ref{Zielstellung} definierten Anforderungen konnten von dem Prototypen erfüllt werden. % @TODO(Val): "Alle Anforderungen" ist nicht richtig, weil wir ja nur 8 Tasten haben. Das wird am Ende ja nochmal genau aufgeführt, was alles erfüllt wurde.
+Ein Großteil der in Kapitel \ref{Zielstellung} definierten Anforderungen konnten von dem Prototypen erfüllt werden.
 Zusätzlich erweist sich die Klangdämpfung, dort wo sie eingesetzt wird, als effektiv. \newline
 Ein großer Teil, der fehlt, sind Sicherheitskonzepte, weshalb es nicht unbeaufsichtigt betrieben
 werden sollte, sowie die Fertigstellung der Schaltung für die zweite Hälfte der Tasten.
 
+Für die mögliche Fertigstellung des Prototypen, muss der Zeitaufwand betrachtet werden.
+Von der Umsetzung her ist nur die hälfte des Klaviers anspielbar. Das bedeutet, dass folgendes noch zu tun ist:
+\begin{itemize}
+    \item Löten der Schaltung für 48 Solenoids
+    \item Löten der Anschlussblöcke: 76 Stück
+    \item Abisulierung der Hubmagnete für 48 Stück
+    \item Fertigstellung des Brettes für die Befästigung der Hubmagnete (Bohren) und die Befästigung
+    \item Verbindung zwischen Hubmagneten und Tasten für 76 Stück
+    \item Klangdämpfung für 86 Hubmagneten
+\end{itemize}
+
+Die Zeiteinschätzung kann gut auf den bisherigen Arbeiten basieren. Das Löten und Abisulieren der Schaltung für
+40 Hubmagnete, benötigte etwa 40 Stunden. Die Befästigung der Magnete und die Verbindung mit den Tasten wird auf
+mindestens zwei Stunden Arbeit herauslaufen.
+Zusätzlich wird mindestens eine Stunde (tendenziell eher 2) für die Klangdämpfung benötigt werden.
+
+Damit beläuft sich die Fertigstellung des Prototypen auf mindestens weitere 44 Stunden. Dazu kommt, dass der Prototyp
+noch ausführlich getestet werden muss und gegebenenfalls Fehler die beim Löten o.ä. aufkommen behoben werden müssen.
+
+Der Prototyp wird aus diesem Grund nicht komplett fertiggestellt.
 % @TODO(Val): Hier oder bei den Limitationen später genauer beschreiben wie ein Sicherheitskonzept aussehen könnte und warum es gebraucht wird
+% @Note(Jay): Steht grad in Limitationen aber wir könnens gerne hier hin ziehen damit hier etwas mehr steht
+
+

@@ -233,6 +233,17 @@ Da die Hitzeentwicklung der Hubmagnete mit der Dauer der Nutzung stark ansteigt,
 Besser würde sich hier eine Metallplatte anbieten, auf der die Aktuatoren verschraubt werden.
 Aus Kostengründen wurde das beim Prototypen hier noch nicht umgesetzt.
 
+\paragraph{Sicherheitskonzept}
+Es besteht bei der Konzeption deer Hardware kein Sicherheitskonzept. Die Wärmeabfuhr wurde für den Bereich Temperaturkontrolle
+bereits genannt. Dazu kommt, dass auch Bauteile wie die MOSFETS bei dauerhafter Nutzung erhitzen werden. Es wäre eine Möglichkeit,
+die Bauteile mit Kühlkörpern zu versehen um den Temperaturanstieg zu vermeiden.\newline
+Es besteht außerdem keine Konzeption von Gehäusen um die Hardware zu schützen. Somit kann diese beschädigt werden. Außerdem
+sind auch die Stromverbindungen zu dem externen Stromanschluss von 24V frei zugänglich. Hier sollten Gehäuse entworfen werden,
+die die Schaltung schützen und es sollte ein Konzept zur Isolation entworfen werden.\newline
+Auch der Stromschutz ist nicht gegeben, da technisch gesehen jedes Netzteil, egal mit welcher Stromstärke, angeschlossen
+werden könnte und es keine Mechanismen gibt um den Überstrom zu behandeln. Hier sollten Sicherungen oder Leistungsschalter
+eingebaut werden, um die Brandgefahr zu verringern.
+
 \paragraph{Eingabedateien}
 Die Desktop-Anwendung \ac{SAM} unterstüzt nur den Import von \ac{MIDI}-Dateien.
 Die Untertützung weiterer Formate wäre hier wünschenswert.

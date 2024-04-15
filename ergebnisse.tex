@@ -7,26 +7,21 @@ Nachdem sowohl Hardware als auch Software konzipiert und zu großen Teilen umges
 Dafür wird zunächst ein Kurzüberblick über den gesamten Prototypen gegeben.
 In Abschnitt \ref{ergebnisse-tests} werden dann mehrere Tests und Messungen am Prototypen ausgeführt.
 Die Ergebnisse der Tests zeigen einerseits die Fähigkeiten und Limitationen des Prototypen auf, können zu Teilen aber auch verwendet werden, um bestehende Probleme der Umsetzung zu lösen.
-Zuletzt wird in Abschnitt \ref{ergebnisse-limitationen} noch ein Überblick darüber gegeben, was beim Prototypen noch fehlt, um ihn zu einem vollständigen Produkt zu bringen. % @Note(Val): Der Satz klingt komisch, bitte überarbeiten
+Zuletzt wird in Abschnitt \ref{ergebnisse-limitationen} noch ein Überblick darüber gegeben, was beim Prototypen noch fehlt, um ihn zu einem vollständigen Produkt zu bringen.
 Hier werden nicht nur Limitationen der Umsetzung, sondern auch der Konzeption betrachtet, welche in Fortführungen oder Replikationen dieser Arbeit beachtet werden sollten.
 
-% @TODO(Val): Die Beschreibung des Prototypen fühlt sich gerade noch sehr unzureichend an. Weiß aber auch nicht was man da alles schreiben kann, ohne sich zu sehr zu wiederholen.
-% @Answer(Jay): Hab die Aufwandschätzung hinzugefügt, aber sonst wüsste ich nichts mehr
-
-% @Note(Val): Ist dieser Abschnitt überhaupt relevant?
 Obwohl Software und Hardware getrennt von einander entwickelt wurden, war es aufgrund einer klar definierter Schnittstelle einfach, die beiden zusammen zu führen.
 Nichtsdestotrotz gab es bei der Zusammenführung einige Probleme, die in einem letzten Schritt der Implementierung ausgemerzt wurden.
 Speziell hat sich das Testen der Software des \ac{MC}s ohne verfügbare Hardware als schwierig erwiesen.
 Diese Tests mussten entsprechend in diesem letzten Schritt durchgeführt werden und alle dabei auftretenden Fehler mussten gefunden und beseitigt werden.
-Der in Kapitel \ref{umsetzungSW-Kommunikation-MC} vorgestellte Ansatz und Pseudocode war dabei richtig, jedoch gab es mehrere kleinere Bugs in den Details.
-Der in Anhang \ref{???} beigefügte Quellcode hat beim Testen mit der prototyp-haften Hardware keine Probleme mehr aufgezeigt.
+Der in Kapitel \ref{umsetzungSW-Kommunikation-MC} vorgestellte Ansatz war dabei korrekt, jedoch gab es mehrere kleinere Bugs in den Details.
+Der in Anhang \ref{appndix-code} beigefügte Quellcode hat beim Testen mit der prototyp-haften Hardware keine Probleme mehr aufgezeigt.
 
 Der Prototyp besteht aus der Hardware, die von einer Desktop-Anwendung aus gesteuert werden kann, um Klaviertasten des Pianos anzuspielen.
 Aufgrund zeitlicher Limitationen war es nicht möglich, das gesamte Piano bespielbar zu gestalten.
 Nichtsdestotrotz ist der Prototyp mit diesem Ziel entwickelt worden und ist somit leicht erweiterbar, um das gesamte Klavier anzusteuern.
 Die Anwendung \ac{SAM} leidet ebenso an Defekten, vor allem im Bereich des \ac{UI} Designs und der Usability.
 Allerdings ist die Anwendung funktional und kann Musikstücke aus einem Katalog - der von Nutzer:innen mit \ac{MIDI}-Dateien erweitert werden kann - zum \ac{MC} schicken und abspielen lassen.
-
 
 
 
@@ -42,6 +37,7 @@ Daraufhin werden Messungen der Software in Abschnitt \ref{tests-sw} dargestellt.
 Es wurden auch Tests durchgeführt, um die Korrektheit des Prototypen zu versichern.
 Diese Tests liefen größtenteils jedoch informell durch einfaches Benutzen der Komponenten bzw. des gesamten Prototypen ab und sollen hier nicht genauer geschildert werden.
 Es sollte jedoch angemerkt werden, dass der Prototyp alle Tests auf Korrektheit bestanden hat.
+
 
 \subsection{Hardware-Tests} \label{tests-hw}
 \chapterauthor{Olivier Stenzel, Val Richter, Jakob Kautz}
@@ -64,19 +60,18 @@ Anpassungen der Software, die aufgrund von Testergebnissen durchgeführt wurden,
 	\label{table:hw-tests}
 \end{table}
 
+
 \subsubsection{HW-T1: Min. Periodendauer eines Tastendrucks}
 
 \paragraph{Erklärung:}
-Mit der Periode eines Tastendrucks ist hier jene Zeit gemeint, die zwischen doppelten Betätigen derselben Taste vergeht.
+Mit der Periode eines Tastendrucks ist hier jene Zeit gemeint, die zwischen Loslassen und erneutem Anspielen einer Taste vergeht.
 Da der Hubmagnet, bevor er einen erneuten Tastendruck initiieren kann, wieder in seinen Ausgangszustand zurückkehren muss, kann diese Periode nicht unendlich reduziert werden, da es sonst nur zu einem konstanten Spielen der Taste kommt.
 Es soll sichergestellt werden, dass alle Töne des Stücks erklingen, weshalb das Erfassen der minimalen Periodendauer bedeutsam ist.
-Software-seitig kann diese Periodendauer genutzt werden, um zu verhindern, dass ein solches \ac{Verschmelzen} von zwei Anschlägen zu einem konstanten Anspielen vorkommt.
+Software-seitig kann diese Periodendauer genutzt werden, um zu verhindern, dass ein solches \enquote{Verschmelzen} von zwei Anschlägen zu einem konstanten Anspielen vorkommt.
 
 \paragraph{Ablauf:}
 Schrittweise wird software-seitig die Frequenz des Anspielens einer Taste erhöht.
 Es werden mehrere Tasten für diesen Test verwendet, wobei der Fokus, auf Grund des höchsten Mechanik-Gewichts, auf der tiefsten Taste - der A0 Taste - liegt.
-% @Note(Val): Was wird mit "Mechanik-Gewicht" gemeint? Vorher wird nie erwähnt, dass manche Tasten ein höheres Gewicht haben. Das wäre vielleicht wichtig vorher schon zu erwähnen
-% @Note(Jay): Habs in Ansteuerungskonzept (Der letzte Absatz über Elektronik) hinzugefügt wenn das passt?
 Während des Spielens wird eine Slow-Motion-Aufnahme des Hammers und der Klaviersaite angefertigt ud im Anschluss analysiert.
 Wird die Saite angeschlagen, kann die Frequenz im nächsten Schritt erhöht werden.
 Sollte sie nicht angeschlagen werden, ist die maximal verwendbare Frequenz (und damit auch die minimale Periodendauer) gefunden und kann in den Code aufgenommen werden.
@@ -119,7 +114,6 @@ Da diese Spannung im Datenblatt des Hubmagneten nicht ersichtlich ist und das Ta
 \paragraph{Ablauf:}
 Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt, schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
 Dies wird an allen (mit Fokus auf den tieferen) Tasten durchgeführt, da sich die einzelnen Tasten in ihrem Ansprechverhalten teils deutlich unterscheiden.
-% @Note(Val): Erneut - warum wird erst jetzt erwähnt, dass sich die Tasten so stark unterscheiden? Wäre das bei der Konzeption oder dem Anbringen der Aktuatoren an das Piano nicht interessant zu wissen?
 Anschließend wird wieder das Größte der einzelnen Minima in den Code mit aufgenommen.
 
 \paragraph{Ergebnis:}
@@ -263,7 +257,7 @@ Aufgrund zeitlicher Begrenzungen, konnte nicht untersucht werden, woher diese Fe
 
 \paragraph{\ac{UI} Design}
 Das Design der \ac{UI} ist nicht besonders ansprechend.
-Während in der Konzeption mehrere Darstellungsmöglichkeiten des Musik-Katalogs bedacht wurden, wurde in der Implementierung nur eine sehr unschöne Version umgesetzt (siehe Abbildung \ref{???}). % @TODO(Val): Referenz auf Screenshot der UI, wahrscheinlich bei umsetzungSW-UI
+Während in der Konzeption mehrere Darstellungsmöglichkeiten des Musik-Katalogs bedacht wurden, wurde in der Implementierung nur eine sehr unschöne Version umgesetzt (siehe Abbildungen \ref{img:ui-start} bis \ref{img:ui-play}).
 
 \paragraph{Musikverwaltung}
 \ac{SAM} erlaubt zwar das Hinzufügen von Musikstücken mit selbstgewähltem Namen, das spätere Umbenennen oder Löschen der Musikstücke fehlt allerdings.

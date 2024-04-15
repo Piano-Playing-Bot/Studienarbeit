@@ -288,7 +288,6 @@ Dieses hat folgenden Aufbau:
 		\item OE: Output Enable, zur Aktivierung der Ausgänge
 		\item SHCP: Shift Clock, Clock-Eingang zur Übernahme Data Signals in Schieberegister
 		\item STCP: Store Clock, Beim Wechsel von LOW auf HIGH wird der Inhalt des Schieberegisters in das Ausgaberegister kopiert
-		% @Note(Val): Selbe Bezeichnung wie oben verwenden. Entweder LOW/HIGH oder AN/AUS
 		\item MR: Master Reset, Leerung des Schieberegisters
 		\item Q7S: Überlauf für Kaskadierung
 	\end{enumerate}
@@ -351,8 +350,6 @@ Die eigentliche Matrix-Schaltung ist auf den Breadboards zu sehen. Dort ist darg
 \paragraph{Matrix mit Multiplexing}
 Ein Multiplexer (bzw. ein Demultiplexer) ermöglicht das Kombinieren mehrerer Signale zu einem bzw. dem Trennen eines einzelnen Signals zu mehreren, unterschiedlichen Signalen.
 Bei einer LED-Matrix erfolgt das Prinzip durch die Verwendung von Schieberegistern und Transistoren.
-% @TODO(Val): Sicher, dass das richtig ist?
-% @Answer(Jay): Ja. Also es geht bestimmt auch anders, aber fürs selber bauen der Schaltung hab ich dazu vernünftige Quellen gefunden. Ich könnte sonst schreiben "kann über Schieberegister..."
 Somit kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit einem GPIO-Pin des \ac{MC}s elimniert werden.
 Entsprechend werden weniger Pins benötigt, um die Matrix anzusteuern.
 Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und Latenzen durch die Schieberegister einher.

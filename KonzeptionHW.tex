@@ -277,13 +277,12 @@ können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verw
 In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet[siehe: \cite*[siehe ][]{DatasheetSchieberegister74HC595}].
 Dieses hat folgenden Aufbau:
 \begin{figure}[htbp]
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.45\textwidth}
 		\includegraphics [width=1\textwidth] {img/Schieberegister}
-		% @TODO(Val): Bildquelle
-		\caption{Schematik Schieberegisterﬁ[\cite*[siehe ][]{DatasheetSchieberegister74HC595}]}
+		\caption{Schematik Schieberegister [\cite*[siehe ][]{DatasheetSchieberegister74HC595}]}
 		\label{img:Shift}
 \end{minipage}
-\begin{minipage}{0.6\textwidth}
+\begin{minipage}{0.55\textwidth}
 	\begin{enumerate}
 		\item Q0-Q7: Ausgänge (parallelgeschaltet)
 		\item Vcc: Anschluss Versorgungsspannung (+)
@@ -337,24 +336,17 @@ Bei einer LED-Matrix ohne Multiplexing werden die LEDs direkt über die \ac{GPIO
 muss der \ac{MC} jeden Pin einzeln aktivieren oder deaktivieren, um die entsprechende LED ein- oder auszuschalten.
 Hierbei werden viele Pins benötigt, um die gesamte Matrix anzusteuern, was besonders bei größeren Matrizen unpraktisch
 sein kann. Für dieses Projekt wird, wie oben aufgeführt, eine 8x8-Matrix benötigt. Es werden also 16 PWM-Fähige Pins
-benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über 6 von diesen Pins.
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=0.6\textwidth]{img/LEDMatrixSchaltung}
-	\caption{Matrix ohne Multiplexing Schematisch}
-	\label{fig:Matrix}
-\end{figure}
-% @Note(Jay): Welches der Bilder?
-%Um die Komplexität darzustellen, eine Aktuator-Matrix ohne Multiplexer würde für neun Aktuatoren wie folgt aussehen:
-% \begin{figure}[htbp]
-% 	\centering
-% 	\includegraphics[width=0.9\textwidth]{img/AktMatrix}
-% 	\caption{Aktuator-Matrix ohne Multiplexer}
-% 	\label{fig:AktMatrix}
-% \end{figure}
-% @TODO(Val): Das erste Bild ist zu klein, um erkenntlich zu sein und das zweite Bild ist überhaupt nicht verständlich (wo ist da zum Beispiel die Matrix)
-% @TODO(Val): Bildquelle
+benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über 6 von diesen Pins.\newline
+Abbildung \ref{fig:AktMatrix} zeigt den Aufbau einer Aktuator-Matrix ohne Multiplexing. Dargestellt, ist eine 3x3
+Matrix, mit externer Stromversorgung (Da das Tool nur maximal 9V Batterien zur auswahl bietet, wurden für eine Simulation
+mehrere davon in Reihe geschaltet). Statt Aktuatoren wurden zum Testen Messgeräte angeschlossen.
+Die eigentliche Matrix-Schaltung ist auf den Breadboards zu sehen. Dort ist dargestellt, wie die Signale verteilt sind.
+ \begin{figure}[htbp]
+ 	\centering
+ 	\includegraphics[width=0.9\textwidth]{img/AktMatrix}
+ 	\caption{Aktuator-Matrix ohne Multiplexer}
+ 	\label{fig:AktMatrix}
+ \end{figure}
 % @Note(Jay): Schaltung ist selbst erstellt also brauchen wir keine Quelle, oder?
 
 %mit Multiplexer
@@ -369,8 +361,7 @@ Wobei die Latenzen der Schieberegister in diesem Projekt vernachlässigt werden 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.75\textwidth]{img/matrixMuxSchaltung}
-	\caption{Aktuator-Matrix mit Multiplexing[\cite*[][]{LEDMatrix}]}
-	% @TODO(Val): Im Bild steht LED-Matrix, deswegen ist es komisch in der Bildüberschrift dann "Aktuator-Matrix" zu schreiben
+	\caption{Matrix mit Multiplexing[\cite*[][]{LEDMatrix}]}
 	\label{fig:AktMatrixMux}
 \end{figure}
 

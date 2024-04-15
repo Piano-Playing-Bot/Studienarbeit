@@ -11,6 +11,7 @@ Zuletzt wird in Abschnitt \ref{ergebnisse-limitationen} noch ein Überblick dar�
 Hier werden nicht nur Limitationen der Umsetzung, sondern auch der Konzeption betrachtet, welche in Fortführungen oder Replikationen dieser Arbeit beachtet werden sollten.
 
 % @TODO(Val): Die Beschreibung des Prototypen fühlt sich gerade noch sehr unzureichend an. Weiß aber auch nicht was man da alles schreiben kann, ohne sich zu sehr zu wiederholen.
+% @Answer(Jay): Hab die Aufwandschätzung hinzugefügt, aber sonst wüsste ich nichts mehr
 
 % @Note(Val): Ist dieser Abschnitt überhaupt relevant?
 Obwohl Software und Hardware getrennt von einander entwickelt wurden, war es aufgrund einer klar definierter Schnittstelle einfach, die beiden zusammen zu führen.
@@ -73,7 +74,9 @@ Software-seitig kann diese Periodendauer genutzt werden, um zu verhindern, dass 
 
 \paragraph{Ablauf:}
 Schrittweise wird software-seitig die Frequenz des Anspielens einer Taste erhöht.
-Es werden mehrere Tasten für diesen Test verwendet, wobei der Fokus, auf Grund des höchsten Mechanik-Gewichts, auf der tiefsten Taste - der A0 Taste - liegt. % @Note(Val): Was wird mit "Mechanik-Gewicht" gemeint? Vorher wird nie erwähnt, dass manche Tasten ein höheres Gewicht haben. Das wäre vielleicht wichtig vorher schon zu erwähnen
+Es werden mehrere Tasten für diesen Test verwendet, wobei der Fokus, auf Grund des höchsten Mechanik-Gewichts, auf der tiefsten Taste - der A0 Taste - liegt.
+% @Note(Val): Was wird mit "Mechanik-Gewicht" gemeint? Vorher wird nie erwähnt, dass manche Tasten ein höheres Gewicht haben. Das wäre vielleicht wichtig vorher schon zu erwähnen
+% @Note(Jay): Habs in Ansteuerungskonzept (Der letzte Absatz über Elektronik) hinzugefügt wenn das passt?
 Während des Spielens wird eine Slow-Motion-Aufnahme des Hammers und der Klaviersaite angefertigt ud im Anschluss analysiert.
 Wird die Saite angeschlagen, kann die Frequenz im nächsten Schritt erhöht werden.
 Sollte sie nicht angeschlagen werden, ist die maximal verwendbare Frequenz (und damit auch die minimale Periodendauer) gefunden und kann in den Code aufgenommen werden.
@@ -115,7 +118,8 @@ Da diese Spannung im Datenblatt des Hubmagneten nicht ersichtlich ist und das Ta
 
 \paragraph{Ablauf:}
 Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt, schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
-Dies wird an allen (mit Fokus auf den tieferen) Tasten durchgeführt, da sich die einzelnen Tasten in ihrem Ansprechverhalten teils deutlich unterscheiden. % @Note(Val): Erneut - warum wird erst jetzt erwähnt, dass sich die Tasten so stark unterscheiden? Wäre das bei der Konzeption oder dem Anbringen der Aktuatoren an das Piano nicht interessant zu wissen?
+Dies wird an allen (mit Fokus auf den tieferen) Tasten durchgeführt, da sich die einzelnen Tasten in ihrem Ansprechverhalten teils deutlich unterscheiden.
+% @Note(Val): Erneut - warum wird erst jetzt erwähnt, dass sich die Tasten so stark unterscheiden? Wäre das bei der Konzeption oder dem Anbringen der Aktuatoren an das Piano nicht interessant zu wissen?
 Anschließend wird wieder das Größte der einzelnen Minima in den Code mit aufgenommen.
 
 \paragraph{Ergebnis:}

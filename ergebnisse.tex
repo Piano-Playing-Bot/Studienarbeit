@@ -170,28 +170,29 @@ Da der Test aufgrund fehlender Zeit nicht durchgeführt werden konnte, werden hi
 \chapterauthor{Val Richter}
 
 Tabelle \ref{table:sw-tests} listet die unterschiedlichen Messungen, die an der Software durchgeführt wurden.
+Diese Tests wurden dabei alle auf dem gewählten Arduino UNO R3 bzw. einem Desktop mit Windows 10, einer Intel i5-10310U CPU und einer Intel UHD Grafigkarte durchgeführt.
+Um einen Normalverbrauch zu simulieren, wurden bei deern Tests der Desktop Anwendung mehrere Hintergrundanwendungen geöffnet, jedoch während der Testung nicht direkt verwendet.
 Die Bedeutung dieser Messergebnisse wird im Folgenden beleuchtet.
 
-% @TODO(Val): Collect these test values lol
-% @TODO(Val): Füge "Länge für Import von MIDI-Dateien" oder so hinzu
 \begin{table}[htbp]
 	\centering
 	\begin{tabular}{|l|p{10cm}|l|}
 		\theadstart{ID} & \theadcol{Beschreibung} & \theadcol{Ergebnis} \\ \hline
-		SW-T1 & Durchschnittliche Latenz bei der Kommunikation zwischen \ac{SAM} \& \ac{MC} & ... \\ \hline
-		SW-T2 & Minimale Laufzeit einer Iteration des \ac{MC}s während dem Abspielen eines Musikstücks & ... \\ \hline
-		SW-T3 & Maximale Laufzeit einer Iteration des \ac{MC}s während dem Abspielen eines Musikstücks & ... \\ \hline
-		SW-T4 & Minimale Laufzeit einer Iteration des Kommunikations-Threads in \ac{SAM} während Abspielen eines Musikstücks & ... \\ \hline
-		SW-T5 & Maximale Laufzeit einer Iteration des Kommunikations-Threads in \ac{SAM} während Abspielen eines Musikstücks & ... \\ \hline
-		SW-T6 & Minimale \ac{FPS} von \ac{SAM} während ausfühlicher Nutzung & ... \\ \hline
-		SW-T7 & Maximale \ac{FPS} von \ac{SAM} während ausfühlicher Nutzung & ... \\ \hline
-		SW-T8 & Maximaler Speicherverbrauch von \ac{SAM} bei ausführlicher Nutzung von 30 Minuten & ... \\ \hline
+		SW-T1 & Durchschnittliche Latenz bei der Kommunikation zwischen \ac{SAM} \& \ac{MC} bei einer Baud-Rate von 9600 & ca. 1.75ms \\ \hline
+		SW-T2 & Durchschnittliche Latenz bei der Kommunikation zwischen \ac{SAM} \& \ac{MC} bei einer Baud-Rate von 230400 & ca. 0.9ms \\ \hline
+		SW-T3 & Maximale Laufzeit einer Iteration des \ac{MC}s während dem Abspielen eines Musikstücks & ca. 49ms \\ \hline
+		SW-T4 & Minimale Laufzeit einer Iteration des \ac{MC}s während dem Abspielen eines Musikstücks & ca. 12ms \\ \hline
+		SW-T5 & Minimale Laufzeit einer Iteration des Wiedergabe-Codecycles in \ac{SAM} während Abspielen eines Musikstücks & ca. 3ms \\ \hline
+		SW-T6 & Maximale Laufzeit einer Iteration des Wiedergabe-Codecycles in \ac{SAM} während Abspielen eines Musikstücks & ca. 31ms \\ \hline
+		SW-T7 & Minimale \ac{FPS} von \ac{SAM} während ausfühlicher Nutzung & ca. 1000 \ac{FPS} \\ \hline
+		SW-T8 & Maximale \ac{FPS} von \ac{SAM} während ausfühlicher Nutzung & ca. 52 \ac{FPS} \\ \hline
 	\end{tabular}
 	\caption{Software-Tests}
 	\label{table:sw-tests}
 \end{table}
 
-% @TODO(Val): Beschreiben was diese Ergebnisse bedeuten v.a. mit Hinblick auf Bottlenecks
+SW-T1 und SW-T2 haben den selben Test durchlaufen, jedoch jeweils mit unterschiedlichen Baud-Raten.
+Die Baud-Rate gibt beim \ac{UART}-Protokoll die Anzahl Bits, die pro Sekunde übertragen werden, an \cite[vgl.][S. 22]{bak.UniversalAsynchronousReceiver.03}. % @TODO(Val): Rest schreiben
 
 
 \section{Limitationen \& Erweiterungsmöglichkeiten} \label{ergebnisse-limitationen}

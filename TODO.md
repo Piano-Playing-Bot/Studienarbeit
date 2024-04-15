@@ -1,5 +1,4 @@
 - Use "theadstart" und "theadcol" in all tables for better, unified style
-- add images in appendix (jay has images)
 - refer to appendixes in text (especially appendix-demo)
 - update all "ref{???}" throughout the text
 - add citations

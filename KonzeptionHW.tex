@@ -78,17 +78,15 @@ Nun stellt sich also noch die Frage, wie genau die Aktuatoren mit den Tasten des
 
 Eine Möglichkeit besteht darin, die Aktuatoren oben über den Tasten anzubringen, entweder in Form einer nachgebildeten
 \enquote{Klavierhand} mit zehn \enquote{Fingern} oder in Form einer Schiene mit 88 Aktuatoren auf den Tasten.
-Beide Lösungen bringen allerdings das Problem mit sich, dass sie gegen die in Kapitel \ref{Zielstellung} definierte Anforderung
+Beide Lösungen bringen allerdings das Problem mit sich, dass sie gegen die in Kapitel \ref{Zielstellung} definierte Anforderung A6
 der Flexibilität verstoßen, nämlich dass das Klavier sowohl automatisch als auch manuell bespielbar sein soll.\newline
 Außerdem würde die Klavierhand-Option - die dem tatsächlichen Klavierspiel ähnlich sieht -
 aufgrund der Bewegung und Präzision eine komplexere Logik und
 Montage erfordern. Die Schienenoption bietet hier eine viel einfachere Ansteuerung, benötigt jedoch einen Aktuator für jede Taste.
-Außerdem steht diese Variante im Gegensatz zu der in Kapitel \ref{Zielstellung} Anforderung, dass der Aufbau für unterschiedliche Klaviere anpassbar
-sein soll. Das liegt daran, dass diese Schiene eine fest vorgegebene Länge hätte, welche für Klaviere welche eine
-andere größe haben, nicht mehr passen würde. \newline
+Außerdem steht diese Variante im Gegenspruch zur Anforderung A8, dass der Aufbau für unterschiedliche Klaviere anpassbar
+sein soll. Das liegt daran, dass diese Schiene eine fest vorgegebene Länge hätte, welche für Klaviere mit anderen Größen nicht mehr passen würde. \newline
 
-Eine Alternative hierzu besteht darin, die Aktuatoren unter den Tasten anzubringen, wodurch die Anforderung der Flexibilität
-im Gegensatz zur ersten Option nicht beeinflusst wird.\newline
+Eine Alternative hierzu besteht darin, die Aktuatoren unter den Tasten anzubringen, wodurch die Anforderung der Flexibilität nicht beeinflusst wird.\newline
 Das Klavier kann also sowohl vom \enquote{Piano Player} als auch von einem menschlichen Spieler gleichzeitig bedient werden.
 Da diese Anforderung eine hohe Priorität hat, wird die Ansteuerung von untern erfolgen. \newline
 Grundsätzlich gibt es hierbei zwei Möglichkeiten für die Ansteuerung:
@@ -103,15 +101,16 @@ erhöht.
 Generell ist die Drückoption ästhetisch ansprechender, da die Hardware sehr einfach versteckt werden könnte.
 Somit würde die Illusion entstehen, dass die Tasten sich von alleine bewegen. Die Option erfordert jedoch eine hohe Präzision und könnte die
 Tastenempfindlichkeit beeinträchtigen. Außerdem wäre aufgrund der präzisen Montage der Aktuatoren die Anforderung
-der Anpassbarkeit (siehe Kapitel \ref{Zielstellung}) komplexer umzusetzen.
+der Anpassbarkeit (A8) aufwendiger zu erfüllen.
 
 Für das Drücken der Tasten fallen noch weitere Probleme an. Um die Tasten drücken zu können, muss ein möglichst großer
 Hebel aufgebracht werden, damit die Aktuatoren möglichst wenig Kraft für das anspielen aufbrauchen müssen.
-Dieser Punkt ist besonders wichtig, wenn der \enquote{Piano Player} mit unterschiedlichen Lautstärken und Dynamiken spielen soll.
+Dieser Punkt ist besonders wichtig, wenn der \enquote{Piano Player} mit unterschiedlichen Lautstärken und Dynamiken spielen können soll (siehe Anforderung A10).
 % @Question(Jay): Ist es offensichtlich dass das daran liegt dass wir dann auch leiser spielen können oder soll ich das noch erwähnen?
-Dies führt dazu, dass die Aktuatoren soweit hinten wie möglich angebracht werden müssen. % @Note(Jay) weil größter Hebel ist offensichtlich, oder?
+% @Answer(Val): Kruse findet das wahrscheinlich offensichtlich und wenn ich kurz drüber nachdenke komme ich auch drauf, aber wenn du das in einem Nebensatz kurz erwähnen könntest wäre es wahrscheinlich besser
+Dies führt dazu, dass die Aktuatoren soweit hinten wie möglich angebracht werden müssen, um einen größeren Hebeleffekt zu erhalten.
 \newline
-Hier tritt das Problem auf:
+Hierbei tritt nun das folgende Problem auf:
 Der Holraum, der sich im hinteren Teil des ausgewählten Klaviers befindet, ist nicht durchgängig. Daher ist es
 erforderlich, Löcher einzubauen. Diese müssen räumlich so platziert werden, dass sie keine wichtigen Teile der Klaviermechanik
 stören. Aufgrund des Klavierbaus bedeutet dies, dass die Löcher etwa im mittleren Drittel der Taste angebracht werden müssen.
@@ -120,13 +119,13 @@ voller Hebelkraft von ganz hinten angespielt werden. Allerdings würde dies dazu
 \begin{enumerate}
 	\item unterschiedlich stark angespielt werden und der Klang somit seltsam ist,
 	\item der Anstoß der Tasten genormt wird und somit nicht die gesamte Dynamik der hinten angebrachten Aktuatoren genutzt
-	wird, damit alle gleich klingen. Dies würde die Software komplexer machen, da dies berücksichtigt werden muss, um eine
+	wird, damit alle gleich klingen. Dies würde eine komplexere Software erfordern, da dies berücksichtigt werden muss, um eine
 	konsistente Leistung zu gewährleisten.
 \end{enumerate}
 Zur Vereinfachung wäre es daher sinnvoller, alle Tasten von der gleichen Höhe aus anzuspielen. Dies bedeutet, dass alle
 Tasten von weiter vorne angespielt werden und somit ein Teil der möglichen Dynamik verloren geht. \newline
 
-Diese Probleme fallen beim Ziehen der Tasten weg beziehungsweise sind weniger ausgeprägt. % @Note(Val): Klingt ein bisschen repetetiv mit den vorherigen Sätzen, inhaltlich aber ok
+Diese Probleme fallen beim Ziehen der Tasten weg bzw. sind weniger ausgeprägt.
 Bei der Präzision liegt der Grund dafür darin, dass die Taste nicht
 direkt getroffen werden muss. Stattdessen wird lediglich ein Seil (siehe Kapitel \ref{subsec:VerbindungTastenAktuatoren})
 gezogen, das den Aktuator dazu veranlasst, die Taste
@@ -134,18 +133,18 @@ gerade nach unten zu ziehen.
 Da das Ziehen des Seils weniger präzise Kontrolle erfordert
 und keine direkte Interaktion mit der Tastenmechanik erfordert, kann es auch die Tastenempfindlichkeit weniger beeinträchtigen
 als das Drücken der Tasten. Es ist allerdings zu beachten, dass das ziehen der Seile - im Gegensatz zum drücken - keine
-optimalen Ergebnisse im Bereich des Präzisen spielens bringen. Dies hat mehrere Gründe.
+optimalen Ergebnisse im Bereich des präzisen Spielens bringen. Dies hat mehrere Gründe.
 \begin{enumerate}
-	\item Verzögerung: Wenn das Seil sich über die Zeit lockert, kann es sein, dass das betätigen der Taste nicht direkt mit der Bewegung des Aktuators kommt. Außerdem würde die Taste so nicht komplett gedrückt werden.
-	\item Verschleiß: Die Bewegung über Führsysteme oder Umlenkrollen, welche für eine gerade Bewegung der Seile benötigt werden, können zu Reibungsverlust führen. Außerdem könnten die Seile sich durch verschleiß lockern oder verschieben.
+	\item \textbf{Verzögerung:} Wenn das Seil sich über die Zeit lockert, kann es sein, dass die Taste nicht direkt mit der Bewegung des Aktuators betätigt wird. Außerdem würde die Taste so nicht komplett gedrückt werden.
+	\item \textbf{Verschleiß:} Die Bewegung über Führsysteme oder Umlenkrollen, welche für eine gerade Bewegung der Seile benötigt werden, können zu Reibungsverlust führen. Außerdem könnten die Seile sich durch verschleiß lockern oder verschieben.
 \end{enumerate}
 Letztendlich handelt es sich bei beiden Problemen um Gebrauchserscheinungen, welche durch eine gute Auswahl von Seilen
-und Wartungen am Klavier wenn es öfter in Benutzung ist minimiert werden können.
-Die Hebelkraft ist ebenfalls ein geringeres Problem, da die Aktuatoren Problemlos am vordersten Punkt der Tasten
+und Wartungen am Klavier, wenn es öfter in Benutzung ist, minimiert werden können.
+Die Hebelkraft ist ebenfalls ein geringeres Problem, da die Aktuatoren problemlos am vordersten Punkt der Tasten
 befästigt werden können, da hier - im Gegensatz zum hinteren Teil des Klaviers - nichts im Weg ist.
 
 Insgesamt fiel die Entscheidung deshalb auf die Strategie des Ziehens von unten.
-Bei diesem Ansatz wird die geringste mechanische Präzision benötigt und das Klavier ist trotz Montage des Bots noch manuell spielbar.
+Bei diesem Ansatz wird die geringste mechanische Präzision benötigt und das Klavier ist trotz Montage der Aktuatoren noch manuell bespielbar.
 
 \section{Elektronik}\label{sec:konzeptionhw-elektronik}
 

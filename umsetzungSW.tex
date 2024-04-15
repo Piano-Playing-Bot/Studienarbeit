@@ -86,11 +86,6 @@ Bei Nachrichten einer fixen Länge kann gewartet werden, bis alle Bytes der Nach
 Bei der \enquote{Music}- und \enquote{New-Music}-Nachricht dagegen, kann aufgrund geringen Speicherplatzes nicht unbedingt gewartet werden, bis die gesamte Nachricht eingetroffen ist.
 Eine alternative Lösung muss entsprechend \enquote{greedy} sein und die empfangenen Bytes der \lstinline|PidiCmd|s und \lstinline|PlayedKey|s direkt auslesen und in die zur Verfügung stehenden Buffer für die nächsten zu spielenden Noten einsortieren.
 Um dies umzusetzen, muss der derzeitige Zustand gespeichert werden, damit sich nach jeder Iteration gemerkt wird, ob die nächsten Bytes einen \lstinline|PidiCmd|, einen \lstinline|PlayedKey|, den Start einer neuen Nachricht oder etwas anderes darstellt.
-Alles in allem sieht die Logik für den Arduino dann dem in Listing \ref{code:Comm-MC} dargestellten Pseudocode sehr ähnlich. % @Note(Val): Sollte das Listing überhaupt hierhin? Vielleicht passt es besser in den Anhang oder vielleicht sollten wir es komplett streichen
-
-\begin{UnbrokenCodePage}[style=CStyle, caption={Kommunikation beim \ac{MC}}, label={code:Comm-MC}]
-// @TODO(Val): Vereinfachter Pseudocode des Arduino-Skripts hier
-\end{UnbrokenCodePage}
 
 
 \subsection{Kommunikation auf der Desktop Anwendung} \label{umsetzungSW-Kommunikation-UI}
@@ -103,9 +98,10 @@ Fortführungen dieser Arbeit sollten den Aufwand dieser Erweiterung prüfung und
 
 Auf Windows müssen COM Ports für die Kommunikation verwendet werden.
 COM Ports sind serielle Ports auf Windows, die Daten über das \ac{UART} Protokoll empfangen und senden können.
-Zum Lesen oder Schreiben werden diese Ports als Dateien betrachtet und die Funktionen \enquote{ReadFile} und \enquote{WriteFile} verwendet.
-Alternativ bietet Windows auch asynchrone Versionen der Funktionen an, die den laufenden Thread nicht bis Abschluss der \ac{I/O}-Operation blockieren.
-Weitere Möglichkeiten zum Lesen, wie zum Beispiel eine Methode fürs Polling von Dateien, gibt es nicht. % @TODO(Val): Quelle
+Zum Lesen oder Schreiben werden diese Ports als Dateien betrachtet und die Funktionen \enquote{ReadFile} und \enquote{WriteFile} verwendet \cites[vgl.][Kapitel 4]{den.SerialCommunications.10}[][S. 3]{bay.WindowsSerialPort.08}.
+Alternativ bietet Windows auch asynchrone Versionen der Funktionen an, die den laufenden Thread nicht bis Abschluss der \ac{I/O}-Operation blockieren \cite[vgl.][Kapitel 4]{den.SerialCommunications.10}. \newline
+Das Lesen von COM Ports kann entweder in einer Endlosschleife wiederholt werden, um alle eingehenden Bytes zu erhalten, oder es kann ein sogenannter \enquote{\ac{I/O} Completion Port} verwendet werden, um über das Eintreffen von Bytes von Windows informiert zu werden \cite[vgl.][]{ash.CompletionPortsWin32.22}.
+Da diese Funktionalität erst sehr spät in die Entwicklung gefunden wurde, wurde sie weder verwendet noch getestet.
 
 Die naive Implementierung des Lesens von \ac{SPPP}-Nachrichten bringt mit hier ebenfalls Probleme mit sich.
 Aufruf zum Lesen von $n$ Bytes blockt bis $n$ Bytes gelesen wurden oder bricht mit einer Fehlermeldung ab.
@@ -128,7 +124,7 @@ Da nur dieser Thread den Ring-Buffer befüllt und der restliche Code nur aus dem
 Aufgrund des geringeren Entwicklungsaufwands wurde sich für die Nutzung der blockierenden Version entschieden.
 
 Bei der naiven Implemenierung des Schreibens ist ebenfalls ein vorher unerwartetes Problem aufgetreten.
-Beim Schreiben kurzer Nachrichten hat ein einfacher Aufruf der \enquote{WriteFile} Funktion mi der enkodierten Nachricht ausgreicht.
+Beim Schreiben kurzer Nachrichten hat ein einfacher Aufruf der \enquote{WriteFile} Funktion mit der enkodierten Nachricht ausgreicht.
 Beim Senden längerer Nachrichten - speziell bei \enquote{Music} und \enquote{New-Music} Nachrichten - wurden dagegen nicht alle Bytes vom Arduino empfangen.
 Es gibt mehrere Stellen, an denen der Fehler auftreten könnte.
 Es könnte sein, dass der \ac{MC} nicht schnell geng mit dem Lesen der einkommenden Bytes ist und deshalb einige Bytes überschreibt und überspringt.

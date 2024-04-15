@@ -158,7 +158,7 @@ Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung,
 wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
 
 %Arduino Intro
-	\paragraph{Arduino}
+	\paragraph{Arduino} %TODO(Jay): Quelle
 	Bei einem Arduino handelt es sich um eine Plattform für die Entwicklung von elektronischen Prototypen. % @Note(Val): Ist ein Arduino wirklich eine "Platform"? Das klingt irgendwie komisch...
 	Er besteht aus einem \ac{MC}-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten verbunden werden kann.
 	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können.
@@ -171,7 +171,7 @@ wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen 
 \newline
 %Pi Intro
 
-\paragraph{Rasperry Pi}
+\paragraph{Rasperry Pi} %TODO(Jay): Quelle
 Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert.
 Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu IoT-Geräten.
 Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet.
@@ -202,7 +202,7 @@ Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM} Pins, die
 
 \subsection{Pulsweitenmodulation}\label{PWM}
 \chapterauthor{Jakob Kautz}
-Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert.
+Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert [Vgl: \cite*[siehe ][]{PWM}].
 Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. benötigt.
 In diesen Fällen muss die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
 Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt.
@@ -215,9 +215,9 @@ Bei den \ac{PWM}-Ausgängen wird die Pulsweite - die Dauer der Einschaltzeit - d
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics [width=13cm, height=8cm] {img/pulsweite}
+	\includegraphics [width=8cm] {img/pulsweite}
 	% @Note(Val): Quelle des Bilds fehlt hier noch
-	\caption{Pulsweitenmodulation}
+	\caption{Pulsweitenmodulation [siehe: \cite*[siehe ][]{PWM}]}
 	\label{fig:pulsweite}
 \end{figure}
 
@@ -255,7 +255,7 @@ wobei in dieser Arbeit 2 im Detail betrachtet werden:
 % @Note(Jay): Shields verbinden oder mehrere Arduinos nutzen weil das haben wir ja kurz überlegt und dann relativ schnell verworfen
 
 \subsubsection{Schieberegister}
-Ein Schieberegister ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
+Ein Schieberegister[siehe: \cite*[siehe ][]{Schieberegister}] ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
 Datenbits verwendet wird.\newline
 Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell in das Register eingegeben und dann
 sequenziell aus dem Register ausgegeben werden können.
@@ -269,8 +269,7 @@ Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des 
 können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
 
 \paragraph{74HC959 Schieberegister}
-% TODO(Jay): Latenzen durch schieben adden
-In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet.
+In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet[siehe: \cite*[siehe ][]{DatasheetSchieberegister74HC595}].
 Dieses hat folgenden Aufbau:
 \begin{figure}[htbp]
 \begin{minipage}{0.4\textwidth}
@@ -294,8 +293,8 @@ Dieses hat folgenden Aufbau:
 	\end{enumerate}
 \end{minipage}
 \end{figure}
-
-\subsubsection{Aktuator-Matrix}
+Ein Nachteil des Schieberegisters besteht darin, dass Latenzen auftreten.
+\subsubsection{Aktuator-Matrix} %TODO(Jay): Quelle
 Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
 In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
 $$
@@ -319,7 +318,7 @@ entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
 Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM}-Signalen erscheint es den Betrachter:nnen, als ob alle LEDs
 gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
 
-\begin{figure}[htbp]
+\begin{figure}[htbp] %TODO(Jay): Quelle
 	\centering
 	\includegraphics[width=0.45\textwidth]{img/LED-Matrix}
 	\caption{Beispielhafte Darstellung einer LED-Matrix}
@@ -336,7 +335,7 @@ Hierbei werden viele Pins benötigt, um die gesamte Matrix anzusteuern, was beso
 sein kann. Für dieses Projekt, wird wie oben aufgeführt, eine 8x8-Matrix benötigt. Es werden also 16 PWM-Fähige Pins
 benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über 6 von diesen Pins.
 
-\begin{figure}[htbp]
+\begin{figure}[htbp] %TODO(Jay): Quelle
 	\centering
 	\includegraphics[width=0.6\textwidth]{img/LEDMatrixSchaltung}
 	\caption{Matrix ohne Multiplexing Schematisch}
@@ -359,7 +358,7 @@ Somit kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit ei
 Entsprechend werden weniger Pins benötigt, um die Matrix anzusteuern.
 Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und Latenzen durch die Schieberegister einher. % @Note(Val): Sind die Latenzen nur "möglich"? Müsste es nicht entweder klar Latenzen erhöhen oder nicht?
 Wobei die Latenzen der Schieberegister in diesem Projekt vernachlässigt werden können.
-\begin{figure}[htbp]
+\begin{figure}[htbp] %TODO(Jay): Quelle
 	\centering
 	\includegraphics[width=0.75\textwidth]{img/matrixMuxSchaltung}
 	\caption{Aktuator-Matrix mit Multiplexing}
@@ -394,14 +393,14 @@ Letztendlich fiel die Entscheidung auf die Verwendung von Schieberegistern. Dies
 	% @Note(Jay): Ist zu sagen das wir nichts nutzen wollten wo wir keine konkrete Aussage zu finden wenn wir wissen dass es anders funktioniert okay?
 \end{enumerate}
 
-\subsection{Transistor}
+\subsection{Transistor} %TODO(Jay): Quelle
 \chapterauthor{Jakob Kautz}
 Ein Transistor ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
 (den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern. Es gibt verschiedene Arten
 von Transistoren, wobei grob zwischen Transistor und MOSFET unterschieden wird.
 Die grundlegenden Prinzipien ihrer Funktionsweise sind allerdings ähnlich.
 
-\begin{figure}[htbp]
+\begin{figure}[htbp] %TODO(Jay): Quelle
 	\centering
 	\includegraphics[width=0.45\textwidth]{img/Mosfet}
 	\caption{Aufbau MOSFET}
@@ -450,7 +449,7 @@ Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei
 An sich laufen alle 3 Aktuatoren auf das gleiche Prinzip - elektromagnetische Induktion - hinaus. Der Hauptunterschied
 der in dieser Arbeit betrachtet wird, ist einmal der Unterschied zwischen einer rotierenden und linearen Bewegung der Aktuatoren,
 und im späteren noch wie die Aktuatoren bezüglich Präzision, Kraft, etc. abschneiden.
-\paragraph{Elektromotor} \footnote{\cite*[siehe ][]{Aufbau.Elektromotoren}}
+\paragraph{Elektromotor} \cite*[siehe ][]{Aufbau.Elektromotoren}
 Zu Beginn wird ersteinmal das eigentliche Prinzip hinter Elektromotoren betrachtet, da dies hinter allen gewählten Aktuatoren
 ähnlich ist.
 
@@ -461,7 +460,7 @@ Betrachten wir also den Elektromagneten, welcher als Hauptkomponente zur mechani
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/AufbauElektromagnet}
-	\caption{Aufbau eines Rotors\footnote{\cite*[siehe ][]{Aufbau.Elektromotoren}}}
+	\caption{Aufbau eines Rotors\cite*[siehe ][]{Aufbau.Elektromotoren}}
 	\label{fig:Elektromagnet}
 \end{figure}
 Dabei markieren die Nummern die verschiedenen Komponenten.
@@ -474,7 +473,7 @@ Wird ein Gleichstrom angelegt, fließt dieser durch die Spule, welche so ein Mag
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Magnetfeld}
-	\caption{Spule mit Magnetfeld\footnote{\cite*[siehe ][]{Elektromagnete}}}
+	\caption{Spule mit Magnetfeld\cite*[siehe ][]{Elektromagnete}}
 	\label{fig:Magnetfeld}
 \end{figure}
 Der Eisenkern wird nun zum Elektromagneten. Die Polung des Magneten hängt davon ab, in welche Richtung der Strom fließt.
@@ -483,12 +482,12 @@ sind. Die gewünschte Rotierbewegung erfolgt durch das umpolen der magnetischen 
 Dafür ist ein sogenannter Kollektor zuständig, welcher die Stromrichtung in der Spule umschaltet.
 
 
-\paragraph{Schrittmotor\footnote{\cite*[siehe ][]{Aufbau.Elektromotoren}}}
+\paragraph{Schrittmotor\cite*[siehe ][]{Aufbau.Elektromotoren}}
 Ein Schrittmotor übt eine Rotierende Bewegung aus.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Schrittmotor}
-	\caption{Schrittmotor\footnote{\cite*[siehe ][]{Aufbau.Elektromotoren}}}
+	\caption{Schrittmotor\cite*[siehe ][]{Aufbau.Elektromotoren}}
 	\label{fig:Linearmotor}
 \end{figure}
 Ein Schrittmotor, ist im Wesentlichen ein Brushless-Elektromotor, der intern so konstruiert ist,

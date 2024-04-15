@@ -10,8 +10,6 @@
 \chapter{Konzeption - Hardware}\label{konzeptionHW}
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
 
-% @TODO(Val): Erst erklären warum MCs und Aktuatoren benötigt werden, bevor erzählt wird, dass wir die irgendwie verwenden müssen. Sonst argumentieren wir mit technischer Lösung statt dem Problem. Wenn wir die Erklärung dafür erst später haben wollen, sollten wir hier zumindest anfangs schon erwähnen, dass wir später noch erklären, warum Aktuatoren und ein MC benötigt werden oder so
-
 Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
 Die Grundfragen, welche bei der Konstruktion auftreten, betreffen die Methode des Anspielens der Klaviertasten, die
 Signalübertragung des \ac{MC}s, sowie die Konzeption der Schaltung. \newline
@@ -55,7 +53,6 @@ Mittels dieser Anforderungen wurde online ein passendes Klavier für 100\euro{} 
 Das Ansteuerungskonzept bezieht sich auf die Problemstellung, dass die Saiten des Klaviers auf irgendeine Art automatisiert zum Schwingen gebracht werden müssen.
 Dafür ist eine Vorrichtung hilfreich, die elektrische Signale in Bewegung umwandeln kann.
 Dies ist die Eigenschaft von Aktuatoren, wie z.B. Motoren.
-Ein Aktuator wandelt ganz genrell Energie in Bewegung (oder andere physikalische Größen) um, um eine gewünschte Aktion herbeizuführen oder einen Mechanismus zu steuern. \newline % @TODO(Val): Quelle für Aktuator-Definition
 
 In diesem Kapitel wird untersucht, wie genau man das Anspielen der Saiten technisch umsetzen kann.
 Dabei ist eine grundlegende Überlegung, ob man die Saiten direkt anschlägt,
@@ -99,7 +96,7 @@ Grundsätzlich gibt es hierbei zwei Möglichkeiten für die Ansteuerung:
 	\item Drücken der Tasten
 \end{enumerate}
 Bei beiden Varianten wird jede Taste mit einem Aktuator
-ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten % @Question(Jay) soll ich späteres Kapitel zu Kosten referenzieren oder so lassen?
+ausgestattet, es werden also 88 Aktuatoren benötigt, was die Kosten
 im Gegensatz zu der von oben Spielenden \enquote{Klavierhand}
 erhöht.
 Generell ist die Drückoption ästhetisch ansprechender, da die Hardware sehr einfach versteckt werden könnte.
@@ -110,8 +107,6 @@ der Anpassbarkeit (A8) aufwendiger zu erfüllen.
 Für das Drücken der Tasten fallen noch weitere Probleme an. Um die Tasten drücken zu können, muss ein möglichst großer
 Hebel aufgebracht werden, damit die Aktuatoren möglichst wenig Kraft für das anspielen aufbrauchen müssen.
 Dieser Punkt ist besonders wichtig, wenn der \enquote{Piano Player} mit unterschiedlichen Lautstärken und Dynamiken spielen können soll (siehe Anforderung A10).
-% @Question(Jay): Ist es offensichtlich dass das daran liegt dass wir dann auch leiser spielen können oder soll ich das noch erwähnen?
-% @Answer(Val): Kruse findet das wahrscheinlich offensichtlich und wenn ich kurz drüber nachdenke komme ich auch drauf, aber wenn du das in einem Nebensatz kurz erwähnen könntest wäre es wahrscheinlich besser
 Dies führt dazu, dass die Aktuatoren soweit hinten wie möglich angebracht werden müssen, um einen größeren Hebeleffekt zu erhalten.
 \newline
 Hierbei tritt nun das folgende Problem auf:
@@ -190,7 +185,7 @@ Es wurde sich letztendlich für den Arduino entschieden.
 Der Rasperry Pi stand vor allem aufgrund seiner höheren Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
 Allerdings ist er aufgrund seines Betriebssystems nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt.
 Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
-Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine präzise Ansteuerung von Aktuatoren benötigen. % @Note(Val): Simpel != Präzise. Nur weil der Arduino eine simple Hardware-Interaktion hat, heißt es nicht, dass er die Hardware präzise ansteueren könnte
+Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine möglichst Latenzfreie Ansteuerung von Aktuatoren benötigen.
 Zudem sollte hier keine besonders komplexe Ansteuerungslogik benötigt werden, weshalb ein Arduino genug Rechenleistung aufweisen sollte.
 
 Für das Projekt wird spezifisch ein Arduino UNO R3 verwendet \cite[siehe][für die genaue Spezifikation]{ard.ArduinoR3Datasheet.24}.
@@ -229,7 +224,7 @@ Eine digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das z
 Dieses HIGH-LOW-Muster kann Spannungen zwischen der vollen Versorgungsspannung und 0V simulieren.
 Dabei wird der Anteil der Zeit geändert, für den das Signal auf HIGH geschaltet ist, relativ zur Zeit, in der das Signal auf LOW geschaltet ist.
 Um unterschiedliche, analoge Werte zu erhalten, wird die Pulsweite moduliert.
-Wenn dieses HIGH-LOW-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und Vcc, die die Helligkeit der LED steuert. % @TODO(Val): Vcc als Abkürzung erst ausschreiben
+Wenn dieses HIGH-LOW-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und \enquote{Voltage at the common collector} [Vcc], die die Helligkeit der LED steuert.
 
 Auf den Arduino bezogen sieht die Umsetzung eines \ac{PWM} Signals wie folgt aus:
 Ein Taktsignal gelangt in die entsprechende Clock.
@@ -286,7 +281,8 @@ Dieses hat folgenden Aufbau:
 		\item DS: Data Signal, serieller Dateneingang
 		\item OE: Output Enable, zur Aktivierung der Ausgänge
 		\item SHCP: Shift Clock, Clock-Eingang zur Übernahme Data Signals in Schieberegister
-		\item STCP: Store Clock, Beim Wechsel von LOW auf HIgh wird der Inhalt des Schieberegisters in das Ausgaberegister kopiert % @Note(Val): Selbe Bezeichnung wie oben verwenden. Entweder LOW/HIGH oder AN/AUS
+		\item STCP: Store Clock, Beim Wechsel von LOW auf HIGH wird der Inhalt des Schieberegisters in das Ausgaberegister kopiert
+		% @Note(Val): Selbe Bezeichnung wie oben verwenden. Entweder LOW/HIGH oder AN/AUS
 		\item MR: Master Reset, Leerung des Schieberegisters
 		\item Q7S: Überlauf für Kaskadierung
 	\end{enumerate}
@@ -353,7 +349,7 @@ Bei einer LED-Matrix erfolgt das Prinzip durch die Verwendung von Schieberegiste
 % @Answer(Jay): Ja. Also es geht bestimmt auch anders, aber fürs selber bauen der Schaltung hab ich dazu vernünftige Quellen gefunden. Ich könnte sonst schreiben "kann über Schieberegister..."
 Somit kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit einem GPIO-Pin des \ac{MC}s elimniert werden.
 Entsprechend werden weniger Pins benötigt, um die Matrix anzusteuern.
-Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und Latenzen durch die Schieberegister einher. % @Note(Val): Sind die Latenzen nur "möglich"? Müsste es nicht entweder klar Latenzen erhöhen oder nicht?
+Die Nutzung von Multiplexern bringt somit eine effizientere Ressourcennutzung mit sich, kommt allerdings auch mit einer komplexeren Schaltung und Latenzen durch die Schieberegister einher.
 Wobei die Latenzen der Schieberegister in diesem Projekt vernachlässigt werden können.
 \begin{figure}[htbp]
 	\centering
@@ -639,7 +635,7 @@ Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunde
 \subsubsection{Hubmagnet}
 
 Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnets mit dem +24V verbunden.
-Bei Hubmagneten ist es in der Regel egal, welcher Anschluss an Plus und welcher an Minus angeschlossen wird (siehe Kapitel \ref{subsec:aktuator}). % @TODO(Val): Wird das in dem Unterkapitel wirklich erklärt? Wäre es nicht besser, sich einfach direkt auf die Quelle hier zu referenzieren?
+Bei Hubmagneten ist es in der Regel egal, welcher Anschluss an Plus und welcher an Minus angeschlossen wird\footnote{siehe: \cite*[]{SolenoidDesign}}.
 
 \subsubsection{Testen}
 

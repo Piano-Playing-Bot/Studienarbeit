@@ -443,13 +443,47 @@ Ein Aktuator wandelt Energie in Bewegung (oder andere physikalische Größen) um
 oder einen Mechanismus zu steuern. \newline % @TODO(Val): Quelle für Aktuator-Definition
 Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
 \begin{enumerate}
-	\item Linearmotor % @Note(Jay): Ich glaub es wär smart hier Elektromotor zu sagen und dann zu unterteilen
-	\item Servomotor % TODO(Jay): Lin. Servomotor
-	\item Hubmagnet % TODO(Jay): Welcher genau und wie viel Kraft
+	\item Elektromotor: Schrittmotor
+	\item Elektromotor: linearer Servomotor
+	\item Hubmagnet
 \end{enumerate}
+An sich laufen alle 3 Aktuatoren auf das gleiche Prinzip - elektromagnetische Induktion - hinaus. Der Hauptunterschied
+der in dieser Arbeit betrachtet wird, ist einmal der Unterschied zwischen einer rotierenden und linearen Bewegung der Aktuatoren,
+und im späteren noch wie die Aktuatoren bezüglich Präzision, Kraft, etc. abschneiden.
+\paragraph{Elektromotor}
+Zu Beginn wird ersteinmal das eigentliche Pri nzip hinter Elektromotoren betrachtet, da dies hinter allen gewählten Aktuatoren
+ähnlich ist.
+
+Grundlegend handelt es sich bei einem Elektromotor um ein Bauteil, welches elektrische Leistung in mechanische umwandelt.
+Er besteht aus dem von Statoren erzeugten Magnetfeld und einem sich drehenden Magneten (Rotor) im Inneren.
+Betrachten wir also den Elektromagneten, welcher als Hauptkomponente zur mechanischen Leistung beiträgt:
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/AufbauElektromagnet}
+	\caption{Aufbau eines Rotors}
+	\label{fig:Elektromagnet}
+\end{figure}
+Dabei markieren die Nummern die verschiedenen Komponenten.
+\begin{enumerate}
+	\item Dauermagnet % @Question(Jay): Ab wann ist etwas direkt zitiert? Weil in der Quelle steht es so: Um einen Elektromotor bauen zu können, wird zunächst ein Dauermagnet (1) in einer bestimmten Bauform benötigt. Zwischen den Polen des Dauermagneten ist ein drehbares Eisenteil (2) gelagert, um das eine Spule aus isoliertem Kupferdraht (3) gewickelt ist.
+	\item Drehbares Eisenteil
+	\item Spule
+\end{enumerate}
+Wird ein Gleichstrom angelegt, fließt dieser durch die Spule, welche so ein Magnetfeld erzeugt.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=5cm]{img/Magnetfeld}
+	\caption{Spule mit Magnetfeld}
+	\label{fig:Magnetfeld}
+\end{figure}
+Der Eisenkern wird nun zum Elektromagneten. Die Polung des Magneten hängt davon ab, in welche Richtung der Strom fließt.
+Um die Drehbewegung zu ermöglichen, ist die Positionierung des Magneten so, dass der Süd- am Nordpol und der Nord- am Süd-Pol
+sind. Die gewünschte Rotierbewegung erfolgt durch das umpolen der magnetischen Ausrichtung.
+Dafür ist ein sogenannter Kollektor zuständig, welcher die Stromrichtung in der Spule umschaltet.
 
 % @TODO(Val): Quelle für jede Definition der 3 Aktuator-Typen
-\paragraph{Linearmotor}
+\paragraph{Schrittmotor}
 Ein Linearmotor ist ein Aktuator, der eine lineare Bewegung erzeugt. Er besteht aus einer festen Spule und einem
 beweglichen Magneten oder umgekehrt. Wenn Strom durch
 die Spule fließt, erzeugt sie % @Question(Val): Ist es richtig zu sagen, dass die Spule ein Magnetfeld erzeugt? (Ich hab physikalisch keine Ahnung, also kann gut sein, dass das so richtig formuliert ist)
@@ -463,12 +497,12 @@ Physikalische Grundlagen:
 \end{itemize}
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=5cm]{img/Linearmotor}
-	\caption{Linearmotor}
+	\includegraphics[width=5cm]{img/}
+	\caption{Schrittmotor}
 	\label{fig:Linearmotor}
 \end{figure}
 
-\paragraph{Servomotor}
+\paragraph{Linearer Servomotor}
 % @Note(Val): Hier scheint etwas falsch zu sein. Bei der Entscheidungsfindung später sagt ihr, dass Servomotoren eine rotierende Bewegung erzeugen. Aber hier sagt ihr, dass es mit einer Drehung anfängt und diese dann vom Servomotor in eine Bewegung (ich nehme an lineare Bewegung) umgewandelt wird.
 Ein Servomotor ist ein elektromechanischer Aktuator, der eine Bewegung durch eine Drehung ermöglicht.
 Er besteht aus einem Elektromotor, einem Getriebe und einem Feedback-Mechanismus. Der Elektromotor erzeugt eine rotierende
@@ -488,8 +522,8 @@ Physikalische Grundlagen:
 \end{itemize}
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=5cm]{img/Servomotor}
-	\caption{Servomotor}
+	\includegraphics[width=5cm]{img/}
+	\caption{Linearer Servomotor}
 	\label{fig:Servomotor}
 \end{figure}
 

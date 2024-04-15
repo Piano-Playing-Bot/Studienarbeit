@@ -389,6 +389,7 @@ Letztendlich fiel die Entscheidung auf die Verwendung von Schieberegistern. Dies
 	Verwendung für die Ansteuerung von Aktuatoren zu verstehen und umzusetzen.
 	% @Note(Jay): Ist zu sagen das wir nichts nutzen wollten wo wir keine konkrete Aussage zu finden wenn wir wissen dass es anders funktioniert okay?
 	% @Note(Val): Ist ok und ein valider Punkt, aber klingt ein bisschen als wären wir einfach inkompetent lol
+	% @Note(Jay): Ikkk das dachte ich auch deswegen hab ich mich gefragt ob wirs einfach rauslassen
 \end{enumerate}
 
 \subsection{Transistor}
@@ -411,7 +412,7 @@ eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu verme
 \chapterauthor{Jakob Kautz}
 
 Die Aktuatoren werden für die Steuerung der Tasten benötigt.
-Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
+Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet:
 \begin{enumerate}
 	\item Elektromotor: Schrittmotor
 	\item Elektromotor: linearer Servomotor
@@ -443,7 +444,7 @@ Die in Abbildung \ref{fig:Elektromagnet} dargestellen Nummern markieren die folg
 	\item Spule
 \end{enumerate}
 
-Wird ein Gleichstrom angelegt, fließt dieser durch die Spule, welche so ein Magnetfeld erzeugt.
+Wird ein Gleichstrom angelegt, fließt dieser durch die Spule, welche so ein Magnetfeld (siehe Abbildung \ref{fig:Magnetfeld}) erzeugt.
 
 \begin{figure}[htbp]
 	\centering
@@ -551,8 +552,6 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 	Der Hauptgrund liegt im Preis, der sehr viel höher ist als bei Hubmagneten, da die Steuerungssysteme in den Motoren komplexer sind.
 	Aus dem gleichen Grund haben Hubmagnete in der Regel eine höhere Reaktionsgeschwindigkeit, was beim Spielen von Musikstücken eine große Rolle spielt.
 	Außerdem ist die Montage von Hubmagneten - insbesondere wenn es an Platz mangelt - einfacher, da diese tendenziell kleiner sind.
-	% @Question(Jay): Ist es sinnvoll noch Vorteile zu nennen? Also sowas wie bessere Dynamik des Motors wodurch die Tasten "schöner" gespielt werden könnten und höhere Präzision was sinnvoll gewesen wäre wenn wir das von hinten hochdrücken gemacht hätten?
-	% @Answer(Val): Würde ich nicht sagen
 	\item \textbf{Hubmagnete:} Hubmagnete bieten Vorteile wie eine schnelle Reaktionsgeschwindigkeit, einfache Steuerung und geringen Kosten im Vergleich zu den anderen Aktuatoren. Die verwendeten Hubmagnete können eine Kraft von 25N ausüben,
 	was dazu genügt, eine Taste  zu spielen und gleichzeitig Platz für dynamische Anpassungen von Lautstärke und Tastanschlag lassen.
 	% @TODO(Val): Können wir auf das Datasheet der Hubmagnete verweisen oder so?
@@ -571,16 +570,7 @@ Der Schaltplan besteht im Großteil aus den bereits aufgeführten Komponenten:
 \end{enumerate}
 
 In diesem Kapitel wird erläutert, wie diese Komponenten miteinander verbunden werden um eine Funktionsfähige
-Schaltung zu erstellen. Die gesamte Schaltung mit allen 88 Hubmagneten wird wie folgt aussehen:
-% @TODO(Val): Wäre es nicht besser das Ergebnis erst am Ende des Unterkapitels zu zeigen?
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics [width=0.85\textwidth] {img/SchaltungGesamt}
-	\caption{Überblick Schaltplan}
-	\label{img:Schaltplan}
-\end{figure}
-
+Schaltung zu erstellen.
 
 \subsubsection{Arduino}
 
@@ -668,6 +658,16 @@ Für insgesamt 4 Hubmagnete - wobei in dem Schema Motoren gewählt wurden, da da
 	\includegraphics[width=0.9\textwidth]{img/SchematischeSchaltungExp}
 	\caption{Beispielhaftes Schema des Schaltplans}
 	\label{img:SchaltungExpSchema}
+\end{figure}
+
+Die gesamte Schaltung mit allen 88 Hubmagneten wird wie folgt aussehen:
+% @TODO(Val): Wäre es nicht besser das Ergebnis erst am Ende des Unterkapitels zu zeigen?
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics [width=0.85\textwidth] {img/SchaltungGesamt}
+	\caption{Überblick Schaltplan}
+	\label{img:Schaltplan}
 \end{figure}
 
 

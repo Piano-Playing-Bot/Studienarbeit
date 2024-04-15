@@ -117,6 +117,74 @@ Funktionalitäten die benötigt werden, werden dabei benannt und können zusamme
 Gleichzeitig wird auch notiert, welche Daten zu welchem Zeitpunkt vorliegen müssen und wie diese von einander abhängen. \newline
 Dieser Ansatz wurde von Casey Muratori \enquote{Semantic Compression} getauft \cite[vgl.][]{mur.SemanticCompression.14}\footnote{Muratori spricht von Semantic Compression speziell bei der Entwicklung, jedoch wird in seiner Erklärung klar, dass er keinen vorherigen Schritt für die Konzeption der Architektur als notwendig sieht. Hier soll zwar der selbe Ansatz verwendet werden, aber mit einer Trennung des Entwurfs von der Implementierung.}.
 
+Mit \enquote{Codepath} ist hier eine endliche, serielle Liste von Instruktionen gemeint.
+Dabei ist zu beachten, dass auch eine mehrfach ausführende Schleife oder ein \lstinline|if-else| Block eine Liste von Instruktionen erstellt, die von der CPU augeführt werden können \cite[vgl.][]{fle.TaxonomyComputationShapes.23}. \newline
+Eine Endlosschleife dagegen erzeugt keinen Codepath, da sie nicht terminiert.
+Solche Konstrukte werden stattdessen als \enquote{Codecycle} bezeichnet \cite[vgl.][]{fle.TaxonomyComputationShapes.23}.
+Nachdem die Definitionen nun geklärt wurden, kann die Analyse für die Architektur beginnen.
+
+Nach vermutlich notwendigen Initialisierungen, muss die Anwendung beim Starten in einen Codecycle zum Darstellen der \ac{UI} übergehen.
+Dieser Codecycle soll fortgehend auch der \enquote{UI-Codecycle} genannt werden, da er sich um das Rendern der \ac{UI} kümmert.
+
+Zu Beginn der Anwendung soll der vorhandene Musikkatalog angezeigt werden.
+Da der Katalog permament gespeichert werden soll, muss er in einer oder mehreren Dateien gespeichert werden.
+Der Katalog besteht aus einer Liste von Musikstücken.
+Jedes Musikstück besteht dabei aus einem Namen sowie den Daten, die zum Abspielen des Stücks benötigt werden (siehe Abschnitt \ref{vorgehenSW-PIDI}). \newline
+Zum Darstellen des Katalogs werden dabei nur die Namen der Musikstücke benötigt.
+Die weiteren Daten werden erst beim Abspielen der Musik gebraucht.
+Entsprechend ist es sinnvoll, die Namen der Musikstücke in einer seperaten Liste (und der Einfachheit halber somit auch einer eigenen Datei) zu speichern.
+
+Um die Startseite der \ac{UI} anzeigen zu können, muss zuerst also zuerst der Katalog vom Dateisystem ausgelesen werden.
+Es gibt nun zwei Möglichkeiten zur Anordnung dieses Codepaths zum Auslesen des Katalogs:
+\begin{enumerate}
+    \item Der Codepath wird vor dem UI-Codecycle ausgeführt
+    \item Der Codepath wird parallel zum UI-Codecycle ausgeführt
+\end{enumerate}
+
+Der erste Ansatz vereinfacht den Code, der für den UI-Codecycle nötig ist, da davon ausgegangen werden kann, dass der Katalog von Beginn an zur Verfügung steht.
+Der zweite Ansatz erlaubt dagegen ein schnelleres Darstellen der \ac{UI}, was die Usability der Anwendung erhöht.
+Da die zusätzliche Komplexität hier nicht besonders hoch ist, wurde hier die Usability priorisiert und der zweite Ansatz gewählt.
+Solange der Katalog noch nicht geladen wurde, soll dabei eine Lade-Animation statt des Katalogs angezeigt werden.
+Daraus folgt auch, dass der UI-Codecycle eine Fallunterscheidung benötigt und darauf basierend etwas anderes darstellt.
+
+Sobald der Katalog geladen wurde, gibt es nun mehrere Möglichkeiten, wie die Nutzer:innen den Zustand der Anwendung ändern können sollen.
+\begin{enumerate}
+    \item Suchen eines Musikstücks über eine Suchbox
+    \item Umbenennen eines Musikstücks über eine zugehörige Eingabebox
+    \item Löschen eines Musikstücks über einen zugehörigen Button
+    \item Hinzufügen eines Musikstücks durch Klicken auf den \enquote{Import}-Button
+    \item Wiedergabe eines Musikstücks über einen zugehörigen Button
+\end{enumerate}
+
+Die ersten drei Möglichkeiten benötigen keine neuen Daten.
+Stattdessen wird hier nur der Katalog angepasst, bzw. bei der ersten Möglichkeit wird der Katalog nur gefiltert. \newline
+Bei allen drei Codepaths stellt sich wieder die Frage, ob sie parallel zum UI-Codecycle ausgeführt werden sollten oder nicht.
+Die Parallelisierung bringt jeweils wieder eine erhöhte Komplexität der Implementierung mit sich, stellt aber sicher, dass die \ac{UI} nicht temporär einfriert.
+Da die zweite und dritte Aktion eine Interaktion mit dem Dateisystem voraussetzen, was relativ hohe Latenzen mit sich bringen kann, wurde sich entschieden diese parallel zum UI-Codecycle zu gestalten.
+Die Suche dagegen soll nicht parallel geschaltet werden.
+
+Für das Hinzufügen eines Musikstücks soll, wie in Abschnitt \ref{vorgehenSW-UI-design} erwähnt, eine zweite Seite dargestellt werden.
+Dies benötigt entsprechend eine weitere Fallunterscheidung beim UI-Codecycle.
+Nachdem die Nutzer:innen eine Datei zum Hinzufügen gewählt haben, muss diese zum Katalog hinzugefügt werden.
+Wie in Abschnitt \ref{vorgehenSW-PIDI} aufgezeigt wird, soll ein eigenes Format zum Abspielen von Musikstücken verwendet werden.
+Entsprechend muss es eine Transformation der eingegebenen Daten zum hier verwendeten Format geben.
+Je nach Länge des Musikstücks, muss davon ausgegangen werden, dass diese Transformation relativ lange brauchen kann.
+Es ist entsprechend sinnvoll, diese Transformation zu machen, bevor das Musikstück in den Katalog eingefügt wird.
+Dann kann ein Musikstück aus dem Katalog jederzeit sofort wiedergegeben werden.
+
+Weiterhin ist aus dem selben Grund auch ratsam, diese Transformation parallel zum UI-Codecycle zu gestalten.
+Während die Nutzer:innen auf der zweiten Seite sind und den Namen des Musikstücks anpassen können, sollte parallel also der Import der Datei laufen. \newline
+Das Ergebnis dieses Codepaths muss das Musikstück im richtigen Datenformat sein.
+Diese Daten müssen dann einerseits in einer Datei gespeichert werden und andererseits muss auch der Name des Musikstücks zum Katalog - sowohl in der Datei des Katalogs als auch im bereits verwendeten Speicher dafür - hinzugefügt werden.
+Sollten die Nutzer:innen nun aber den Import abbrechen, darf der Katalog noch nicht angepasst sein.
+Das heißt, dass dieser Codepath nicht die Anpassung des Katalogs selbst vornehmen sollte.
+Stattdessen sollte das im UI-Codecycle getan werden, nachdem die Nutzer:innen den Import abgeschlossen haben und der Codepath erfolgreich fertig gelaufen ist.
+Andernfalls sollte das Ergebnis des Codepaths vom UI-Codecycle wieder verworfen werden.
+
+Zuletzt gilt es noch die 5. Interaktion der Nutzer:innen zu betrachten: Die Wiedergabe eines Musikstücks.
+
+
+% @TODO(Val): SADT Diaram am Ende zeigen
 
 
 \section{Datenformat für Musikstücke} \label{vorgehenSW-PIDI}

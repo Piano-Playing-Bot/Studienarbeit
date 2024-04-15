@@ -181,27 +181,28 @@ Wenn zwei Hubmagnetreihen übereinander gebildet werden, hat jede Tastenansteuer
 Durch die 7mm Abstand ist eine Wärmeabfuhr über die Luft in geringem Ausmaß möglich.
 Alle Seile werden pro Hubmagnetreihe, parallel zwischen Tasten und Hubmagneten verbunden.
 
-Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung, würde allerdings auf Kosten der Spielbarkeit (siehe Anforderung 1 in Kapitel \ref{Zielstellung}) gehen.
+Die Hubmagnete direkt unter dem Tastenbrett zu befestigen wäre eine triviale Lösung, würde allerdings auf Kosten der Spielbarkeit (siehe Anforderung A1 in Kapitel \ref{Zielstellung}) gehen.
 Um also die Beinfreiheit der Pianist:in zu gewährleisten
 werden die Hubmagnete am Korpus des Klaviers (untere Frontplatte) befestigt.
 
 Um die Austauschbarkeit der Komponenten zu verbessern, werden die Hubmagnete nicht direkt an der unteren Frontplatte,
-sondern auf zwei Pressspanplatten (ca. 70cm x 25cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden können(siehe Abb. \ref{fig:BefestigungHubmagnete}).
+sondern auf zwei Pressspanplatten (ca. 70cm x 25cm) befestigt, welche an vier Punkten mit dem Klavier verschraubt werden können (siehe Abbildung \ref{fig:BefestigungHubmagnete}).
 In diesem Prototyp wird die Verschraubung an das Klavier nicht genutzt, um an Flexibilität zu gewinnen.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=5cm]{img/Magnetbrett.jpg}
+    \includegraphics[width=7cm]{img/Magnetbrett.jpg}
     \caption{Befestigung der Hubmagnete}
     \label{fig:BefestigungHubmagnete}
 \end{figure}
 
+
 \subsubsection{Seilführung}
 
-Würde man die Seile von den Tasten direkt zu den Hubmagneten führen,
-hätte man deutliche Hub-Verluste und könnte unter Umständen die Tasten nicht mehr ausreichend stark betätigen, um einen Ton zu erzeugen.
+Würden die Seile von den Tasten direkt zu den Hubmagneten geführt werden,
+gäb es deutliche Hub-Verluste, sodass unter Umständen die Tasten nicht mehr ausreichend stark betätigt werden könnten, um einen Ton zu erzeugen.
 \newline
-In den folgenden Abbildungen ist die seitliche Ansicht des Klaviers gezeichnet.
+In den folgenden Abbildungen (\ref{img:kUmlenkung_locker} bis \ref{img:mitumlenkung_locker}) ist die seitliche Ansicht des Klaviers gezeichnet.
 Dabei repräsentieren der schwarze bzw. weiße Block jeweils eine schwarze bzw. weiße Taste.
 Der grüne und pinke Strich stehen für die Seile, die den Hubmagneten mit dem Loch in der Taste verbinden.
 Unten links sind die zwei übereinanderliegenden Solenoid-Reihen abgebildet.
@@ -224,7 +225,7 @@ Abbildung \ref{img:kUmlenkung_gezogen} zeigt den selben Aufbau mit dem Unterschi
     \label{img:kUmlenkung_gezogen}
 \end{figure}
 
-Mit diesem intuitiven Aufbau funktioniert das Betätigen der Tasten nicht, da diese nicht weit genug heruntergezogen werden.
+Mit diesem intuitiven Aufbau funktioniert das Betätigen der Tasten nicht, da diese nicht weit genug heruntergezogen werden können.
 Um den gesamten Hub des Magneten zu Nutzen und an die Taste weiterzugeben, müssen Umlenkungen eingebaut werden.
 Mittels dieser Umlenkung, die mit einem PVC-Rohr umgesetzt werden kann, werden die Seile so geführt, das sie senkrecht auf die Hubmagnete fallen.
 Somit wird die Tiefe, mit der die Tasten gedrückt werden, wieder auf annähernd 1cm erhöht, was dem Hub des Magneten entspricht..
@@ -244,7 +245,7 @@ Dies kann auch mathematisch bewiesen werden:
 \newline Distanz zwischen der unteren Frontplatte und dem zum Loch im Tastenbrett t = 18cm
 
 Gesucht ist die Differenz der Längen zwischen dem Tastenbrett und dem Hubmagneten, wenn die Tasten (nicht-)gedrückt sind.
-Diese ist in Zeichnung \nameref{img:kUmlenkung_locker} und \nameref{img:kUmlenkung_gezogen} rot gekennzeichnet.
+Diese sind in Zeichnung \enquote{\nameref{img:kUmlenkung_locker}} und \enquote{\nameref{img:kUmlenkung_gezogen}} rot gekennzeichnet.
 \newline $ht_{entspannt}$ beschreibt die Seillänge zum Tastenbrett im entspannten Zustand
 \newline $ht_{entspannt}$ = $\sqrt {h^{2} + t^{2}}$ = 32.45cm
 \newline $ht_{gespannt}$ = $\sqrt {(h + 1)^{2} + t^{2}}$ = 33.29cm
@@ -253,9 +254,9 @@ Diese ist in Zeichnung \nameref{img:kUmlenkung_locker} und \nameref{img:kUmlenku
 Die Differenz zwischen $ht1_{gespannt}$ und $ht1_{entspannt}$ (bzw. ht2) beschreibt die Tiefe,
 die eine Taste gedrückt werden kann, wenn der Hub des Magnetens 1cm beträgt.
 \newline Diese beträgt also ohne Umlenkung nur 0.84cm.
-Mit der Umlenkung (siehe \nameref{img:mitumlenkung_locker})
+Mit der Umlenkung (siehe Abbildung \ref{img:mitumlenkung_locker}) % @TODO(Val): Satz fertig schreiben
 
-Um also die Intensität des Tastendrucks besser steuern zu können und um die Haltbarkeit des Materials zu verlängern,
+Um die Intensität des Tastendrucks besser steuern zu können und um die Haltbarkeit des Materials zu verlängern,
 sollte die Reibung am Seil möglichst gering gehalten werden.
 Dazu können mittels Rohren, welche waagerecht unter dem Klaviaturbalken entlang der Löcher montiert werden können (siehe Abbildung \ref{fig:fussraum}), die Seile umgelenkt und
 entlang der Verkleidung zur unteren Frontplatte des Klaviers geführt werden.
@@ -276,8 +277,8 @@ Wie eben beschrieben wird das Ziehen durch ein Seil ermöglicht.
 Dafür wird ein leichtes, formbares, unelastisches und dehnungsresistentes Material benötigt, welches die Hubmagnete mit den Tasten verbindet.
 Je leichter das Material ist, desto weniger geht die Genauigkeit der Kraftübertragung zwischen den Magneten und den Tasten verloren.
 Durch die Formbarkeit kann der Knoten sehr eng an der Taste geschnürt werden, wodurch das Ansprechverhalten schneller erfolgen kann.
-Da die Anschläge ruckartige Bewegungen sind, ist es wichtig ein unelastisches Seil zu verwenden.
-Um häufiges Nachspannen oder Austauschen des Seils entgegenzuwirken, sollte dies so dehnungsresistent wie möglich sein.
+Da die Anschläge ruckartige Bewegungen sind, ist es wichtig, ein unelastisches Seil zu verwenden.
+Um häufiges Nachspannen oder Austauschen des Seils zu vermeiden, sollte es so dehnungsresistent wie möglich sein.
 
 \paragraph{Nähgarn}
 
@@ -294,9 +295,9 @@ Beim Ziehen des Magnetens wurde erst die lockere Schlaufe an der Taste gestreckt
 
 \paragraph{Angelschnur}
 
-Mit einer kurzen Auseinandersetzung mit dem Angelzubehör konnte schnell eine geeignetere Schnur gefunden werden.
-Genauer handelt es sich um eine geflochtene Schnur aus Polyethylene.
-Mit einem Durchmesser von 1.6 mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7 kg standhalten.
+Nach einer kurzen Auseinandersetzung mit Angelzubehör konnte schnell eine geeignetere Schnur gefunden werden.
+Genauer handelt es sich hier um eine geflochtene Schnur aus Polyethylene.
+Mit einem Durchmesser von 1.6mm ist sie nicht nur sehr dünn und flexibel, sondern kann auch bis zu 7kg standhalten.
 Nach ausgiebigem Testen ist eindeutig, dass die Angelschnur die Anforderungen erfüllt.
 Damit ist nun auch das Spielen des Forellenquintetts von Schubert ein Leichtes.
 
@@ -306,18 +307,18 @@ Die Hubmagnete machen beim Anschlagen laute \enquote{Klack} Geräusche, welche v
 Genauer handelt es sich um den Metall-Anker, der gegen das Ende des Metall-Gehäuses stößt.
 Auch hierfür gab es mehrere Ideen und Tests, um das Geräusch zu dämpfen:
 
-\subsubsection{Isolierfolie}
+\paragraph{Isolierfolie}
 
 Die erste Überlegung war die Auskleidung des Innenraums der Hubmagnete mit Isolierfolie.
 Diese Idee wurde wieder verworfen, da das Wissen über die Hitzeentwicklung zu diesem Zeitpunkt noch zu gering war, um sicherzustellen, dass die Isolierung dem standhält. % "dem" meint die Hitzeentwicklung? Dann müsste es "ihr" sein.
 
-\subsubsection{Gummi-Stopper}
+\paragraph{Gummi-Stopper}
 
 Die nächste Idee war das Limitieren des Schlags durch Dichtungsringe aus Gummi
 zwischen Anker und dem äußeren Gehäuse.
 Da für die Befestigung keine zufriedenstellende Lösung gefunden wurde, wurde auch diese Idee verworfen.
 
-\subsubsection{Schaumstoff}
+\paragraph{Schaumstoff}
 
 Wie im Abbildung \ref{fig:schaumstoff} zu sehen ist, wurde die \enquote{Gummi-Stopper}-Idee durch den Einsatz von Schaumstoff leicht modifiziert. \newline
 + Klopfgeräusch wird vollständig verhindert \newline
@@ -333,15 +334,15 @@ Wie im Abbildung \ref{fig:schaumstoff} zu sehen ist, wurde die \enquote{Gummi-St
 
 \paragraph{Seil (2mm Durchmesser) um den Anker}
 
-Um das \enquote{Problem} der schlechten Ästetik beim Schaumstoff zu beseitigen, wird nun ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt. \newline
+Um das \enquote{Problem} der schlechten Ästetik beim Schaumstoff zu beseitigen, wurde ein 2mm dickes Seil im Inneren des Gehäuses um den Anker gewickelt. \newline
 + Auch hier konnte das Klopfen vollständig beseitigt werden \newline
-+ Von außen sieht man keine Veränderung \newline
-+ Das Seil scheint ausführlichen Tests nach der Hitzeentwicklung gut Stand zu halten  \newline
++ Von außen ist keine Veränderung zu sehen \newline
++ Das Seil scheint nach ausführlichem Testen der Hitzeentwicklung gut Stand zu halten  \newline
 - Durch die Dicke des Seils, werden 2mm des Hubs nicht verwendet, weshalb nur noch 8mm übrig bleiben.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics [width=4cm] {img/Hubmagnet_Seil_Daempfung.jpg}
+    \includegraphics [width=6cm] {img/Hubmagnet_Seil_Daempfung.jpg}
     \caption{Hubmagnet: Dämpfung mit Seil}
 \end{figure}
 
@@ -349,7 +350,7 @@ Um das \enquote{Problem} der schlechten Ästetik beim Schaumstoff zu beseitigen,
 \subsection{Klavieranbau}
 Im Rahmen des Protoypen wurde die Elektrik nicht fest am Klavier verschraubt.
 Das Brett mit den Hubmagneten wurde stattdessen nur an das Klavier angelehnt, während die Angelschnüre die Verbindung zu den Tasten herstellen.
-Gespannt werden die Seile durch eine Schrauben-Mutter Konstruktion (siehe Abschnitt \ref{subsec:VerbindungTastenAktuatoren}).
+Gespannt werden die Seile durch eine Schrauben-Mutter Konstruktion (siehe auch Abschnitt \ref{subsec:VerbindungTastenAktuatoren}).
 
 \subsection{Ergebnisse des Prototypen}
 % @TODO(Val):
@@ -358,21 +359,22 @@ Der Prototyp des selbstspielenden Klaviers zeigt erfolgreiche Ergebnisse in mehr
 fertig gelöteten Schaltung könnten 40 Tasten angespielt werden, allerdings haben die Tests sich auf 8 beschränkt.
 Ein Großteil der in Kapitel \ref{Zielstellung} definierten Anforderungen konnten von dem Prototypen erfüllt werden.
 Zusätzlich erweist sich die Klangdämpfung, dort wo sie eingesetzt wird, als effektiv. \newline
-Ein großer Teil, der fehlt, sind Sicherheitskonzepte, weshalb es nicht unbeaufsichtigt betrieben
-werden sollte, sowie die Fertigstellung der Schaltung für die zweite Hälfte der Tasten.
+Ein großer Teil, der fehlt, ist ein Sicherheitskonzept, weshalb es nicht unbeaufsichtigt betrieben
+werden sollte.
+Auch fehlt die Fertigstellung der Schaltung für die zweite Hälfte der Tasten.
 
 Für die mögliche Fertigstellung des Prototypen, muss der Zeitaufwand betrachtet werden.
-Von der Umsetzung her ist nur die hälfte des Klaviers anspielbar. Das bedeutet, dass folgendes noch zu tun ist:
+Von der Umsetzung her ist nur die hälfte des Klaviers anspielbar. Speziell wären die folgenden Aufgaben noch zu tun.
 \begin{itemize}
     \item Löten der Schaltung für 48 Solenoids
     \item Löten der Anschlussblöcke: 76 Stück
-    \item Abisulierung der Hubmagnete für 48 Stück
-    \item Fertigstellung des Brettes für die Befästigung der Hubmagnete (Bohren) und die Befästigung
-    \item Verbindung zwischen Hubmagneten und Tasten für 76 Stück
+    \item Isolierung von 48 Hubmagneten
+    \item Fertigstellung des Brettes für die Befestigung der Hubmagnete (Bohren) und die Befestigung % @TODO(Val): Hier fehlt das Ende des Satzes
+    \item Verbindung zwischen 76 Hubmagneten und Tasten
     \item Klangdämpfung für 86 Hubmagneten
 \end{itemize}
 
-Die Zeiteinschätzung kann gut auf den bisherigen Arbeiten basieren. Das Löten und Abisulieren der Schaltung für
+Die Zeiteinschätzung kann gut auf den bisherigen Arbeiten basieren. Das Löten und isolieren der Schaltung für
 40 Hubmagnete, benötigte etwa 40 Stunden. Die Befästigung der Magnete und die Verbindung mit den Tasten wird auf
 mindestens zwei Stunden Arbeit herauslaufen.
 Zusätzlich wird mindestens eine Stunde (tendenziell eher 2) für die Klangdämpfung benötigt werden.
@@ -381,7 +383,4 @@ Damit beläuft sich die Fertigstellung des Prototypen auf mindestens weitere 44 
 noch ausführlich getestet werden muss und gegebenenfalls Fehler die beim Löten o.ä. aufkommen behoben werden müssen.
 
 Der Prototyp wird aus diesem Grund nicht komplett fertiggestellt.
-% @TODO(Val): Hier oder bei den Limitationen später genauer beschreiben wie ein Sicherheitskonzept aussehen könnte und warum es gebraucht wird
-% @Note(Jay): Steht grad in Limitationen aber wir könnens gerne hier hin ziehen damit hier etwas mehr steht
-
 

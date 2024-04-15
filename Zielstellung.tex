@@ -10,114 +10,53 @@
 Das Kernanliegen dieser Arbeit ist die Entwicklung eines multifunktionalen Klaviers,
 das sowohl manuell von Musiker:innen als auch automatisiert durch einen Computer bespielt werden kann.
 
-Da es wünschenswert ist, dass Nutzer:innen auf eine breite Palette fertiger Stücke zugreifen und diese selbstständig erweitern können,
+Da es wünschenswert ist, dass Nutzer:innen auf eine breite Palette fertiger Stücke zugreifen und diese Palette selbstständig erweitern können,
 wäre eine Steuerung über den PC sinnvoll.
 Neben der Auswahl von Musikstücken soll die Anwendung außerdem die Möglichkeit bieten,
-die Wiedergabegeschwindigkeit und die Lautstärke individuell anzupassen.
+die Wiedergabegeschwindigkeit und Lautstärke individuell anzupassen.
 
 In Anlehnung an die Funktionsweise populärer Musikplayer wird angestrebt,
 dass die Wiedergabe nicht nur pausiert, sondern auch innerhalb eines Stücks frei navigiert werden kann.
 
-\newpage
-
-\section{Anforderungen} \label{sec:zielstellung-anforderungen}
-
-% @Note(Val): Die Anforderungen werden nicht motiviert, sondern einfach gestellt.
-Im Folgenden befinden sich die allgemeinen Anforderungen, die an dieses Projekt gestellt wurden.
+In Tabelle \ref{table:anforderungen} befinden sich die allgemeinen Anforderungen, die an dieses Projekt gestellt wurden.
 Basierend auf den Anforderungen und deren Priorisierungen kann die Arbeit in kleinere Arbeitspakete aufgeteilt werden.
 Zuerst sollen die Anforderungen mit hoher Priorität umgesetzt werden und im Anschluss jene mit einer niedrigeren.
-Im weiteren Verlauf dieser Arbeit wird nicht weiter auf die Priorisierung eingegangen, da alle genannten auch umgesetzt wurden.
+Im weiteren Verlauf dieser Arbeit wird nicht weiter auf die Priorisierung eingegangen, da alle genannten auch umgesetzt wurden. % @TODO(Val): Ich würde vielleicht noch ein paar Anforderungen mit "niedrig" einbringen, damit auch Erweiterungsmöglichkeiten hier schon genannt werden. Dann muss dieser Satz angepasst werden
+
+Wie an den genannten Anforderungen erkenntlich wird, lässt sich diese Arbeit entlang der Software-/Hardware-Grenze teilen.
+Das ist insoweit sinnvoll, dass die Planung und Umsetzung der beiden Teile dann parallel getan werden kann.
 
 \begin{table}[ht]
     \centering
     \begin{tabular}{ | m{1cm} | m{2cm} | m{8cm} | m{2cm} | }
+        \theadstart{ID} & \theadcol{Kategorie} & \theadcol{Anforderung} & \theadcol{Priorität} \\
         \hline
-        \textbf{Nr.} & \textbf{Kategorie} & \textbf{Anforderung} & \textbf{Priorität} \\
-        \hline
-        1 & \multirow{3}{2cm}{Allgemein} & Flexibilität: Das Klavier muss sowohl manuell als auch automatisch bespielbar sein. & Hoch \\
+        A1 & \multirow{3}{2cm}{Allgemein} & \textbf{Flexibilität:} Das Klavier muss sowohl manuell als auch automatisch bespielbar sein & Hoch \\
         \cline{1-1} \cline{3-4}
-        2 & & Benutzerinterface: Entwicklung eines intuitiven Interfaces. & Hoch \\
+        A2 & & \textbf{Benutzerinterface:} Entwicklung eines intuitiven Interfaces & Hoch \\
         \cline{1-1} \cline{3-4}
-        3 & & Budget: Gesamtkosten < 2000€. & Mittel \\
+        A3 & & \textbf{Budget:} Gesamtkosten < 2000\euro{} & Mittel \\
         \cline{1-1} \cline{3-4}
-        4 & & Responsivität: Die Anwendung muss auf verschiedenen Computern mit Windows 10 und 11 laufen. & Mittel \\
+        A4 & & \textbf{Portabilität:} Die Anwendung muss auf verschiedenen Computern mit Windows 10 und 11 laufen & Mittel \\
         \cline{1-1} \cline{3-4}
-        5 & & Performanz: Die Performanz soll mindestens die von professionellen Pianist:innen erreichen. & Mittel \\
+        A5 & & \textbf{Performanz:} Die Performanz soll mindestens die von professionellen Pianist:innen erreichen & Mittel \\
         \cline{1-1} \cline{3-4}% @TODO(Jay): Muss in Fazit rein und besser definiert werden
-        6 & & Spielbarkeit: Der Aufbau sollte dazu in der Lage sein, mindestens 10 Tasten gleichzeitig anspielen zu können & Mittel \\
+        A6 & & \textbf{Spielbarkeit:} Der Aufbau sollte dazu in der Lage sein, mindestens 10 Tasten gleichzeitig anspielen zu können & Mittel \\
         \hline
-        7 & \multirow{2}{2cm}{Hardware} & Tastenbetätigung: Hardware muss in der Lage sein, Klaviertasten autonom zu bedienen. & Hoch \\
+        A7 & \multirow{2}{2cm}{Hardware} & \textbf{Tastenbetätigung:} Die Hardware muss in der Lage sein, Klaviertasten autonom zu bedienen & Hoch \\
         \cline{1-1} \cline{3-4}
-        8 & & Anpassbarkeit: Hardware-Komponenten müssen auf unterschiedliche Klaviertypen anpassbar sein. & Mittel \\
+        A8 & & \textbf{Anpassbarkeit:} Hardware- \& Software-Komponenten müssen auf unterschiedliche Klaviertypen anpassbar sein & Mittel \\
         \hline
-        9 & \multirow{4}{2cm}{Software} & Musikstück-Auswahl: Nutzer:innen wählen Musikstücke über eine Desktop-Anwendung. & Hoch \\
+        A9 & \multirow{4}{2cm}{Software} & \textbf{Musikstück-Auswahl:} Musikstücke sind über eine Desktop-Anwendung wählbar & Hoch \\
         \cline{1-1} \cline{3-4}
-        10 & & Wiedergabe-Kontrolle: Anpassung der Wiedergabegeschwindigkeit und Lautstärke. & Mittel \\
+        A10 & & \textbf{Wiedergabe-Kontrolle:} Anpassung der Wiedergabegeschwindigkeit und Lautstärke & Mittel \\
         \cline{1-1} \cline{3-4}
-        11 & & Navigation: Möglichkeit, die Wiedergabe zu pausieren und innerhalb des Stücks zu navigieren. & Mittel \\
+        A11 & & \textbf{Navigation:} Möglichkeit, die Wiedergabe zu pausieren und innerhalb des Stücks zu navigieren & Mittel \\
         \cline{1-1} \cline{3-4}
-        12 & & MIDI-Integration: System muss MIDI-Dateien für die Erweiterung des Katalogs unterstützen. & Mittel \\
+        A12 & & \textbf{\ac{MIDI}-Integration:} System muss \ac{MIDI}-Dateien für die Erweiterung des Katalogs unterstützen & Mittel \\
         \hline
     \end{tabular}
     \caption{Anforderungen an das selbstspielende Klavier}
     \label{table:anforderungen}
 \end{table}
 
-
-
-\section{Vorgehensweise} \label{sec:zielstellung-vorgehen}
-
-In diesem Kapitel wird der geplante Ablauf des Projektes zur Entwicklung eines selbstspielenden Klaviers vorgestellt.
-Die Vorgehensweise ist in zwei Hauptteile, die Hardware und die Software, aufgeteilt, die das parallele Arbeiten vereinfachen.
-
-Das Projekt wurde, ebenso wie die Gliederung der Arbeit in folgende Aufgabenbereiche gegliedert:
-
-\begin{itemize}
-    \item Definition der funktionalen Anforderungen an das Klavier. (siehe Kapitel \ref{sec:zielstellung-anforderungen})
-    \item Auswahl der Ansteuerung-Hardware. (siehe Kapitel \ref{konzeptionHW})
-    \item Bau der Ansteuerungs-Hardware. (siehe Kapitel \ref{umsetzungHW})
-    \item Entwurf des Konzepts für die Desktop-Anwendung. (siehe Kapitel \ref{vorgehenSW})
-    \item Entwicklung der Software. (siehe Kapitel \ref{umsetzungSW})
-    \item Testen der Kombination aus Hard-und Software. (siehe Kapitel \ref{tests})
-    \item Fazit. (siehe Kapitel \ref{fazit})
-\end{itemize}
-
-
-\subsubsection{Konzeptualisierung und Planung}\label{Vorgehensweise - Konzeptualisierung und Planung}
-
-Zu Beginn des Projektes stand die Konzeptualisierung, in der die grundlegenden Anforderungen an das System festgelegt wurden.
-Besondere Aufmerksamkeit galt dabei der Schnittstelle zwischen der Hardware und der Software der Desktop-Anwendung.
-
-\subsubsection{Hardware-Entwicklung}\label{Vorgehensweise - Hardware-Implementierung}
-
-Nach der Konzeptualisierung des Projekts folgte das Entwickeln und Umsetzen der Hardwarekomponenten:
-
-\begin{itemize}
-    \item Auswahl und Testung von Komponenten, die in der Lage sind, die Klaviertasten autonom zu betätigen.
-    \item Entwicklung eines Prototyps zur Überprüfung der Ansteuerung und Funktionalität der Tasten.
-    \item Anschließen des \ac{MC}s in das Gesamtsystem.
-\end{itemize}
-
-\subsubsection{Software-Entwicklung}\label{Vorgehensweise - Software-Entwicklung}
-
-Parallel zur Hardware-Entwicklung wird die Software konzipiert und programmiert:
-
-\begin{itemize}
-    \item Entwicklung eines Kommunikationsprotokolls zwischen Anwendungsprogramm und \ac{MC}.
-    \item Gestaltung der Benutzeroberfläche der Desktop-Anwendung, welche die Auswahl und Wiedergabe der Musikstücke ermöglicht.
-    \item Implementierung von Funktionen zur Anpassung der Wiedergabegeschwindigkeit und Lautstärke.
-    \item Entwicklung eines Systems zur Verwaltung und Erweiterung des Musik-Katalogs, einschließlich der Integration und des Parsings von MIDI-Dateien.
-\end{itemize}
-
-\subsubsection{Integration und Tests}\label{Vorgehensweise - Integration und Tests}
-
-In der abschließenden Phase werden die Hardware und Software integriert und umfassend getestet:
-
-\begin{itemize}
-    \item Zusammenführung der Hardware- und Softwarekomponenten zu einem einheitlichen System.
-    \item Durchführung von Tests zur Überprüfung der Funktionalität und Benutzerfreundlichkeit.
-    \item Fehlerbehebung und Feinabstimmung des Systems basierend auf Testergebnissen.
-\end{itemize}
-
-Das Ergebnis dieser Vorgehensweise soll ein benutzerfreundliches, selbstspielendes Klavier sein,
-das den in Kapitel \ref{sec:zielstellung-anforderungen} genannten Anforderungen entspricht und einen Mehrwert sowohl für Musiker:innen als auch für Technikaffine bietet.

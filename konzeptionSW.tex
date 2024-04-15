@@ -178,39 +178,39 @@ Wenn davon ausgegangen wird, dass die meisten Töne mit einer Anspielstärke ges
 Der \ac{MC} hat grundlegend zwei Aufgaben.
 Einerseits muss der \ac{MC} Daten an die Aktuatoren senden, um das Klavier richtig anzuspielen.
 Andererseits muss der \ac{MC} auch mit \ac{SAM} kommunizieren können.
-Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearebeitet werden.
+Da der \ac{MC} nur einen einzelnen CPU-Kern hat, können diese Aufgaben nur abwechselnd nacheinander und nicht parallel bearbeitet werden.
 Während die Anspiellogik in diesem Kapitel erläutert wird, soll die Kommunikation mit \ac{SAM} im nächsten Kapitel \ref{vorgehenSW-SPPP} dargelegt werden.
 
 Um die richtigen Werte zu den Aktuatoren zu senden, müssen nacheinander alle Werte an die Schieberegister gegeben werden.
 Der Wert des letzten Schieberegister-Ausgangs muss dabei zuerst gesendet werden, da es dann als erstes komplett durchgeschoben wurde.
 Sobald alle Werte ausgesandt wurden, müssen die Ausgänge der Schieberegister gesperrt werden, damit diese nicht ständig fluktuieren.
-All das kann beim Arduino, der in Kapitel \ref{Ansteuerung} als \ac{MC} gewählt wurde, über das Ansprechen spezieller \ac{PWM}-Pins getan werden.
+All das kann beim Arduino UNO R3, der in Kapitel \ref{Ansteuerung} als \ac{MC} gewählt wurde, über das Ansprechen spezieller \ac{PWM}-Pins getan werden.
 
 Wann immer die Signale für die Aktuatoren ausgesandt werden sollen, müssen diese Werte vorher bereitstehen.
 Da 88 Aktuatoren angesteuert werden sollen, muss also eine Liste von 88 \ac{PWM}-Werten befüllt werden.
 Im Folgenden soll diese Liste \lstinline{piano} genannt werden.
 Um \lstinline{piano} zu befüllen müssen die Informationen des Musikstücks verwendet werden, die wie in Abschnitt \ref{vorgehenSW-PIDI} beschrieben, als eine Liste von \lstinline{PidiCmd}s gespeichert werden.
 
-Die \lstinline{PidiCmd}-Struktur ist nicht nur sehr speichereffizient, sondern erlaubt auch eine performante Anpassung der \lstinline{piano} Liste.
+Die \lstinline{PidiCmd}-Struktur ist nicht nur sehr speicher-effizient, sondern erlaubt auch eine performante Anpassung der \lstinline{piano} Liste.
 Da die \lstinline{PidiCmd}s zeitlich sortiert sein müssen, reicht ein laufender Index in die Liste.
 Um zu entscheiden, ob eine Note gespielt werden soll, wird außerdem die Zeit benötigt, die seit Spielen des letzten \lstinline{PidiCmd}s vergangen ist.
 Außerdem muss überprüft werden, ob einige der zurzeit spielenden Töne wieder ausgeschaltet werden sollten.
 Um dies schnell berechnen zu können, wird eine Liste mit allen zurzeit gespielten Noten gehalten.
-Für jede Note wird dabei die Zeit gespeichert, für die sie noch weiterhin gespielt werden sollte.
+Für jede Note wird dabei die Zeit gespeichert, für die sie weiterhin noch gespielt werden sollte.
 Listing \ref{code:Apply PIDICmds} stellt diese Logik in Pseudocode dar.
 
 \begin{UnbrokenCodePage}[style=CStyle, caption={Nutzung der \lstinline{PidiCmd}-Struktur}, label={code:Apply PIDICmds}]
 PIDICmds *cmds; // assume this array to be initialized already
 u8  piano[88];  // list of values to send to magnets
 u32 index = 0;
+u32 elapsed_time = 0;
 while (true) {  // Endless Loop of Microcontroller
     u32 start_time   = currentTime(); // time in milliseconds
-    u32 elapsed_time = 0;
     update_played_keys(elapsed_time);
     while (index < length(cmds) && cmds[index].dt <= elapsed_time) {
         applyCmd(piano, cmds[index]);
-        elapsed_time -= cmds[index].dt;
         add_to_played_keys(cmds[index].dt);
+        elapsed_time -= cmds[index].dt;
         index++;
     }
     elapsed_time += getElapsedTimeSince(start_time);
@@ -219,12 +219,12 @@ while (true) {  // Endless Loop of Microcontroller
 
 Die in Listing \ref{code:Apply PIDICmds} erwähnten Funktionen \lstinline{currentTime} und \lstinline{getElapsedTimeSince} sind über die eingebaute Uhr des \ac{MC} umsetzbar.
 Die Funktion \lstinline{aplyCmd} setzt die Stärke des Tastenanschlags an der richtigen Stelle in der \lstinline{piano} Liste.
-Da die \lstinline{PidiCmd}-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktuator, der diese Taste betätigt, hier geschehen.
+Da die \lstinline{PidiCmd}-Struktur die Anordnung und Anzahl verfügbarer Aktuatoren ignoriert, muss diese Umrechnung von Oktave und Ton in den genauen Aktuator, der diese Taste betätigt, hier geschehen. \newline
 Zuletzt verwendet das Listing noch die Funktionen \lstinline{update_played_keys} und \lstinline{add_to_played_keys}.
 Diese benötigen eine Liste der zurzeit gespielten Töne.
-Weil nur eine bestimmte Anzahl der Aktuatoren zu einem Zeitpunkt aktiv sein dürfen (siehe Kapitel \ref{Prototyp}), kann diese Liste klein gehalten werden.
+Weil nie mehr als 10 Aktuatoren zu einem Zeitpunkt aktiviert sein dürfen (siehe Kapitel \ref{Prototyp}), kann diese Liste klein gehalten werden.
 
-Sollte ein Musikstück diese Obergrenze zu gleichzeitig zu spielender Noten überschreiten, müssen einige Töne früher beendet werden als eigentlich angesehen.
+Sollte ein Musikstück diese Obergrenze gleichzeitig zu spielender Noten überschreiten, müssen einige Töne früher beendet werden als eigentlich erwünscht. \newline
 Hier gibt es mehrere Strategien, die jeweils eigene Vor- und Nachteile mit sich bringen.
 Die am leichtesten zu implementierende Idee, würde neue Noten einfach nicht spielen lassen.
 Entweder könnten diese neuen Noten übersprungen werden, oder es könnte gewartet werden, bis eine der zurzeit spielenden Noten wieder ausklingen sollen, bevor weitere \lstinline{PidiCmd}s überhaupt betrachtet werden.
@@ -236,9 +236,8 @@ Nun werden gerade C, D, E, F und G der mittleren Oktave gespielt.
 Das C soll nur noch für ein paar Millisekunden gespielt werden.
 Davor soll aber nun ein B gespielt werden.
 Dieses B soll nun für eine ganze Sekunde gespielt werden.
-Optimal wäre es hier, das C, das sowieso bald ausklingen soll, ein paar Millisekunden früher zu auszuschalten, dami das B zum richtigen Zeitpunkt schon gespielt werden kann.
-Die zuerst genannte Strategie würde dagegen das C einfach überhaupt nicht spielen.
-% @Note(Jay): Wäre es nicht das B das nicht gespielt wird wenn das C schon an ist?
+Optimal wäre es hier, das C, das sowieso bald ausklingen soll, ein paar Millisekunden früher auszuschalten, damit das B zum richtigen Zeitpunkt schon gespielt werden kann.
+Die zuerst genannte Strategie würde dagegen das B einfach überhaupt nicht spielen.
 
 Aus diesem Beispiel lässt sich eine alternative Strategie entwickeln.
 So lassen sich die Längen, für die die bereits gespielten Töne und den neu zu spielenden Ton vergleichen.
@@ -247,32 +246,32 @@ Da die Liste bereits gespielter Töne kurz sein muss, ist eine Iteration über a
 Nichtsdestotrotz ist dieses Vorgehen komplizierter und rechenaufwendiger als die beiden erstgenannten Ideen.
 
 Eine weitere Möglichkeit wäre statt der Länge die Anschlagstärken zu vergleichen.
-Es kann davon ausgegangen werden, dass das Fehlen stärker zu spielender Töne eher negativ auffallen würde als das Fehlen leiserer Töne.
+Es kann davon ausgegangen werden, dass das Fehlen stärker zu spielender Töne eher negativ auffallen würde als das Fehlen leiserer Töne. \newline
 Es ließe sich auch eine Heuristik erstellen, die sowohl die Anschlagsstärke als auch die noch verbleibende Spiellänge mit einander vermischt.
 Ohne Testen an realen Musikstücken, ist es jedoch schwer zu sagen, wie eine solche Heuristik aussehen sollte.
 Hier ist es also sinnvoll eine leicht anpassbare Heuristik zu verwenden und während des Testens dann zu analysieren, welche Heuristik die am besten klingende Resultate mit sich bringt.
 
 Die benötigte Logik zum Anspielen des Klaviers ist damit fast vollständig besprochen.
-Es fehlt jedoch noch die Logik zum dynamischen Anhalten und Anpassen der Lautstärke und Spielgeschwindigkeit, die in Kapitel \ref{Zielstellung} spezifiziert wurden.
+Es fehlt jedoch noch die Logik zum dynamischen Anhalten und Anpassen der Lautstärke und Spielgeschwindigkeit (siehe Anforderungen A10 und A11).
 
-Das Anhalten kann über eine einfachen Bool'schen Wert gelöst werden.
+Das Anhalten kann mithilfe eines einfachen Bool'schen Wert gelöst werden.
 Wenn angehalten wurde, soll statt den Werten aus der \lstinline{piano} Liste, eine Null an jeden Aktuator gesendet werden.
-Auch sollen keine weiteren \lstinline{PidiCmd}s angewandt werden.
+Auch sollen keine weiteren \lstinline{PidiCmd}s angewandt werden und die \lstinline|elapsed_time| soll nicht weiter inkrementiert werden.
 
 Die Lautstärke ist über Erhöhen der Anschlagsstärke umsetzbar.
 Da \lstinline{PidiCmd}s die Anschlagsstärke in einem abstrakten Wert von 0 bis 15 darstellen, kann dieser Wert über einen Lautstärke-Faktor einfach skaliert werden.
 
 Die Geschwindigkeit kann ebenfalls über einen Faktor implementiert werden.
 Dieser Faktor skaliert dabei jedoch die Messung der vergangenen Zeit.
-Hierbei ist aufzupassen, dass nicht die in Listing \ref{code:Apply PIDICmds} verwendete Variable \lstinline{elapsed_time} skaliert wird, sondern der Term \lstinline{getElapsedTimeSince}, der zur \lstinline{elapsed_time} hinzu addiert wird.
+Hierbei ist aufzupassen, dass nicht die in Listing \ref{code:Apply PIDICmds} verwendete Variable \lstinline{elapsed_time} skaliert wird, sondern der Term \lstinline{getElapsedTimeSince}, der zur \lstinline{elapsed_time} hinzu addiert wird. \newline
 Ansosten würde nämlich die akkumulierte Zeit der Vergangenheit angepasst werden, statt die Geschwindigkeit der zurzeit laufenden Zeit zu verändern.
 
 
 \section{Kommunikation} \label{vorgehenSW-SPPP}
 
-Den in Kapitel \ref{Zielstellung} gestellten Anforderungen nach, soll über \ac{SAM} das automatisch gespielte Musikstück dynamisch wählbar sein.
-Das bringt mit sich, dass \ac{SAM} Daten an den \ac{MC} senden können muss.
-Abgesehen von den zu spielenden Noten, muss \ac{SAM} dem \ac{MC} auch mitteilen können, ob angehalten, oder Lautstärke und Geschwindigkeit angepasst werden sollen.
+Den in Kapitel \ref{Zielstellung} gestellten Anforderungen nach, soll über \ac{SAM} das automatisch gespielte Musikstück dynamisch wählbar sein (Anforderung A9).
+Das bringt mit sich, dass \ac{SAM} Daten an den \ac{MC} senden können muss. \newline
+Abgesehen von den zu spielenden Noten, muss \ac{SAM} dem \ac{MC} auch mitteilen können, ob angehalten, oder die Lautstärke bzw. Geschwindigkeit angepasst werden sollen (Anforderungen A10 und A11).
 
 % @TODO(Val): Source for why these questions in particular maybe
 Hierbei sollten mehrere Fragen aufkommen:
@@ -290,8 +289,8 @@ Hierbei sollten mehrere Fragen aufkommen:
 Zuerst mag eine einseitige Kommunikation ausreichend erscheinen.
 Allerdings erlaubt eine zweiseitige Kommunikation bessere Portabilität der Anwendung.
 So muss \ac{SAM} wissen, über welchen Port der \ac{MC} angesprochen werden kann.
-Da nicht alle Maschinen die gleichen Ports zur Verfügung stehen haben, sollte dieser Port dynamisch wählbar sein.
-Um den korrekten Port entsprechend auch dynamisch finden zu können, muss der \ac{MC} ein einzigartiges Signal über den Port zu \ac{SAM} schicken können.
+Da nicht alle Maschinen die gleichen Ports zur Verfügung stehen haben, sollte dieser Port dynamisch wählbar sein. \newline
+Um den korrekten Port entsprechend auch dynamisch finden zu können, ist es hilfreich, wenn der \ac{MC} ein einzigartiges Signal über den Port zu \ac{SAM} schicken kann.
 Hier kann beispielsweise ein spezielles \enquote{PING}-Signal über jeden verfügbaren Port geschickt werden.
 Während der \enquote{PING} von anderen Ports ignoriert wird, kann der \ac{MC} mit dem entsprechenden \enquote{PONG}-Signal antworten.
 Somit kann \ac{SAM} jederzeit die Verfügbarkeit des \ac{MC}s und dessen Port prüfen.
@@ -299,49 +298,49 @@ Somit kann \ac{SAM} jederzeit die Verfügbarkeit des \ac{MC}s und dessen Port pr
 Mögliche Übertragungsmedien für die Kommunikation lassen sich in die Kategorien \enquote{Kabel} und \enquote{Kabellos} einteilen.
 Kabellose Medien wie WLAN oder Bluetooth benötigen bei dem in Kapitel \ref{Ansteuerung} gewählten \ac{MC} ein weiteres Modul.
 Das würde die Kosten weiter erhöhen und damit entgegen dem Ziel einer möglichst preisgünstigen Entwicklung sprechen.
-Nichtsdestotrotz sollte die Kommunikation erweiterbar konzipiert werden, um auch leicht kabellos umgesetzt werden zu können.
-Da es im gewählten \ac{MC} jedoch schon eingebaut ist und damit die preisgünstigste Möglichkeit darstellt, soll hier eine Verbindung über ein USB-Kabel zwischen \ac{MC} und \ac{SAM} angenommen werden.
+Nichtsdestotrotz sollte die Kommunikation erweiterbar konzipiert werden, um auch leicht kabellos umgesetzt werden zu können. \newline
+Da es beim gewählten \ac{MC} jedoch schon eingebaut ist und damit die preisgünstigste Möglichkeit darstellt, soll hier eine Verbindung über ein USB-Kabel zwischen \ac{MC} und \ac{SAM} angenommen werden.
 
 Damit wird auch die nächste Frage bereits beantwortet, da über das USB-Kabel nur eine serielle Kommunikation möglich ist.
 Der gewählte \ac{MC} schränkt auch die möglichen Protokolle zur Übertragung von Daten ein.
 So unterstützt der Arduino Uno R3 nur die folgenden drei Übertragungsprotokolle:
+
 \begin{enumerate}
     \item \ac{I2C}
     \item \ac{SPC}
     \item \ac{UART}
 \end{enumerate}
-\ac{I2C} und \ac{SPC} sind beides Protokolle, die für die Kommunikation mit Periphergeräten gedacht wurden.
-\ac{UART} wird dagegen von Arduino Dokumentation für generelle Kommunikation mit einem PC empfohlen. % @TODO(Val): Source - Documentation/Examples
-Da die Desktop-Anwendung das selbe Protokoll sprechen können muss, ist die Nutzung von \ac{UART} auch insoweit sinnvoll, dass Windows nativ die Nutzung des \ac{UART}-Protokolls über sogenannte \enquote{COM}-Ports ermöglicht.
+
+\ac{I2C} und \ac{SPC} sind beides Protokolle, die für die Kommunikation mit Periphergeräten gedacht wurden \cites[vgl.][]{zsh.InterIntegratedCircuitI2C.24}{as.ArduinoSerialPeripheral.23}.
+\ac{UART} wird dagegen von der Arduino Dokumentation für generelle Kommunikation mit einem PC empfohlen \cite[vgl.][]{sie.UniversalAsynchronousReceiverTransmitter.23}.
+Da die Desktop-Anwendung das selbe Protokoll sprechen können muss, ist die Nutzung von \ac{UART} auch insoweit sinnvoll, dass Windows nativ die Nutzung des \ac{UART}-Protokolls über sogenannte \enquote{COM}-Ports ermöglicht \cite[vgl.][]{mar.ConfigurationCOMPorts.22}. \newline
 Da \ac{UART} verwendet wird, steht auch fest, dass die Übertragung von Daten asynchron abläuft.
 
-% @Note(Val): Sollte erwähnt werden, dass UI & MC die selbe Baud-Rate, Daten-Bit-Siue, etc. haben müssen?
-% Siehe List hier: https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter#Transmitting_and_receiving_serial_data
-Das \ac{UART}-Protokoll bringt auf Level der Bit-Übertragung bereits Mechanismen zum Sicherstellen der Datenkonsistenz und Vollständigkeit mit sich. % @Note(Val): Mention what mechanisms these are maybe
+Das \ac{UART}-Protokoll bringt auf Level der Bit-Übertragung bereits Mechanismen zum Sicherstellen der Datenkonsistenz und Vollständigkeit mit sich.
 Bis jetzt wurde jedoch nur geklärt wie die Bits der Nachrichten übertragen werden, nicht jedoch wie diese Nachrichten aussehen sollen.
 Das benötigt ein weiteres Protokoll, das diesmal jedoch über Software in den Anwendungen des Arduinos und Desktops implementiert werden muss.
 Im Folgenden soll dieses Protokoll \enquote{\ac{SPPP}} genannt werden.
 
 Es wäre hierbei möglich ein bereits existierendes, generelles Kommunikationsprotokoll zu verwenden.
-Zum Beispiel könnten die Daten über das \ac{HTTP} gesendet werden.
-Jedoch muss selbst dann noch ein spezielles Schema spezifiziert werden, in dem die Daten angeordnet werden.
+Zum Beispiel könnten die Daten über das \acf{HTTP} gesendet werden.
+Jedoch muss selbst dann noch ein spezielles Schema spezifiziert werden, in dem die Daten angeordnet werden. \newline
 Entsprechend ist es sinnvoll hier ein eigenes, einfaches Protokoll zu entwerfen, dass alle Anforderungen an die Kommunikation abdecken kann.
-Dabei muss das \ac{SPPP} die folgenden Anforderungen erfüllen, welche basierend auf den in Kapitel \ref{Zielstellung} gestellten Anforderungen abgeleitet wurden.
+Dabei muss das \ac{SPPP} Protokoll die folgenden Anforderungen erfüllen, welche von den in Kapitel \ref{Zielstellung} gestellten Anforderungen abgeleitet wurden.
 
 \begin{enumerate}
-    \item \ac{SAM} muss einen \enquote{Ping} senden können, auf die der \ac{MC} mit einem \enquote{Pong} antwortet, damit der genaue Port, an dem der Arduino ist, identifiziert werden kann.
+    \item \ac{SAM} muss einen \enquote{Ping} senden können, auf die der \ac{MC} mit einem \enquote{Pong} antwortet, damit der genaue Port, über dem der Arduino verbunden ist, identifiziert werden kann
     \item \ac{SAM} muss dem \ac{MC} sagen können, dass die Musik angehalten oder fortgesetzt werden soll
     \item Die Lautstärke muss von \ac{SAM} an den \ac{MC} gesendet werden können
     \item Die Geschwindigkeit muss von \ac{SAM} an den \ac{MC} gesendet werden können
-    \item Musikdaten in Form von \lstinline|PidiCmd|s muss von \ac{SAM} an den \ac{MC} gesendet werden können
+    \item Musikdaten in Form von \lstinline|PidiCmd|s müssen von \ac{SAM} an den \ac{MC} gesendet werden können
     \item \ac{SAM} muss dem \ac{MC} sagen können, dass zu einem beliebigen Zeitpunkt im Musikstück gesprungen werden soll
-    \item Fehler in der Kommunikation sollten erkannt werden, damit \ac{SAM} und \ac{MC} diese entsprechen behandeln können
+    \item Fehler in der Kommunikation sollten erkannt werden, damit \ac{SAM} und \ac{MC} diese entsprechend behandeln können
     \item Die Latenz beim Senden von Nachrichten sollte möglichst gering und mindestens unter einer Sekunde sein
     \item Das Protokoll soll erweiterbar sein, sodass leicht weitere Versionen erstellt werden können, ohne Backwards-Compatibility zu brechen
 \end{enumerate}
 
 Aus den Anforderungen wird klar, dass es unterschiedliche Arten an Nachrichten gibt, die vom Protokoll unterstützt werden müssen.
-Ein entsprechend simpler Aufbau von \ac{SPPP} Nachrichten besteht aus einer ID, die den Typ der Nachricht identifiziert, und einem Datensatz, der je nach Nachrichten-Typ unterschiedlich spezifiziert ist.
+Ein entsprechend simpler Aufbau von \ac{SPPP} Nachrichten besteht aus einer ID, die den Typ der Nachricht identifiziert, und einem Datensatz, der je nach Nachrichten-Typ unterschiedlich spezifiziert ist. \newline
 Damit lässt sich das Protokoll auch leicht erweitern, da neue Nachrichten-Typen einfach hinzugefügt werden können.
 Es empfiehlt sich außerdem jede Nachricht mit bestimmten \enquote{Magic Bytes} zu starten, um keine arbiträren Datenströme als Nachrichten zu interpretieren.
 
@@ -362,7 +361,7 @@ Die vollständige Spezifikation des Protokolls findet sich in Anhang \ref{append
     \begin{tabular}{|p{6mm}|p{80mm}|p{55mm}|}
         \theadstart{ID} & \theadcol{Beschreibung} & \theadcol{Payload} \\ \hline
         \enquote{P} & \enquote{Ping}-Nachricht & - \\ \hline
-        \enquote{p} & \enquote{Pong}-Nachricht - Antwort vom \ac{MC} auf Ping-Nachricht & Maximal-Anzahl von \lstinline|PidiCmd|s pro \enquote{Music}-Nachricht als 16-Bit Zahl \\ \hline
+        \enquote{p} & \enquote{Pong}-Nachricht - Antwort vom \ac{MC} auf \enquote{Ping}-Nachricht & Maximal-Anzahl von \lstinline|PidiCmd|s pro \enquote{Music}-Nachricht als 16-Bit Zahl \\ \hline
         \enquote{C} & \enquote{Continue}-Nachricht, zum Anhalten bzw. Fortsetzen der Musik & 1 Byte; Nur bei 0 soll die Musik angehalten werden \\ \hline
         \enquote{V} & \enquote{Volume}-Nachricht - setzt die Lautstärke & 32-bit Floating-Point Wert \\ \hline
         \enquote{S} & \enquote{Speed}-Nachricht - setzt die Abspielgeschwindigkeit & 32-bit Floating-Point Wert \\ \hline
@@ -375,9 +374,9 @@ Die vollständige Spezifikation des Protokolls findet sich in Anhang \ref{append
     \label{table:SPPP-Messages}
 \end{table}
 
-\subsection{Fehlerbehandlung} \label{SPPP-Error-Handling}
 
-% @Note(Val): Einleitung hier redet von 'Erkennung' der Fehler, Subsection-Titel ist aber 'Fehlerbehandlung' - da sollte eins von beiden wahrscheinlich gefixt werden
+\subsection{Fehlererkennung} \label{SPPP-Error-Handling}
+
 Wie in den oben gelisteten Anforderungen erwähnt, benötigt es jedoch noch eine Möglichkeit Fehler in der Kommunikation zu erkennen.
 Es gibt hierbei grundsätzlich drei Arten an potenziellen Fehlern:
 
@@ -391,49 +390,50 @@ Die erste Art an Fehlern soll hier erstmal ignoriert werden, da sie dank der von
 Nichtsdestotrotz ist dies eine mögliche Fehlerquelle, die in Erweiterungen an diese Arbeit ausgebessert werden sollte.
 Eine mögliche Sicherstellung der Datenkonsistenz würde beispielsweise über das Mitsenden eines Kontroll-Bytes funktionieren.
 
-Der zweite Fehler kann sowohl durch Fehler in der Übertragung, als auch durch ein Fehler bei der Software des Empfängers entstehen.
+Der zweite Fehler kann sowohl durch Fehler in der Übertragung, als auch durch einen Fehler bei der Software des Empfängers entstehen.
 Eine einfache Lösung dieses Problems, lässt den Empfänger eine Empfangsbestätigung zurücksenden.
 Das selbe Prinzip wird bei der oben erwänten \enquote{Ping} und \enquote{Pong}-Nachricht verwendet.
-Ein mögliches Problem beim Senden einer Empfangsbestätigung ist die Ungewissheit, ob die Empfangsbestätigung selbst empfangen wurde.
-Dann müsste nämlich eine Empfangsbestätigung für die Empfangsbestätigung gesendet werden, welche ebenfalls wieder als empfangen bestätigt werden müsste, bis nur noch Empfangsbestätigungen hin und her geschickt werden.
+Ein mögliches Problem beim Senden einer Empfangsbestätigung ist die Ungewissheit, ob die Empfangsbestätigung selbst empfangen wurde. \newline
+Dann müsste nämlich eine Empfangsbestätigung für die Empfangsbestätigung gesendet werden, welche ebenfalls wieder als empfangen bestätigt werden müsste, bis nur noch Empfangsbestätigungen hin und her geschickt würden.
 
 Es stellt sich jedoch heraus, dass das hier kein Problem ist.
-Sollte eine Empfangsbestätigung nicht empfangen werden, muss der Sender die selbe Nachricht nochmal senden.
-Solange das zweimalig Erhalten der selben Nachricht genau die selben Auswirkungen hat wie das einmalige Erhalten der Nachricht, wird keine Empfangsbestätigung für die Empfangsbestätigung selbst benötigt, da die Nachricht ohne Risiken einfach nochmal geschickt werden kann.
+Sollte eine Empfangsbestätigung nicht empfangen werden, soll der Sender die selbe Nachricht einfach nochmal senden. \newline
+Solange das zweimalige Erhalten der selben Nachricht genau die selben Auswirkungen hat wie das einmalige Erhalten der Nachricht, wird keine Empfangsbestätigung für die Empfangsbestätigung selbst benötigt, da die Nachricht ohne Risiken einfach nochmal geschickt werden kann.
 Wenn die in Tabelle \ref{table:SPPP-Messages} gelisteten Nachrichtentypen betrachtet werden, fällt außerdem auf, dass nur die Nachrichten, die von \ac{SAM} gesendet werden, eine Empfangsbestätigung benötigen.
 Diese Bestätigung soll über die \enquote{Success}-Nachricht gegeben werden, welche entsprechend nur vom \ac{MC} geschickt werden muss.
 
-Ein weiteres Problem, das mit Empfangsbestätigungen auftreten kann, ist das Zuordnen der Nachricht, die nun als empfangen bestätigt wurde.
+Ein weiteres Problem, das mit Empfangsbestätigungen auftreten kann, ist das Zuordnen der Nachricht, die nun als empfangen bestätigt wurde. \newline
 Sollte \ac{SAM} beispielsweise zwei Nachrichten direkt nacheinander schicken und dann nur eine einzelne \enquote{Success}-Nachricht zurück erhalten, ist unklar welche der beiden Nachrichten nun angekommen ist und welche nicht.
 Dies kann gelöst werden, indem jeder Nachricht eine einzigartige Nummer zugeordnet wird und die \enquote{Success}-Nachricht diese Nummer referenziert.
 
 Alternativ kann auch spezifziert werden, dass eine neue Nachricht nur gesendet werden darf, wenn eine \enquote{Success}-Nachricht erhalten wurde oder eine gewisse Zeit vergangen ist.
-Diese Zeit wird auch als \enquote{Timeout} benannt.
+Diese Zeit wird auch als \enquote{Timeout} benannt. \newline
 Die zweite Methode bringt mit sich, dass das \ac{SPPP} Protokoll synchron wird und deshalb weniger flexibel als die asynchrone, erste Lösungsvariante erscheinen mag.
 Allerdings erleichtert die Synchronisierung des Protokolls auch den Umgang mit dem 3. Fehler, wie nachher gezeigt wird.
 Entsprechend wird sich für diese Lösungsmöglichkeit entschieden.
 
-Weiterhin sollte die Frage aufkommen, warum statt einer eigenen \enquote{Pong}-Nachricht nicht einfach die selbe \enquote{Success}-Nachrich gesendet werden kann, wenn der Austausch von \enquote{Ping}- und \enquote{Pong}-Nachrichten genauso dem Prinzip der Empfangsbestätigung folgt.
+Weiterhin sollte die Frage aufkommen, warum statt einer eigenen \enquote{Pong}-Nachricht nicht einfach die selbe \enquote{Success}-Nachrich gesendet werden kann, wenn der Austausch von \enquote{Ping}- und \enquote{Pong}-Nachrichten genauso dem Prinzip der Empfangsbestätigung folgt. \newline
 Der Grund dafür liegt in den \enquote{Music}-Nachrichten, die eine variable Länge haben.
-Da dieses Protokoll - wie auch das in Kapitel \ref{vorgehenSW-PIDI} spezifzierte \ac{PIDI}-Format - portabel für verschiedene Hardware-Voraussetzungen sein soll, kann \ac{SAM} nicht die Speicherkapazitäten des \ac{MC}s voraussetzen.
+Da dieses Protokoll - wie auch das in Kapitel \ref{vorgehenSW-PIDI} spezifzierte \ac{PIDI}-Format - portabel für verschiedene Hardware-Voraussetzungen sein soll, kann \ac{SAM} nicht die Speicherkapazitäten des \ac{MC}s voraussetzen. \newline
 Entsprechend muss der \ac{MC} \ac{SAM} irgendwie mitteilen, was die akzeptierte Maximallänge für die \enquote{Music}-Nachricht ist.
 Da die \enquote{Ping}-Nachricht im Regelfall sowieso die zuerst gesendete Nachricht wäre, kann der \ac{MC} deren Empfangsbestätigung nutzen, um \ac{SAM} dieses Maximum mitzuteilen.
 Damit ist die \enquote{Ping}-Nachricht nun notwendigerweise die zuerst gesendete Nachricht in diesem Protokoll.
 
 Es bleibt nun noch der 3. Fehler zu behandeln.
-Wenn ein Teil der gesendeten Nachricht ausfällt, gibt es zwei Möglichkeiten:
+Wenn ein Teil der gesendeten Nachricht ausfällt, gibt es zwei Möglichkeiten: \newline
 Entweder werden weitere Bytes empfangen, sodass eine scheinbar vollständige, wenn auch inkorrekte Nachricht erhalten wird.
 Das ist im Endeffekt wieder das 1. Problem und wird ebenso im Rahmen dieser Arbeit ignoriert.
-Weitere Versionen des Protokolls sollten diese Quellen möglicher Dateninkonsistenz jedoch behandeln.
+Weitere Versionen des Protokolls sollten diese Quellen möglicher Dateninkonsistenz jedoch behandeln. \newline
 Es ist allerdings auch möglich, dass keine weiteren Bytes empfangen werden und die Nachricht unvollständig bleibt.
-Da das Protokoll synchron ist und keine weiteren Nachrichten gesendet werden sollten, bevor Empfangsbestätigung zurückgeschickt wurde, ist dies tatsächlich der sehr viel wahrscheinlichere Fall.
+Da das Protokoll synchron ist und keine weiteren Nachrichten gesendet werden sollten, bevor eine Empfangsbestätigung zurückgeschickt wurde, ist dies tatsächlich der sehr viel wahrscheinlichere Fall.
 Da für die Behandlung des 2. Problems sowieso schon ein Timeout festgelegt werden muss, kann dieser Timeout hier ebenfalls verwendet werden.
 Sobald der Timeout abgelaufen ist und die Nachricht noch nicht vollständig empfangen wurde, soll diese einfach verworfen werden.
-Sollten die fehlenden Bytes nach Ablauf des Timeouts eintreffen, werden diese ignoriert, da sie sehr wahrscheinlich nicht mit den Magic-Bytes des \ac{SPPP} Protokolls beginnen.
+Sollten die fehlenden Bytes nach Ablauf des Timeouts eintreffen, werden diese ignoriert, da sie sehr recht wahrscheinlich nicht die Magic-Bytes des \ac{SPPP} Protokolls beinhalten.
 
 In den oben genannten Anforderungen wurde die maximale Latenz für Nachrichten auf 1 Sekunde gesetzt.
 Diese Anforderung kann eins-zu-eins als Wert des Timeouts von \ac{SPPP}-Nachrichten übernommen werden.
-\ac{SAM} muss dabei jedoch den doppelten \ac{Timeout} als Wert nehmen, da sie zusätzlich noch auf den Eingang der Empfangsbestätigung warten muss.
+\ac{SAM} muss dabei jedoch den doppelten \enquote{Timeout} als Wert nehmen, da sie zusätzlich noch auf den Eingang der Empfangsbestätigung warten muss.
+
 
 \subsection{\enquote{Music}-Nachrichten} \label{SPPP-Pidi-Messages}
 
@@ -442,14 +442,14 @@ Wie in Kapitel \ref{vorgehenSW-MC} beschrieben, verwendet der \ac{MC} das selbst
 Entsprechend ist es sinnvoll, diese Daten direkt im gleichen Format an den \ac{MC} zu schicken.
 
 Da der Speicherplatz des \ac{MC}s jedoch vergleichsweise stark begrenzt ist, können viele Songs nicht komplett gespeichert werden.
-Auch wenn diese Limitation mit Erweiterungen der Hardware gelöst werden könnten, würden diese die Kosten weiter heben.
-Um dem Ziel der Arbeit gerecht zu werden, darf kein großer Speicherplatz vorausgesetzt werden.
+Auch wenn diese Limitation mit Erweiterungen der Hardware gelöst werden könnten, würden diese die Kosten weiter heben und die Portabilität verringern.
+Um dem Ziel der Arbeit gerecht zu werden, darf kein großer Speicherplatz vorausgesetzt werden. \newline
 Wenn also nicht davon auszugehen ist, dass das gesamte Musikstück auf einmal auf dem \ac{MC} gespeichert werden kann, müssen die Musikdaten in Teilen nach einander geschickt werden.
 In anderen Worten: es ist ein Streaming der Musikdaten notwendig.
 
-Eine erste Problematik, die hierbei aufkommt ist die Latenz der Nachrichten.
+Eine erste Problematik, die hierbei aufkommt, ist die Latenz der Nachrichten.
 Wenn nach Spielen eines Teils des Songs immer eine längere Wartezeit folgt, bevor die nächsten Töne gespielt werden können, macht es das selbst-spielende Klavier praktisch unnutzbar.
-Diese Problematik ist auch als \enquote{Buffering} bekannt. % @TODO(Val): Source for Buffering
+Diese Problematik ist auch als \enquote{Buffering} bekannt \cite[vgl.][]{clo.WhatDoesBuffering.21}. \newline
 Die einfachste Art dem Vorzeubugen ist durch die Verwendung von zwei Buffern für die \lstinline|PidiCmd|s.
 Ein Buffer hält die derzeit zu spielenden \lstinline|PidiCmd|s, während der zweite Buffer mit den danach zu spielenden \lstinline|PidiCmd|s befüllt werden kann.
 Sobald der erste Buffer fertig gespielt wurde, können die beiden Buffer effizient mit einem Tausch ihrer Pointer gewechselt werden.
@@ -459,8 +459,8 @@ Eine einfache Verbesserung dieser Strategie ist die Nutzung von mehr als nur zwe
 Wenn zum Beispiel drei Buffer genutzt werden, müssen zwei Buffer durchgespielt werden, bevor der nächste Buffer aufgefüllt werden muss.
 Auch können die Buffer bereits getauscht werden, bevor die Nachricht fertig gelesen wurde, solange zumindest ein \lstinline|PidiCmd| bereits gelesen wurde.
 
-Die nächste Schwierigkeit kommt daher, dass \ac{SAM} wissen muss, wann der nächste Teil des Musikstücks benötigt wird.
-\ac{SAM} könnte versuchen selbst die vergangene Zeit zu zählen und die selben Berechnung wie der \ac{MC} machen, um zu wissen, wieweit der \ac{MC} bis jetzt gespielt hat.
+Die nächste Schwierigkeit kommt daher, dass \ac{SAM} wissen muss, wann der nächste Teil des Musikstücks benötigt wird. \newline
+\ac{SAM} könnte versuchen selbst die vergangene Zeit zu zählen und die selben Berechnung wie der \ac{MC} zu machen, um zu wissen, wieweit der \ac{MC} bis jetzt gespielt hat.
 Falls hierbei jedoch ein Fehler auftritt, würden die Musikdaten zum falschen Zeitpunkt gesendet werden.
 Abgesehen davon wäre dies auch ein relativ großer Entwicklungsaufwand.
 Einfacher ist es, wenn der \ac{MC} eine bestimmte Nachricht schickt, um den nächsten Teil des Musikstücks anzufordern.
@@ -480,10 +480,9 @@ Nun soll die Anwendung aber auch die Möglichkeit bieten, während des Spielen e
 In diesem Fall muss dem \ac{MC} mitgeteilt werden, dass ein neues Stück anfängt und alle Aktuatoren zu Beginn wieder ausgeschaltet werden sollen.
 
 Zusätzlich soll es den Nutzer:innen möglich sein, in einem zurzeit spielenden Stück zu einem anderem Zeitpunkt zu springen.
-In diesem Fall müssen die zurzeit aktiven Aktuatoren womöglich ebenfalls ausgeschaltet werden.
-% @Note(Jay): Es ist etwas unverständlich warum
+In diesem Fall müssen die zurzeit aktiven Aktuatoren womöglich ebenfalls ausgeschaltet werden, da einige der in Zeitpunkt A zu spielenden Noten beim Zeitpunkt B vermutlich nicht gespielt werden sollen. \newline
 Jedoch ist es hier im Allgemeinen nicht der Fall, dass alle Aktuatoren ausgeschaltet werden sollten.
-Die Aktuatoren der Noten, die bis zu dem gewählten Zeitpunkt gespielt werden sollen, müssen nämlich angeschaltet werden.
+Die Aktuatoren der Noten, die bis zu dem gewählten Zeitpunkt gespielt werden sollen, müssen nämlich angeschaltet werden. \newline
 In Kapitel \ref{vorgehenSW-MC} wurde beschrieben, wie der \ac{MC} eine Liste bereits gespielter Noten für die selbe Problematik verwendet.
 Es liegt entsprechend nahe, das selbe Konzept hier zu verwenden.
 So kann ebenjene Liste direkt auf Seiten \ac{SAM}s erstellt werden und zum \ac{MC} geschickt werden.

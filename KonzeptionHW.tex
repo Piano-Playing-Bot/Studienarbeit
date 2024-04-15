@@ -269,6 +269,7 @@ Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des 
 können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
 
 \paragraph{74HC959 Schieberegister}
+% TODO(Jay): Latenzen durch schieben adden
 In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet.
 Dieses hat folgenden Aufbau:
 \begin{figure}[htbp]
@@ -326,9 +327,9 @@ gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert we
 \end{figure}
 
 %ohne Multiplexer
-\paragraph{Matrix ohne Multiplexer}
+\paragraph{Matrix ohne Multiplexing}
 
-Bei einer LED-Matrix ohne Multiplexer werden die LEDs direkt über die \ac{GPIO}-Pins des
+Bei einer LED-Matrix ohne Multiplexing werden die LEDs direkt über die \ac{GPIO}-Pins des
 \ac{MC}s angesteuert. Jede LED ist einzeln mit einem Pin des \ac{MC}s verbunden. Um die LEDs anzusteuern,
 muss der \ac{MC} jeden Pin einzeln aktivieren oder deaktivieren, um die entsprechende LED ein- oder auszuschalten.
 Hierbei werden viele Pins benötigt, um die gesamte Matrix anzusteuern, was besonders bei größeren Matrizen unpraktisch
@@ -338,7 +339,7 @@ benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über 6 von diese
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.6\textwidth]{img/LEDMatrixSchaltung}
-	\caption{Matrix ohne Multiplexer Schematisch}
+	\caption{Matrix ohne Multiplexing Schematisch}
 	\label{fig:Matrix}
 \end{figure}
 % @Note(Jay): Welches der Bilder?
@@ -351,7 +352,7 @@ benötigt. Der hier verwendete \ac{MC} verfügt allerdings nur über 6 von diese
 %\end{figure}
 %mit Multiplexer
 %Was ist ein Multiplexer, warum hilft er bei Martix wie sieht allg Schaltung aus?
-\paragraph{Matrix mit Multiplexer}
+\paragraph{Matrix mit Multiplexing}
 Ein Multiplexer (bzw. ein Demultiplexer) ermöglicht das kombinieren mehrerer Signale zu einem bzw. dem Trennen eines einzelnen Signals zu mehreren, unterschiedlichen Signalen.
 Bei einer LED-Matrix erfolgt das Prinzip durch die Verwendung von Schieberegistern und Transistoren.
 Somit kann damit die Notwendigkeit zum Verbinden jedes individuellen Pins mit einem GPIO-Pin des \ac{MC}s elimniert werden.
@@ -367,31 +368,30 @@ Wobei die Latenzen der Schieberegister in diesem Projekt vernachlässigt werden 
 
 \subsubsection{Entscheidungsfindung}
 Letztendlich fiel die Entscheidung auf die Verwendung von Schieberegistern. Dies liegt an mehreren Gründen:
-\begin{enumerate} % @Note(Jay): Ersten Punkt sinnvoller schreiben pls der doppelt sich und ist nicht so kohärent
-	\item Interferenz und ungenaue Steuerung durch die Matrixstruktur:  Eine LED-Matrix wird, wie bereits erklärt,
-	typischerweise durch \ac{PWM} angesteuert, um den Eindruck zu erwecken, dass alle
-	LEDs gleichzeitig leuchten, obwohl sie tatsächlich nacheinander aktiviert werden. Dieses Prinzip funktioniert gut für LEDs,
-	da sie einen langsamen Reaktionsmechanismus haben und das menschliche Auge träge ist, bei Aktuatoren, welche möglichst dynamisch und Präzise angespielt werden sollen, ist dieses Prinzip nicht gewinnbringend.
-	Bei der Verwendung einer Aktuatoren-Matrix über \ac{PWM}
+\begin{enumerate}
+	\item Funktionalität: Bei der Verwendung einer Aktuatoren-Matrix über \ac{PWM}
 	kann es zu Interferenzen kommen, die die Präzision der Steuerung beeinträchtigen. Da die \ac{PWM}-Signale zeilenweise
 	multiplexiert werden, kann es vorkommen, dass die \ac{PWM}-Signale nicht mit der benötigten Stärke für jeden Aktuator geliefert
 	werden. Das liegt daran, dass verschiedene Aktuatoren in derselben Zeile unterschiedliche \ac{PWM}-Signale benötigen können,
-	was zu ungenauer Steuerung führt. Dies kann zu Kompromissen bei der Präzision und Leistung der Aktuatoren führen. % @Note(Val): Verstehe ich nicht. Jede LED auf der Matrix kann doch unabhängig der anderen angesteuert werden und andere Signale erhalten. Sonst wäre das ja eh nicht nutzbar für uns.
+	was zu ungenauer Steuerung führt. Dies kann zu Kompromissen bei der Präzision und Leistung der Aktuatoren führen.
+	% @Note(Val): Verstehe ich nicht. Jede LED auf der Matrix kann doch unabhängig der anderen angesteuert werden und andere Signale erhalten. Sonst wäre das ja eh nicht nutzbar für uns.
 	% @Note(Val): Wieder viele Konjunktive. Entweder es ist ein Problem oder nicht.
 	% @Note(Jay): Die LED-Matrix basiert auf trägheit des menschlichen Auges, weswegen dass da kein Problem ist. Bei uns würde das spielen halt trotzdem klappen, aber unsere Präzision für Akkuratheit wär eingeschrenkt.
 	\item Komplexität der Schaltung bei selbstgebauter Aktuator-Matrix: Die Implementierung einer Aktuator-Matrix über eine
 	LED-Matrix hinaus wäre technisch anspruchsvoller und erfordert eine komplexere Schaltung. Im Gegensatz dazu ist die
 	Verwendung von Schieberegistern eine einfachere Methode zur Ansteuerung der Aktuatoren.
-	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix ohne Multiplexer eine Vielzahl an Pins, welche der \ac{MC} % @Note(Val): Dieser letzte Punkt ist valide aber können wir mMn auch auslassen, wenn wir genug andere Punkte haben
+	\item Anzahl der Pins: Wie bereits erklärt, benötigt die Matrix ohne Multiplexing eine Vielzahl an Pins, welche der \ac{MC} % @Note(Val): Dieser letzte Punkt ist valide aber können wir mMn auch auslassen, wenn wir genug andere Punkte haben
 	nicht liefert. Da die Matrix verwendet werden sollte um eben dieses Problem zu lösen, schien es nicht sinnvoll
-	das Prinzip einzusetzen. % @Note(Val): Aber mit Multiplexer braucht es doch nicht mehr so viele Pins, oder? Vielleicht konkret berechnen wie viele Pins dann benötigt wären und sagen, dass es immer noch mehr Pins sind als beim Schieberegister?
-	% TODO(Jay): mit würden wir 3 Schieberegister brauchen - entweder schieben, oder bräuchten 9 Ausgänge und wenn wir schieben können wir direkt die andere Variante nutzen weils dann für SW einfacher ist
+	das Prinzip einzusetzen. Durch die Kombination von Schieberegistern und Matrixaufbau wäre dieses Problem gelöst.
+	Es würden insgesamt 2 Schieberegister benötigt werden, also 6 Pins die diese ansteuern, womit die Anzahl der verfügbaren
+	Pins ausreicht. Die Entscheidung von der Variante abzusehen, liegt in dem bereits genannten Problemen der Matrix-Struktur im Allgemeinen.
 	\item Ressourcen: Desweiteren basiert die Entscheidung auf unzureichenden Ressourcen für die Matrix. Im Internet gab es
 	keine ausreichenden Anleitungen/Ressourcen, die die Implementierung einer LED-Matrix mit Aktuatoren ausreichend
 	unterstützen würden. Zusätzlich dazu lieferten die Simulationen via Tinkercad\footnote{Tinkercad: https://www.tinkercad.com} keine befriedigenden Ergebnisse
 	für die Aktuator-Matrix.
 	Im Gegensatz dazu sind Schieberegister gut dokumentiert und es gibt ausreichende Ressourcen, um ihre
 	Verwendung für die Ansteuerung von Aktuatoren zu verstehen und umzusetzen.
+	% @Note(Jay): Ist zu sagen das wir nichts nutzen wollten wo wir keine konkrete Aussage zu finden wenn wir wissen dass es anders funktioniert okay?
 \end{enumerate}
 
 \subsection{Transistor}

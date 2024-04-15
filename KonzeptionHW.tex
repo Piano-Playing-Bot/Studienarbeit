@@ -562,25 +562,31 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 \chapterauthor{Olivier Stenzel, Jakob Kautz}
 
 Der Schaltplan besteht im Großteil aus den bereits aufgeführten Komponenten:
+
 \begin{enumerate}
 	\item Arduino
 	\item Schieberegister
-	\item MOSFET
-	\item Hubmagnet
+	\item Transistoren
+	\item Hubmagneten
 \end{enumerate}
+
 In diesem Kapitel wird erläutert, wie diese Komponenten miteinander verbunden werden um eine Funktionsfähige
 Schaltung zu erstellen. Die gesamte Schaltung mit allen 88 Hubmagneten wird wie folgt aussehen:
+% @TODO(Val): Wäre es nicht besser das Ergebnis erst am Ende des Unterkapitels zu zeigen?
+
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=0.85\textwidth] {img/SchaltungGesamt}
 	\caption{Überblick Schaltplan}
 	\label{img:Schaltplan}
 \end{figure}
+
+
 \subsubsection{Arduino}
 
 Im Zentrum der Schaltung steht der \ac{MC} (hier: Arduino Uno R3).
 Dieser erhält Daten und Strom über den integrierten USB-Anschluss, welcher mit dem Computer verbunden wird.
-Da der Arduino limitierte \nameref{PWM}-fähige Ausgänge bereitstellt, werde Schieberegister (74HC595) verwendet.
+Da der Arduino nur eine begrenzte Anzahl von \ac{PWM}-fähigen Ausgänge bereitstellt, werden Schieberegister (hier: 74HC595) zur Vermehrung der Ausgänge verwendet (siehe Abschnitt \ref{output}).
 Mit jedem \enquote{in Reihe} geschaltetem Schieberegister kann die Anzahl \ac{PWM}-fähiger Ausgänge um 8 erweitert werden.
 
 \subsubsection{Schieberegister}
@@ -589,7 +595,7 @@ Der Arduino wird an fünf Stellen mit dem ersten Schieberegister verbunden:
 
 Arduinoport D2 <-> Serial (SER) Input
 
-Über diese Verbindung werden serielle Daten werden hier bitweise in das Register geschoben.
+Über diese Verbindung werden serielle Daten hier bitweise in das Register geschoben.
 
 Arduinoport D3 <-> SHCP (Shift Register Clock Input)
 
@@ -613,9 +619,9 @@ Arduino VCC 5V <-> VCC, $\overline{SRCLR}$ (Reset)
 Um das Schiebregister mit den benötigten 5V zu betreiben, wird der entsprechende Pin mit dem 5V Output des Arduino verbunden.
 Zusätzlich wird der $\overline{ }$ SRCLR Port des Schieberegisters, welcher ein Reset ermöglicht dauerhaft mit 5V verbunden.
 
-Jedes weiteres Schieberegister greift die oben genannten Signale ab.
+Jedes weitere Schieberegister greift die oben genannten Signale ab.
 Der einzige Unterschied befindet sich am Serial (SER) Input Port.
-Das Schieberegister an Position i+1 wird mit dem seriellen Output des Schieberegisters an Position i verbunden. ($\forall i = 0,...,10$)
+Das Schieberegister an Position $i+1$ wird mit dem seriellen Output des Schieberegisters an Position $i$ verbunden ($\forall i = 0,...,10$).
 
 \begin{figure}[htbp]
 	\centering
@@ -624,16 +630,16 @@ Das Schieberegister an Position i+1 wird mit dem seriellen Output des Schiebereg
 	\label{fig:Shifting}
 \end{figure}
 
-\subsubsection{MOSFET}
+\subsubsection{Transistoren}
 
 Die Hubmagnete werden jeweils mit 24V und mit bis zu 400mA betrieben.
 Um einen hohen Stromfluss zu steuern, können Transistoren verwendet werden.
-Für hohe Spannungen und schnelle Schaltvorgänge eigenen sich besonders MOSFETs (Metall-Oxid-Halbleiter-Feldeffekttransistor).
-Im Folgenden werden speziell n-MOSFETs verwendet, der mit einem Signal zwischen 0V (leitet nicht) und +5V (voll leitend) angesteuert werden kann.
+Für hohe Spannungen und schnelle Schaltvorgänge eigenen sich besonders MOSFETs.
+Im Folgenden werden speziell n-MOSFETs verwendet, die mit einem Signal zwischen 0V (nicht leitend) und +5V (voll leitend) angesteuert werden können.
 
 Der folgende Aufbau ist für die insgesamt 88 Ausgänge der 11 Schieberegister identisch, da jeder Ausgang für die Ansteuerung genau eines Motors zuständig ist.
 
-Der GATE-Pin des MOSFETs erhält das Signal, dass die \enquote{``Durchlässigkeit''} steuert aus einem der Outputs des Schieberegisters.
+Der GATE-Pin des MOSFETs erhält das Signal, das die \enquote{Durchlässigkeit} steuert, aus einem der Outputs des Schieberegisters.
 Der SOURCE-Pin wird mit Ground des gesamten Systems verbunden.
 Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunden.
 
@@ -646,19 +652,16 @@ Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunde
 
 \subsubsection{Hubmagnet}
 
-Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnetes mit dem +24V verbunden.
-Bei Hubmagneten ist es in der Regel egal, welcher Anschluss an Plus und welcher an Minus angeschlossen wird
-(siehe Kapitel \ref{subsec:aktuator}).
+Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnets mit dem +24V verbunden.
+Bei Hubmagneten ist es in der Regel egal, welcher Anschluss an Plus und welcher an Minus angeschlossen wird (siehe Kapitel \ref{subsec:aktuator}). % @TODO(Val): Wird das in dem Unterkapitel wirklich erklärt? Wäre es nicht besser, sich einfach direkt auf die Quelle hier zu referenzieren?
 
 \subsubsection{Testen}
 
 Um die Fehlersuche zu erleichtern, werden LEDs in den Schaltplan mit eingebaut.
 Diese werden jeweils mit einem entsprechenden $1k\Omega$ Widerstand parallel zu den Motoren angeschlossen.
 So kann anhand der Helligkeit der LED die Intensität abgelesen werden, mit der eine Taste gespielt wird.
-\newline
 
-Für insgesamt 4 Hubmagnete (Wobei in dem Schema Motoren gewählt wurden, da das Programm keine Hubmagnete als Komponenten
-zur Verfügung stellt) und 2 Schieberegister sieht die Darstellung des Schaltplans Schematisch wie folgt aus:
+Für insgesamt 4 Hubmagnete - wobei in dem Schema Motoren gewählt wurden, da das Programm keine Hubmagnete als Komponenten zur Verfügung stellt - und 2 Schieberegister wurde der Schaltplan in Abbildung \ref{img:SchaltungExpSchema} dargestellt.
 
 \begin{figure}[htbp]
 	\centering

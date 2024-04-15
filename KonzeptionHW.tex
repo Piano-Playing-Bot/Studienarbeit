@@ -9,20 +9,21 @@
 
 \chapter{Konzeption - Hardware}\label{konzeptionHW}
 \chapterauthor{Jakob Kautz, Olivier Stenzel}
-% @Note(Val): Abschnitt fängt im Präteritum an und geht dann mit Präsenz weiter
-% Glaube, dass Präsenz leichter lesbar ist, aber muss halt einfach einheitlich sei
-% @Note(Val): Der ganze Abschnitt argumentiert falsch herum.
-% Ihr redet von Aktuatoren, Mikrocontrollern, etc. ohne vorher zu erklären, warum die überhaupt benötigt werden.
-% Statt Lösungen zu liefern, sollte hier erstmal erklärt werden, welche Probleme gelöst werden müssen
-Für die Umsetzung eines selbstspielenden Klaviers werden verschiedene technische Überlegungen angestellt.
+
+% @TODO(Val): Erst erklären warum MCs und Aktuatoren benötigt werden, bevor erzählt wird, dass wir die irgendwie verwenden müssen. Sonst argumentieren wir mit technischer Lösung statt dem Problem. Wenn wir die Erklärung dafür erst später haben wollen, sollten wir hier zumindest anfangs schon erwähnen, dass wir später noch erklären, warum Aktuatoren und ein MC benötigt werden oder so
+
+Für die Umsetzung eines selbstspielenden Klaviers wurden verschiedene technische Überlegungen angestellt.
 Die Grundfragen, welche bei der Konstruktion auftreten, betreffen die Methode des Anspielens der Klaviertasten, die
 Signalübertragung des \ac{MC}s, sowie die Konzeption der Schaltung.
 Folgende Anforderungen muss die Konzeption abdecken:
+
+
 \begin{enumerate}
-	\item Ansteuerungskonzept: Die Tasten müssen möglichst effizient von der Hardware angespielt werden, dies beinhaltet Positionierung der Aktuatoren und die Verbindung zwischen Hardware und Klavier.
-	\item Auswahl der Aktuatoren: Die Aktuatoren \ref{subsec:aktuator} müssen eine präzise Steuerung der Tasten ermöglichen, ohne dass Akkuratheit und Geschwindigkeit des Anspielens der Tasten vernachlässigt wird
-	\item Auswahl des \ac{MC}: Die Aktuatoren benötigen zur Ansteuerung der Klaviertasten die Signale der Software, wobei die Kommunikation via \ac{MC} geschieht.
+	\item \textbf{Ansteuerungskonzept:} Die Tasten müssen möglichst präzise und effizient von der Hardware angespielt werden können; dies beinhaltet Positionierung der Aktuatoren und die Verbindung zwischen Hardware und Klavier
+	\item \textbf{Auswahl der Aktuatoren:} Die Aktuatoren müssen eine präzise Steuerung der Tasten ermöglichen, ohne dass Genauigkeit und Geschwindigkeit des Anspielens der Tasten vernachlässigt wird
+	\item \textbf{Auswahl des \ac{MC}:} Die Aktuatoren benötigen zur Ansteuerung der Klaviertasten die Signale der Software, wobei die Kommunikation über einen \ac{MC} geschieht
 \end{enumerate}
+
 Die Überlegungen und Entscheidungen für die genutzte Hardware sowie den Aufbau dieser werden in diesem Kapitel erläutert.
 Die Hardware-Komponente des Projektes wird im folgenden auch als \enquote{Piano Player} bezeichnet.
 
@@ -48,14 +49,13 @@ Mittels dieser Anforderungen wurde online ein passendes Klavier für 100\euro{} 
 
 \chapterauthor{Jakob Kautz}
 
-Das Ansteuerungskonzept bezieht sich auf die Problemstellung, dass die Saiten des Klaviers auf irgendeine Art zum
-schwingen gebracht werden müssen.
+Das Ansteuerungskonzept bezieht sich auf die Problemstellung, dass die Saiten des Klaviers auf irgendeine Art automatisiert zum Schwingen gebracht werden müssen.
 Dafür ist eine Vorrichtung hilfreich, die elektrische Signale in Bewegung umwandeln kann.
-Dies ist die Eigenschaft von Aktuatoren, wie z.b. Motoren.
+Dies ist die Eigenschaft von Aktuatoren, wie z.B. Motoren.
 
 In diesem Kapitel wird untersucht, wie genau man das Anspielen der Saiten technisch umsetzen kann.
 Dabei ist eine grundlegende Überlegung, ob man die Saiten direkt anschlägt,
-oder die bestehenden Tasten weiter dafür nutzt.
+oder die bestehenden Tasten dafür nutzt.
 
 Wenn die Aktuatoren direkt die Saiten des Klaviers anspielen, erfordert dies weniger Kraft im Vergleich zum
 Anspielen der Tasten. Das liegt daran, dass die Tasten eine größere mechanische Übersetzung bieten, um die Saiten
@@ -71,21 +71,19 @@ Montage bieten kann. \newline
 Allerdings geht dabei die gesamte Mechanik des Klaviers verloren, was bedeutet, dass Aspekte wie Dämpfung nicht genutzt werden können,
 was wiederum zu einem weniger ansprechenden Klang führt. Zusätzlich müsste das Klavier permanent geöffnet bleiben, und die
 Aktuatoren müssten äußerst präzise die Saiten anschlagen, um akzeptable Ergebnisse zu erzielen.
-% @Note(Val): Mit Außnahme des letzten Punkts verstehe ich die Argumente hier ehrlich gesagt nicht. Vieleicht kenne ich mich einfach zu wenig mit Klavieren aus, um das nachvollziehen zu können und wir setzen offensichtlch ein bisschen Klavier-Wissen voraus, aber fals hier für jeden Punkt ein Nebensatz hin könnte, warum das so ist, wäre das wahrscheinlich besser
-% @Question(Jay): Ist das so sinnvoller/nachvollziehbarer?
-Da der zweite Punkt - ein ansprechender Klang - für dieses Projekt eine höhere Priorität annimmt, fiel die Entscheidung
+Da die Erzeugung eines ansprechenden Klangs für dieses Projekt eine höhere Priorität annimmt, fiel die Entscheidung
 darauf, die Tasten anzuspielen. Somit kann die Klaviermechanik genutzt werden, was für einen
 authentischeren Klang sorgt. \newline
 Nun stellt sich also noch die Frage, wie genau die Aktuatoren mit den Tasten des Klaviers verbunden werden.
 
 Eine Möglichkeit besteht darin, die Aktuatoren oben über den Tasten anzubringen, entweder in Form einer nachgebildeten
 \enquote{Klavierhand} mit zehn \enquote{Fingern} oder in Form einer Schiene mit 88 Aktuatoren auf den Tasten.
-Beide Lösungen bringen allerdings das Problem mit sich, dass sie gegen die in \ref{sec:zielstellung-anforderungen} definierte Anforderung
+Beide Lösungen bringen allerdings das Problem mit sich, dass sie gegen die in Kapitel \ref{Zielstellung} definierte Anforderung
 der Flexibilität verstoßen, nämlich dass das Klavier sowohl automatisch als auch manuell bespielbar sein soll.\newline
 Außerdem würde die Klavierhand-Option - die dem tatsächlichen Klavierspiel ähnlich sieht -
 aufgrund der Bewegung und Präzision eine komplexere Logik und
 Montage erfordern. Die Schienenoption bietet hier eine viel einfachere Ansteuerung, benötigt jedoch einen Aktuator für jede Taste.
-Außerdem steht diese Variante im Gegensatz zu der in Kapitel \ref{sec:zielstellung-anforderungen} Anforderung, dass der Aufbau für unterschiedliche Klaviere anpassbar
+Außerdem steht diese Variante im Gegensatz zu der in Kapitel \ref{Zielstellung} Anforderung, dass der Aufbau für unterschiedliche Klaviere anpassbar
 sein soll. Das liegt daran, dass diese Schiene eine fest vorgegebene Länge hätte, welche für Klaviere welche eine
 andere größe haben, nicht mehr passen würde. \newline
 
@@ -105,7 +103,7 @@ erhöht.
 Generell ist die Drückoption ästhetisch ansprechender, da die Hardware sehr einfach versteckt werden könnte.
 Somit würde die Illusion entstehen, dass die Tasten sich von alleine bewegen. Die Option erfordert jedoch eine hohe Präzision und könnte die
 Tastenempfindlichkeit beeinträchtigen. Außerdem wäre aufgrund der präzisen Montage der Aktuatoren die Anforderung
-der Anpassbarkeit (siehe Kapitel \ref{sec:zielstellung-anforderungen}) komplexer umzusetzen.
+der Anpassbarkeit (siehe Kapitel \ref{Zielstellung}) komplexer umzusetzen.
 
 Für das Drücken der Tasten fallen noch weitere Probleme an. Um die Tasten drücken zu können, muss ein möglichst großer
 Hebel aufgebracht werden, damit die Aktuatoren möglichst wenig Kraft für das anspielen aufbrauchen müssen.
@@ -562,7 +560,7 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 \begin{enumerate}
 	\item Schritt-Motor: Im laufe der Arbeit wurde sich gegen eine rotierende Bewegung des Aktuators entschieden. Diese
 	hätte in der Konzeption mehrere Umleitungen der Seile gebraucht, damit die Tasten gerade nach unten gezogen werden können.
-	Außerdem bringt es mit den in Kapitel \ref{sec:zielstellung-anforderungen} definierten Anforderungen keinen Mehrwert,
+	Außerdem bringt es mit den in Kapitel \ref{Zielstellung} definierten Anforderungen keinen Mehrwert,
 	die Bewegung des Aktuators in \enquote{Schritte} aufzuteilen. Der Hauptgrund der Betrachtung dieses Aktuators lag darin,
 	dass das Projekt hier dazu erweitert werden kann, nicht nur MIDI-Dateien zu spielen, sondern auch andersherum am Klavier
 	gespielte Stücke zu speichern und automatisch wiederzugeben, da die Position der Aktuatoren einfach gespeichert und

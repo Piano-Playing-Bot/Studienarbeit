@@ -150,9 +150,9 @@ Bei diesem Ansatz wird die geringste mechanische Präzision benötigt und das Kl
 
 \subsection{Mikrocontroller}\label{Ansteuerung}
 \chapterauthor{Jakob Kautz}
-Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein Mikrocontroller (später: \ac{MC}) gut geeignet.
+Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein \acf{MC} gut geeignet.
 Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung,
-wobei für diese Arbeit ein Arduino und ein Rasperry Pi\footnote{Genau genommen handled es sich bei einem Rasperry Pi um einen Einplatinencontroller.} betrachtet wurden.
+wobei für diese Arbeit nur ein Arduino und ein Rasperry Pi\footnote{Genau genommen handelt es sich bei einem Rasperry Pi nicht um einen \ac{MC}, sondern um einen Einplatinencontroller.} betrachtet werden sollen.
 
 %Arduino Intro
 	\paragraph{Arduino}
@@ -182,20 +182,20 @@ Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projek
 
 %Vergleich
 Es wurde sich letztendlich für den Arduino entschieden.
-Der Rasperry Pi stand vor allem aufgrund seiner höhere Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
+Der Rasperry Pi stand vor allem aufgrund seiner höheren Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
 Allerdings ist er aufgrund seines Betriebssystems nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt.
 % @Note(Jay): Vllt noch genauer
 Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
-Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, welche eine präzise Ansteuerung von Aktuatoren benötigt. % @Note(Val): Simpel != Präzise. Nur weil der Arduino eine simple Hardware-Interaktion hat, heißt es nicht, dass er die Hardware präzise ansteueren könnte
-Zudem sollte die Ansteuerungslogik nicht besonders komplex sein, weshalb ein Arduino genug Rechenleistung aufweisen können sollte.
+Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine präzise Ansteuerung von Aktuatoren benötigen. % @Note(Val): Simpel != Präzise. Nur weil der Arduino eine simple Hardware-Interaktion hat, heißt es nicht, dass er die Hardware präzise ansteueren könnte
+Zudem sollte hier keine besonders komplexe Ansteuerungslogik benötigt werden, weshalb ein Arduino genug Rechenleistung aufweisen sollte.
 
-Für das Projekt wird spezifisch ein Arduino R3\footnote{Der Arduino R3 wird auch als \enquote{Mega 2563} bezeichnet.} verwendet.
-Bei der Auswahl des spezifischen Arduinos wurden der Arduino Uno, Nano und R3 betrachtet.
+Für das Projekt wird spezifisch ein Arduino UNO R3 verwendet \cite[siehe][für die genaue Spezifikation]{ard.ArduinoR3Datasheet.24}.
+Bei der Auswahl des spezifischen Arduinos wurden der Arduino UNO Mini, Nano und R3 betrachtet.
 Im Prinzip wäre jedes der genannten Modelle für die Anwendung möglich, allerdings verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
-gegenüber der 32KB vom Arduino Uno und den 16KB des Arduino Nanos). Der gewählte Arduino verfügt auch über einen CPU-Kern.
-Der Arduino Uno verfügt zwar über mehr Ports, allerdings bringt dies keinen Mehrwert, da die Anzahl der benötigten Ausgänge auch bei einem Arduino Uno nicht erreicht werden
+gegenüber der 32KB vom Arduino UNO Mini und den 30KB, die auf dem Arduino Nano verfügbar sind \cites[vgl.][]{ard.ArduinoR3Datasheet.24}{ard.ArduinoMiniDatasheet.24}{ard.ArduinoNanoDatasheet.24}).
+Der Arduino UNO R3 verfügt zwar über mehr Ports, allerdings bringt dies keinen Mehrwert, da die Anzahl der benötigten Ausgänge auch bei einem R3 nicht erreicht werden
 (siehe Kapitel \ref{output}).
-Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM} Pins, die im Rahmen des Projekts genutzt werden können.
+Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM}-Pins, die im Rahmen des Projekts genutzt werden können.
 
 \subsection{Pulsweitenmodulation}\label{PWM}
 \chapterauthor{Jakob Kautz}

@@ -50,7 +50,7 @@ Auch kann es zu Zuständen kommen, in denen der \ac{MC} ohne Lesen einer einkomm
 Eine naive Implementierung dieser Logik tritt jedoch bald in Probleme.
 Da die Bytes kontinuierlich nacheinander eintreffen, müssen alle einkommenden Bytes in einem Buffer gespeichert werden, bevor sie als \ac{SPPP} Nachricht interpretiert werden können.
 Die Standard-Bibliothek des Arduino Projekts bietet dieses Buffering für das Lesen von Daten über das \ac{UART} Protokoll bereits an.
-Jedoch ist dieser Buffer nicht ausreichend, da er zu klein ist und nach gewisser Zeit wieder von vorne überschrieben wird. % @TODO(Val): Check that this is correct. Also that sentence kinda sucks
+Jedoch ist dieser Buffer nicht ausreichend, da er zu klein ist und nach gewisser Zeit wieder von vorne überschrieben wird.
 
 Deshalb muss ein eigener Buffer erstellt werden, der groß genug für eine \ac{SPPP} Nachricht und nicht überschrieben wird.
 Der Buffer sollte jede Iteration mit den neu gelesenen Bytes befüllt werden.

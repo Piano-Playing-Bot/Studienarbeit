@@ -46,9 +46,6 @@ Je mehr Speicherplatz das Format nämlich benötigt, desto öfter muss die \ac{U
 
 \section{Desktop Anwendung} \label{vorgehenSW-UI}
 
-% @TODO(Val): Wiedergabegeschwindigkeit kommt nicht vor, aber wurde bei Anforderungen genannt
-% @TODO(Val): Dieses Unterkapitel erklärt größtenteils warum wir die Anforderungen haben und passt deswegen vielleicht besser in Kapitel 2 statt hierhin
-
 \ac{SAM} soll der Nutzer:in eine Schnittstelle zum Anspielen des Pianos bieten.
 Den in Tabelle \ref{table:anforderungen} genannten Anforderungen nach, soll es der Nutzer:in möglich sein Musikstücke aus einem Katalog auszuwählen und dem Katalog neue Stücke hinzuzufügen.
 Weiterhin soll die Wiedergabe über die \ac{UI} steuerbar sein.
@@ -141,16 +138,10 @@ Falls grundlegend andere Informationen benötigt werden, ist eine Änderung der 
 Es ist also festzuhalten, dass die Verwendung eines Formats wie \ac{MIDI} hier sinnvoll ist.
 Bevor \ac{MIDI} selbst gewählt wird, sollten jedoch noch weitere Aspekte beachtet werden.
 
-Dieses Projekt will explizit eine höhere Performanz als die schnellsten menschlichen Pianist:innen erreichen (siehe Kapitel \ref*{Zielstellung}). % @TODO(Val): Muss im Kapitel auch erwähnt werden
-
-% @Note(Jay): Eine Anforderung an das Projekt ist es anstatt dieses Projekt will?
-% @Question(Jay): Macht das bei der Performanz beim spielen an sich einen unterschied oder nur beim "erstellen" der Liste?
-Dieses Projekt will explizit eine höhere Performanz als die schnellsten menschlichen Pianist:innen erreichen (siehe Kapitel \ref*{Zielstellung}).
+Eine Anforderung dieses Projekts ist eine höhere Performanz als die schnellsten menschlichen Pianist:innen zu erreichen (siehe Tabelle \ref{table:anforderungen}).
 Entsprechend sollte das gewählte Datenformat der Musikstücke auch möglichst schnell in das Format umgeformt werden können, das für die Ausgabe an die Aktuatoren benötigt wird.
 Am performantesten wäre es hierbei, eine Liste jener Daten zu speichern, die zu jedem Zeitpunkt an die Aktuatoren ausgegeben werden müssen, da dann gar keine Datentransformation mehr nötig ist.
 
-% @Note(Val): Muss ich erklären, warum erhöhte Kommunikation die Performanz beeinträchtigen könnte oder ist das selbsterklärend?
-% @Note(Jay): find ich selbsterklärend
 Allerdings muss das Datenformat auch möglichst wenig Speicherplatz verbrauchen.
 Da der Code auf einem \ac{MC} laufen muss, ist Speicherplatz relativ begrenzt.
 Der \ac{MC} muss dabei nicht das gesamte Musikstück auf einmal gespeichert haben, da restliche Teile des Musikstücks auch später von \ac{SAM} nachgereicht werden können.
@@ -270,8 +261,6 @@ Der Wert des letzten Schieberegister-Ausgangs muss dabei zuerst gesendet werden,
 Sobald alle Werte ausgesandt wurden, müssen die Ausgänge der Schieberegister gesperrt werden, damit diese nicht ständig fluktuieren.
 All das kann beim Arduino, der in Kapitel \ref{Ansteuerung} als \ac{MC} gewählt wurde, über das Ansprechen spezieller \ac{PWM}-Pins getan werden.
 
-% @TODO(Val): Absatz bzgl. Notwendigkeit von Interrupts beim Ansprechen von PWM einfügen
-
 Wann immer die Signale für die Aktuatoren ausgesandt werden sollen, müssen diese Werte vorher bereitstehen.
 Da 88 Aktuatoren angesteuert werden sollen, muss also eine Liste von 88 \ac{PWM}-Werten befüllt werden.
 Im Folgenden soll diese Liste \lstinline{piano} genannt werden.
@@ -338,7 +327,6 @@ Es ließe sich auch eine Heuristik erstellen, die sowohl die Anschlagsstärke al
 Ohne Testen an realen Musikstücken, ist es jedoch schwer zu sagen, wie eine solche Heuristik aussehen sollte.
 Hier ist es also sinnvoll eine leicht anpassbare Heuristik zu verwenden und während des Testens dann zu analysieren, welche Heuristik die am besten klingende Resultate mit sich bringt.
 
-% @TODO(Val): Spezifiziere diese Anforderungen auch wirklich in Kapitel Zielstellung
 Die benötigte Logik zum Anspielen des Klaviers ist damit fast vollständig besprochen.
 Es fehlt jedoch noch die Logik zum dynamischen Anhalten und Anpassen der Lautstärke und Spielgeschwindigkeit, die in Kapitel \ref{Zielstellung} spezifiziert wurden.
 
@@ -372,7 +360,6 @@ Hierbei sollten mehrere Fragen aufkommen:
     \item Wie wird Datenkonsistenz sichergestellt?
     \item Wie wird Datenvollständigkeit sichergestellt?
     \item Wie wird mit Fehlern umgegangen?
-% @Note(Val): Die Arten von Kommunikation (seriell/parallel, (asyn-/syn-/iso-)chron) erklär ich hier nicht, da wir bei Leser:innen von einem Wissenstand einer generellen IT Bachelor Student:in ausgehen.
 \end{enumerate}
 
 Zuerst mag eine einseitige Kommunikation ausreichend erscheinen.

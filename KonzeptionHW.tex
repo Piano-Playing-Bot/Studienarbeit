@@ -399,37 +399,10 @@ Letztendlich fiel die Entscheidung auf die Verwendung von Schieberegistern. Dies
 	% @Note(Val): Ist ok und ein valider Punkt, aber klingt ein bisschen als wären wir einfach inkompetent lol
 \end{enumerate}
 
-\subsection{Transistor} %TODO(Jay): Quelle
+\subsection{Transistor} 
 \chapterauthor{Jakob Kautz}
-Ein Transistor ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
-(den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern. Es gibt verschiedene Arten
-von Transistoren, wobei grob zwischen Transistor und MOSFET unterschieden wird.
-Die grundlegenden Prinzipien ihrer Funktionsweise sind allerdings ähnlich.
-
-\begin{figure}[htbp] %TODO(Jay): Quelle
-	\centering
-	\includegraphics[width=0.45\textwidth]{img/Mosfet}
-	\caption{Aufbau MOSFET}
-	\label{img:transistor}
-\end{figure}
-
-Funktionsweise eines Transistors:
-Ein Transistor besteht typischerweise aus einem Halbleitermaterial wie Silizium und kann in drei Haupttypen unterteilt
-werden: Bipolartransistor (NPN und PNP) und MOSFET (Metalloxid-Halbleiter-Feldeffekttransistor).  \newline
-Bipolartransistor: Die Steuerung des Stromflusses erfolgt durch die Änderung des Stroms, der in die Basis des
-Transistors fließt, was den Stromfluss zwischen Emitter und Collector beeinflusst. \newline
-%Note(Jay) soll ich Emitter und Collector noch erklären?
-MOSFET: Bei einem MOSFET wird der Stromfluss zwischen Source und Drain durch das Anlegen einer Spannung an das Gate
-gesteuert, wodurch ein elektrisches Feld im Halbleiter erzeugt wird, das den Stromfluss reguliert. \newline
-
-Unterschied zwischen Transistor und MOSFET: \newline
-Ein MOSFET ist eine spezielle Art von Transistor, der auf einem anderen Prinzip basiert als der Bipolartransistor. Der
-Hauptunterschied liegt in der Steuerung des Stromflusses: Während beim Bipolartransistor der Strom durch die Basis
-gesteuert wird, erfolgt die Steuerung beim MOSFET durch das Anlegen einer Spannung an das Gate.
-Bei n-MOSFETs (negativ dotierte MOSFETs, welche in diesem Projekt verwendet wurden) wird durch das Anlegen einer
-positiven Spannung am Gate ein
-elektrisches Feld erzeugt, das die Leitfähigkeit zwischen Source und Drain beeinflusst. Dies führt dazu, dass der n-MOSFET
-in einem bestimmten Bereich des Gate-Spannungsbereichs als Schalter oder Verstärker arbeiten kann. \newline
+Ein Transistor [\cite*[siehe ]{BipolarerTransistor}] ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
+(den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern.
 
 Verwendung von Transistoren in Aktuatoren-Schaltungen:
 Transistoren werden in Aktuatoren-Schaltungen verwendet, um die Aktuatoren

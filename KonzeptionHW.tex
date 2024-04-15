@@ -400,7 +400,7 @@ Letztendlich fiel die Entscheidung auf die Verwendung von Schieberegistern. Dies
 	% @Note(Val): Ist ok und ein valider Punkt, aber klingt ein bisschen als wären wir einfach inkompetent lol
 \end{enumerate}
 
-\subsection{Transistor} 
+\subsection{Transistor}
 \chapterauthor{Jakob Kautz}
 Ein Transistor [\cite*[siehe ]{BipolarerTransistor}] ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
 (den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern.
@@ -415,8 +415,10 @@ sperren.
 Es ist entscheidend, sicherzustellen, dass die Spannungen in der Schaltung diese Anforderungen erfüllen, um
 eine ordnungsgemäße Funktion des MOSFETs sicherzustellen und Schäden zu vermeiden.
 
+
 \subsection{Aktuator}\label{subsec:aktuator}
 \chapterauthor{Jakob Kautz}
+
 Die Aktuatoren werden für die Steuerung der Tasten benötigt.
 Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei Möglichkeiten betrachtet: % @Note(Val): Falls es einen Grund gibt, nur diese 3 zu betrachten, gerne nennen, ansonsten sollte das auch so fine sein, glaube ich
 \begin{enumerate}
@@ -424,80 +426,88 @@ Bei den möglichen Aktuatoren für die Ansteuerung der Klaviertasten wurden drei
 	\item Elektromotor: linearer Servomotor
 	\item Hubmagnet
 \end{enumerate}
-An sich laufen alle 3 Aktuatoren auf das gleiche Prinzip - elektromagnetische Induktion - hinaus. Der Hauptunterschied
-der in dieser Arbeit betrachtet wird, ist einmal der Unterschied zwischen einer rotierenden und linearen Bewegung der Aktuatoren,
-und im späteren noch wie die Aktuatoren bezüglich Präzision, Kraft, etc. abschneiden.
-\paragraph{Elektromotor} \cite*[siehe ][]{Aufbau.Elektromotoren}
-Zu Beginn wird ersteinmal das eigentliche Prinzip hinter Elektromotoren betrachtet, da dies hinter allen gewählten Aktuatoren
-ähnlich ist.
+
+An sich funktionieren alle 3 Aktuatoren über das selbe Prinzip: elektromagnetische Induktion.
+Der Hauptunterschied, der in dieser Arbeit betrachtet wird, ist einmal der Unterschied zwischen einer rotierenden und linearen Bewegung der Aktuatoren,
+und im Späteren noch wie die Aktuatoren bezüglich Präzision, Kraft, etc. abschneiden.
+
+\paragraph{Elektromotor}
+Zu Beginn soll ersteinmal das Prinzip hinter Elektromotoren betrachtet werden, da dies hinter allen gewählten Aktuatoren ähnlich ist.
 
 Grundlegend handelt es sich bei einem Elektromotor um ein Bauteil, welches elektrische Leistung in mechanische umwandelt.
-Er besteht aus dem von Statoren erzeugten Magnetfeld und einem sich drehenden Magneten (Rotor) im Inneren.
-Betrachten wir also den Elektromagneten, welcher als Hauptkomponente zur mechanischen Leistung beiträgt:
+Er besteht aus einem von Statoren erzeugten Magnetfeld und einem sich drehenden Magneten (Rotor) im Inneren \cite*[vgl.][]{Aufbau.Elektromotoren}.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/AufbauElektromagnet}
-	\caption{Aufbau eines Rotors\cite*[siehe ][]{Aufbau.Elektromotoren}}
+	\caption{Aufbau eines Rotors \cite*{Aufbau.Elektromotoren}}
 	\label{fig:Elektromagnet}
 \end{figure}
-Dabei markieren die Nummern die verschiedenen Komponenten.
+
+Die in Abbildung \ref{fig:Elektromagnet} dargestellen Nummern markieren die folgenden Komponenten:
+
 \begin{enumerate}
 	\item Dauermagnet % @Question(Jay): Ab wann ist etwas direkt zitiert? Weil in der Quelle steht es so: Um einen Elektromotor bauen zu können, wird zunächst ein Dauermagnet (1) in einer bestimmten Bauform benötigt. Zwischen den Polen des Dauermagneten ist ein drehbares Eisenteil (2) gelagert, um das eine Spule aus isoliertem Kupferdraht (3) gewickelt ist.
 	\item Drehbares Eisenteil
 	\item Spule
 \end{enumerate}
+
 Wird ein Gleichstrom angelegt, fließt dieser durch die Spule, welche so ein Magnetfeld erzeugt.
+
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Magnetfeld}
-	\caption{Spule mit Magnetfeld\cite*[siehe ][]{Elektromagnete}}
+	\caption{Spule mit Magnetfeld \cite*{Aufbau.Elektromotoren}}
 	\label{fig:Magnetfeld}
 \end{figure}
+
 Der Eisenkern wird nun zum Elektromagneten. Die Polung des Magneten hängt davon ab, in welche Richtung der Strom fließt.
 Um die Drehbewegung zu ermöglichen, ist die Positionierung des Magneten so, dass der Süd- am Nordpol und der Nord- am Süd-Pol
 sind. Die gewünschte Rotierbewegung erfolgt durch das umpolen der magnetischen Ausrichtung.
-Dafür ist ein sogenannter Kollektor zuständig, welcher die Stromrichtung in der Spule umschaltet.
+Dafür ist ein sogenannter Kollektor zuständig, welcher die Stromrichtung in der Spule umschaltet \cite*[vgl.][]{Aufbau.Elektromotoren}.
 
 
-\paragraph{Schrittmotor\cite*[siehe ][]{Aufbau.Elektromotoren}}
-Ein Schrittmotor übt eine Rotierende Bewegung aus.
+\paragraph{Schrittmotor}
+
+Ein Schrittmotor übt eine Rotierende Bewegung aus und ist im Wesentlichen ein bürstenloser Elektromotor, der intern so konstruiert ist,
+dass er Drehbewegungen in genau definierten Schritten ausführt, typischerweise mit einem Winkel von 1,8 Grad oder weniger.
+Dabei sind bürstenloser Elektromotoren Drehstrommotoren. Als Innenläufer sind die Wicklungen des Stators außerhalb im festen Gehäuse,
+während der Rotor sich im inneren dreht.
+Die Energieversorgung erfolgt über Gleichspannung, die in einer festgelegten Reihenfolge auf die Spulen des Motors
+geschaltet wird, um die Bewegung zu steuern \cite*[vgl.][]{Aufbau.Elektromotoren}.
+Schrittmotoren finden eine hohe Anwendung in der Steuerungstechnik, was einer der Gründe ist, warum dieser Motor in diesem
+Projekt betrachtet wird. Durch ihre bürstenlose Bauweise verursachen sie keine Störungen durch Bürstenfeuer \cite*[vgl.][]{Aufbau.Elektromotoren}, was bei einem
+Holzklavier durchaus sinnvoll ist.
+
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Schrittmotor}
-	\caption{Schrittmotor\cite*[siehe ][]{Aufbau.Elektromotoren}}
+	\caption{Schrittmotor \cite*{Aufbau.Elektromotoren}}
 	\label{fig:Linearmotor}
 \end{figure}
-Ein Schrittmotor, ist im Wesentlichen ein Brushless-Elektromotor, der intern so konstruiert ist,
-dass er Drehbewegungen in präzise definierten Schritten ausführt, typischerweise mit einem Winkel von 1,8 Grad oder weniger.
-Dabei sind Brushless-Elektromotoren Drehstrommotoren. Als Innenläufer sind die Wicklungen des stators außerhalb im festen Gehäuse,
-während der Rotor sich im inneren dreht.
-Die Energieversorgung erfolgt über Gleichspannung, die in einer festgelegten Reihenfolge auf die Spulen des Motors
-geschaltet wird, um die Bewegung zu steuern.
-Schrittmotoren finden eine hohe Anwendung in der Steuerungstechnik, was einer der Gründe ist, warum dieser Motor in dem
-Projekt betrachtet wird. Durch ihre bürstenlose Bauweise verursachen sie keine Störungen durch Bürstenfeuer, was bei einem
-Holzklavier durchaus sinnvoll erschien.
 
-
-\paragraph{Linearer Servomotor\footnote{\cite*[siehe ][]{Linearer.Servo}}}
-Im Gegensatz zum Schrittmotor, wird die elektrische Leisung hier in eine lineare Bewegung umgewandelt. Er basiert auf der
+\paragraph{Linearer Servomotor}
+Im Gegensatz zum Schrittmotor, wird die elektrische Leistung hier in eine lineare Bewegung umgewandelt. Er basiert auf der
 Verwendung permanentmagnetischer Felder. Im Wesentlichen
-verhält sich ein linearer Servomotor ähnlich wie ein rotierender Servomotor, jedoch ist er in seiner Form gestreckt und
-linear ausgelegt.
+verhält sich ein linearer Servomotor ähnlich wie ein rotierender Servomotor, jedoch ist er in seiner Form gestreckt und linear ausgelegt \cite*[vgl.][]{Linearer.Servo}.
+
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/LinServo}
-	\caption{Linearer Servomotor\footnote{\cite*[siehe ][]{ReicheltLinearerServomotor}}}
+	\caption{Linearer Servomotor \cite*{rei.ReicheltLinearerServomotor.}}
 	\label{fig:Servomotor}
 \end{figure}
-Im wesentlichen besteht der Motor aus 5 verschiedenen Komponenten:
+
+Im wesentlichen besteht der Motor aus 5 verschiedenen Komponenten \cite*[vgl.][]{Linearer.Servo}:
+
 \begin{enumerate}
 	\item Spule/Kolben: Für die eigentliche Umsetzung von Energie in mechanische Leistung zuständig
 	\item magnetische Welle (durch Rotor): Schwingung aus elektrischen und magnetischen Feldern, die sich räumlich ausbreitet
-	\item Rückführsystem: Meldet relevante Parameter des Zustands des Motors zurück
+	\item Rückführsystem: Meldet relevante Parameter des Zustands an den Motor zurück
 	\item Linearlager und- führung: Ermöglichen Bewegung entlang einer geraden Achse
 	\item Servoverstärker/Steuerungseinheit: Schnittstelle Steuerung und Motor
 \end{enumerate}
+
 Diese Elemente ermöglichen eine direkte lineare Bewegung,
 wobei der Servoregler den Motor mit Strom versorgt und die Rückmeldungen mit den Sollparametern vergleicht,
 um die Leistung zu optimieren.
@@ -505,56 +515,56 @@ um die Leistung zu optimieren.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/BrushlessDCLin}
-	\caption{Aufbau eines Linearen Servo-motors\footnote{\cite*[siehe ][]{Linearer.Servo}}}
+	\caption{Aufbau eines Linearen Servomotors \cite*{Linearer.Servo}}
 	\label{fig:ServomotorAufbau}
 \end{figure}
+
 Für eine präzise Bewegungssteuerung werden integrierte Servoregelkreise eingesetzt, die Strom-, Geschwindigkeits- und
 Positionsregelung umfassen. Der Stromkreis reguliert den Strom, um die Kraft für Beschleunigung oder Schub zu liefern,
 während die Geschwindigkeitsschleife die Geschwindigkeit proportional zur Spannung steuert. Die Positionsregelschleife
-übernimmt den Sollwert und passt die Bewegung entsprechend an.
+übernimmt den Sollwert und passt die Bewegung entsprechend an \cite*[vgl.][]{Linearer.Servo}.
 
-\paragraph{Hubmagnet\footnote{\cite*[siehe ][Chapter 1-2]{SolenoidDesign}}}
-Hubmagnete fallen ebenfalls unter die Elektromotoren.
+\paragraph{Hubmagnet}
+Hubmagnete sind ebenfalls eine Form von Elektromotoren \cite*[vgl.][Kapitel 1-2]{SolenoidDesign}.
+
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Hubmagnet}
-	\caption{Hubmagnet\footnote{\cite*[siehe ][]{ReicheltHubmagnetMonostabil}}}
+	\caption{Hubmagnet \cite*{rei.ReicheltLinearerServomotor.}}
 	\label{fig:Hubmagnet}
 \end{figure}
 
 Hubmagnete verwenden eine lange
 Drahtschleife, die um einen metallischen Kern (Plunger) gewickelt ist, und erzeugen ein Magnetfeld, um die lineare Bewegung
-des Plungers zu erzeugen, wenn ein elektrischer Strom durch die Drahtspule fließt. Lineare Solenoids können einseitig oder
-bidirektional (Drücken und Ziehen) sein und haben oft eine Rückholfeder, um den Plunger in die Ausgangsposition zurückzubringen.
+des Plungers herbeizuführen, wenn ein elektrischer Strom durch die Drahtspule fließt. Lineare Solenoids können einseitig oder
+bidirektional (Drücken und Ziehen) sein und haben oft eine Rückholfeder, um den Plunger in die Ausgangsposition zurückzubringen \cite*[vgl.][Kapitel 1-2]{SolenoidDesign}.
+
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/AufbauMagnet}
-	\caption{Hubmagnet Aufbau\footnote{\cite*[siehe ][]{SolenoidDesign}}}
+	\caption{Hubmagnet Aufbau \cite*{SolenoidDesign}}
 	\label{fig:HubmagnetAufbau}
 \end{figure}
 
 \paragraph{Entscheidungsfindung}
 Prinzipiell kann jeder der genannten Aktuatoren für das Projekt verwendet werden. Die Entscheidung fiel aufgrund
 mehrerer Vortzeile allerdings auf den Hubmagneten:
+
 \begin{enumerate}
-	\item Schritt-Motor: Im laufe der Arbeit wurde sich gegen eine rotierende Bewegung des Aktuators entschieden. Diese
-	hätte in der Konzeption mehrere Umleitungen der Seile gebraucht, damit die Tasten gerade nach unten gezogen werden können.
+	\item \textbf{Schrittmotor:} Im Laufe der Arbeit wurde sich gegen eine rotierende Bewegung des Aktuators entschieden, da mehrere Umleitungen der Seile dann notwendig wären, um die Tasten gerade nach unten ziehen zu können.
 	Außerdem bringt es mit den in Kapitel \ref{Zielstellung} definierten Anforderungen keinen Mehrwert,
 	die Bewegung des Aktuators in \enquote{Schritte} aufzuteilen. Der Hauptgrund der Betrachtung dieses Aktuators lag darin,
-	dass das Projekt hier dazu erweitert werden kann, nicht nur MIDI-Dateien zu spielen, sondern auch andersherum am Klavier
-	gespielte Stücke zu speichern und automatisch wiederzugeben, da die Position der Aktuatoren einfach gespeichert und
-	ausgelesen werden kann. % @Question(Jay): Ist der Satz sinnvoll? Ich stolper beim lesen drüber aber mir fällt grad keine Formulierung ein
-	\item Linearer Servo-Motor: Prinzipiell gibt es drei Gründe warum die Entscheidung nicht auf den linearen Servo-motor fiel.
-	Der Hauptgrund lag im Preis, der sehr viel Höher ist als für die Hubmagnete, da die Steuerungssysteme in den Motoren komplexer sind.
-	Aus dem gleichen Grund, haben Hubmagnete in der Regel eine höhere Reaktinsgeschwindigkeit, was bei Musikstücken eine
-	große Rolle spielt.
-	Außerdem ist die Montage von Hubmagneten - insbesondere wenn es an Platz mangelt - einfacher, da diese tendenziell
-	kleiner sind. % @Question(Jay): Ist es sinnvoll noch Vorteile zu nennen? Also sowas wie bessere Dynamik des Motors wodurch die Tasten "schöner" gespielt werden könnten und höhere Präzision was sinnvoll gewesen wäre wenn wir das von hinten hochdrücken gemacht hätten?
-	\item Hubmagnete: Hubmagnete bieten Vorteile wie schnelle Reaktion, einfache Steuerung und geringe
-	Herstellungskosten im Vergleich zu anderen Aktuatoren. Der Hubmagnet wurde aufgrund seines einfachen Aufbaus,
-	kostengründen, und seiner Geschwindigkeit gewählt. Die verwendeten Hubmagnete können eine Kraft von 25N ausüben,
-	was dazu genügt, eine Taste  zu spielen und gleichzeitig Platz für dynamische Anpassungen von Lautstärke und
-	Tastanschlag lassen.
+	dass das Projekt dann insoweit erweitert werden könnte, dass auch am Klavier
+	gespielte Stücke gespeichert und später automatisch wiedergegeben werden könnten, da die Position von Schrittmotoren einfach gespeichert und ausgelesen werden kann.
+	\item \textbf{Linearer Servomotor:} Prinzipiell gibt es drei Gründe warum die Entscheidung nicht auf den linearen Servomotor fiel.
+	Der Hauptgrund liegt im Preis, der sehr viel höher ist als bei Hubmagneten, da die Steuerungssysteme in den Motoren komplexer sind.
+	Aus dem gleichen Grund haben Hubmagnete in der Regel eine höhere Reaktionsgeschwindigkeit, was beim Spielen von Musikstücken eine große Rolle spielt.
+	Außerdem ist die Montage von Hubmagneten - insbesondere wenn es an Platz mangelt - einfacher, da diese tendenziell kleiner sind.
+	% @Question(Jay): Ist es sinnvoll noch Vorteile zu nennen? Also sowas wie bessere Dynamik des Motors wodurch die Tasten "schöner" gespielt werden könnten und höhere Präzision was sinnvoll gewesen wäre wenn wir das von hinten hochdrücken gemacht hätten?
+	% @Answer(Val): Würde ich nicht sagen
+	\item \textbf{Hubmagnete:} Hubmagnete bieten Vorteile wie eine schnelle Reaktionsgeschwindigkeit, einfache Steuerung und geringen Kosten im Vergleich zu den anderen Aktuatoren. Die verwendeten Hubmagnete können eine Kraft von 25N ausüben,
+	was dazu genügt, eine Taste  zu spielen und gleichzeitig Platz für dynamische Anpassungen von Lautstärke und Tastanschlag lassen.
+	% @TODO(Val): Können wir auf das Datasheet der Hubmagnete verweisen oder so?
 \end{enumerate}
 
 \subsection{Schaltplan} \label{subsec:schaltplan}

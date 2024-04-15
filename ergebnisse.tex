@@ -14,6 +14,7 @@ Hier werden nicht nur Limitationen der Umsetzung, sondern auch der Konzeption be
 % @Answer(Jay): Hab die Aufwandschätzung hinzugefügt, aber sonst wüsste ich nichts mehr
 
 % @Note(Val): Ist dieser Abschnitt überhaupt relevant?
+% @Answer(Jay): Ich finds für die Vollständigkeit schön, aber an sich nicht
 Obwohl Software und Hardware getrennt von einander entwickelt wurden, war es aufgrund einer klar definierter Schnittstelle einfach, die beiden zusammen zu führen.
 Nichtsdestotrotz gab es bei der Zusammenführung einige Probleme, die in einem letzten Schritt der Implementierung ausgemerzt wurden.
 Speziell hat sich das Testen der Software des \ac{MC}s ohne verfügbare Hardware als schwierig erwiesen.
@@ -75,8 +76,6 @@ Software-seitig kann diese Periodendauer genutzt werden, um zu verhindern, dass 
 \paragraph{Ablauf:}
 Schrittweise wird software-seitig die Frequenz des Anspielens einer Taste erhöht.
 Es werden mehrere Tasten für diesen Test verwendet, wobei der Fokus, auf Grund des höchsten Mechanik-Gewichts, auf der tiefsten Taste - der A0 Taste - liegt.
-% @Note(Val): Was wird mit "Mechanik-Gewicht" gemeint? Vorher wird nie erwähnt, dass manche Tasten ein höheres Gewicht haben. Das wäre vielleicht wichtig vorher schon zu erwähnen
-% @Note(Jay): Habs in Ansteuerungskonzept (Der letzte Absatz über Elektronik) hinzugefügt wenn das passt?
 Während des Spielens wird eine Slow-Motion-Aufnahme des Hammers und der Klaviersaite angefertigt ud im Anschluss analysiert.
 Wird die Saite angeschlagen, kann die Frequenz im nächsten Schritt erhöht werden.
 Sollte sie nicht angeschlagen werden, ist die maximal verwendbare Frequenz (und damit auch die minimale Periodendauer) gefunden und kann in den Code aufgenommen werden.
@@ -119,7 +118,6 @@ Da diese Spannung im Datenblatt des Hubmagneten nicht ersichtlich ist und das Ta
 \paragraph{Ablauf:}
 Software-seitig wird der Wert, der die Intensität des Anschlags beschreibt, schrittweise soweit reduziert, bis die Taste keinen Ton mehr spielt.
 Dies wird an allen (mit Fokus auf den tieferen) Tasten durchgeführt, da sich die einzelnen Tasten in ihrem Ansprechverhalten teils deutlich unterscheiden.
-% @Note(Val): Erneut - warum wird erst jetzt erwähnt, dass sich die Tasten so stark unterscheiden? Wäre das bei der Konzeption oder dem Anbringen der Aktuatoren an das Piano nicht interessant zu wissen?
 Anschließend wird wieder das Größte der einzelnen Minima in den Code mit aufgenommen.
 
 \paragraph{Ergebnis:}
@@ -167,9 +165,9 @@ bei der Wiedergabe von Musikstücken.
 \paragraph{Ergebnis:}
 Da der Test aufgrund fehlender Zeit nicht durchgeführt werden konnte, werden hier lediglich die Erfolgskriterien aufgezählt:
 \begin{enumerate}
-	\item Jeder Ton wird zum erwarteten Zeitpunkt gespielt, innerhalb einer akzeptablen Toleranzschwelle von ???ms % @TODO(Val): Was ist die Toleranzschwelle und benennen wir die irgendwo bevor mal?
+	\item Jeder Ton wird zum erwarteten Zeitpunkt gespielt, innerhalb einer akzeptablen Toleranzschwelle von 5ms
 	\item Die Reihenfolge der gespielten Töne entspricht exakt der vorgegebenen Signalabfolge.
-	\item Die Abweichungen zwischen den erwarteten und tatsächlichen Spielzeiten liegen innerhalb akzeptabler Grenzwerte % @TODO(Jay): def this
+	\item Die Abweichungen zwischen den erwarteten und tatsächlichen Spielzeiten (Dauer) liegen innerhalb einer grenze von 5ms
 \end{enumerate}
 
 \subsection{Software-Tests} \label{tests-sw}
@@ -279,5 +277,3 @@ Stattdessen wird bei unerwarteten Zuständen die Anwendung gewaltsam abgestürzt
 Das \ac{SPPP}-Protokoll hat keine eingebauten Mechanismen zum Sicherstellen der Datenkonsistenz.
 Es muss entsprechend darauf vertraut werden, dass das Übertragungsmedium die Nachrichten vollständig und korrekt überträgt.
 Die Nutung von Parity Bits oder Ähnlichem würde die Datenkonsistenz stärker versichern.
-
-% @TODO(Val): Bei Limitationen müssen auf jeden Fall Sicherheitsrisiken, etc. der Hardware noch erwähnt werden

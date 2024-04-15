@@ -89,15 +89,13 @@ Um dies umzusetzen, muss der derzeitige Zustand gespeichert werden, damit sich n
 
 
 \subsection{Kommunikation auf der Desktop Anwendung} \label{umsetzungSW-Kommunikation-UI}
-% @Note(Val): Documentaion of COM-Ports: https://learn.microsoft.com/en-us/windows-hardware/drivers/serports/configuration-of-com-ports
 
 Es gibt keine standardisierte, Betribssystem-übergreifende API zum Empfangen und Senden von Daten über das \ac{UART} Protokoll.
 Da \ac{SAM} den Anforderungen nach nur auf Windows laufen muss, wird hier auf die Windows-spezifische API dafür zurückgegriffen.
 Um dies stattdessen cross-platform zu entwickeln, müsste eine eigene Abstraktion über die Platform-spezifischen APIs für die \ac{UART} Kommunikation gefunden werden.
 Fortführungen dieser Arbeit sollten den Aufwand dieser Erweiterung prüfung und ggf. umsetzen.
 
-Auf Windows müssen COM Ports für die Kommunikation verwendet werden.
-COM Ports sind serielle Ports auf Windows, die Daten über das \ac{UART} Protokoll empfangen und senden können.
+Auf Windows werden sogenannte COM Ports für die serielle Kommunikation über das \ac{UART} Protokoll verwendet \cite[vgl.][]{mar.ConfigurationCOMPorts.22}.
 Zum Lesen oder Schreiben werden diese Ports als Dateien betrachtet und die Funktionen \enquote{ReadFile} und \enquote{WriteFile} verwendet \cites[vgl.][Kapitel 4]{den.SerialCommunications.10}[][S. 3]{bay.WindowsSerialPort.08}.
 Alternativ bietet Windows auch asynchrone Versionen der Funktionen an, die den laufenden Thread nicht bis Abschluss der \ac{I/O}-Operation blockieren \cite[vgl.][Kapitel 4]{den.SerialCommunications.10}. \newline
 Das Lesen von COM Ports kann entweder in einer Endlosschleife wiederholt werden, um alle eingehenden Bytes zu erhalten, oder es kann ein sogenannter \enquote{\ac{I/O} Completion Port} verwendet werden, um über das Eintreffen von Bytes von Windows informiert zu werden \cite[vgl.][]{ash.CompletionPortsWin32.22}.

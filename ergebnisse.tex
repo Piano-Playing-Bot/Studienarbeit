@@ -83,7 +83,7 @@ Software-seitig gibt es nun mehrere Möglichkeiten, dieses Minimum zu forcieren.
 Zum Beispiel könnte im \ac{PIDI}-Format vorgegeben werden, dass zwischen zwei Anschlägen eines einzigen Tons immer min. 40ms liegen müssen.
 Da das \ac{PIDI}-Format aber unabhängig der Hardware sein soll und diese Begrenzung speziell durch die verwendeten Komponenten aufkommt, ist dies eine eher unschöne Lösung.
 
-Stattdessen wäre es besser wenn nur der \ac{MC} diese Limitierung beachten muss, da nur dieser Wissen über die spezifische Hardware-Umstzung verwenden soll.
+Stattdessen wäre es besser wenn nur der \ac{MC} diese Limitierung beachten muss, da nur dieses Wissen über die spezifische Hardware-Umstzung verwenden soll.
 Der \ac{MC} muss entsprechend Tasten finden, die so lange gespielt werden sollen, dass ihr nächstes Anspielen weniger als 40ms später erfolgt.
 Wenn diese Tasten gefunden wurde, könnte entweder das nächste Anspielen der Taste später erfolgen oder die Spiellänge der Taste reduziert werden.
 Da das Anspielen einer Taste sehr viel klarer zu erkennen ist als das Weiterspielen einer Taste, beeinflusst die zweite Strategie den Klang des Musikstücks geringer.

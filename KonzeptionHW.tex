@@ -153,34 +153,35 @@ angepasst werden.
 
 \section{Elektronik}\label{sec:konzeptionhw-elektronik}
 
-\subsection{Mikrocontroller[\cite*[siehe: ]{ArduinoVsRaspberry2022}]}\label{Ansteuerung}
+\subsection{Mikrocontroller} \label{Ansteuerung}
 \chapterauthor{Jakob Kautz}
+
 Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein \acf{MC} gut geeignet.
 Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung,
-wobei für diese Arbeit nur ein Arduino und ein Rasperry Pi\footnote{Genau genommen handelt es sich bei einem Rasperry Pi nicht um einen \ac{MC}, sondern um einen Einplatinencontroller.} betrachtet werden sollen.
+wobei für diese Arbeit nur ein Arduino und ein Rasperry Pi\footnote{Genau genommen handelt es sich bei einem Rasperry Pi nicht um einen \ac{MC}, sondern um einen Einplatinencontroller \cite*[vgl.][]{.ArduinoVsRaspberry.22}.} betrachtet werden sollen.
 
 %Arduino Intro
 	\paragraph{Arduino[\cite*[siehe: ]{ArduinoRobotics}]}
 	Ein Arduino unterstützt die Entwicklung von elektronischen Prototypen.
 	Er besteht aus einem \ac{MC}-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten verbunden werden kann.
-	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können.
+	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können \cite*[vgl.][]{.ArduinoVsRaspberry.22}.
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics [width=8cm] {img/ArduinoR3}
-		\caption{Arduino Uno\cite[siehe ]{Arduino}}
+		\caption{Arduino Uno \cite[siehe]{fir.Arduino.24}}
 		\label{img:Arduino}
 	\end{figure}
 \newline
 %Pi Intro
 
-\paragraph{Rasperry Pi[\cite*[siehe: ]{ArduinoVsRaspberry2022}]}
+\paragraph{Rasperry Pi[\cite*[siehe: ]{.ArduinoVsRaspberry.22}]}
 Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert.
-Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu IoT-Geräten.
-Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet.
+Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu \ac{IoT}-Geräten.
+Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet \cite*[vgl.][]{.ArduinoVsRaspberry.22}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=8cm] {img/RasperryPi}
-	\caption{Rasperry Pi\cite[siehe ]{RasperryPi}}
+	\caption{Rasperry Pi \cite[siehe]{okd.RasperryPi.24}}
 	\label{img:Raspi}
 \end{figure}
 \newline
@@ -191,7 +192,7 @@ Es wurde sich letztendlich für den Arduino entschieden.
 Der Rasperry Pi stand vor allem aufgrund seiner höheren Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
 Allerdings ist er aufgrund seines Betriebssystems nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt.
 Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
-Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine möglichst Latenzfreie Ansteuerung von Aktuatoren benötigen.
+Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine möglichst Latenzfreie Ansteuerung von Aktuatoren benötigen \cite*[vgl.][]{.ArduinoVsRaspberry.22}.
 Zudem sollte hier keine besonders komplexe Ansteuerungslogik benötigt werden, weshalb ein Arduino genug Rechenleistung aufweisen sollte.
 
 Für das Projekt wird spezifisch ein Arduino UNO R3 verwendet \cite[siehe][für die genaue Spezifikation]{ard.ArduinoR3Datasheet.24}.
@@ -230,7 +231,7 @@ Eine digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das z
 Dieses HIGH-LOW-Muster kann Spannungen zwischen der vollen Versorgungsspannung und 0V simulieren.
 Dabei wird der Anteil der Zeit geändert, für den das Signal auf HIGH geschaltet ist, relativ zur Zeit, in der das Signal auf LOW geschaltet ist.
 Um unterschiedliche, analoge Werte zu erhalten, wird die Pulsweite moduliert.
-Wenn dieses HIGH-LOW-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und \enquote{Voltage at the common collector} [Vcc], die die Helligkeit der LED steuert.
+Wenn dieses HIGH-LOW-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und \ac{Vcc}, die die Helligkeit der LED steuert.
 
 Auf den Arduino bezogen sieht die Umsetzung eines \ac{PWM} Signals wie folgt aus:
 Ein Taktsignal gelangt in die entsprechende Clock.
@@ -282,7 +283,7 @@ Dieses hat folgenden Aufbau:
 \begin{minipage}{0.55\textwidth}
 	\begin{enumerate}
 		\item Q0-Q7: Ausgänge (parallelgeschaltet)
-		\item Vcc: Anschluss Versorgungsspannung (+)
+		\item \ac{Vcc}: Anschluss Versorgungsspannung (+)
 		\item Gnd: Anschluss Versorgugsspannung (-)
 		\item DS: Data Signal, serieller Dateneingang
 		\item OE: Output Enable, zur Aktivierung der Ausgänge
@@ -294,7 +295,9 @@ Dieses hat folgenden Aufbau:
 \end{minipage}
 \end{figure}
 Ein Nachteil des Schieberegisters besteht darin, dass Latenzen auftreten.
-\subsubsection{Aktuator-Matrix\cite*[siehe ][]{LEDMatrix}}
+
+\subsubsection{Aktuator-Matrix}
+
 Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
 In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
 $$
@@ -316,13 +319,14 @@ Die Steuerung der Matrix kann sowohl mit als auch ohne Multiplexing erfolgen.
 Prinzipiell wird jede Zeile der Matrix nacheinander aktiviert, während die
 entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
 Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM}-Signalen erscheint es den Betrachter:nnen, als ob alle LEDs
-gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
+gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden \cite*[vgl.][]{fsa+.LEDMatrix.23}.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.45\textwidth]{img/LED-Matrix}
-	\caption{Beispielhafte Darstellung einer LED-Matrix \cite*[siehe ][]{LEDMatrixTreiberplatine}}
+	\caption{Beispielhafte Darstellung einer LED-Matrix}
 	\label{img:LED-Matrix}
+	\source{\cite{far.LEDMatrixTreiberplatine.24}}
 \end{figure}
 
 %ohne Multiplexer
@@ -599,7 +603,7 @@ Arduino GND <-> Ground, Output Enable (OE)
 Der OE-Pin wird genutzt, um die Ausgänge des Schieberegisters global zu aktivieren oder zu deaktivieren, ohne die Daten selbst zu beeinflussen.
 Da das Schieberegister zu keiner Zeit deaktiviert sein soll, wird dieser Pin dauerhaft mit dem GND-Pin verbunden.
 
-Arduino VCC 5V <-> VCC, $\overline{SRCLR}$ (Reset)
+Arduino \ac{Vcc} 5V <-> \ac{Vcc}, $\overline{SRCLR}$ (Reset)
 
 Um das Schiebregister mit den benötigten 5V zu betreiben, wird der entsprechende Pin mit dem 5V Output des Arduino verbunden.
 Zusätzlich wird der $\overline{ }$ SRCLR Port des Schieberegisters, welcher ein Reset ermöglicht dauerhaft mit 5V verbunden.

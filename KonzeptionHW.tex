@@ -158,30 +158,32 @@ angepasst werden.
 
 Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein \acf{MC} gut geeignet.
 Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung,
-wobei für diese Arbeit nur ein Arduino und ein Rasperry Pi\footnote{Genau genommen handelt es sich bei einem Rasperry Pi nicht um einen \ac{MC}, sondern um einen Einplatinencontroller \cite*[vgl.][]{.ArduinoVsRaspberry.22}.} betrachtet werden sollen.
+wobei für diese Arbeit nur ein Arduino und ein Rasperry Pi\footnote{Genau genommen handelt es sich bei einem Rasperry Pi nicht um einen \ac{MC}, sondern um einen Einplatinencontroller \cite[vgl.][]{.ArduinoVsRaspberry.22}.} betrachtet werden sollen.
 
 %Arduino Intro
-	\paragraph{Arduino[\cite*[siehe: ]{ArduinoRobotics}]}
+	\paragraph{Arduino}
 	Ein Arduino unterstützt die Entwicklung von elektronischen Prototypen.
 	Er besteht aus einem \ac{MC}-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten verbunden werden kann.
-	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können \cite*[vgl.][]{.ArduinoVsRaspberry.22}.
+	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können \cite[vgl.][]{fir.Arduino.24}.
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics [width=8cm] {img/ArduinoR3}
-		\caption{Arduino Uno \cite[siehe]{fir.Arduino.24}}
+		\caption{Arduino Uno}
+		\source{\cite{fir.Arduino.24}}
 		\label{img:Arduino}
 	\end{figure}
 \newline
 %Pi Intro
 
-\paragraph{Rasperry Pi[\cite*[siehe: ]{.ArduinoVsRaspberry.22}]}
+\paragraph{Rasperry Pi}
 Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert.
 Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu \ac{IoT}-Geräten.
-Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet \cite*[vgl.][]{.ArduinoVsRaspberry.22}.
+Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet \cite[vgl.][]{.ArduinoVsRaspberry.22}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=8cm] {img/RasperryPi}
-	\caption{Rasperry Pi \cite[siehe]{okd.RasperryPi.24}}
+	\caption{Rasperry Pi}
+	\source{\cite{okd.RasperryPi.24}}
 	\label{img:Raspi}
 \end{figure}
 \newline
@@ -192,10 +194,10 @@ Es wurde sich letztendlich für den Arduino entschieden.
 Der Rasperry Pi stand vor allem aufgrund seiner höheren Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
 Allerdings ist er aufgrund seines Betriebssystems nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt.
 Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
-Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine möglichst Latenzfreie Ansteuerung von Aktuatoren benötigen \cite*[vgl.][]{.ArduinoVsRaspberry.22}.
+Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine möglichst Latenzfreie Ansteuerung von Aktuatoren benötigen \cite[vgl.][]{.ArduinoVsRaspberry.22}.
 Zudem sollte hier keine besonders komplexe Ansteuerungslogik benötigt werden, weshalb ein Arduino genug Rechenleistung aufweisen sollte.
 
-Für das Projekt wird spezifisch ein Arduino UNO R3 verwendet \cite[siehe][für die genaue Spezifikation]{ard.ArduinoR3Datasheet.24}.
+Für das Projekt wird spezifisch ein Arduino UNO R3 verwendet \cite[siehe][für die Spezifikation]{ard.ArduinoR3Datasheet.24}.
 Bei der Auswahl des spezifischen Arduinos wurden der Arduino UNO Mini, Nano und R3 betrachtet.
 Im Prinzip wäre jedes der genannten Modelle für die Anwendung möglich, allerdings verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
 gegenüber der 32KB vom Arduino UNO Mini und den 30KB, die auf dem Arduino Nano verfügbar sind \cites[vgl.][]{ard.ArduinoR3Datasheet.24}{ard.ArduinoMiniDatasheet.24}{ard.ArduinoNanoDatasheet.24}).
@@ -208,7 +210,7 @@ Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM}-Pins, die
 \chapterauthor{Jakob Kautz}
 
 Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der \acf{PWM} erläutert.
-Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert [Vgl: \cite*[siehe ][]{PWM}].
+Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert \cite[vgl.][]{PWM}.
 Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. benötigt.
 In diesen Fällen muss die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
 Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt.

@@ -352,7 +352,7 @@ Im Rahmen des Protoypen wurde die Elektrik nicht fest am Klavier verschraubt.
 Das Brett mit den Hubmagneten wurde stattdessen nur an das Klavier angelehnt, während die Angelschnüre die Verbindung zu den Tasten herstellen.
 Gespannt werden die Seile durch eine Schrauben-Mutter Konstruktion (siehe auch Abschnitt \ref{subsec:VerbindungTastenAktuatoren}).
 
-\subsection{Ergebnisse des Prototypen}
+\subsection{Ergebnisse des Prototypen}\label{ErgebnissePrototyp}
 \chapterauthor{Jakob Kautz}
 % @TODO(Val):
 Der Prototyp des selbstspielenden Klaviers zeigt erfolgreiche Ergebnisse in mehreren Bereichen. Die Implementierung von
@@ -384,4 +384,26 @@ Damit beläuft sich die Fertigstellung des Prototypen auf mindestens weitere 44 
 noch ausführlich getestet werden muss und gegebenenfalls Fehler die beim Löten o.ä. aufkommen behoben werden müssen.
 
 Der Prototyp wird aus diesem Grund nicht komplett fertiggestellt.
+
+Während der Entwicklung des Prototypen traten unerwartete Herausforderungen auf, die den Projektverlauf beeinflussten.
+Eine der ersten Hürden war die Stromstärke, die anders als ursprünglich angenommen ausfiel. Anfangs wurde mit einem
+Verbrauch von 0,4 Ampere pro Hubmagnet kalkuliert, doch letztendlich betrug die tatsächliche Stromstärke 0,7 Ampere pro
+Hubmagnet. Die zu Beginn vorgesehenen Breadboards können jedoch nur maximal 0,5 Ampere pro Stecker verarbeiten.
+Somit musste der Teil der Schaltung, der mehr Strom benötigte - alles nach den Dioden, da ab diesem Punkt ein externer
+Stromanschluss für den Betrieb der Hubmagnete hinzukam - auf Steckplatinen gelötet werden. Dies führte zu Verzögerungen
+im Projekt, da auf die Platinen gewartet werden musste, zusätzlicher Arbeitsbelastung, da nun die gesamte Schaltung gelötet
+wurde, und höheren Kosten, da zusätzlich zu den bereits bestellten Breadboards Platinen gekauft wurden.
+Die Breadboards konnten jedoch in der Ausbildungsabteilung der Firma weiterverwendet werden, weshalb sie nicht in die
+Kostenübersicht aufgenommen wurden.
+
+Eine weitere unerwartete Herausforderung im Zusammenhang mit der Stromstärke bestand darin, dass die verwendeten
+Jumper-Kabel nicht dick genug waren, um den Stromfluss der externen Stromversorgung zu bewältigen. Für eine stabilere
+Verbindung waren daher dickere Kabel für den Plus- und Minuspol erforderlich. Es wurden keine neuen Kabel bestellen,
+da die dickeren Kabel für den externen Stromanschluss von der Uni bereitgestellt wurden, während die Jumper-Kabel für den
+Rest der Schaltung ausreichten.
+
+Die letzte unerwartete Herausforderung ergab sich aus den unterschiedlich großen Bohrlöchern in den Hubmagneten, die zur
+Befestigung an dem Brett dienen sollten. Dies erforderte den Kauf verschieden großer Schrauben und teilweise auch Muttern,
+um sicherzustellen, dass sich die Magnete nicht lösen. Obwohl diese Lösung funktioniert, ist es ratsam, die Schrauben
+gelegentlich nachzuziehen, um zu verhindern, dass sich während des Spielens ein Hubmagnet löst.
 

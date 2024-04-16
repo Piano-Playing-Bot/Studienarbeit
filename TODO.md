@@ -1,5 +1,0 @@
-- Use "theadstart" und "theadcol" in all tables for better, unified style
-- refer to appendixes in text (especially appendix-demo)
-- update all "ref{???}" throughout the text
-- add citations
-- make sure, that every mention of anforderungen/ziele gets actually mentioned in chapter 2

@@ -90,8 +90,6 @@ Entsprechend würde nur ein Subset des \ac{MIDI}-Standards zum Speichern der Mus
 Nichtsdestotrotz kann das Format für diesen eingeschränkten Anwendungsfall noch optimiert werden.
 Um diese Verbesserungen zu motivieren, soll zuerst die Enkodierung von Noten in \ac{MIDI} erläutert werden.
 
-% @Note(Jay): Wäre eine Tabelle für welche Daten brauchen wie viel Speicher sinnvoll? Wäre übersichtlicher (zusätzlich, nicht stattdessen though, ich mag die Erklärung)
-% @TODO(Val): Diese Tabelle hinzufügen
 \ac{MIDI} speichert die Notenfolgen in sogenannten \enquote{Nachrichten}.
 Nachrichten können auch andere Daten tragen \cite[siehe][für die gesamte Liste]{vm.SummaryMIDIMessages.20}, hier sollen aber nur die Nachrichten zum Spielen von Tönen betrachtet werden.
 Jede dieser Nachrichten folgt einer relativen Zeitangabe, im Standard \enquote{delta time} genannt.
@@ -273,7 +271,6 @@ Den in Kapitel \ref{Zielstellung} gestellten Anforderungen nach, soll über \ac{
 Das bringt mit sich, dass \ac{SAM} Daten an den \ac{MC} senden können muss. \newline
 Abgesehen von den zu spielenden Noten, muss \ac{SAM} dem \ac{MC} auch mitteilen können, ob angehalten, oder die Lautstärke bzw. Geschwindigkeit angepasst werden sollen (Anforderungen A10 und A11).
 
-% @TODO(Val): Source for why these questions in particular maybe
 Hierbei sollten mehrere Fragen aufkommen:
 \begin{enumerate}
     \item Geht die Kommunikation in beide Richtungen oder nur von \ac{SAM} zum \ac{MC}?
@@ -574,7 +571,7 @@ Da anzunehmen ist, dass Buttons leichter als ein Slider zu implementieren sind, 
 
 Zuletzt ist nun noch das Hinzufügen von Musikstücken zu beachten.
 Da das Importieren neuer Musikstücke einen zweitrangigen Use-Case darstellt, wurde sich entschieden, diesen auf einer zweiten Seite umzusetzen.
-Viele bekannte Anwendungen, bei denen das Hochladen bzw. Importieren von Dateien ebenfalls nicht den primären Use-Case darstellt, lösen dies genauso. % @TODO(Val): Beispiele in Klammern/Fußnote erwähnen
+Viele bekannte Anwendungen, bei denen das Hochladen bzw. Importieren von Dateien ebenfalls nicht den primären Use-Case darstellt, lösen dies genauso.
 Auf der Startseite soll ein Button zum Importieren exisiteren,der dann zur zweiten Seite führt, wo die zu importierende Datei ausgewählt werden kann, und für den Import umbenannt werden kann.
 
 Es soll der Nutzer:in generell die Möglichkeit gegeben werden, jedes Musikstück im Katalog zu jedem Zeitpunkt umzubenennen und auch wieder zu entfernen.
@@ -583,7 +580,7 @@ Das verhilft laut dem \ac{UI} Design Pattern \enquote{Make it direct} eine intui
 Beim Darstellen der Musikstücke sollte entsprechend der Name angezeigt werden, sowie eine Möglichkeit zum Abspielen, Anpassen des Namens und zum Löschen des Musikstücks.
 
 Zuletzt ist beim Import noch zu beachten, dass die Nutzer:innen jederzeit den Import abbrechen können sollten.
-Da der Import die Nutzer:in auf eine neue Seite bringt, soll das Abbrechen über einen links-gerichteten Pfeil gekennzeichnet werden, welches ein gängiges Symbol zum Rückkehren auf die vorherige Seite darstellt. % @TODO(Val): Beispiele in Klammern/Fußzeile erwähnen
+Da der Import die Nutzer:in auf eine neue Seite bringt, soll das Abbrechen über einen links-gerichteten Pfeil gekennzeichnet werden, welches ein gängiges Symbol zum Rückkehren auf die vorherige Seite darstellt.
 
 
 \subsection{Architektur} \label{vorgehenSW-UI-code}
@@ -714,5 +711,3 @@ Zuletzt kann die Verbindung der beiden Codecycle auch noch erweitert werden.
 So ist es beispielsweise sinnvoll anzuzeigen, ob eine Verbindung zum \ac{MC} gefunden wurde.
 Auch kann der Fortschritt auf der Wiedergabeleiste relativ genau angegeben werden.
 Auch kann dem UI-Codecycle über z.B. geteilte Variablen mitgeteilt werden, wann eine Nachricht erfolgreich vom \ac{MC} empfangen wurde, um die \ac{UI} mit dem Stand des \ac{MC}s synchron zu halten.
-
-% @TODO(Val): SADT Diagramme einfügen

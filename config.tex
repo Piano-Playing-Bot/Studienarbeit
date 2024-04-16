@@ -12,29 +12,29 @@
 %%
 %% LANGUAGE SETTINGS
 %% Schriftarten- und Zeichenpakete
-\usepackage[ngerman]{babel}				% german language
-\usepackage[T1]{fontenc}				% For font encodings
-\usepackage[utf8]{inputenc}				% For input encodings
-\usepackage[german=quotes]{csquotes}	% correct quoting using \enquote{}
+\usepackage[ngerman]{babel}           % german language
+\usepackage[T1]{fontenc}              % For font encodings
+\usepackage[utf8]{inputenc}           % For input encodings
+\usepackage[german=quotes]{csquotes}  % correct quoting using \enquote{}
 
-\usepackage{makeidx}					% allows index generation
-\usepackage{listings}					% Format Listings properly
-\usepackage{lipsum}						% Blindtext
-\usepackage{graphicx}					% use various graphics formats
-\usepackage[german]{varioref}			% nicer references \vref
-\usepackage[format=plain]{caption}		% better Captions (format=plain to avoid hanging indentation)
-\usepackage{booktabs}					% nicer Tabs
-\usepackage[hidelinks=true]{hyperref}	% keine roten Markierungen bei Links
-\usepackage{fnpct}						% Correct superscripts
-\usepackage{calc}						% Used for extra space below footsepline, in particular
-\usepackage{array}						% Better Array & Tabular environments
-\usepackage{acronym}					% Allows using acronyms
-\usepackage{algorithm}					% provides block command \algorithm
-\usepackage{algpseudocode}				% Typesetting pseudocode
-\usepackage{setspace}					% Allows setting line-spacing
-\usepackage{tocloft}					% better table of contents, lists of figures/tables
-\usepackage{tikz}						% Used for drawing directly in LaTeX
-\usepackage{amsmath}					% Advanced Maths
+\usepackage{makeidx}                  % allows index generation
+\usepackage{listings}                 % Format Listings properly
+\usepackage{lipsum}                   % Blindtext
+\usepackage{graphicx}                 % use various graphics formats
+\usepackage[german]{varioref}         % nicer references \vref
+\usepackage[format=plain]{caption}    % better Captions (format=plain to avoid hanging indentation)
+\usepackage{booktabs}                 % nicer Tabs
+\usepackage[hidelinks=true]{hyperref} % keine roten Markierungen bei Links
+\usepackage{fnpct}                    % Correct superscripts
+\usepackage{calc}                     % Used for extra space below footsepline, in particular
+\usepackage{array}                    % Better Array & Tabular environments
+\usepackage{acronym}                  % Allows using acronyms
+\usepackage{algorithm}                % provides block command \algorithm
+\usepackage{algpseudocode}            % Typesetting pseudocode
+\usepackage{setspace}                 % Allows setting line-spacing
+\usepackage{tocloft}                  % better table of contents, lists of figures/tables
+\usepackage{tikz}                     % Used for drawing directly in LaTeX
+\usepackage{amsmath}                  % Advanced Maths
 \usepackage{multirow}
 
 %% Table-Header
@@ -214,3 +214,5 @@
   \@afterheading%
 }
 \makeatother
+
+\newcommand{\source}[1]{\caption*{Quelle: {#1}} }

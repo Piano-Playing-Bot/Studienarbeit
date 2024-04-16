@@ -153,34 +153,37 @@ angepasst werden.
 
 \section{Elektronik}\label{sec:konzeptionhw-elektronik}
 
-\subsection{Mikrocontroller[\cite*[siehe: ]{ArduinoVsRaspberry2022}]}\label{Ansteuerung}
+\subsection{Mikrocontroller} \label{Ansteuerung}
 \chapterauthor{Jakob Kautz}
+
 Um die Signale des Programmes an die Aktuatoren weitergeben zu können, ist ein \acf{MC} gut geeignet.
 Auf dem Markt steht eine hohe Anzahl an \ac{MC}s zur Verfügung,
-wobei für diese Arbeit nur ein Arduino und ein Rasperry Pi\footnote{Genau genommen handelt es sich bei einem Rasperry Pi nicht um einen \ac{MC}, sondern um einen Einplatinencontroller.} betrachtet werden sollen.
+wobei für diese Arbeit nur ein Arduino und ein Rasperry Pi\footnote{Genau genommen handelt es sich bei einem Rasperry Pi nicht um einen \ac{MC}, sondern um einen Einplatinencontroller \cite[vgl.][]{.ArduinoVsRaspberry.22}.} betrachtet werden sollen.
 
 %Arduino Intro
-	\paragraph{Arduino[\cite*[siehe: ]{ArduinoRobotics}]}
+	\paragraph{Arduino}
 	Ein Arduino unterstützt die Entwicklung von elektronischen Prototypen.
 	Er besteht aus einem \ac{MC}-Board, das mit verschiedenen Sensoren, Aktuatoren und anderen elektronischen Komponenten verbunden werden kann.
-	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können.
+	Der Arduino verfügt über digitale und analoge Ein- und Ausgangspins, die für die Interaktion mit Geräten verwendet werden können \cite[vgl.][]{fir.Arduino.24}.
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics [width=8cm] {img/ArduinoR3}
-		\caption{Arduino Uno\cite[siehe ]{Arduino}}
+		\caption{Arduino Uno}
+		\source{\cite{fir.Arduino.24}}
 		\label{img:Arduino}
 	\end{figure}
 \newline
 %Pi Intro
 
-\paragraph{Rasperry Pi[\cite*[siehe: ]{ArduinoVsRaspberry2022}]}
+\paragraph{Rasperry Pi}
 Ein Rasperry Pi ist ein Einplatinencontroller, der auf einem ARM-Prozessor basiert.
-Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu IoT-Geräten.
-Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet.
+Er ist dafür konzipiert, eine breite Palette von Anwendungen zu unterstützen, vom Prototypenbau bis zu \ac{IoT}-Geräten.
+Im Gegensatz zum Arduino ist er besonders für komplexe und rechenlastige Projekte geeignet \cite[vgl.][]{.ArduinoVsRaspberry.22}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=8cm] {img/RasperryPi}
-	\caption{Rasperry Pi\cite[siehe ]{RasperryPi}}
+	\caption{Rasperry Pi}
+	\source{\cite{okd.RasperryPi.24}}
 	\label{img:Raspi}
 \end{figure}
 \newline
@@ -191,10 +194,10 @@ Es wurde sich letztendlich für den Arduino entschieden.
 Der Rasperry Pi stand vor allem aufgrund seiner höheren Speicherkapazität und Rechenleistung zur Diskussion, wodurch eine komplexere Ansteuerungslogik möglich wäre.
 Allerdings ist er aufgrund seines Betriebssystems nicht für Echtzeit-Anwendungen bzw. geschwindigkeitskritische Anwendungen ausgelegt.
 Im Gegensatz dazu bietet der Arduino eine Echtzeitverarbeitung mit geringer Latenz.
-Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine möglichst Latenzfreie Ansteuerung von Aktuatoren benötigen.
+Außerdem verfügt ein Arduino über eine recht simple Hardware-Interaktion - er ist darauf spezialisiert, die Hardware direkt anzusprechen - und ist somit besser für Projekte geeignet, die eine möglichst Latenzfreie Ansteuerung von Aktuatoren benötigen \cite[vgl.][]{.ArduinoVsRaspberry.22}.
 Zudem sollte hier keine besonders komplexe Ansteuerungslogik benötigt werden, weshalb ein Arduino genug Rechenleistung aufweisen sollte.
 
-Für das Projekt wird spezifisch ein Arduino UNO R3 verwendet \cite[siehe][für die genaue Spezifikation]{ard.ArduinoR3Datasheet.24}.
+Für das Projekt wird spezifisch ein Arduino UNO R3 verwendet \cite[siehe][für die Spezifikation]{ard.ArduinoR3Datasheet.24}.
 Bei der Auswahl des spezifischen Arduinos wurden der Arduino UNO Mini, Nano und R3 betrachtet.
 Im Prinzip wäre jedes der genannten Modelle für die Anwendung möglich, allerdings verfügt der R3 im Gegensatz zu den anderen beiden Modellen über mehr Speicherkapazitäten (256KB Flash Speicher
 gegenüber der 32KB vom Arduino UNO Mini und den 30KB, die auf dem Arduino Nano verfügbar sind \cites[vgl.][]{ard.ArduinoR3Datasheet.24}{ard.ArduinoMiniDatasheet.24}{ard.ArduinoNanoDatasheet.24}).
@@ -207,7 +210,7 @@ Der Arduino R3 bietet - wie die anderen beiden Modelle auch - \ac{PWM}-Pins, die
 \chapterauthor{Jakob Kautz}
 
 Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der \acf{PWM} erläutert.
-Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert [Vgl: \cite*[siehe ][]{PWM}].
+Zur Vollständigkeit wird in diesem Abschnitt das Prinzip der Pulsweitenmodulation erläutert \cite[vgl.][]{PWM}.
 Oftmals ist bei der Ansteuerung der Aktuatoren nicht die gesamte Versorgungsspannung erwünscht bzw. benötigt.
 In diesen Fällen muss die anliegende Spannung varriiert werden, damit die Spannung am Ziel dem gewünschten Wert entspricht.
 Angenommen es ist eine Spannung von 2.5V erwünscht, wobei die Vollversorgungsspannung 5V beträgt.
@@ -221,7 +224,8 @@ Bei den \ac{PWM}-Ausgängen wird die Pulsweite - die Dauer der Einschaltzeit - d
 \begin{figure}[htbp]
 	\centering
 	\includegraphics [width=8cm] {img/pulsweite}
-	\caption{Pulsweitenmodulation [siehe: \cite*[siehe ][]{PWM}]}
+	\caption{Pulsweitenmodulation}
+	\source{\cite{PWM}}
 	\label{fig:pulsweite}
 \end{figure}
 
@@ -230,7 +234,7 @@ Eine digitale Steuerung wird verwendet, um eine Rechteckwelle - ein Signal das z
 Dieses HIGH-LOW-Muster kann Spannungen zwischen der vollen Versorgungsspannung und 0V simulieren.
 Dabei wird der Anteil der Zeit geändert, für den das Signal auf HIGH geschaltet ist, relativ zur Zeit, in der das Signal auf LOW geschaltet ist.
 Um unterschiedliche, analoge Werte zu erhalten, wird die Pulsweite moduliert.
-Wenn dieses HIGH-LOW-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und \enquote{Voltage at the common collector} [Vcc], die die Helligkeit der LED steuert.
+Wenn dieses HIGH-LOW-Muster zum Beispiel schnell genug mit einer LED wiederholt wird, resultiert daraus eine konstante Spannung zwischen 0 und \ac{Vcc}, die die Helligkeit der LED steuert.
 
 Auf den Arduino bezogen sieht die Umsetzung eines \ac{PWM} Signals wie folgt aus:
 Ein Taktsignal gelangt in die entsprechende Clock.
@@ -256,9 +260,11 @@ wobei in dieser Arbeit 2 im Detail betrachtet werden:
 	\item Aktuator-Matrix
 \end{enumerate}
 
+
 \subsubsection{Schieberegister}
-Ein Schieberegister[siehe: \cite*[siehe ][]{Schieberegister}] ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
-Datenbits verwendet wird.\newline
+
+Ein Schieberegister ist ein integrierter Schaltkreis, der zur Speicherung und sequenziellen Verschiebung von
+Datenbits verwendet wird \cite[vgl.][]{Schieberegister}.\newline
 %Das grundlegende Prinzip eines Schieberegisters ist, dass Datenbits seriell in das Register eingegeben und dann
 %sequenziell aus dem Register ausgegeben werden können.
 %Dies geschieht durch die Verwendung von Taktimpulsen, die das Verschieben der Bits steuern.\newline
@@ -271,18 +277,19 @@ Um 88 Ausgänge mit Hilfe von Schieberegistern, die von nur 3 \ac{PWM}-Pins des 
 können 11 8-Bit-Schieberegister  - also Schieberegister mit 8 Ausgängen - verwendet werden.
 
 \paragraph{74HC959 Schieberegister}
-In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet[siehe: \cite*[siehe ][]{DatasheetSchieberegister74HC595}].
+In dieser Arbeit wird spezifisch ein 74HC959 Schieberegister betrachtet \cite[siehe][für die Spezifikation]{dio.74HC595.18}.
 Dieses hat folgenden Aufbau:
 \begin{figure}[htbp]
 \begin{minipage}{0.45\textwidth}
 		\includegraphics [width=1\textwidth] {img/Schieberegister}
-		\caption{Schematik Schieberegister [\cite*[siehe ][]{DatasheetSchieberegister74HC595}]}
+		\caption{Schematik Schieberegister}
+		\source{\cite{dio.74HC595.18}}
 		\label{img:Shift}
 \end{minipage}
 \begin{minipage}{0.55\textwidth}
 	\begin{enumerate}
 		\item Q0-Q7: Ausgänge (parallelgeschaltet)
-		\item Vcc: Anschluss Versorgungsspannung (+)
+		\item \ac{Vcc}: Anschluss Versorgungsspannung (+)
 		\item Gnd: Anschluss Versorgugsspannung (-)
 		\item DS: Data Signal, serieller Dateneingang
 		\item OE: Output Enable, zur Aktivierung der Ausgänge
@@ -294,7 +301,9 @@ Dieses hat folgenden Aufbau:
 \end{minipage}
 \end{figure}
 Ein Nachteil des Schieberegisters besteht darin, dass Latenzen auftreten.
-\subsubsection{Aktuator-Matrix\cite*[siehe ][]{LEDMatrix}}
+
+\subsubsection{Aktuator-Matrix}
+
 Die Aktuator-Matrix ist einer LED-Matrix nachgeahmt.
 In einer Matrix, werden zwei Reihen nach folgendem Muster an Ports angeschlossen:
 $$
@@ -316,13 +325,14 @@ Die Steuerung der Matrix kann sowohl mit als auch ohne Multiplexing erfolgen.
 Prinzipiell wird jede Zeile der Matrix nacheinander aktiviert, während die
 entsprechenden LEDs in den Spalten gleichzeitig eingeschaltet werden.
 Durch schnelles Wechseln zwischen den Zeilen mithilfe von \ac{PWM}-Signalen erscheint es den Betrachter:nnen, als ob alle LEDs
-gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden.
+gleichzeitig leuchten würden, obwohl sie tatsächlich nacheinander aktiviert werden \cite[vgl.][]{fsa+.LEDMatrix.23}.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.45\textwidth]{img/LED-Matrix}
-	\caption{Beispielhafte Darstellung einer LED-Matrix \cite*[siehe ][]{LEDMatrixTreiberplatine}}
+	\caption{Beispielhafte Darstellung einer LED-Matrix}
 	\label{img:LED-Matrix}
+	\source{\cite{far.LEDMatrixTreiberplatine.24}}
 \end{figure}
 
 %ohne Multiplexer
@@ -357,7 +367,8 @@ Wobei die Latenzen der Schieberegister in diesem Projekt vernachlässigt werden 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.75\textwidth]{img/matrixMuxSchaltung}
-	\caption{Matrix mit Multiplexing[\cite*[][]{LEDMatrix}]}
+	\caption{Matrix mit Multiplexing}
+	\source{\cite{fsa+.LEDMatrix.23}}
 	\label{fig:AktMatrixMux}
 \end{figure}
 
@@ -390,8 +401,8 @@ Letztendlich fiel die Entscheidung auf die Verwendung von Schieberegistern. Dies
 
 \subsection{Transistor}
 \chapterauthor{Jakob Kautz}
-Ein Transistor [\cite*[siehe ]{BipolarerTransistor}] ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
-(den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern.
+Ein Transistor ist ein elektronisches Bauteil, das in der Lage ist, den Stromfluss zwischen zwei seiner Anschlüsse
+(den sogenannten Source und Drain) mithilfe eines dritten Anschlusses (der Gate) zu steuern \cite[vgl.]{sch.BipolarerTransistor.24}.
 
 Verwendung von Transistoren in Aktuatoren-Schaltungen:
 Transistoren werden in Aktuatoren-Schaltungen verwendet, um die Aktuatoren
@@ -423,12 +434,13 @@ und im Späteren noch wie die Aktuatoren bezüglich Präzision, Kraft, etc. absc
 Zu Beginn soll ersteinmal das Prinzip hinter Elektromotoren betrachtet werden, da dies hinter allen gewählten Aktuatoren ähnlich ist.
 
 Grundlegend handelt es sich bei einem Elektromotor um ein Bauteil, welches elektrische Leistung in mechanische umwandelt.
-Er besteht aus einem von Statoren erzeugten Magnetfeld und einem sich drehenden Magneten (Rotor) im Inneren \cite*[vgl.][]{Aufbau.Elektromotoren}.
+Er besteht aus einem von Statoren erzeugten Magnetfeld und einem sich drehenden Magneten (Rotor) im Inneren \cite[vgl.][]{Aufbau.Elektromotoren}.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/AufbauElektromagnet}
-	\caption{Aufbau eines Rotors \cite*{Aufbau.Elektromotoren}}
+	\caption{Aufbau eines Rotors}
+	\source{\cite{Aufbau.Elektromotoren}}
 	\label{fig:Elektromagnet}
 \end{figure}
 
@@ -445,14 +457,15 @@ Wird ein Gleichstrom angelegt, fließt dieser durch die Spule, welche so ein Mag
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Magnetfeld}
-	\caption{Spule mit Magnetfeld \cite*{Aufbau.Elektromotoren}}
+	\caption{Spule mit Magnetfeld}
+	\source{\cite{Aufbau.Elektromotoren}}
 	\label{fig:Magnetfeld}
 \end{figure}
 
 Der Eisenkern wird nun zum Elektromagneten. Die Polung des Magneten hängt davon ab, in welche Richtung der Strom fließt.
 Um die Drehbewegung zu ermöglichen, ist die Positionierung des Magneten so, dass der Süd- am Nordpol und der Nord- am Süd-Pol
 sind. Die gewünschte Rotierbewegung erfolgt durch das umpolen der magnetischen Ausrichtung.
-Dafür ist ein sogenannter Kollektor zuständig, welcher die Stromrichtung in der Spule umschaltet \cite*[vgl.][]{Aufbau.Elektromotoren}.
+Dafür ist ein sogenannter Kollektor zuständig, welcher die Stromrichtung in der Spule umschaltet \cite[vgl.][]{Aufbau.Elektromotoren}.
 
 
 \paragraph{Schrittmotor}
@@ -462,31 +475,33 @@ dass er Drehbewegungen in genau definierten Schritten ausführt, typischerweise 
 Dabei sind bürstenloser Elektromotoren Drehstrommotoren. Als Innenläufer sind die Wicklungen des Stators außerhalb im festen Gehäuse,
 während der Rotor sich im inneren dreht.
 Die Energieversorgung erfolgt über Gleichspannung, die in einer festgelegten Reihenfolge auf die Spulen des Motors
-geschaltet wird, um die Bewegung zu steuern \cite*[vgl.][]{Aufbau.Elektromotoren}.
+geschaltet wird, um die Bewegung zu steuern \cite[vgl.][]{Aufbau.Elektromotoren}.
 Schrittmotoren finden eine hohe Anwendung in der Steuerungstechnik, was einer der Gründe ist, warum dieser Motor in diesem
-Projekt betrachtet wird. Durch ihre bürstenlose Bauweise verursachen sie keine Störungen durch Bürstenfeuer \cite*[vgl.][]{Aufbau.Elektromotoren}, was bei einem
+Projekt betrachtet wird. Durch ihre bürstenlose Bauweise verursachen sie keine Störungen durch Bürstenfeuer \cite[vgl.][]{Aufbau.Elektromotoren}, was bei einem
 Holzklavier durchaus sinnvoll ist.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Schrittmotor}
-	\caption{Schrittmotor \cite*{Aufbau.Elektromotoren}}
+	\caption{Schrittmotor}
+	\source{\cite{Aufbau.Elektromotoren}}
 	\label{fig:Linearmotor}
 \end{figure}
 
 \paragraph{Linearer Servomotor}
 Im Gegensatz zum Schrittmotor, wird die elektrische Leistung hier in eine lineare Bewegung umgewandelt. Er basiert auf der
 Verwendung permanentmagnetischer Felder. Im Wesentlichen
-verhält sich ein linearer Servomotor ähnlich wie ein rotierender Servomotor, jedoch ist er in seiner Form gestreckt und linear ausgelegt \cite*[vgl.][]{Linearer.Servo}.
+verhält sich ein linearer Servomotor ähnlich wie ein rotierender Servomotor, jedoch ist er in seiner Form gestreckt und linear ausgelegt \cite[vgl.][]{Linearer.Servo}.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/LinServo}
-	\caption{Linearer Servomotor \cite*{rei.ReicheltLinearerServomotor.}}
+	\caption{Linearer Servomotor}
+	\source{\cite{rei.ReicheltLinearerServomotor.24}}
 	\label{fig:Servomotor}
 \end{figure}
 
-Im wesentlichen besteht der Motor aus 5 verschiedenen Komponenten \cite*[vgl.][]{Linearer.Servo}:
+Im wesentlichen besteht der Motor aus 5 verschiedenen Komponenten \cite[vgl.][]{Linearer.Servo}:
 
 \begin{enumerate}
 	\item Spule/Kolben: Für die eigentliche Umsetzung von Energie in mechanische Leistung zuständig
@@ -503,34 +518,37 @@ um die Leistung zu optimieren.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/BrushlessDCLin}
-	\caption{Aufbau eines Linearen Servomotors \cite*{Linearer.Servo}}
+	\caption{Aufbau eines Linearen Servomotors}
+	\source{\cite{Linearer.Servo}}
 	\label{fig:ServomotorAufbau}
 \end{figure}
 
 Für eine präzise Bewegungssteuerung werden integrierte Servoregelkreise eingesetzt, die Strom-, Geschwindigkeits- und
 Positionsregelung umfassen. Der Stromkreis reguliert den Strom, um die Kraft für Beschleunigung oder Schub zu liefern,
 während die Geschwindigkeitsschleife die Geschwindigkeit proportional zur Spannung steuert. Die Positionsregelschleife
-übernimmt den Sollwert und passt die Bewegung entsprechend an \cite*[vgl.][]{Linearer.Servo}.
+übernimmt den Sollwert und passt die Bewegung entsprechend an \cite[vgl.][]{Linearer.Servo}.
 
 \paragraph{Hubmagnet}
-Hubmagnete sind ebenfalls eine Form von Elektromotoren \cite*[vgl.][Kapitel 1-2]{SolenoidDesign}.
+Hubmagnete sind ebenfalls eine Form von Elektromotoren \cite[vgl.][Kapitel 1-2]{SolenoidDesign}.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/Hubmagnet}
-	\caption{Hubmagnet \cite*{rei.ReicheltLinearerServomotor.}}
+	\caption{Hubmagnet}
+	\source{\cite{rei.ReicheltLinearerServomotor.24}}
 	\label{fig:Hubmagnet}
 \end{figure}
 
 Hubmagnete verwenden eine lange
 Drahtschleife, die um einen metallischen Kern (Plunger) gewickelt ist, und erzeugen ein Magnetfeld, um die lineare Bewegung
 des Plungers herbeizuführen, wenn ein elektrischer Strom durch die Drahtspule fließt. Lineare Solenoids können einseitig oder
-bidirektional (Drücken und Ziehen) sein und haben oft eine Rückholfeder, um den Plunger in die Ausgangsposition zurückzubringen \cite*[vgl.][Kapitel 1-2]{SolenoidDesign}.
+bidirektional (Drücken und Ziehen) sein und haben oft eine Rückholfeder, um den Plunger in die Ausgangsposition zurückzubringen \cite[vgl.][Kapitel 1-2]{SolenoidDesign}.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=5cm]{img/AufbauMagnet}
-	\caption{Hubmagnet Aufbau \cite*{SolenoidDesign}}
+	\caption{Hubmagnet Aufbau}
+	\source{\cite{SolenoidDesign}}
 	\label{fig:HubmagnetAufbau}
 \end{figure}
 
@@ -548,7 +566,7 @@ mehrerer Vortzeile allerdings auf den Hubmagneten:
 	Der Hauptgrund liegt im Preis, der sehr viel höher ist als bei Hubmagneten, da die Steuerungssysteme in den Motoren komplexer sind.
 	Aus dem gleichen Grund haben Hubmagnete in der Regel eine höhere Reaktionsgeschwindigkeit, was beim Spielen von Musikstücken eine große Rolle spielt.
 	Außerdem ist die Montage von Hubmagneten - insbesondere wenn es an Platz mangelt - einfacher, da diese tendenziell kleiner sind.
-	\item \textbf{Hubmagnete:} Hubmagnete\footnote{\cite*[siehe ][]{DatasheetSolenoids} für genauere Informationen} bieten Vorteile wie eine schnelle Reaktionsgeschwindigkeit, einfache Steuerung und geringen Kosten im Vergleich zu den anderen Aktuatoren. Die verwendeten Hubmagnete können eine Kraft von 25N ausüben,
+	\item \textbf{Hubmagnete:} Hubmagnete\footnote{siehe \cite{hes.FrameSolenoidElectromagnet.} für genauere Informationen} bieten Vorteile wie eine schnelle Reaktionsgeschwindigkeit, einfache Steuerung und geringen Kosten im Vergleich zu den anderen Aktuatoren. Die verwendeten Hubmagnete können eine Kraft von 25N ausüben,
 	was dazu genügt, eine Taste  zu spielen und gleichzeitig Platz für dynamische Anpassungen von Lautstärke und Tastanschlag lassen.
 \end{enumerate}
 
@@ -599,7 +617,7 @@ Arduino GND <-> Ground, Output Enable (OE)
 Der OE-Pin wird genutzt, um die Ausgänge des Schieberegisters global zu aktivieren oder zu deaktivieren, ohne die Daten selbst zu beeinflussen.
 Da das Schieberegister zu keiner Zeit deaktiviert sein soll, wird dieser Pin dauerhaft mit dem GND-Pin verbunden.
 
-Arduino VCC 5V <-> VCC, $\overline{SRCLR}$ (Reset)
+Arduino \ac{Vcc} 5V <-> \ac{Vcc}, $\overline{SRCLR}$ (Reset)
 
 Um das Schiebregister mit den benötigten 5V zu betreiben, wird der entsprechende Pin mit dem 5V Output des Arduino verbunden.
 Zusätzlich wird der $\overline{ }$ SRCLR Port des Schieberegisters, welcher ein Reset ermöglicht dauerhaft mit 5V verbunden.
@@ -638,7 +656,7 @@ Der DRAIN-Pin wird direkt mit dem entsprechenden Kontakt am Hubmagneten verbunde
 \subsubsection{Hubmagnet}
 
 Um den Stromkreis zu schließen wird der andere Kontakt des Hubmagnets mit dem +24V verbunden.
-Bei Hubmagneten ist es in der Regel egal, welcher Anschluss an Plus und welcher an Minus angeschlossen wird\footnote{siehe: \cite*[]{SolenoidDesign}}.
+Bei Hubmagneten ist es in der Regel egal, welcher Anschluss an Plus und welcher an Minus angeschlossen wird \cite[vgl.][]{SolenoidDesign}.
 
 \subsubsection{Testen}
 

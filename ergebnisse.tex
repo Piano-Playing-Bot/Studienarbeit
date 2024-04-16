@@ -83,7 +83,7 @@ Software-seitig gibt es nun mehrere Möglichkeiten, dieses Minimum zu forcieren.
 Zum Beispiel könnte im \ac{PIDI}-Format vorgegeben werden, dass zwischen zwei Anschlägen eines einzigen Tons immer min. 40ms liegen müssen.
 Da das \ac{PIDI}-Format aber unabhängig der Hardware sein soll und diese Begrenzung speziell durch die verwendeten Komponenten aufkommt, ist dies eine eher unschöne Lösung.
 
-Stattdessen wäre es besser wenn nur der \ac{MC} diese Limitierung beachten muss, da nur dieses Wissen über die spezifische Hardware-Umstzung verwenden soll.
+Stattdessen wäre es besser wenn nur der \ac{MC} diese Limitierung beachten muss, da nur dieser Wissen über die spezifische Hardware-Umstzung verwenden soll.
 Der \ac{MC} muss entsprechend Tasten finden, die so lange gespielt werden sollen, dass ihr nächstes Anspielen weniger als 40ms später erfolgt.
 Wenn diese Tasten gefunden wurde, könnte entweder das nächste Anspielen der Taste später erfolgen oder die Spiellänge der Taste reduziert werden.
 Da das Anspielen einer Taste sehr viel klarer zu erkennen ist als das Weiterspielen einer Taste, beeinflusst die zweite Strategie den Klang des Musikstücks geringer.
@@ -192,7 +192,24 @@ Die Bedeutung dieser Messergebnisse wird im Folgenden beleuchtet.
 \end{table}
 
 SW-T1 und SW-T2 haben den selben Test durchlaufen, jedoch jeweils mit unterschiedlichen Baud-Raten.
-Die Baud-Rate gibt beim \ac{UART}-Protokoll die Anzahl Bits, die pro Sekunde übertragen werden, an \cite[vgl.][S. 22]{bak.UniversalAsynchronousReceiver.03}. % @TODO(Val): Rest schreiben
+Die Baud-Rate gibt beim \ac{UART}-Protokoll die Anzahl Bits, die pro Sekunde geschickt werden, an \cite[vgl.][S. 22]{bak.UniversalAsynchronousReceiver.03}.
+Während die Baud-Rate den Durchsatz an Daten angibt, muss die Latenz seperat berechnt werden.
+Nichtsdestotrotz bedingt auch die Latenz eindeutig, da es die Geschwindigkeit, mit der Daten übertragen werden, beeinflust. \newline
+Bei den Tests wurde jeweils wiederholt ein Byte vom Desktop zum Arduino geschickt und vom Arduino wieder zurück geschickt.
+Gemessen wurde dann die Zeit, die zwischen Senden und Wiedererhalten des Bytes auf Seiten des Desktops vergangen ist und durch zwei geteilt (da ja nur die Zeit zum Senden in eine Richtung erwünscht ist).
+
+Es wurden hier auch mehrere Baud-Raten getestet, weil experimentell herausgefunden, dass es bei höheren Baud-Raten machmal zu Datenverlust kommt.
+Dieses Problem wurde in Kapitel \ref{umsetzungSW-Kommunikation-UI} ein wenig genauer beleuchtet. \newline
+Da dieses Problem vor allem bei höheren Baud-Raten auftritt, ist stark zu vermuten, dass der Arduino an einem gewissen Punkt nicht mehr schnell genug mit dem Lesen von einkommenden Bytes ist und einige der zwischengespeicherten Bytes wieder überschreibt, bevor sie geparst werden konnten.
+
+EIn weiteres Indiz dafür wird auch von den Ergebnissen der Tests SW-T3 und SW-T4 bereitgestellt.
+Hier wird nämlich gezeigt, dass der Arduino für eine einzelne Iteration seiner Endlosschleife bis zu 50ms braucht. \newline
+Während der \ac{MC} damit anscheinend zu langsam ist, um das vollständige Empfangen von \ac{SPPP}-Nachrichten sicherzustellen, erreicht er damit immer noch die in Anforderung A5 genannten Performanz-Ziele zum Anspielen von Tönen.
+
+Für eine Erweiterung des Prototypen sollte entsprechend überprüft werden, ob ein größerer Buffer zum Speichern einkommender Bytes das Problem bereits löst.
+Falls dies nicht der Fall sein sollte, müsste stattdessen versucht werden, die Performanz des \ac{MC}s zu optimieren.
+
+% @TODO(Val): Maybe add calculation based on Baud-Rate and latency on how fast any communication theoretically would be and thus what the latencies for receiving the next pidi cmds should be???
 
 
 \section{Limitationen \& Erweiterungsmöglichkeiten} \label{ergebnisse-limitationen}

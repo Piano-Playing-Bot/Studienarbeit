@@ -127,7 +127,7 @@ Außerdem soll es trotz der starken Einschränkung auf diesen Anwendungsfall die
 Listing \ref{code:PidiCmd struct} zeigt die endgültige Datenstruktur, die für ein individuellen \lstinline{PidiCmd} gewählt wurde, in Form eines C-Bitfields.
 Die vollständige Spezifikation des Formats lässt sich in Anhang \ref{appendix-pidi} finden.
 
-\begin{UnbrokenCodePage}[style=CStyle, caption={Definition eines \ac{PIDI}-Kommands}, label={code:PidiCmd struct}]
+\begin{UnbrokenCodePage}[style=CStyle, caption={Definition eines PIDI-Kommand}, label={code:PidiCmd struct}]
 typedef enum {
     PIANO_KEY_C,
     PIANO_KEY_CS,
@@ -370,7 +370,7 @@ Die vollständige Spezifikation des Protokolls findet sich in Anhang \ref{append
         \enquote{N} & \enquote{New-Music}-Nachricht & siehe Abschnitt \ref{SPPP-Pidi-Messages} \\ \hline
         \enquote{r} & \enquote{Request}-Nachricht - vom \ac{MC} geschickt (siehe Abschnitt \ref{SPPP-Pidi-Messages}) & - \\ \hline
     \end{tabular}
-    \caption{\ac{SPPP}-Nachrichten}
+    \caption{SPPP-Nachrichten}
     \label{table:SPPP-Messages}
 \end{table}
 
